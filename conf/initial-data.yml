@@ -1,0 +1,54 @@
+# Users
+
+users:
+    - !!models.User
+        id: 1
+        username: test
+        role: !!models.Role
+                id: 1
+
+# Roles
+
+roles:
+    - !!models.Role
+       id: 1
+       name: role1
+       info: this is a role
+       functions:
+           - !!models.Function
+               id: 1
+       
+# Functions
+
+functions:
+    - !!models.Function
+        id: 1
+        name: function1
+        info: this is a function
+        roles: 
+           - !!models.Role
+               id: 1
+      
+# Projects
+
+projects:
+    - !!models.Project
+        id: 1
+        name: project1
+        
+# Courses
+
+courses:
+    - !!models.Course
+        id: 1
+        name: course1
+        info: this is a course
+        
+        # Courses
+
+# Enrolls:
+enrolls:
+    - !!models.Enroll
+        id: 1
+        name: enroll name 1
+        info: this is a course
