@@ -8,7 +8,7 @@ In windows 7:
 1. Download this repository
 2. Install play, MySQL(or other database)
 3. Add play to PATH of system variables
-4. Edit play application.conf, edit the database configuration (here, using mysql as an example:
+4. Edit play application.conf, edit the database configuration (here, using mysql as an example):
 
   db.default.driver=com.mysql.jdbc.Driver 
   db.default.url="jdbc:mysql://localhost/admissions_distribution" 
