@@ -19,4 +19,4 @@ In windows 7:
 5. cd Play_AdmissionsDistributon
 6. play run
 
-ps: If want to import the project into Eclipse, just using command : play eclipse, and import it!
+ps: This project has already eclisified! If not, just using command : play eclipse, and import it!
