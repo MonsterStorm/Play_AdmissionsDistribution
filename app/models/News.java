@@ -13,8 +13,10 @@ public class News extends Model {
 
 	public String title; // 标题
 
+	@Lob
 	public String detail; // 详细
 
+	@ManyToOne
 	public NewsType type; // 资讯类别
 
 	public Long time;// 时间

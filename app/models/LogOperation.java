@@ -11,9 +11,11 @@ public class LogOperation extends Model {
 	@Id
 	public Long id;
 
+	@ManyToOne
 	public User user;// 操作用户
 
 	public Long time;// 操作时间
 
+	@ManyToOne
 	public Function function;// 操作内容，某个功能
 }

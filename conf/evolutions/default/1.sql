@@ -9,8 +9,8 @@ create table course (
   money                     double,
   start_time                bigint,
   contact                   varchar(255),
-  info                      varchar(255),
-  detail                    varchar(255),
+  info                      longtext,
+  detail                    longtext,
   constraint pk_course primary key (id))
 ;
 
@@ -31,11 +31,11 @@ create table enroll (
   id                        bigint auto_increment not null,
   enroll_time               bigint,
   enroll_ip                 varchar(255),
-  enroll_domin              varchar(255),
+  enroll_domain             varchar(255),
   name                      varchar(255),
-  sex                       varchar(255),
-  id_card                   varchar(255),
-  birth                     varchar(255),
+  sex                       integer,
+  idcard                    varchar(255),
+  birth                     bigint,
   company_name              varchar(255),
   position                  varchar(255),
   phone                     varchar(255),
@@ -63,7 +63,9 @@ create table log_login (
 
 create table log_operation (
   id                        bigint auto_increment not null,
+  user_id                   bigint,
   time                      bigint,
+  function_id               bigint,
   constraint pk_log_operation primary key (id))
 ;
 
@@ -81,7 +83,8 @@ create table message (
 create table news (
   id                        bigint auto_increment not null,
   title                     varchar(255),
-  detail                    varchar(255),
+  detail                    longtext,
+  type_id                   bigint,
   time                      bigint,
   constraint pk_news primary key (id))
 ;
@@ -121,10 +124,10 @@ create table user (
   password                  varchar(255),
   nickname                  varchar(255),
   idcard                    varchar(255),
-  birthday                  varchar(255),
+  birthday                  bigint,
   sex                       varchar(255),
   phone                     varchar(255),
-  cellphone                 varchar(255),
+  mobile                    varchar(255),
   qq                        varchar(255),
   email                     varchar(255),
   address                   varchar(255),
@@ -165,8 +168,14 @@ create table user_course (
 ;
 alter table domain add constraint fk_domain_user_1 foreign key (user_id) references user (id) on delete restrict on update restrict;
 create index ix_domain_user_1 on domain (user_id);
-alter table user add constraint fk_user_role_2 foreign key (role_id) references role (id) on delete restrict on update restrict;
-create index ix_user_role_2 on user (role_id);
+alter table log_operation add constraint fk_log_operation_user_2 foreign key (user_id) references user (id) on delete restrict on update restrict;
+create index ix_log_operation_user_2 on log_operation (user_id);
+alter table log_operation add constraint fk_log_operation_function_3 foreign key (function_id) references function (id) on delete restrict on update restrict;
+create index ix_log_operation_function_3 on log_operation (function_id);
+alter table news add constraint fk_news_type_4 foreign key (type_id) references news_type (id) on delete restrict on update restrict;
+create index ix_news_type_4 on news (type_id);
+alter table user add constraint fk_user_role_5 foreign key (role_id) references role (id) on delete restrict on update restrict;
+create index ix_user_role_5 on user (role_id);
 
 
 

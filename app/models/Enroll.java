@@ -21,15 +21,15 @@ public class Enroll extends Model {
 
 	public String enrollIp;// 登记时的ip
 
-	public String enrollDomin;// 来源域名，如www.google.com，用于分销的统计
+	public String enrollDomain;// 来源域名，如www.google.com，用于分销的统计
 
 	public String name;// 报名人姓名
 
-	public String sex;// 性别
+	public int sex;// 性别，0女，1男
 
-	public String idCard;// 身份证号
+	public String idcard;// 身份证号
 
-	public String birth;// 出生日期
+	public Long birth;// 出生日期，存时间串
 
 	public String companyName;// 公司名称
 

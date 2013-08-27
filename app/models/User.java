@@ -28,13 +28,13 @@ public class User extends Model {
 	// -------------用于普通用户--------------
 	public String idcard;// 身份证
 
-	public String birthday;// 出生日期
+	public Long birthday;// 出生日期
 
 	public String sex;// 性别
 
 	public String phone;// 电话
 
-	public String cellphone;// 移动电话
+	public String mobile;// 移动电话
 
 	public String qq; // qq
 

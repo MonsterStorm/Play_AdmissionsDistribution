@@ -1,5 +1,7 @@
 package models;
 
+import java.util.*;
+
 import javax.persistence.*;
 
 import play.db.ebean.*;
@@ -18,4 +20,7 @@ public class NewsType extends Model {
 	public Long id;
 
 	public String name;
+	
+	@OneToMany(cascade=CascadeType.PERSIST)
+	public List<News> news;
 }

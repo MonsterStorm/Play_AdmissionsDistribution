@@ -27,7 +27,9 @@ public class Course extends Model {
 
 	public CourseType type;// 课程类别
 
+	@Lob
 	public String info;// 课程简介
 
+	@Lob
 	public String detail;// 课程详细信息
 }

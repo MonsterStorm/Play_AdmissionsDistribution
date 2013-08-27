@@ -35,15 +35,29 @@ public class InitialData {
 			// Insert users first
 			Ebean.save(all.get("users"));
 
-			// Insert projects
-			Ebean.save(all.get("projects"));
+			// Insert CourseType
+			Ebean.save(all.get("courseTypes"));
 
 			// Insert course
 			Ebean.save(all.get("courses"));
 
+			// Insert projects
+			Ebean.save(all.get("projects"));
+
 			// Insert enroll
 			Ebean.save(all.get("enrolls"));
 
+			// Insert News Type
+			Ebean.save(all.get("newsType"));
+
+			// Insert News
+			Ebean.save(all.get("news"));
+			
+			// Insert Messages
+			Ebean.save(all.get("messages"));
+						
+			// Insert Domains
+			Ebean.save(all.get("domains"));
 		}
 	}
 

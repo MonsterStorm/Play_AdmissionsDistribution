@@ -1,0 +1,1 @@
+//This the place for basic javascripts
