@@ -3,4 +3,20 @@ This is your new Play 2.1 application
 
 This is a website using play framework!
 
-Note: Already eclipsified!
+##Config Step##
+In windows 7:
+1. Download this repository
+2. Install play, MySQL(or other database)
+3. Add play to PATH of system variables
+4. Edit play application.conf, edit the database configuration (here, using mysql as an example):
+
+  db.default.driver=com.mysql.jdbc.Driver 
+  db.default.url="jdbc:mysql://localhost/admissions_distribution" 
+  db.default.user=username
+  db.default.password=password 
+  db.default.logStatements=true
+
+5. cd Play_AdmissionsDistributon
+6. play run
+
+ps: This project has already eclisified! If not, just using command : play eclipse, and import it!
