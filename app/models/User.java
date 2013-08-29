@@ -70,4 +70,17 @@ public class User extends Model {
 
 	@OneToMany(cascade = CascadeType.ALL)
 	public List<Domain> domains;// 分销商对应的域名，一个分销商可以有多个域名，一个域名只能归属于一个分销商，级联删除
+
+	
+	
+	// -- 查询
+
+	public static Model.Finder<String, User> find = new Model.Finder(String.class, User.class);
+
+	/**
+	 * Authenticate a User.
+	 */
+	public static User authenticate(String username, String password) {
+		return find.where().eq("username", username).eq("password", password).findUnique();
+	}
 }
