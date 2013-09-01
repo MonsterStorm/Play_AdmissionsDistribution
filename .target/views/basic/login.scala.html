@@ -1,0 +1,37 @@
+@(form: Form[LoginController.Login])
+<html>
+<head>
+<title>Zentasks</title>
+<link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
+<link rel="stylesheet" type="text/css" media="screen"
+	href="@routes.Assets.at("stylesheets/login.css")">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+</head>
+<body>
+	<header>
+		<a href="@routes.Application.index" id="logo"><span>培训分销系统</span></a>
+	</header>
+	@helper.form(routes.LoginController.login) {
+
+	<h1>登录</h1>
+
+	@if(form.hasGlobalErrors) {
+	<p class="error">@form.globalError.message</p>
+	} @if(flash.contains("success")) {
+	<p class="success">@flash.get("success")</p>
+	}
+
+	<p>
+		<input type="text" name="username" placeholder="用户名"
+			value="@form("username").value">
+	</p>
+	<p>
+		<input type="password" name="password" placeholder="密码">
+	</p>
+	<p>
+		<button type="submit">登录</button>
+	</p>
+
+	}
+</body>
+</html>

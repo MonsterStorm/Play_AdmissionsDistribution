@@ -1,0 +1,217 @@
+/** Project: AdmissionsDistribution
+ *  Description: 
+ *
+ *  @creator       Thinkin-Tags v0.4.1
+ *  @framework     YAML v4.1.2
+ *  @file          screen.css
+ */
+
+@media screen {
+
+	body {
+		background: #ddd;
+		overflow-y: scroll;
+	}
+
+	.ym-wrapper {
+		margin: 0 auto;
+		max-width: 80em;
+	}
+
+	.ym-wbox {
+		overflow: hidden;
+		padding: 10px;
+	}
+
+	header {
+		background-image: -webkit-linear-gradient(top, #444444 0%,#444444 45%,#ffffff 55%,#ffffff 100%);
+		background-image: -moz-linear-gradient(top, #444444 0%,#444444 45%,#ffffff 55%,#ffffff 100%);
+		background-image: -ms-linear-gradient(top, #444444 0%,#444444 45%,#ffffff 55%,#ffffff 100%);
+		background-image: -o-linear-gradient(top, #444444 0%,#444444 45%,#ffffff 55%,#ffffff 100%);
+		background-image: linear-gradient(to bottom, #444444 0%,#444444 45%,#ffffff 55%,#ffffff 100%);
+	}
+
+	nav h1 {
+		color: #fff;
+		float: left;
+	}
+
+	nav {
+		background: #444;
+		padding: 24px 0 24px 0;
+	}
+
+	main {
+		background: #fff;
+		padding: 24px 0;
+	}
+
+	footer {
+		border-top: 4px #ccc solid;
+		padding: 24px 0;
+	}
+
+	.ym-hlist {
+		background: transparent;
+		float: right;
+		width: auto;
+	}
+
+	.ym-hlist ul {
+		float: right;
+		padding: 0;
+	}
+
+	.ym-hlist ul li a {
+		background: rgba(255,255,255,.3);
+		border-radius: 5px;
+		color: #000;
+		display: block;
+		padding: 6px 24px;
+		text-decoration: none;
+	}
+
+	.ym-hlist ul li {
+		margin: 0;
+	}
+
+	.ym-hlist ul li+li {
+		margin-left: 12px;
+	}
+
+	.ym-hlist ul li a:hover {
+		color: #fff;
+	}
+
+	.ym-hlist ul li .active {
+		background: rgba(255,255,255,.75);
+	}
+
+	.teaser {
+		position: relative;
+	}
+
+	.overlay {
+		background: rgba(255,255,255,.5);
+		bottom: 64px;
+		left: 64px;
+		outline: 12px rgba(255,255,255,.5) solid;
+		position: absolute;
+		width: 40%;
+	}
+
+	.overlay p {
+		font-style: italic;
+	}
+
+	.ym-gbox-left {
+	}
+
+	.ym-gbox-right {
+	}
+
+	#column_login {
+	}
+
+	.ym-col1 {
+	}
+
+	.ym-cbox-left {
+	}
+
+	.ym-col2 {
+	}
+
+	.ym-cbox-right {
+	}
+
+	.ym-col3 {
+	}
+
+	.ym-cbox {
+	}
+
+	#aa {
+	}
+
+}
+
+@media only screen and (max-width: 768px) {
+
+	.linearize-level-1,
+	.linearize-level-1 > [class*="ym-c"],
+	.linearize-level-1 > [class*="ym-g"] {
+		display: block;
+		float: none;
+		margin: 0;
+		padding: 0;
+		width: auto !important;
+	}
+
+	.linearize-level-1 > [class*="ym-c"] > [class*="ym-cbox"],
+	.linearize-level-1 > [class*="ym-g"] > [class*="ym-gbox"] {
+		margin: 0;
+		overflow: hidden;
+		padding: 0;
+	}
+
+	nav,
+	header,
+	main,
+	footer {
+		padding: 0;
+	}
+
+	nav h1 {
+		float: none;
+	}
+
+	.overlay {
+		background: transparent;
+		margin: 2em 0 1em 0;
+		outline: 0 none;
+		position: static;
+		width: auto;
+	}
+
+	.ym-hlist ul li+li {
+		margin: 0.5em 0;
+	}
+
+	.ym-searchform,
+	nav .ym-hlist,
+	nav .ym-hlist ul,
+	nav .ym-hlist ul li {
+		display: block;
+		float: none;
+		text-align: left;
+		width: auto;
+	}
+
+	.ym-searchform input[type="search"] {
+		width: 75%;
+	}
+
+}
+
+@media only screen and (max-width: 480px) {
+
+	.linearize-level-2,
+	.linearize-level-2 > [class*="ym-c"],
+	.linearize-level-2 > [class*="ym-g"] {
+		display: block;
+		float: none;
+		margin: 0;
+		padding: 0;
+		width: auto !important;
+	}
+
+	.linearize-level-2 > [class*="ym-c"] > [class*="ym-cbox"],
+	.linearize-level-2 > [class*="ym-g"] > [class*="ym-gbox"] {
+		margin: 0;
+		overflow: hidden;
+		padding: 0;
+	}
+
+}
+
