@@ -20,6 +20,5 @@ public class Domain extends Model {
 	public String domain;// 域名
 
 	@ManyToOne
-	public User user;// 对应的分销商，该字段可以为空，表示该域名暂时无推销商
-
+	public Agent agent;// 代理机构，一个域名拥有一个代理人（也可以没有），一个代理人可以有多个域名
 }

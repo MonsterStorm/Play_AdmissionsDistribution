@@ -5,7 +5,7 @@ import javax.persistence.*;
 import play.db.ebean.*;
 
 /**
- * 课程类
+ * 课程类，由讲师创建
  * 
  * @author MonsterStorm
  * 

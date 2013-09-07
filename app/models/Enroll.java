@@ -5,7 +5,7 @@ import javax.persistence.*;
 import play.db.ebean.*;
 
 /**
- * 报名信息，
+ * 报名信息
  * 
  * @author MonsterStorm
  * 
@@ -17,6 +17,26 @@ public class Enroll extends Model {
 	@Id
 	public Long id;
 
+	// -- 报名所属
+	@ManyToOne
+	public User fromAgent;// 来源代理人，一个代理人可以有多个报名信息，一个报名信息只能隶属于一个代理人，如果是直接通过平台过来，则该字段为空
+
+	@ManyToOne
+	public EducationInstitution edu;// 所属教育机构，一个教育机构可以有多个报名信息，一个报名信息隶属于一个教育机构。
+
+	// -- 报名确认信息
+	public Audit auditOfAgent;// 代理人审核
+
+	public Audit auditOfEdu;// 教育机构的审核信息
+
+	// -- 收款确认信息
+	public ConfirmReceipt confirmOfEdu;// 教育机构收款信息
+
+	public ConfirmReceipt confirmOfPlatform;// 平台收款信息
+
+	public ConfirmReceipt confirmOfAgent;// 代理人收款信息
+
+	// -- 其他基本信息
 	public Long enrollTime;// 报名时间
 
 	public String enrollIp;// 登记时的ip

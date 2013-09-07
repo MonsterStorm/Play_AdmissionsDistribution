@@ -4,6 +4,7 @@ import java.util.*;
 
 import javax.persistence.*;
 
+import models.interfaces.*;
 import play.db.ebean.*;
 
 /**
@@ -14,7 +15,7 @@ import play.db.ebean.*;
  */
 @Entity
 @Table(name = "user")
-public class User extends Model {
+public class User extends Model implements IModel {
 
 	@Id
 	public Long id;
@@ -25,62 +26,74 @@ public class User extends Model {
 
 	public String nickname;// 昵称，对于培训机构可以是xxx培训几个，对于老师可以是xxx老师，该名称公开给外界。
 
-	// -------------用于普通用户--------------
-	public String idcard;// 身份证
-
-	public Long birthday;// 出生日期
-
-	public String sex;// 性别
-
-	public String phone;// 电话
-
 	public String mobile;// 移动电话
 
-	public String qq; // qq
-
-	public String email;// 邮箱
-
-	public String address;// 地址
-	// -------------用于普通用户--------------
-
-	public String info;// 介绍，对于讲师或者教育机构有用
+	public String email;// 邮箱地址
 
 	public String logo;// 个人头像，或者教育机构的照片
 
-	// 注册
-	public Long registerTime;// 注册时间
-
-	public String registerIp;// 注册ip
-
-	// 登录
-	public Long lastLoginTime;// 最后登录时间
-
-	public String lastLoginIp;// 最后登录ip
-
 	public int status;// 帐号状态，0：待审核（新注册用户为待审核，只有少量权限）1：审核通过（普通）2：审核未通过（提示审核不通过原因）3：禁用（禁用以后登录提示需要管理员激活）
 
-	@ManyToMany
-	public List<CourseType> courseTypes;// 对于讲师，可以讲授的课程类别
-
-	@ManyToMany
-	public List<Course> courses;// 对于讲师，可以讲授的课程
+	@OneToOne
+	public UserInfo basicInfo;// 用户基本信息，一个用户对应一个基本信息，一个基本信息对应一个用户
 
 	@ManyToOne
-	public Role role;// 角色，这里只做一个用户拥有一种角色处理
+	public List<Role> roles;// 角色，一个用户可以同时是多个角色，比如同时是教育机构和代理人，一个用户拥有多个角色，一个角色可以被多个用户拥有
 
 	@OneToMany(cascade = CascadeType.ALL)
-	public List<Domain> domains;// 分销商对应的域名，一个分销商可以有多个域名，一个域名只能归属于一个分销商，级联删除
+	public List<EducationInstitution> edus;// 用户对应的教育机构，一个用户可以对应多个教育机构，一个教育机构只能隶属于一个用户（创建者，但是可以有多个子帐号）
 
-	
-	
+	@OneToOne
+	public Instructor instructor;// 讲师，一个用户对应于一个讲师，一个讲师只能是一个用户
+
+	@OneToOne
+	public Agent agent;// 代理人，一个用户对应于一个代理人，一个代理人只能是一个用户
+
 	// -- 查询
-
-	public static Model.Finder<String, User> find = new Model.Finder(String.class, User.class);
+	public static Model.Finder<String, User> finder = new Model.Finder(
+			Long.class, User.class);
 
 	/**
-	 * Authenticate a User.
+	 * find all user
+	 * 
+	 * @return
 	 */
-	public static User authenticate(String username, String password) {
-		return find.where().eq("username", username).eq("password", password).findUnique();
+	public static List<User> findAll() {
+		return finder.findList();
 	}
+
+	/**
+	 * find one by id
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public static User find(Long id) {
+		return finder.where().eq("id", id).findUnique();
+	}
+
+	/**
+	 * 认证用户名/邮箱/手机号，密码组合是否存在，存在则可以正常登录
+	 * 
+	 * @param username
+	 * @param password
+	 * @return
+	 */
+	public static User authenticate(String account, String password) {
+		User user = finder.where().eq("username", account).eq("password", password).findUnique();
+		if (user == null){
+			user = finder.where().eq("email", account).eq("password", password).findUnique();
+		}
+		if (user == null){
+			user = finder.where().eq("mobile", account).eq("password", password).findUnique();
+		}
+		return user;
+	}
+
+	// ------------------------object functions-----------------------
+	// to string
+	public String toString() {
+		return "User(id: " + id + ", username: " + username + ")";
+	}
+
 }

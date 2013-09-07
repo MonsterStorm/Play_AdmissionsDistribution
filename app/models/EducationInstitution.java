@@ -1,0 +1,34 @@
+package models;
+
+import java.util.*;
+
+import javax.persistence.*;
+
+import play.db.ebean.*;
+
+/**
+ * 教育机构
+ * 
+ * @author MonsterStorm
+ * 
+ */
+@Entity
+@Table(name = "education_institution")
+public class EducationInstitution extends Model {
+
+	@Id
+	public Long id;
+
+	@ManyToOne
+	public User creator;// 教育机构的创建者，一个创建者可以创建多个教育机构，一个教育机构只能被一个用户创建
+
+	public Long createTime;// 创建日期
+
+	@ManyToMany
+	public List<User> bypassAccounts;// 子帐号，如果没有子帐号则为空。一个教育机构可以有多个子账户，一个子账户只能隶属于一个教育机构
+
+	@OneToMany
+	public List<Course> courses;// 教育机构对应的课程列表，一个教育机构可以有多个课程
+	
+	// 其他属性字段
+}

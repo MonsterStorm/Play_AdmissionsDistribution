@@ -19,8 +19,10 @@ public class NewsType extends Model {
 	@Id
 	public Long id;
 
-	public String name;
+	public String name;//类别名
+	
+	public String info;//额外信息
 	
 	@OneToMany(cascade=CascadeType.PERSIST)
-	public List<News> news;
+	public List<News> news;//新闻类别对应的新闻，一个新闻类别对应多个新闻，一个新闻只有一个类别
 }

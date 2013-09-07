@@ -6,12 +6,13 @@ import play.db.ebean.*;
 
 /**
  * 培训项目
- * 
+ * v1.0: 这个版本教育机构创建的就只是课程，不存在培训项目
  * @author MonsterStorm
  * 
  */
 @Entity
 @Table(name = "project")
+@Deprecated
 public class Project extends Model {
 
 	@Id
