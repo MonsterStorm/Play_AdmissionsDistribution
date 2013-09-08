@@ -29,8 +29,14 @@ public class InitialData {
 			// Insert functions first
 			Ebean.save(all.get("functions"));
 
+			// Insert modules first
+			Ebean.save(all.get("modules"));
+
 			// Insert roles first
 			Ebean.save(all.get("roles"));
+
+			// Insert userinfos first
+			Ebean.save(all.get("userinfos"));
 
 			// Insert users first
 			Ebean.save(all.get("users"));
@@ -52,10 +58,10 @@ public class InitialData {
 
 			// Insert News
 			Ebean.save(all.get("news"));
-			
+
 			// Insert Messages
 			Ebean.save(all.get("messages"));
-						
+
 			// Insert Domains
 			Ebean.save(all.get("domains"));
 		}

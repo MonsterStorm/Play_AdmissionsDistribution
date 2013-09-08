@@ -24,6 +24,6 @@ public class Function extends Model {
 	public String info;// 功能描述
 
 	@ManyToMany
-	public List<Role> roles;// 一个功能可以被多个role拥有，一个role可以有多个function
+	public List<Module> modules;// 一个功能可以被多个模块拥有，一个模块可以拥有多个功能
 
 }

@@ -45,4 +45,8 @@ public class UserInfo extends Model {
 	public Long lastLoginTime;// 最后登录时间
 
 	public String lastLoginIp;// 最后登录ip
+
+	public UserInfo(User user) {
+		this.user = user;
+	}
 }

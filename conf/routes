@@ -4,17 +4,21 @@
 
 # Home page
 GET     /                           controllers.Application.index()
+GET		/admin/login				controllers.Application.admin()
 
-GET		/login						controllers.LoginController.pageForm()
-POST    /login                      controllers.LoginController.login()
 
 #Platform
 GET		/platform/:page				controllers.PlatformController.page(page: String)
 
+#Login
+
+GET		/login						controllers.LoginController.pageForm()
+POST    /login                      controllers.LoginController.login()
+POST	/admin/login				controllers.LoginController.loginAdmin()
 
 #Admin
+GET		/admin/logout				controllers.AdminController.logout()
 GET		/admin/:page				controllers.AdminController.page(page: String)
-POST	/admin/login				controllers.AdminController.login()
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

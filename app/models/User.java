@@ -49,9 +49,9 @@ public class User extends Model implements IModel {
 	@OneToOne
 	public Agent agent;// 代理人，一个用户对应于一个代理人，一个代理人只能是一个用户
 
+
 	// -- 查询
-	public static Model.Finder<String, User> finder = new Model.Finder(
-			Long.class, User.class);
+	public static Model.Finder<String, User> finder = new Model.Finder(Long.class, User.class);
 
 	/**
 	 * find all user
@@ -81,10 +81,10 @@ public class User extends Model implements IModel {
 	 */
 	public static User authenticate(String account, String password) {
 		User user = finder.where().eq("username", account).eq("password", password).findUnique();
-		if (user == null){
+		if (user == null) {
 			user = finder.where().eq("email", account).eq("password", password).findUnique();
 		}
-		if (user == null){
+		if (user == null) {
 			user = finder.where().eq("mobile", account).eq("password", password).findUnique();
 		}
 		return user;

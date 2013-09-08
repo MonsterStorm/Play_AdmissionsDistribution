@@ -5,28 +5,44 @@ users:
         username: test
         password: test
         nickname: 这只是个昵称
+        mobile: 1234567890
+        email: zhangsan@gmail.com  
+        logo: /photos/131231.png
+        status: 0
+        basicInfo: !!models.UserInfo
+                     id: 1
+        roles: 
+             - !!models.Role
+                id: 1
+                
+# UserInfo
+
+userinfos:
+    - !!models.UserInfo
         sex: 1
         idcard: 360402190003288745
         phone: 3456879
-        mobile: 1234567890
         address: 浙江杭州某个地方
         qq: 10086
-        email: zhangsan@gmail.com  
         info: 我只是想学个课程而已。。
-        logo: /photos/131231.png
         registerIp: 127.0.0.1
         lastLoginIp: 127.0.0.2
-        status: 0
-        role: !!models.Role
-                id: 1
-
+        
 # Roles
 
 roles:
     - !!models.Role
-       id: 1
        name: role1
        info: this is a role
+       modules: 
+           - !!models.Module
+               id: 1
+       
+# Modules
+modules:
+    - !!models.Module
+       name: 教育机构管理
+       info: 管理教育机构功能
        functions:
            - !!models.Function
                id: 1
@@ -41,22 +57,22 @@ functions:
     - !!models.Function
         name: 功能1
         info: 查看所有在库培训项目
-        roles: 
-           - !!models.Role
+        modules: 
+           - !!models.Module
                id: 1
                
     - !!models.Function
         name: 功能2
         info: 查看所有培训学员
-        roles: 
-           - !!models.Role
+        modules: 
+           - !!models.Module
                id: 1
                
     - !!models.Function
         name: 功能3
         info: 查看项目明细
-        roles: 
-           - !!models.Role
+        modules: 
+           - !!models.Module
                id: 1
       
 # Projects
