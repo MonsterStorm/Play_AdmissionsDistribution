@@ -12,7 +12,6 @@ GET		/platform/:page				controllers.PlatformController.page(page: String)
 
 #Login
 
-GET		/login						controllers.LoginController.pageForm()
 POST    /login                      controllers.LoginController.login()
 POST	/admin/login				controllers.LoginController.loginAdmin()
 

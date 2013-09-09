@@ -26,4 +26,12 @@ public class Secured extends Security.Authenticator {
     
     // Access rights
     
+    /**
+     * is user has right to execute a function
+     * @param function
+     * @return
+     */
+    public static boolean hasRights(Long function){
+    	return false;
+    }
 }

@@ -1,0 +1,23 @@
+@(table_head: List[String], table_body: List[String])
+
+<div class="table-responsive">
+	<div style="overflow: auto">
+		<table class="table table-hover table-bordered table-striped">
+			<thead>
+				<tr>
+					<th>#</th> 
+					@for(head <- table_head) {
+						<th>xxx@head</th> 
+					}
+				</tr>
+			</thead>
+			<tbody>
+				@for(item <- table_body){
+				<tr>
+					<td>@item</td>
+				</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+</div>

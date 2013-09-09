@@ -27,15 +27,6 @@ public class LoginController extends BaseController {
 	}
 
 	/**
-	 * 返回一个表单
-	 * 
-	 * @return
-	 */
-	public static Result pageForm() {
-		return ok(views.html.basic.login.render(form(Login.class)));
-	}
-
-	/**
 	 * 登录
 	 * 
 	 * @return
