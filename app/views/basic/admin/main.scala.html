@@ -18,7 +18,9 @@ Html)(leftmenu: Html)(nav: Html)(content: Html)(footer: Html)
 			<div class="span10">
 				<div class="well">
 					@nav
-					@content
+					<div id="content" style="min-height:500px;"><!--自定义的id，用于ajax替换-->
+						@content
+					</div>
 				</div>
 			</div>
 		</div>

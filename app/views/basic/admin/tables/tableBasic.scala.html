@@ -1,4 +1,4 @@
-@(table_head: List[String], table_body: List[String])
+@(heads: List[String], models: List[User], properties: List[String])
 
 <div class="table-responsive">
 	<div style="overflow: auto">
@@ -6,15 +6,18 @@
 			<thead>
 				<tr>
 					<th>#</th> 
-					@for(head <- table_head) {
-						<th>xxx@head</th> 
+					@for(head <- heads) {
+						<th>@head</th> 
 					}
 				</tr>
 			</thead>
 			<tbody>
-				@for(item <- table_body){
+				@for(model <- models){
 				<tr>
-					<td>@item</td>
+					<td>#</td>
+					@for(property <- properties) {
+						<td>@{model.get(property)}</td> 
+					}
 				</tr>
 				}
 			</tbody>

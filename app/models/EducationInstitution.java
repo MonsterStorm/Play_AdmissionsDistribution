@@ -31,4 +31,5 @@ public class EducationInstitution extends Model {
 	public List<Course> courses;// 教育机构对应的课程列表，一个教育机构可以有多个课程
 	
 	// 其他属性字段
+	public String name;//教育机构名称
 }

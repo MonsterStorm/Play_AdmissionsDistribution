@@ -65,6 +65,7 @@ create table education_institution (
   id                        bigint auto_increment not null,
   creator_id                bigint,
   create_time               bigint,
+  name                      varchar(255),
   constraint pk_education_institution primary key (id))
 ;
 

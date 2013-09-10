@@ -41,6 +41,9 @@ public class InitialData {
 			// Insert users first
 			Ebean.save(all.get("users"));
 
+			// Insert EducationInstitution first
+			Ebean.save(all.get("edus"));
+			
 			// Insert CourseType
 			Ebean.save(all.get("courseTypes"));
 

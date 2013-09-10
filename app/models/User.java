@@ -1,5 +1,6 @@
 package models;
 
+import java.lang.reflect.*;
 import java.util.*;
 
 import javax.persistence.*;
@@ -49,9 +50,28 @@ public class User extends Model implements IModel {
 	@OneToOne
 	public Agent agent;// 代理人，一个用户对应于一个代理人，一个代理人只能是一个用户
 
-
+	
+	/**
+	 * 根据类的属性名称，获取属性值
+	 * @param key
+	 * @return
+	 */
+	public Object get(final String property) {
+		try {
+			Field field = User.class.getField(property);
+			if(field != null){
+				field.setAccessible(true);//设置可以访问，对于私有变量有用
+				return field.get(this);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 	// -- 查询
-	public static Model.Finder<String, User> finder = new Model.Finder(Long.class, User.class);
+	public static Model.Finder<String, User> finder = new Model.Finder(
+			Long.class, User.class);
 
 	/**
 	 * find all user
@@ -80,12 +100,15 @@ public class User extends Model implements IModel {
 	 * @return
 	 */
 	public static User authenticate(String account, String password) {
-		User user = finder.where().eq("username", account).eq("password", password).findUnique();
+		User user = finder.where().eq("username", account)
+				.eq("password", password).findUnique();
 		if (user == null) {
-			user = finder.where().eq("email", account).eq("password", password).findUnique();
+			user = finder.where().eq("email", account).eq("password", password)
+					.findUnique();
 		}
 		if (user == null) {
-			user = finder.where().eq("mobile", account).eq("password", password).findUnique();
+			user = finder.where().eq("mobile", account)
+					.eq("password", password).findUnique();
 		}
 		return user;
 	}
