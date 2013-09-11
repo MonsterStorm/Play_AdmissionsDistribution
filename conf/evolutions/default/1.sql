@@ -35,6 +35,16 @@ create table confirm_receipt (
   constraint pk_confirm_receipt primary key (id))
 ;
 
+create table contract (
+  id                        bigint auto_increment not null,
+  name                      varchar(255),
+  detail                    longtext,
+  info                      longtext,
+  create_time               bigint,
+  last_modified             bigint,
+  constraint pk_contract primary key (id))
+;
+
 create table course (
   id                        bigint auto_increment not null,
   name                      varchar(255),
@@ -320,6 +330,8 @@ drop table audit;
 drop table audit_type;
 
 drop table confirm_receipt;
+
+drop table contract;
 
 drop table course;
 

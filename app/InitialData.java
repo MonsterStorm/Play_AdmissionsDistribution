@@ -67,6 +67,9 @@ public class InitialData {
 
 			// Insert Domains
 			Ebean.save(all.get("domains"));
+			
+			// Insert Contracts
+			Ebean.save(all.get("contracts"));
 		}
 	}
 

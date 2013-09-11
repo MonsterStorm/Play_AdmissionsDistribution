@@ -1,0 +1,50 @@
+@(models: Contract)
+
+@import basic.admin.tool._
+
+@toolbar_header={
+<script type="text/javascript">
+	function doEdit(item){
+			var editors = $("#contractDetail [readonly='readonly']");
+			console.dir(editors);
+	    if(editors && editors.length > 0){
+	       editors.removeAttr("readonly");
+	       $(item).addClass("active");
+	    } else {
+	       $("#contractDetail input").attr("readonly", "readonly");
+	       $("#contractDetail textarea").attr("readonly", "readonly");
+				 $(item).removeClass("active");	       
+	    }
+	}
+	
+  function doDelete(){
+     $('#dialogModal').modal()
+  }
+</script>
+
+@dialogBasic("确定", "删除"){确定删除？}
+
+<div class="row">
+	<div class="span2">
+		<h4>协议</h4>
+	</div>
+	<div class="btn-toolbar pull-right" role="toolbar">
+	<div class="btn-group" id="toolbar">
+		<a class="btn btn-success" data-toggle="新增" href="#"><i
+				class="icon-plus icon-white"></i>新增</a>
+ 		<a class="btn btn-info"	data-toggle="编辑" href="#" onclick="doEdit(this)"><i class="icon-pencil icon-white"></i>编辑</a>
+	</div>
+	<div class="btn-group">
+		<a class="btn btn-danger" data-toggle="删除，请谨慎操作！" href="#" onclick="doDelete()"><i
+			class="icon-remove icon-white"></i>删除</a>
+	</div>
+	</div>
+</div>
+} 
+
+@toolbar_header
+<div class="table-responsive" style="overflow: auto" id="contractDetail">
+	<input type="text" placeholder="协议名称" value="@models.name" readonly="readonly"></input>
+	<textarea class="span8 pull-center" rows="20" readonly="readonly">@models.detail</textarea>
+</div>
+<button class="btn btn-large btn-success" type="button">提交</button>

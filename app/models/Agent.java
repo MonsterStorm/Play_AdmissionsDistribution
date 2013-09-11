@@ -24,6 +24,29 @@ public class Agent extends Model {
 
 	@OneToMany
 	public List<Domain> domain;// 代理人对应的域名信息，一个代理人对应多个域名，一个域名隶属于一个代理人（也可以没有代理人）
-	
+
 	// -- 基本信息
+
+	// -- 查询
+	public static Model.Finder<String, Agent> finder = new Model.Finder(
+			Long.class, Agent.class);
+
+	/**
+	 * find all user
+	 * 
+	 * @return
+	 */
+	public static List<Agent> findAll() {
+		return finder.findList();
+	}
+
+	/**
+	 * find one by id
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public static Agent find(Long id) {
+		return finder.where().eq("id", id).findUnique();
+	}
 }

@@ -1,11 +1,9 @@
-@(models: List[Course])
-
-@import basic.admin.tool._
+@(models: List[Instructor])
 
 @toolbar_header={
 <div class="row">
 	<div class="span2">
-		<h4>培训项目</h4>
+		<h4>讲师</h4>
 	</div>
 	<div class="btn-toolbar pull-right" role="toolbar">
 		<div class="btn-group">
@@ -68,9 +66,9 @@ $('#toolbar').tooltip(options);
 			<thead>
 				<tr>
 					<th>ID</th>
-					<th>教育机构</th>
-					<th>课程名</th>
-					<th>开课时间</th>
+					<th>姓名</th>
+					<th>最新课程</th>
+					<th>注册时间</th>
 					<th>简介</th>
 					<th>操作</th> 
 				</tr>
@@ -79,10 +77,10 @@ $('#toolbar').tooltip(options);
 				@for(model <- models){
 				<tr>
 					<td>@model.id</td>
-					<td>@model.edu.name</td>
-					<td>@model.name</td>
-					<td>@model.startTime</td>
-					<td>@model.info</td>
+					<td>@model.user.username</td>
+					<td>@model.user.username</td>
+					<td>@model.user.username</td>
+					<td>@model.user.username</td>
 					<td>@toolbar</td>
 				</tr>
 				}

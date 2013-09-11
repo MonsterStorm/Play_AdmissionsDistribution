@@ -1,12 +1,5 @@
 //This the place for basic javascripts
 /**
- * get page
- */
-function getGetPage(domain, url) {
-	ajaxBasic("/" + domain + "/" + url, url, "GET", "#content");
-}
-
-/**
  * Ajax函数封装，便于调用
  * 
  * @param 请求的Ajax

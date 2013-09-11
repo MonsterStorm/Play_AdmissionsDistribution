@@ -29,7 +29,29 @@ public class EducationInstitution extends Model {
 
 	@OneToMany
 	public List<Course> courses;// 教育机构对应的课程列表，一个教育机构可以有多个课程
-	
+
 	// 其他属性字段
-	public String name;//教育机构名称
+	public String name;// 教育机构名称
+
+	// -- 查询
+	public static Model.Finder<String, EducationInstitution> finder = new Model.Finder(Long.class, EducationInstitution.class);
+
+	/**
+	 * find all user
+	 * 
+	 * @return
+	 */
+	public static List<EducationInstitution> findAll() {
+		return finder.findList();
+	}
+
+	/**
+	 * find one by id
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public static EducationInstitution find(Long id) {
+		return finder.where().eq("id", id).findUnique();
+	}
 }
