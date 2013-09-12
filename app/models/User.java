@@ -49,6 +49,9 @@ public class User extends Model implements IModel {
 
 	@OneToOne
 	public Agent agent;// 代理人，一个用户对应于一个代理人，一个代理人只能是一个用户
+	
+	@OneToOne
+	public Student student;//学员，一个用户对于一个学员，一个学员只能是一个用户
 
 	
 	/**

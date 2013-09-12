@@ -20,6 +20,9 @@ public class Contract extends Model {
 
 	@Lob
 	public String info;// 协议说明
+	
+	@ManyToOne
+	public ContractType type;//协议类型，一个协议只有一个类型，一个类型的协议有多个
 
 	public Long createTime;// 协议创建日期
 

@@ -8,7 +8,6 @@ import models.*;
 import play.mvc.*;
 import controllers.LoginController.Login;
 import controllers.secure.*;
-import static play.data.Form.*;
 /**
  * contoller for admin
  * 
@@ -25,6 +24,7 @@ public class AdminController extends BaseController {
 	private static final String PAGE_ADMIN_COURSES = "adminCourses";//培训项目管理
 	private static final String PAGE_ADMIN_EDUS = "adminEdus";//教育机构管理
 	private static final String PAGE_ADMIN_INSTRUCTORS = "adminInstructors";//讲师管理
+	private static final String PAGE_ADMIN_STUDENTS = "adminStudents";//学员管理
 	private static final String PAGE_ADMIN_AGENTS = "adminAgents";//代理人管理
 	private static final String PAGE_ADMIN_CONTRACTS = "adminContracts";//合约管理
 	
@@ -49,6 +49,8 @@ public class AdminController extends BaseController {
 			return pageAdminEdus();
 		} else if (PAGE_ADMIN_INSTRUCTORS.equalsIgnoreCase(page)){
 			return pageAdminInstructors();
+		} else if (PAGE_ADMIN_STUDENTS.equalsIgnoreCase(page)){
+			return pageAdminStudents();
 		} else if (PAGE_ADMIN_AGENTS.equalsIgnoreCase(page)){
 			return pageAdminAgents();
 		} else if (PAGE_ADMIN_CONTRACTS.equalsIgnoreCase(page)){
@@ -86,6 +88,16 @@ public class AdminController extends BaseController {
 		List<Instructor> instructors = new ArrayList<Instructor>();
 		instructors.addAll(Instructor.findAll());
 		return ok(views.html.module.admin.adminInstructors.render(instructors));
+	}
+	
+	/**
+	 * 教育讲师
+	 * @return
+	 */
+	public static Result pageAdminStudents(){
+		List<User> users = new ArrayList<User>();
+		users.addAll(User.findAll());
+		return ok(views.html.module.admin.adminStudents.render(users));
 	}
 	
 	/**
