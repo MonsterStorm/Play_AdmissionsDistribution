@@ -28,7 +28,8 @@ public class Course extends Model {
 
 	public String contact;// 联系方式，包括联系人，电话等
 
-	public CourseType type;// 课程类别
+	@ManyToOne
+	public CourseType courseType;// 课程类别
 
 	@Lob
 	public String info;// 课程简介

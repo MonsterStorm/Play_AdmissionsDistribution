@@ -1,19 +1,11 @@
-@(models: List[Course])
+@(models: List[Message])
 
 @toolbar_header={
 <div class="row">
 	<div class="span2">
-		<h4>培训项目</h4>
+		<h4>留言管理</h4>
 	</div>
 	<div class="btn-toolbar pull-right" role="toolbar">
-		<div class="btn-group">
-			<a class="btn btn-success" data-toggle="新增" href="#"><i
-				class="icon-plus icon-white"></i>新增</a>
-		</div>
-		<div class="btn-group">
-			<button type="button" class="btn btn-default">所有待审核</button>
-			<button type="button" class="btn btn-default">所有已审核</button>
-		</div>
 		<div class="btn-group">
 			<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
 				排序 <span class="caret"></span>
@@ -27,15 +19,14 @@
 </div>
 } 
 
-@toolbar={
+@toolbar(id: Html)={
 <!-- <script type="text/javascript">
 $('#toolbar').tooltip(options);
 </script> -->
 <div class="pull-left" style="width:130px;">
 	<div class="btn-group" id="toolbar">
-		<a class="btn btn-success" data-toggle="审核通过" href="#"><i
-			class="icon-ok icon-white"></i></a> <a class="btn btn-info"
-			data-toggle="拒绝通过" href="#"><i class="icon-ban-circle icon-white"></i></a>
+		<a class="btn btn-info" data-toggle="查看详细" href="#" onclick="getCommonPage(this, 'messageDetail', 'messageId=@id');"><i
+			class="icon-eye-open icon-white"></i></a> 
 	</div>
 	<div class="btn-group">
 		<a class="btn btn-danger" data-toggle="删除，请谨慎操作！" href="#"><i
@@ -66,10 +57,10 @@ $('#toolbar').tooltip(options);
 			<thead>
 				<tr>
 					<th>ID</th>
-					<th>教育机构</th>
-					<th>课程名</th>
-					<th>开课时间</th>
-					<th>简介</th>
+					<th>留言人</th>
+					<th>标题</th>
+					<th>内容</th>
+					<th>时间</th>
 					<th>操作</th> 
 				</tr>
 			</thead>
@@ -77,11 +68,11 @@ $('#toolbar').tooltip(options);
 				@for(model <- models){
 				<tr>
 					<td>@model.id</td>
-					<td><a href="#" onclick="getCommonPage(this, 'eduDetail', 'eduId=@model.edu.id');">@model.edu.name</a></td>
-					<td><a href="#" onclick="getCommonPage(this, 'courseDetail', 'courseId=@model.id');">@model.name</a></td>
-					<td>@model.startTime</td>
-					<td>@model.info</td>
-					<td>@toolbar</td>
+					<td>@model.name</td>
+					<td>@model.title</td>
+					<td>@model.content</td>
+					<td>@model.time</td>
+					<td>@toolbar{@model.id}</td>
 				</tr>
 				}
 			</tbody>

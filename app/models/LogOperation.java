@@ -1,5 +1,7 @@
 package models;
 
+import java.util.*;
+
 import javax.persistence.*;
 
 import play.db.ebean.*;
@@ -18,4 +20,27 @@ public class LogOperation extends Model {
 
 	@ManyToOne
 	public Function function;// 操作内容，某个功能
+
+	// -- 查询
+	public static Model.Finder<Long, LogOperation> finder = new Model.Finder(
+			Long.class, LogOperation.class);
+
+	/**
+	 * find all user
+	 * 
+	 * @return
+	 */
+	public static List<LogOperation> findAll() {
+		return finder.findList();
+	}
+
+	/**
+	 * find one by id
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public static LogOperation find(Long id) {
+		return finder.where().eq("id", id).findUnique();
+	}
 }

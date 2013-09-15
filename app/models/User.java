@@ -121,6 +121,36 @@ public class User extends Model implements IModel {
 		return user;
 	}
 
+	/**
+	 * 判断一个帐号是否是父帐号
+	 * @param id
+	 * @return
+	 */
+	public static boolean isParentAccount(Long id){
+		User user = find(id);
+		return user.parentAccount == null;
+	}
+	
+	/**
+	 * 判断一个帐号是否是子帐号
+	 * @param id
+	 * @return
+	 */
+	public static boolean isBypassAccount(Long id){
+		User user = find(id);
+		return user.parentAccount != null;
+	}
+	
+	/**
+	 * 判断一个帐号是否有子帐号
+	 * @param id
+	 * @return
+	 */
+	public static boolean hasBypassAccounts(Long id){
+		User user = find(id);
+		return user.bypassAccounts != null && user.bypassAccounts.size() > 0;
+	}
+	
 	// ------------------------object functions-----------------------
 	// to string
 	public String toString() {

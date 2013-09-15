@@ -1,0 +1,5 @@
+该目录存放用户的模板文件，为每个用户建立一个文件夹如username:
+/templates/username/js
+/templates/username/css
+/templates/username/images
+/templates/username/html

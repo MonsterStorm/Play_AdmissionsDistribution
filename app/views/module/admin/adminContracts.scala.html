@@ -17,20 +17,6 @@
 	    toggleActive(item);
 	}
 	
-  function toggleActive(item){
-  	  $(item).toggleClass("active");
-  }
-  
-  /*a is on, and b is up*/
-  function toggleActive(itemA, itemB){
-      if($(itemA).hasClass("active")){
-  	      $(itemA).removeClass("active");
-  	  } else {
-  	    	$(itemA).addClass("active");
-  	    	$(itemB).removeClass("active");//只移出对方的active，并不添加
-  	  }
-  }
-	
   function doDelete(){
      $('#dialogModal').modal()
   }
@@ -48,7 +34,7 @@
 			<button type="button" class="btn btn-default" id="btnB" onclick="toggleActive(this, $('#btnA'))">查看代理协议</button>
 	</div>
 	<div class="btn-group" id="toolbar">
-		<a class="btn btn-success" data-toggle="新增" href="#"><i
+		<a class="btn btn-success" data-toggle="新增" href="#" onclick="doAddNew('#contractDetail')"><i
 				class="icon-plus icon-white"></i>新增</a>
  		<a class="btn btn-info"	data-toggle="编辑" href="#" onclick="doEdit(this)"><i class="icon-pencil icon-white"></i>编辑</a>
 	</div>
@@ -62,7 +48,7 @@
 
 @toolbar_header
 <div class="table-responsive" style="overflow: auto" id="contractDetail">
-	<input type="text" placeholder="协议名称" value="@models.name" readonly="readonly"></input>
+	<input type="text" class="input-xxlarge" placeholder="协议名称" value="@models.name" readonly="readonly"></input>
 	<textarea class="span8 pull-center" rows="20" readonly="readonly">@models.detail</textarea>
 </div>
 <button class="btn btn-large btn-success" type="button">提交</button>

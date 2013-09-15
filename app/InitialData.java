@@ -56,6 +56,9 @@ public class InitialData {
 			// Insert EducationInstitution first
 			Ebean.save(all.get("edus"));
 			
+			// Insert Instuctor
+			Ebean.save(all.get("instructors"));
+			
 			// Insert CourseType
 			Ebean.save(all.get("courseTypes"));
 
@@ -82,6 +85,18 @@ public class InitialData {
 			
 			// Insert Contracts
 			Ebean.save(all.get("contracts"));
+			
+			// Insert TemplateTypes
+			Ebean.save(all.get("templateTypes"));
+
+			// Insert RebateTypes
+			Ebean.save(all.get("rebateTypes"));
+
+			// Insert ConfirmReceipts
+			Ebean.save(all.get("confirmReceipts"));
+			
+			// Insert Rebates
+			Ebean.save(all.get("rebates"));
 		}
 	}
 

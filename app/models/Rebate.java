@@ -31,6 +31,9 @@ public class Rebate extends Model {
 	
 	public double moneyEduAdmit;//教育机构确认收款数
 
+	@OneToOne
+	public ConfirmReceipt lastReceiptOfEdu;//教育机构最后确认收款信息
+	
 	@OneToOne(cascade = CascadeType.ALL)// 级联删除返点类型
 	public RebateType typeToPlatform;// 给平台的返利类型，返点与返点类型一一对应
 
@@ -41,6 +44,9 @@ public class Rebate extends Model {
 	
 	public double moneyPlatformAdmit;//平台确认收款数
 	
+	@OneToOne
+	public ConfirmReceipt lastReceiptOfPlatform;//教育机构最后确认收款信息
+
 	@OneToOne(cascade = CascadeType.ALL)// 级联删除返点类型
 	public RebateType typeToAgent;// 给代理的返利类型，返点与返点类型一一对应
 
@@ -50,7 +56,9 @@ public class Rebate extends Model {
 	public int numAgentAdmit;//代理人确认收款人数
 	
 	public double moneyAgentAdmit;//代理人确认收款数
-
+	
+	@OneToOne
+	public ConfirmReceipt lastReceiptOfAgent;//代理人最后确认收款信息
 
 	// -- 查询
 	public static Model.Finder<String, Rebate> finder = new Model.Finder(Long.class, Rebate.class);

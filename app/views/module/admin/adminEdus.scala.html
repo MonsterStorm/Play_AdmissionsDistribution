@@ -77,7 +77,7 @@ $('#toolbar').tooltip(options);
 				@for(model <- models){
 				<tr>
 					<td>@model.id</td>
-					<td>@model.name</td>
+					<td><a href="#" onclick="getCommonPage(this, 'eduDetail', 'eduId=@model.id');">@model.name</a></td>
 					<td>@model.name</td>
 					<td>@model.name</td>
 					<td>@model.name</td>

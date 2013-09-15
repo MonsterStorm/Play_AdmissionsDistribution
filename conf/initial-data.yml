@@ -112,10 +112,15 @@ edus:
         name: 某个机构
         creator: *user1
 
+# Instructor
+instructors:
+    - !!models.Instructor
+        user: *user2
+
 # Courses
 
 courses:
-    - !!models.Course
+    - &course1 !!models.Course
         name: 浙江大学企业经营变革与商业模式创新总裁高级研修班
         money: 50000.0
         contact: 张三那，10086
@@ -123,6 +128,8 @@ courses:
         detail: 【课程前言】随着人力成本、原材料价格的上涨，“低成本经营时代”宣告结束，中国经济进入了一个全新的转型时代。经济全球化背景下，西方国家的经济衰退与债务危机，以及欧美国家对中国产品贸易保护，大大地限制了中国产品出口的能力，再加上中国通货膨胀和政府对投资抑制的一系列政策，众多复杂因素交织在一起，给各企业、各行各业带来了前所未有的影响。管理者正面临着智慧力和应变力的巨大挑战！企业要能够洞察组织环境与政策的变化，以及企业经营的微观因素变化等各种因素，从业务模式、组织管理模式、战略、人才、流程等方面进行变革，才能保持企业的生存与增长。“企业经营变革与商业模式创新总裁班”高级进修项目，旨在提供全新的教育培训，更新管理者的概念、人际关系与技术技能，以适应当今这个充满变化、竞争层次越来越高的变革时代。【学习特色】关注资本经营——没有资本经营的生产经营，是不可能突破“天花板”的　关注经营变革——在经济转型的大潮中，如何探索出适合企业自身的转型方式　关注治理与管控——公司治理是一种向企业“注入秩序，缓解冲突实现共赢”的手段　关注国际化经营环境——融入国际竞争，建立全新的标杆经营管理体系
         edu: !!models.EducationInstitution
                id: 1
+        courseType: !!models.CourseType
+                      id: 2
           
 # CourseType
 courseTypes:
@@ -175,10 +182,13 @@ newsType:
 messages:
     - !!models.Message
         name: 张三那
+        time: 112312312
         phone: 1234567890
         qq: 12345
         email: zhangsan@gmail.com
         address: 家里蹲那里
+        title: 还需要标题？
+        content: 这是一个留言对吧，我想知道这个项目咋样？
         
 # Domain
 domains:
@@ -196,7 +206,8 @@ contracts:
                 购房协议书 
                 卖房方(甲方): 身份证号码:
                 购房方(乙方): 身份证号码:
-                关于乙方向甲方购房事宜,双方经协商,达成协议如下: 
+                关于乙方向甲方购房事宜,
+                type双方经协商,达成协议如下: 
                 甲方将其拥有独立产权的位于北京市_____________区___________ 
                 _____________________________________________的房屋(房屋所有权证编号:________________________,建筑面积_________________平方米)以人民币_____仟_____佰______拾____万______仟_____佰_____拾______元整($________________)出售给乙方.乙方愿意以上述价格向甲方认购该房,并以购得的上述房屋向______________________________银行申请购房抵押贷款,以支付甲方应收的房款. 
                 二,甲方承诺: 
@@ -209,3 +220,54 @@ contracts:
         info: 这是一份协议
         createTime: 123412431
         lastModified: 1123123111
+
+#TemplateType
+templateTypes:
+    - !!models.TemplateType
+        name: 模板1
+        info: 这是一个很漂亮的模板
+        lastModified: 1123123123
+        url: /public/default/templates/t1/
+        logo: /public/default/templates/t1/logo.png
+    - !!models.TemplateType
+        name: 模板2
+        info: 这是一个特别漂亮的模板
+        lastModified: 13199191
+        url: /public/default/templates/t2/
+        logo: /public/default/templates/t2/logo.png
+        
+#RebateType
+rebateTypes:
+    - &rebateType1 !!models.RebateType
+        ratioOfTotal: 0.01
+        ratioOfPerStudent: 0.1
+    - &rebateType2 !!models.RebateType
+        ratioOfTotal: 0.02
+        ratioOfPerStudent: 0.09
+        
+#ConfirmReceipt
+confirmReceipts:
+    - &receipt1 !!models.ConfirmReceipt
+       confirmer: *user1
+       time: 1123123123
+       money: 10000.00
+       info: 1个学生的学费
+
+#Rebate
+rebates:
+    - !!models.Rebate
+        course: *course1
+        numOfStudents: 10
+        totalMoney: 100000.00
+        numEduAdmit: 1
+        moneyEduAdmit: 10000.0
+        lastReceiptOfEdu: *receipt1
+        rebateToPlatform: 0.0
+        typeToPlatform: *rebateType1
+        numPlatformAdmit: 0
+        moneyPlatformAdmit: 0.0
+        rebateToAgent: 0.0
+        typeToAgent: *rebateType2
+        numAgentAdmit: 0
+        moneyAgentAdmit: 0.0
+        
