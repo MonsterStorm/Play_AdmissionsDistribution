@@ -38,12 +38,18 @@ public class User extends Model implements IModel {
 	@OneToOne
 	public UserInfo basicInfo;// 用户基本信息，一个用户对应一个基本信息，一个基本信息对应一个用户
 
-	@ManyToOne
+	@ManyToMany(cascade=CascadeType.ALL)
 	public List<Role> roles;// 角色，一个用户可以同时是多个角色，比如同时是教育机构和代理人，一个用户拥有多个角色，一个角色可以被多个用户拥有
 
-	@OneToMany(cascade = CascadeType.ALL)
+	@OneToMany(mappedBy="creator", fetch=FetchType.EAGER)
 	public List<EducationInstitution> edus;// 用户对应的教育机构，一个用户可以对应多个教育机构，一个教育机构只能隶属于一个用户（创建者，但是可以有多个子帐号）
-
+	
+	@OneToMany(mappedBy="parentAccount", cascade=CascadeType.ALL)
+	public List<User> bypassAccounts;//子帐号
+	
+	@ManyToOne
+	public User parentAccount;//根帐号
+	
 	@OneToOne
 	public Instructor instructor;// 讲师，一个用户对应于一个讲师，一个讲师只能是一个用户
 
@@ -73,8 +79,7 @@ public class User extends Model implements IModel {
 	}
 	
 	// -- 查询
-	public static Model.Finder<String, User> finder = new Model.Finder(
-			Long.class, User.class);
+	public static Model.Finder<Long, User> finder = new Model.Finder(Long.class, User.class);
 
 	/**
 	 * find all user

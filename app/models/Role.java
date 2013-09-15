@@ -23,15 +23,34 @@ public class Role extends Model {
 
 	public String info;// 角色描述
 
-	@ManyToMany
+	@ManyToMany(mappedBy = "roles")
 	public List<User> users;// 角色对应的用户，一个角色可以被多个用户使用，一个用户可以有多个角色
 
-	@ManyToMany
+	@ManyToMany(cascade = CascadeType.ALL)
 	public List<Module> modules;// 角色对应的功能列表，一个角色有多个功能，一个功能可以被多个角色使用
 
 	// -- 查询
 	public static Model.Finder<Long, Role> finder = new Model.Finder(
 			Long.class, Role.class);
+
+	/**
+	 * find all user
+	 * 
+	 * @return
+	 */
+	public static List<Role> findAll() {
+		return finder.findList();
+	}
+
+	/**
+	 * find one by id
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public static Role find(Long id) {
+		return finder.where().eq("id", id).findUnique();
+	}
 
 	/**
 	 * 判断一个role是否有给定的function权限

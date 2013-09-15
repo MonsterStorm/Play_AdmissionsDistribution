@@ -22,7 +22,7 @@ public class Instructor extends Model {
 	@OneToOne
 	public User user;// 讲师对应的用户，一个用户只能对应一个讲师，一个讲师只能对应一个用户
 
-	@OneToMany
+	@OneToMany(mappedBy="instructor")
 	public List<Course> courses;// 讲师对应的课程，一个讲师可以创建多个课程，一个课程只能被一个讲师创建
 
 	// 其他属性字段

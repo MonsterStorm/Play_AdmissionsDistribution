@@ -11,6 +11,7 @@ public class LogLogin extends Model {
 	@Id
 	public Long id;
 
+	@ManyToOne
 	public User user;// 登录用户
 
 	public Long time;// 登录时间

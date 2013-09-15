@@ -28,18 +28,30 @@ public class InitialData {
 			// System.out.println(all.size());
 			// Insert functions first
 			Ebean.save(all.get("functions"));
-
+			for(Object fun: all.get("functions")) {//save many to many
+		        Ebean.saveManyToManyAssociations(fun, "modules");
+		    }
+			
 			// Insert modules first
 			Ebean.save(all.get("modules"));
+			for(Object module: all.get("modules")) {//save many to many
+		        Ebean.saveManyToManyAssociations(module, "functions");
+		    }
 
 			// Insert roles first
 			Ebean.save(all.get("roles"));
+			for(Object role: all.get("roles")) {//save many to many
+		        Ebean.saveManyToManyAssociations(role, "modules");
+		    }
 
 			// Insert userinfos first
 			Ebean.save(all.get("userinfos"));
 
 			// Insert users first
 			Ebean.save(all.get("users"));
+			for(Object user: all.get("users")) {//save many to many
+		        Ebean.saveManyToManyAssociations(user, "roles");
+		    }
 
 			// Insert EducationInstitution first
 			Ebean.save(all.get("edus"));

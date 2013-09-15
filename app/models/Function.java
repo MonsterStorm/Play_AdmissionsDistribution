@@ -23,7 +23,29 @@ public class Function extends Model {
 
 	public String info;// 功能描述
 
-	@ManyToMany
+	@ManyToMany(mappedBy="functions")
 	public List<Module> modules;// 一个功能可以被多个模块拥有，一个模块可以拥有多个功能
 
+	// -- 查询
+	public static Model.Finder<Long, Function> finder = new Model.Finder(
+			Long.class, Function.class);
+
+	/**
+	 * find all user
+	 * 
+	 * @return
+	 */
+	public static List<Function> findAll() {
+		return finder.findList();
+	}
+
+	/**
+	 * find one by id
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public static Function find(Long id) {
+		return finder.where().eq("id", id).findUnique();
+	}
 }

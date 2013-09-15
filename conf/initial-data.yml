@@ -1,7 +1,7 @@
 # Users
 
 users:
-    - !!models.User
+    - &user1 !!models.User
         username: test
         password: test
         nickname: 这只是个昵称
@@ -11,9 +11,19 @@ users:
         status: 0
         basicInfo: !!models.UserInfo
                      id: 1
-        roles: 
-             - !!models.Role
-                id: 1
+        edus: 
+           - !!models.EducationInstitution
+               id: 1
+                     
+    - &user2 !!models.User
+        username: test2
+        password: test2
+        nickname: 这只是个昵称2
+        mobile: 2222222
+        email: lisi@gmail.com  
+        logo: /photos/131231.png
+        status: 0
+        parentAccount: *user1
                 
 # UserInfo
 
@@ -34,8 +44,8 @@ roles:
     - !!models.Role
        name: role1
        info: this is a role
-       modules: 
-           - !!models.Module
+       users:
+           - !!models.User
                id: 1
        
 # Modules
@@ -43,18 +53,15 @@ modules:
     - !!models.Module
        name: 教育机构管理
        info: 管理教育机构功能
-       functions:
-           - !!models.Function
+       roles: 
+           - !!models.Role
                id: 1
-           - !!models.Function
-               id: 2
-           - !!models.Function
-               id: 3    
        
 # Functions
 
 functions:
     - !!models.Function
+        id: 1
         name: 功能1
         info: 查看所有在库培训项目
         modules: 
@@ -62,6 +69,7 @@ functions:
                id: 1
                
     - !!models.Function
+        id: 2
         name: 功能2
         info: 查看所有培训学员
         modules: 
@@ -102,8 +110,7 @@ projects:
 edus:
     - !!models.EducationInstitution
         name: 某个机构
-        creator: !!models.User
-                   id: 1
+        creator: *user1
 
 # Courses
 

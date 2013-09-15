@@ -7,7 +7,7 @@ import play.*;
 public class Global extends GlobalSettings {
     
     public void onStart(Application app) {
-        //InitialData.insert(app);
+        InitialData.insert(app);
     }
     
 }
