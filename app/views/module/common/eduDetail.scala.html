@@ -1,5 +1,7 @@
 @(model: EducationInstitution)
 
+@import basic.common._
+
 @toolbar_header={
 <div class="row">
 	<div class="span2">
@@ -54,34 +56,40 @@ $('#toolbar').tooltip(options);
 
 <div class="table-responsive">
 	<div style="overflow: auto">
-		<form class="form-horizontal" id="myform">
+<form class="form-horizontal" id="myform" method="post" action="@routes.CommonController.addOrUpdateEntity()">
+		
+			@form_validate_info()
+    
   		<div class="control-group">
     		<label class="control-label">机构名称</label>
     		<div class="controls">
-      		<input class="input-xxlarge" type="text" value="@model.name" readonly="readonly">
+      		<input class="input-xxlarge" type="text" name="name" value="@model.name" readonly="readonly">
     		</div>
   		</div>
 	  		
 			<div class="control-group">
     		<label class="control-label">创建者</label>
     		<div class="controls">
-      		<input class="input-large" type="text" value="@model.creator.username" readonly="readonly">
+      		<input class="input-large" type="text" value="@model.creator.username" disabled>
     		</div>
   		</div>
 
 			<div class="control-group">
     		<label class="control-label">创建日期</label>
     		<div class="controls">
-      		<input class="input-large" type="text" value="@model.createTime" readonly="readonly">
+      		<input class="input-large" type="text" value="@model.createTime" disabled>
     		</div>
   		</div>
-
+			
+			<input class="input-large" type="hidden" name="table" value="@EducationInstitution.TABLE_NAME">
+			<input class="input-large" type="hidden" name="id" value="@model.id">
 			<hr>
 			<div class="control-group row">
     		<div class="controls">
-      		<button type="button" class="btn btn-large btn-success btn-block span2 disabled">提交</button>
+      		<button type="submit" class="btn btn-large btn-success btn-block span2 disabled">提交</button>
     	</div>
-  </div>
-</form>
+  		</div>
+		
+	</form>
 	</div>
 </div>

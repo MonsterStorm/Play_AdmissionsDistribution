@@ -181,7 +181,7 @@ public class AdminController extends BaseController {
 	 */
 	public static Result logout() {
 		//清空缓存
-		session().clear();
+		LoginController.clearSession();
 		return redirect(controllers.routes.AdminController.page(PAGE_LOGIN));
 	}
 }

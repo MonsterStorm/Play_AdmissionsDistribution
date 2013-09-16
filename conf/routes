@@ -7,7 +7,9 @@ GET     /                           controllers.Application.index()
 GET		/admin/login				controllers.Application.admin()
 
 # Common 
-GET     /common/:page                      controllers.CommonController.page(page: String)
+POST	/common/addOrUpdate			controllers.CommonController.addOrUpdateEntity()
+GET     /common/:page               controllers.CommonController.page(page: String)
+	
 
 #Platform
 GET		/platform/:page				controllers.PlatformController.page(page: String)

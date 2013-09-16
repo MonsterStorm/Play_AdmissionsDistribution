@@ -60,7 +60,7 @@
     if(editors && editors.length > 0){
 	  	editors.removeAttr("readonly");
 	  }
-	  $(parent + " input").attr("value", "");
+	  $(parent + " input[name!='table']").attr("value", "");//把属性不是table的值置为空
 	  $(parent + " textarea").html("");
 		$(parent + " select").attr("selectedIndex", "0");
 		$(parent + " button").removeClass("disabled");

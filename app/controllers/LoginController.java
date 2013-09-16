@@ -12,14 +12,18 @@ import static play.data.Form.*;
  * 
  */
 public class LoginController extends BaseController {
+	public static final String KEY_USER_ACCOUNT = "account";
+	public static final String KEY_USER_ID = "user_id";
 	// -- Authentication
 
 	public static class Login {
 		public String account;
 		public String password;
+		public User user;
 
 		public String validate() {
-			if (User.authenticate(account, password) == null) {
+			user = User.authenticate(account, password);
+			if (user == null) {
 				return "用户名或密码无效";
 			}
 			return null;
@@ -49,8 +53,43 @@ public class LoginController extends BaseController {
 			// badRequest(views.html.module.admin.login.render(form(Login.class)));
 		} else {
 			//登录成功，将accout添加到session，这样就可以访问AdminController的函数了
-			session("account", loginForm.get().account);
+			saveSession(loginForm.get());
 			return redirect(controllers.routes.AdminController.page("index"));
 		}
+	}
+	
+	/**
+	 * save information to session
+	 * @param login
+	 */
+	public static void saveSession(Login login){
+		session(KEY_USER_ACCOUNT, login.account);
+		session(KEY_USER_ID, login.user.id.toString());//存用户id
+	}
+	
+	/**
+	 * clear session
+	 */
+	public static void clearSession(){
+		session().clear();
+	}
+	
+	/**
+	 * get string from session
+	 * @param key
+	 * @return
+	 */
+	public static String getFromSession(Object key){
+		return session().get(key);
+	}
+	
+	/**
+	 * get current user from session
+	 * @return
+	 */
+	public static User getSessionUser(){
+		Long userId = Long.valueOf(getFromSession(KEY_USER_ID));
+		User user = User.find(userId);
+		return user;
 	}
 }

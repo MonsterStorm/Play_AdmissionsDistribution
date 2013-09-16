@@ -5,7 +5,10 @@ import static play.data.Form.form;
 import java.util.*;
 
 import models.*;
+import play.api.templates.*;
 import play.mvc.*;
+
+import common.*;
 /**
  * 通用controller，存放公用页面
  * @author MonsterStorm
@@ -28,7 +31,7 @@ public class CommonController extends Controller{
 		if (PAGE_COURSE_DETAIL.equalsIgnoreCase(page)) {//课程
 			return pageCourseDetail();
 		} else if (PAGE_EDU_DETAIL.equalsIgnoreCase(page)) {//教育机构
-			return pageEduDetail();
+			return pageEduDetail(null);
 		} else if (PAGE_MESSAGE_DETAIL.equalsIgnoreCase(page)) {//留言
 			return pageMessageDetail();
 		} else if (PAGE_TEMPLATE_TYPE_DETAIL.equalsIgnoreCase(page)) {//模板类型
@@ -36,7 +39,33 @@ public class CommonController extends Controller{
 		} else if (PAGE_INSTRUCTOR_TYPE_DETAIL.equalsIgnoreCase(page)) {//讲师详情
 			return pageInstructorDetail();
 		} else {
-			return badRequest("页面不存在");
+			return badRequest(Constants.MSG_PAGE_NOT_FOUND);
+		}
+	}
+	
+	/**
+	 * add or update entity
+	 * @return
+	 */
+	public static Result addOrUpdateEntity(){
+		String table = form().bindFromRequest().get("table");
+		if(EducationInstitution.TABLE_NAME.equalsIgnoreCase(table)){//教育机构新增或删除
+			return addOrUpdateEdu(); 
+		} else {
+			return badRequest(Constants.MSG_PAGE_NOT_FOUND);
+		}
+	}
+	
+	/**
+	 * add or update education institution
+	 * @return
+	 */
+	public static Result addOrUpdateEdu(){
+		EducationInstitution edu = EducationInstitution.addOrUpdate(form().bindFromRequest());
+		if(edu != null){
+			return pageEduDetail(edu);
+		} else {
+			return internalServerError(Constants.MSG_INTERNAL_ERROR);
 		}
 	}
 	
@@ -55,9 +84,11 @@ public class CommonController extends Controller{
 	 * 教育机构详情
 	 * @return
 	 */
-	public static Result pageEduDetail(){
-		Long id = Long.valueOf(form().bindFromRequest().get("eduId"));
-		EducationInstitution edu = EducationInstitution.find(id);
+	public static Result pageEduDetail(EducationInstitution edu){
+		if(edu == null){
+			Long id = Long.valueOf(form().bindFromRequest().get("eduId"));
+			edu = EducationInstitution.find(id);
+		}
 		return ok(views.html.module.common.eduDetail.render(edu));
 	}
 	
