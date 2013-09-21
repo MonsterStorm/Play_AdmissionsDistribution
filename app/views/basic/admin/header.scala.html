@@ -20,7 +20,7 @@
 							class="dropdown-toggle" href="#">我的帐户<strong
 								class="caret"></strong></a>
 							<ul class="dropdown-menu">
-								<li><a href="#">个人资料</a></li>
+								<li><a href="#" onclick="getCommonPage(this, 'userDetail', 'id=@session.get("user_id")');">个人资料</a></li>
 								<li><a href="#">修改密码</a></li>
 								<li class="divider"></li>
 								<li><a href="@routes.AdminController.logout()">退出</a></li>

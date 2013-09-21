@@ -5,7 +5,11 @@ import java.util.*;
 
 import javax.persistence.*;
 
+import play.data.*;
 import play.db.ebean.*;
+
+import com.avaje.ebean.*;
+import common.*;
 
 /**
  * 课程类，由讲师创建
@@ -14,9 +18,9 @@ import play.db.ebean.*;
  * 
  */
 @Entity
-@Table(name = "course")
+@Table(name = Course.TABLE_NAME)
 public class Course extends Model {
-
+	public static final String TABLE_NAME = "course";
 	@Id
 	public Long id;
 
@@ -27,6 +31,8 @@ public class Course extends Model {
 	public Long startTime; // 开课时间
 
 	public String contact;// 联系方式，包括联系人，电话等
+
+	public int auditStatus;// 审核状态，课程需要被审核
 
 	@ManyToOne
 	public CourseType courseType;// 课程类别
@@ -63,7 +69,8 @@ public class Course extends Model {
 	}
 
 	// -- 查询
-	public static Model.Finder<String, Course> finder = new Model.Finder(Long.class, Course.class);
+	public static Model.Finder<Long, Course> finder = new Model.Finder(
+			Long.class, Course.class);
 
 	/**
 	 * find all user
@@ -82,5 +89,27 @@ public class Course extends Model {
 	 */
 	public static Course find(Long id) {
 		return finder.where().eq("id", id).findUnique();
+	}
+
+	/**
+	 * 新增或更新一个用户
+	 * 
+	 * @param form
+	 * @return
+	 */
+	public static Course addOrUpdate(Course course) {
+		return null;
+	}
+
+	/**
+	 * find page with filter
+	 * 
+	 * @param page
+	 * @param form
+	 * @return
+	 */
+	public static Page<Course> findPage(DynamicForm form, int page,
+			Integer pageSize) {
+		return new QueryHelper<Course>().findPage(finder, form, page, pageSize);
 	}
 }

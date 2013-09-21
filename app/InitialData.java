@@ -21,7 +21,7 @@ public class InitialData {
 	public static void insert(Application app) {
 		if (Ebean.find(User.class).findRowCount() == 0) {
 
-			System.out.println("xxx");
+			System.out.println("===InitialData===");
 			Map<String, List<Object>> all = (Map<String, List<Object>>) Yaml
 					.load("initial-data.yml");
 

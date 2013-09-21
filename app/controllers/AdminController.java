@@ -6,6 +6,10 @@ import java.util.*;
 
 import models.*;
 import play.mvc.*;
+
+import com.avaje.ebean.*;
+import common.*;
+
 import controllers.LoginController.Login;
 import controllers.secure.*;
 /**
@@ -80,7 +84,12 @@ public class AdminController extends BaseController {
 	 * @return
 	 */
 	public static Result pageAdminCourses(){
-		List<Course> courses = Course.findAll();
+		int page = FormHelper.getPage(form().bindFromRequest());
+		
+		Page<Course> courses = Course.findPage(form().bindFromRequest(), page, null);
+		
+		FormHelper.resetFlash(form().bindFromRequest(), flash());
+		
 		return ok(views.html.module.admin.adminCourses.render(courses));
 	}
 	
@@ -89,7 +98,14 @@ public class AdminController extends BaseController {
 	 * @return
 	 */
 	public static Result pageAdminEdus(){
-		List<EducationInstitution> edus = EducationInstitution.findAll();
+		//get page
+		int page = FormHelper.getPage(form().bindFromRequest());
+		
+		Page<EducationInstitution> edus = EducationInstitution.findPage(form().bindFromRequest(), page, null);
+		
+		//reset flash
+		FormHelper.resetFlash(form().bindFromRequest(), flash());
+
 		return ok(views.html.module.admin.adminEdus.render(edus));
 	}
 	

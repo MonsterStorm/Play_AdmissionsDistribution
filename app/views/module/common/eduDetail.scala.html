@@ -38,55 +38,82 @@ $('#toolbar').tooltip(options);
 </div>
 } 
 
-@paging={
-<div class="pagination">
-	<ul>
-		<li><a href="#">&laquo;</a></li>
-		<li><a href="#">1</a></li>
-		<li><a href="#">2</a></li>
-		<li><a href="#">3</a></li>
-		<li><a href="#">4</a></li>
-		<li><a href="#">5</a></li>
-		<li><a href="#">&raquo;</a></li>
-	</ul>
-</div>
-} 
-
+<script type="text/javascript">
+    $(document).ready( function() {
+			$('#myform').submit(function() {
+		    $(this).ajaxSubmit(ajaxSubmitOptions);
+		    return false;
+			});
+		});
+</script>
 @toolbar_header
+
+<div id="aaa"></div>
 
 <div class="table-responsive">
 	<div style="overflow: auto">
-<form class="form-horizontal" id="myform" method="post" action="@routes.CommonController.addOrUpdateEntity()">
+	<form class="form-horizontal" id="myform" method="post" action="@routes.CommonController.addOrUpdateEntity()">
 		
 			@form_validate_info()
     
   		<div class="control-group">
     		<label class="control-label">机构名称</label>
     		<div class="controls">
-      		<input class="input-xxlarge" type="text" name="name" value="@model.name" readonly="readonly">
+					@if(model != null){
+      			<input class="input-xxlarge" type="text" name="name" value="@model.name" readonly="readonly">
+					} else {
+						<input class="input-xxlarge" type="text" name="name">
+					}
+    		</div>
+  		</div>
+  		
+  		<div class="control-group">
+    		<label class="control-label">机构简介</label>
+    		<div class="controls">
+					@if(model != null){
+      			<textarea rows="20" class="input-xxlarge" type="text" name="info" readonly="readonly">@model.info</textarea>
+					} else {
+						<textarea rows="20" class="input-xxlarge" type="text" name="info"></textarea>
+					}
     		</div>
   		</div>
 	  		
 			<div class="control-group">
     		<label class="control-label">创建者</label>
     		<div class="controls">
-      		<input class="input-large" type="text" value="@model.creator.username" disabled>
+					@if(model != null){
+      			<input class="input-large" type="text" value="@model.creator.username" disabled>
+					} else {
+						<input class="input-large" type="text" disabled>
+					}
     		</div>
   		</div>
 
 			<div class="control-group">
     		<label class="control-label">创建日期</label>
     		<div class="controls">
-      		<input class="input-large" type="text" value="@model.createTime" disabled>
+					@if(model != null && model.createTime != null){
+      			<input class="input-large" type="text" value="@datetime_formatter(model.createTime, true)" disabled>
+					} else {
+						<input class="input-large" type="text" disabled>
+					}
     		</div>
   		</div>
 			
 			<input class="input-large" type="hidden" name="table" value="@EducationInstitution.TABLE_NAME">
-			<input class="input-large" type="hidden" name="id" value="@model.id">
+			@if(model != null){
+				<input class="input-large" type="hidden" name="id" value="@model.id">
+			} else {
+				<input class="input-large" type="hidden" name="id">
+			}
 			<hr>
 			<div class="control-group row">
     		<div class="controls">
-      		<button type="submit" class="btn btn-large btn-success btn-block span2 disabled">提交</button>
+					@if(model != null){
+							<button type="submit" class="btn btn-large btn-success btn-block span2 disabled">提交</button>
+					} else {
+							<button type="submit" class="btn btn-large btn-success btn-block span2">提交</button>
+					}
     	</div>
   		</div>
 		

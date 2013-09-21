@@ -2,7 +2,12 @@ package models;
 
 import javax.persistence.*;
 
+import com.ning.http.client.*;
+
+import play.data.*;
 import play.db.ebean.*;
+import play.mvc.Http.Request;
+import play.mvc.Http.RequestBody;
 
 /**
  * 用户信息表，用于缓存用户信息，简化User表
@@ -45,8 +50,45 @@ public class UserInfo extends Model {
 	public Long lastLoginTime;// 最后登录时间
 
 	public String lastLoginIp;// 最后登录ip
-
-	public UserInfo(User user) {
-		this.user = user;
+	
+	public UserInfo (){}
+	
+	public UserInfo (DynamicForm form){
+		final String address = form.get("address");
+		final String idcard = form.get("idcard");
+		final String birthday = form.get("birthday");
+		final String sex = form.get("sex");
+		final String phone = form.get("phone");
+		final String qq = form.get("qq");
+		final String info = form.get("info");
+		
+		this.address = address;
+		this.idcard = idcard;
+		if(birthday != null)
+			this.birthday = Long.parseLong(birthday);
+		this.sex = sex;
+		this.phone = phone;
+		this.qq = qq;
+		this.info = info;
+		this.registerTime = System.currentTimeMillis();
+	}
+	
+	public static void update(UserInfo userInfo, DynamicForm form){
+		final String address = form.get("address");
+		final String idcard = form.get("idcard");
+		final String birthday = form.get("birthday");
+		final String sex = form.get("sex");
+		final String phone = form.get("phone");
+		final String qq = form.get("qq");
+		final String info = form.get("info");
+		
+		userInfo.address = address;
+		userInfo.idcard = idcard;
+		if(birthday != null)
+			userInfo.birthday = Long.parseLong(birthday);
+		userInfo.sex = sex;
+		userInfo.phone = phone;
+		userInfo.qq = qq;
+		userInfo.info = info;
 	}
 }

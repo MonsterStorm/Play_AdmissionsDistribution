@@ -1,0 +1,15 @@
+@(params: Map[_ <: String, _ <: String] = null)
+<!--列表-->
+@import scala.collection.immutable._
+
+@{
+	if(params != null){
+		flash().putAll(params);	
+	} else {
+		for(obj <- flash().keySet().toArray()){//put all into flash
+			var key = String.valueOf(obj);
+			var value = flash().get(key);
+			flash().put(key, value);
+		}
+	}
+}

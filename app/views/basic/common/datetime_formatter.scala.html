@@ -1,0 +1,12 @@
+@(time: Long, datatime: Boolean)
+@{
+	import java.util.Calendar
+	import java.text.SimpleDateFormat
+	if(datatime){
+		val sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		sdf.format(time)
+	} else {
+		val sdf = new SimpleDateFormat("yyyy-MM-dd");
+		sdf.format(time)	
+	}
+}

@@ -12,6 +12,7 @@ create table agent (
 create table audit (
   id                        bigint auto_increment not null,
   type_id                   bigint,
+  status                    integer,
   creator_id                bigint,
   create_tile               bigint,
   auditor_id                bigint,
@@ -59,6 +60,7 @@ create table course (
   money                     double,
   start_time                bigint,
   contact                   varchar(255),
+  audit_status              integer,
   course_type_id            bigint,
   info                      longtext,
   detail                    longtext,
@@ -84,7 +86,9 @@ create table education_institution (
   id                        bigint auto_increment not null,
   creator_id                bigint,
   create_time               bigint,
+  audit_status              integer,
   name                      varchar(255),
+  info                      longtext,
   constraint pk_education_institution primary key (id))
 ;
 

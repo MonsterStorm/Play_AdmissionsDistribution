@@ -8,6 +8,7 @@ GET		/admin/login				controllers.Application.admin()
 
 # Common 
 POST	/common/addOrUpdate			controllers.CommonController.addOrUpdateEntity()
+POST	/common/delete				controllers.CommonController.deleteEntity()
 GET     /common/:page               controllers.CommonController.page(page: String)
 	
 

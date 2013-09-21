@@ -1,5 +1,7 @@
 package controllers;
 
+import common.*;
+
 import models.*;
 import play.data.*;
 import play.mvc.*;
@@ -63,8 +65,24 @@ public class LoginController extends BaseController {
 	 * @param login
 	 */
 	public static void saveSession(Login login){
-		session(KEY_USER_ACCOUNT, login.account);
+		if(StringHelper.isValidate(login.user.nickname))//存用户昵称
+			session(KEY_USER_ACCOUNT, login.user.nickname);
+		else
+			session(KEY_USER_ACCOUNT, login.account);
+		
 		session(KEY_USER_ID, login.user.id.toString());//存用户id
+	}
+
+	/**
+	 * update session
+	 * @param user
+	 */
+	public static void updateSession(User user){
+		if(StringHelper.isValidate(user.nickname)){
+			session(KEY_USER_ACCOUNT, user.nickname);
+		} else {
+			session(KEY_USER_ACCOUNT, user.username);
+		}
 	}
 	
 	/**

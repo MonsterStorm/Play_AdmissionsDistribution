@@ -1,5 +1,7 @@
 @(model: Course, types: List[CourseType])
 
+@import basic.common._
+
 @toolbar_header={
 <div class="row">
 	<div class="span2">
@@ -36,40 +38,51 @@ $('#toolbar').tooltip(options);
 </div>
 } 
 
-@paging={
-<div class="pagination">
-	<ul>
-		<li><a href="#">&laquo;</a></li>
-		<li><a href="#">1</a></li>
-		<li><a href="#">2</a></li>
-		<li><a href="#">3</a></li>
-		<li><a href="#">4</a></li>
-		<li><a href="#">5</a></li>
-		<li><a href="#">&raquo;</a></li>
-	</ul>
-</div>
-} 
+<script type="text/javascript">
+    $(document).ready( function() {
+			$('#myform').submit(function() {
+		    $(this).ajaxSubmit(ajaxSubmitOptions);
+		    return false;
+			});
+		});
+</script>
+
 
 @toolbar_header
 
 <div class="table-responsive">
 	<div style="overflow: auto">
-		<form class="form-horizontal" id="myform">
+		<form class="form-horizontal" id="myform" method="post" action="@routes.CommonController.addOrUpdateEntity()">
+	
+			@form_validate_info()
+	
   		<div class="control-group">
     		<label class="control-label" for="inputEmail">课程名称</label>
     		<div class="controls">
-      		<input class="input-xxlarge" type="text" value="@model.name" readonly="readonly">
+					@if(model != null){
+      			<input class="input-xxlarge" type="text" value="@model.name" readonly="readonly">
+					} else {
+						<input class="input-xxlarge" type="text">
+					}
     		</div>
   		</div>
 	  		
 			<div class="control-group">
     		<label class="control-label" for="inputEmail">课程类别</label>
 				<div class="controls">
-					<select value="@model.courseType.name" readonly="readonly">
-						@for(t <- types){
+					@if(model != null){
+						<select value="@model.courseType.name" name="courseType" readonly="readonly">
+							@for(t <- types){
+	      				  <option onclick="changeValue('#btnCourseType', '@t.name')">@t.name</option>
+      				}
+						</select>
+					} else {
+						<select name="courseType">
+							@for(t <- types){
 	      			  <option onclick="changeValue('#btnCourseType', '@t.name')">@t.name</option>
-      			}
-					</select>
+      				}
+						</select>
+					}
 				</div>
 			</div>
 
@@ -77,7 +90,11 @@ $('#toolbar').tooltip(options);
     		<label class="control-label" for="inputEmail">学费</label>
     		<div class="controls">
 					<div class="input-prepend input-append">
-  					<input class="input span2" type="text" value="@model.money" readonly="readonly">
+						@if(model != null){
+  						<input class="input span2" type="text" value="@model.money" name="money" readonly="readonly">
+						} else {
+							<input class="input span2" type="text" name="money">
+						}
   					<span class="add-on">元</span>
 					</div>
     		</div>
@@ -86,32 +103,48 @@ $('#toolbar').tooltip(options);
 			<div class="control-group">
     		<label class="control-label" for="inputEmail">开课时间</label>
     		<div class="controls">
-      		<input class="input-large" type="text" value="@model.startTime" readonly="readonly">
+					@if(model != null && model.startTime != null){
+      			<input class="input-large" type="text" value="@model.startTime" readonly="readonly">
+					} else {
+						<input class="input-large" type="text" name="startTime">
+					}
     		</div>
   		</div>
 
 			<div class="control-group">
     		<label class="control-label" for="inputEmail">联系方式</label>
     		<div class="controls">
-      		<textarea rows="3" class="input-large" type="text" readonly="readonly">@model.contact</textarea>
+					@if(model != null){
+      			<textarea rows="3" class="input-large" type="text" name="contact" readonly="readonly">@model.contact</textarea>
+      		} else {
+      			<textarea rows="3" class="input-large" type="text"></textarea>
+      		}
     		</div>
   		</div>
 
 			<div class="control-group">
     		<label class="control-label" for="inputEmail">课程简介</label>
     		<div class="controls">
-      		<textarea rows="3" class="input-xxlarge" type="text" readonly="readonly">@model.info</textarea>
+					@if(model != null){
+      			<textarea rows="3" class="input-xxlarge" type="text" name="contact" readonly="readonly">@model.info</textarea>
+      		} else {
+      			<textarea rows="3" class="input-xxlarge" type="text" name="contact"></textarea>
+      		}
     		</div>
   		</div>
 
 			<div class="control-group">
     		<label class="control-label" for="inputEmail">课程详细信息</label>
     		<div class="controls">
-      		<textarea rows="20" class="input-xxlarge" type="text" readonly="readonly">@model.detail</textarea>
+					@if(model != null){
+      			<textarea rows="20" class="input-xxlarge" type="text" name="detail" readonly="readonly">@model.detail</textarea>
+      		} else {
+      			<textarea rows="20" class="input-xxlarge" type="text" name="detail"></textarea>
+      		}
     		</div>
   		</div>
 
-			@if(model.edu != null){
+			@if(model != null && model.edu != null){
 			<div class="control-group">
     		<label class="control-label" for="inputEmail">教育机构</label>
     		<div class="controls">
@@ -120,7 +153,7 @@ $('#toolbar').tooltip(options);
   		</div>
 			}
 
-			@if(model.instructor != null){
+			@if(model != null && model.instructor != null){
 			<div class="control-group">
     		<label class="control-label" for="inputEmail">讲师</label>
     		<div class="controls">
@@ -129,10 +162,21 @@ $('#toolbar').tooltip(options);
   		</div>
 			}
 
+			<input class="input-large" type="hidden" name="table" value="@Course.TABLE_NAME">
+			@if(model != null){
+				<input class="input-large" type="hidden" name="id" value="@model.id">
+			} else {
+				<input class="input-large" type="hidden" name="id">
+			}
+
 			<hr>
 			<div class="control-group row">
     		<div class="controls">
-      		<button type="button" class="btn btn-large btn-success btn-block span2 disabled">提交</button>
+					@if(model != null){
+      			<button type="submit" class="btn btn-large btn-success btn-block span2 disabled">提交</button>
+      		} else {
+      			<button type="submit" class="btn btn-large btn-success btn-block span2">提交</button>
+      		}
     	</div>
   </div>
 </form>

@@ -6,9 +6,10 @@
 		<h4>返点管理</h4>
 	</div>
 	<div class="btn-toolbar pull-right" role="toolbar">
-		<div class="btn-group">
-			<button type="button" class="btn btn-default">所有待收款</button>
-			<button type="button" class="btn btn-default">所有已收款</button>
+		<div class="btn-group" id="btnGroup">
+			<button type="button" class="btn btn-default active" onclick="toggleActive(this, '#btnGroup :button')">所有</button>
+			<button type="button" class="btn btn-default" onclick="toggleActive(this, '#btnGroup :button')">所有待收款</button>
+			<button type="button" class="btn btn-default" onclick="toggleActive(this, '#btnGroup :button')">所有已收款</button>
 		</div>
 		<div class="btn-group">
 			<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
@@ -73,7 +74,7 @@ $('#toolbar').tooltip(options);
 				@for(model <- models){
 				<tr>
 					<td>@model.id</td>
-					<td><a href="#" onclick="getCommonPage(this, 'courseDetail', 'courseId=@model.course.id');">@model.course.name</a></td>
+					<td><a href="#" onclick="getCommonPage(this, 'courseDetail', 'id=@model.course.id');">@model.course.name</a></td>
 					<td>@model.numOfStudents</td>
 					<td>@model.totalMoney</td>
 					<td>@model.numEduAdmit</td>
