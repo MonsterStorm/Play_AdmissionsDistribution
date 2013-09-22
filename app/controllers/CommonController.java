@@ -88,6 +88,10 @@ public class CommonController extends Controller{
 		}
 	}
 	
+	/**
+	 * add or update user
+	 * @return
+	 */
 	public static Result addOrUpdateUser(){
 		User user = User.addOrUpdate(form().bindFromRequest());
 		if(user != null){
@@ -107,12 +111,19 @@ public class CommonController extends Controller{
 	 */
 	public static Result addOrUpdateCourse(){
 		Form<Course> form = form(Course.class).bindFromRequest();
-		Course course = Course.addOrUpdate(form.get());
-		if(course != null){
-			return pageCourseDetail(course);
-		} else {
-			return internalServerError(Constants.MSG_INTERNAL_ERROR);
+		if(form != null && form.hasErrors() == false){
+			Course course = Course.addOrUpdate(form.get());
+			if(course != null){
+				return pageCourseDetail(course);
+			}
+		} else if(form.hasErrors()) {
+			String error = FormHelper.getFirstError(form.errors());
+			play.Logger.debug("error:" + error);
+			if(error != null){
+				return badRequest(error);
+			}
 		}
+		return internalServerError(Constants.MSG_INTERNAL_ERROR);
 	}
 	
 	/**
@@ -145,9 +156,7 @@ public class CommonController extends Controller{
 			if(id != null){
 				course = Course.find(id);
 			}
-		}
-		Long id = Long.valueOf(form().bindFromRequest().get("id"));
-		course = Course.find(id);
+		} 
 		return ok(views.html.module.common.courseDetail.render(course, types));
 	}
 	

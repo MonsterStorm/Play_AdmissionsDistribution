@@ -27,10 +27,12 @@
 				排序 <span class="caret"></span>
 			</a>
 			<ul class="dropdown-menu">
-				<li class="@checkActive("orderby", "createTime-asc", true)"><a onclick="@buildAction({baseUrl}, "admin", Array("orderby"), Array("createTime-asc"))">按时间-升序</a></li>
-				<li class="@checkActive("orderby", "createTime-desc")"><a onclick="@buildAction({baseUrl}, "admin", Array("orderby"), Array("createTime-desc"))">按时间-降序</a></li>
+				<li class="@checkActive("orderby", "startTime-asc", true)"><a onclick="@buildAction({baseUrl}, "admin", Array("orderby"), Array("startTime-asc"))">按开课时间-升序</a></li>
+				<li class="@checkActive("orderby", "startTime-desc")"><a onclick="@buildAction({baseUrl}, "admin", Array("orderby"), Array("startTime-desc"))">按开课时间-降序</a></li>
 				<li class="@checkActive("orderby", "name-asc")"><a onclick="@buildAction({baseUrl}, "admin", Array("orderby"), Array("name-asc"))">按名称-升序</a></li>
-				<li class="@checkActive("orderby", "name-desc")"><a onclick="@buildAction({baseUrl}, "admin", Array("orderby"), Array("name-desc"))">按名称-降序</a></li>	
+				<li class="@checkActive("orderby", "name-desc")"><a onclick="@buildAction({baseUrl}, "admin", Array("orderby"), Array("name-desc"))">按名称-降序</a></li>
+				<li class="@checkActive("orderby", "courseType-asc")"><a onclick="@buildAction({baseUrl}, "admin", Array("orderby"), Array("courseType-asc"))">按类别-升序</a></li>
+				<li class="@checkActive("orderby", "courseType-desc")"><a onclick="@buildAction({baseUrl}, "admin", Array("orderby"), Array("courseType-desc"))">按类别-降序</a></li>	
 			</ul>
 		</div>
 	</div>
@@ -62,8 +64,9 @@ $('#toolbar').tooltip(options);
 			<thead>
 				<tr>
 					<th>ID</th>
-					<th>教育机构</th>
 					<th>课程名</th>
+					<th>课程类别</th>
+					<th>教育机构</th>
 					<th>开课时间</th>
 					<th>简介</th>
 					<th>操作</th> 
@@ -73,14 +76,31 @@ $('#toolbar').tooltip(options);
 				@for(model <- models.getList()){
 				<tr>
 					<td>@model.id</td>
+					@if(model.name != null){
+						<td><a href="#" onclick="getCommonPage(this, 'courseDetail', 'id=@model.id');">@model.name</a></td>
+					} else {
+						<td>-未设置-</td>
+					}
+					@if(model.courseType != null){
+						<td>@model.courseType.name</td>
+					} else {
+						<td>-未设置-</td>
+					}
 					@if(model.edu != null){
 						<td><a href="#" onclick="getCommonPage(this, 'eduDetail', 'id=@model.edu.id');">@model.edu.name</a></td>
 					} else {
 						<td>-未设置-</td>
 					}
-					<td><a href="#" onclick="getCommonPage(this, 'courseDetail', 'id=@model.id');">@model.name</a></td>
-					<td>@model.startTime</td>
-					<td>@model.info</td>
+					@if(model.startTime != null){
+						<td>@datetime_formatter(model.startTime, true)</td>
+					} else {
+						<td>-未设置-</td>
+					}
+					@if(model.info != null){
+						<td>@model.info</td>
+					} else {
+						<td>-未设置-</td>
+					}
 					<td>@toolbar</td>
 				</tr>
 				}

@@ -15,4 +15,9 @@ public class Constants {
 	//分页大小
 	public static final int PAGE_SIZE = 10;
 	
+	
+	//----------------------------------表单错误提示-----------------------------
+	public static final String MSG_FORM_COURSE_REQUIRED_NAME = "课程名不能为空";
+	public static final String MSG_FORM_COURSE_REQUIRED_MONEY = "学费不能为空"; 
+	
 }

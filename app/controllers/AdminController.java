@@ -84,6 +84,8 @@ public class AdminController extends BaseController {
 	 * @return
 	 */
 	public static Result pageAdminCourses(){
+		play.Logger.error(form().bindFromRequest().get("page"));
+		//get page
 		int page = FormHelper.getPage(form().bindFromRequest());
 		
 		Page<Course> courses = Course.findPage(form().bindFromRequest(), page, null);

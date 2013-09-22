@@ -60,9 +60,9 @@ $('#toolbar').tooltip(options);
     		<label class="control-label" for="inputEmail">课程名称</label>
     		<div class="controls">
 					@if(model != null){
-      			<input class="input-xxlarge" type="text" value="@model.name" readonly="readonly">
+      			<input class="input-xxlarge" name="name" type="text" value="@model.name" readonly="readonly">
 					} else {
-						<input class="input-xxlarge" type="text">
+						<input class="input-xxlarge" name="name" type="text">
 					}
     		</div>
   		</div>
@@ -73,13 +73,13 @@ $('#toolbar').tooltip(options);
 					@if(model != null){
 						<select value="@model.courseType.name" name="courseType" readonly="readonly">
 							@for(t <- types){
-	      				  <option onclick="changeValue('#btnCourseType', '@t.name')">@t.name</option>
+	      				<option value="@t.id" onclick="changeValue('#btnCourseType', '@t.name')">@t.name</option>
       				}
 						</select>
 					} else {
 						<select name="courseType">
-							@for(t <- types){
-	      			  <option onclick="changeValue('#btnCourseType', '@t.name')">@t.name</option>
+							@for((t, index) <- types.zipWithIndex){
+	      			  <option value="@t.id" onclick="changeValue('#btnCourseType', '@t.name')">@t.name</option>
       				}
 						</select>
 					}
@@ -103,10 +103,10 @@ $('#toolbar').tooltip(options);
 			<div class="control-group">
     		<label class="control-label" for="inputEmail">开课时间</label>
     		<div class="controls">
-					@if(model != null && model.startTime != null){
-      			<input class="input-large" type="text" value="@model.startTime" readonly="readonly">
+					@if(model == null){
+      			<input class="input-large" type="text" name="startTime">
 					} else {
-						<input class="input-large" type="text" name="startTime">
+						<input class="input-large" type="text" name="startTime" value="@model.startTime" readonly="readonly">
 					}
     		</div>
   		</div>
@@ -117,7 +117,7 @@ $('#toolbar').tooltip(options);
 					@if(model != null){
       			<textarea rows="3" class="input-large" type="text" name="contact" readonly="readonly">@model.contact</textarea>
       		} else {
-      			<textarea rows="3" class="input-large" type="text"></textarea>
+      			<textarea rows="3" class="input-large" type="text" name="contact"></textarea>
       		}
     		</div>
   		</div>
@@ -126,9 +126,9 @@ $('#toolbar').tooltip(options);
     		<label class="control-label" for="inputEmail">课程简介</label>
     		<div class="controls">
 					@if(model != null){
-      			<textarea rows="3" class="input-xxlarge" type="text" name="contact" readonly="readonly">@model.info</textarea>
+      			<textarea rows="3" class="input-xxlarge" type="text" name="info" readonly="readonly">@model.info</textarea>
       		} else {
-      			<textarea rows="3" class="input-xxlarge" type="text" name="contact"></textarea>
+      			<textarea rows="3" class="input-xxlarge" type="text" name="info"></textarea>
       		}
     		</div>
   		</div>

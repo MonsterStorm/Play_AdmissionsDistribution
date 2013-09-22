@@ -6,7 +6,7 @@ import play.db.ebean.*;
 import com.avaje.ebean.*;
 
 public class QueryHelper<T> {
-	
+	private static final String TAG = QueryHelper.class.getSimpleName();
 	/**
 	 * find page
 	 * @param finder
@@ -16,6 +16,7 @@ public class QueryHelper<T> {
 	 * @return
 	 */
 	public Page<T> findPage(Model.Finder<Long, T> finder, DynamicForm form, int page, Integer pageSize){
+		play.Logger.debug(TAG + ".findPage: page=" + page + ", pageSize=" + pageSize);
 		if(pageSize == null){
 			pageSize = Constants.PAGE_SIZE;
 		}
@@ -48,8 +49,6 @@ public class QueryHelper<T> {
 				}
 			}
 		}
-
-		play.Logger.debug(auditStatus + "," + orderby);
 		
 		if(query != null){
 			return query.findPagingList(pageSize).getPage(page);

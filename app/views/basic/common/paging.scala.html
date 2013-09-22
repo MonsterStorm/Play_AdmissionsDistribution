@@ -7,7 +7,9 @@
 		for(i <- 0 to array.length - 1){//put all into flash
 			var key = String.valueOf(array(i));
 			var value = flash().get(key);
-			params = params + key + ":'" + value + "',";
+			if(key != "page"){//该参数在下面已经传了，这里可以不用传
+				params = params + key + ":'" + value + "',";
+			}
 		}
 	}
 	params

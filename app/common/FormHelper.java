@@ -1,7 +1,11 @@
 package common;
 
 import static play.data.Form.form;
+
+import java.util.*;
+
 import play.data.*;
+import play.data.validation.*;
 import play.mvc.Http.Flash;
 
 /**
@@ -59,7 +63,7 @@ public class FormHelper {
 	 * @return
 	 */
 	public static boolean isAddNew(DynamicForm form){
-		final String strAddNew = form().bindFromRequest().get("addNew");
+		final String strAddNew = form.get("addNew");
 		if(StringHelper.isValidate(strAddNew) && Boolean.parseBoolean(strAddNew) == true){
 			return true;
 		}
@@ -73,7 +77,7 @@ public class FormHelper {
 	 * @return
 	 */
 	public static int getPage(DynamicForm form) {
-		String strPage = form().get("page");
+		String strPage = form.get("page");
 		int page = 0;
 		if (strPage != null) {
 			page = Integer.parseInt(strPage);
@@ -92,6 +96,26 @@ public class FormHelper {
 			flash.clear();// 先clear再添加新的
 			flash.putAll(form().bindFromRequest().data());
 		}
+	}
+	
+	/**
+	 * get an error msg
+	 * @param form
+	 * @return
+	 */
+	public static String getFirstError(Map<String, List<ValidationError>> errors){
+		for (Iterator<String> iter = errors.keySet().iterator(); iter.hasNext();) {
+			final String key = iter.next();
+			final List<ValidationError> values = errors.get(key);
+			if(values != null){
+				for(ValidationError ve : values){
+					if(StringHelper.isValidate(ve.message())){
+						return ve.message();
+					}
+				}
+			}
+		}
+		return null;
 	}
 	
 	

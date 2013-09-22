@@ -1,11 +1,15 @@
 package models;
 
 import java.lang.reflect.*;
+import java.text.*;
 import java.util.*;
 
 import javax.persistence.*;
 
 import play.data.*;
+import play.data.format.*;
+import play.data.format.Formatters.SimpleFormatter;
+import play.data.validation.Constraints.Required;
 import play.db.ebean.*;
 
 import com.avaje.ebean.*;
@@ -20,12 +24,15 @@ import common.*;
 @Entity
 @Table(name = Course.TABLE_NAME)
 public class Course extends Model {
+	private static final String TAG = Course.class.getSimpleName();
 	public static final String TABLE_NAME = "course";
 	@Id
 	public Long id;
 
+	@Required(message=Constants.MSG_FORM_COURSE_REQUIRED_NAME)
 	public String name;// 课程名称
 
+	@Required(message=Constants.MSG_FORM_COURSE_REQUIRED_MONEY)
 	public Double money;// 课程费用
 
 	public Long startTime; // 开课时间
@@ -48,6 +55,32 @@ public class Course extends Model {
 
 	@ManyToOne
 	public Instructor instructor;// 一个课程只能被一个讲师拥有，一个讲师可以有多个课程
+
+	static {
+		Formatters.register(CourseType.class, new SimpleFormatter<CourseType>() {
+
+			@Override
+			public CourseType parse(String arg, Locale l) throws ParseException {
+				try{
+					Long courseTypeId = Long.parseLong(arg);
+					CourseType courseType = CourseType.find(courseTypeId);
+					return courseType;
+				} catch (Exception e){
+					e.printStackTrace();
+				}
+				return null;
+			}
+
+			@Override
+			public String print(CourseType type, Locale l) {
+				if(type != null){
+					return type.name;
+				}
+				return null;
+			}
+
+		});
+	}
 
 	/**
 	 * 根据类的属性名称，获取属性值
@@ -98,6 +131,16 @@ public class Course extends Model {
 	 * @return
 	 */
 	public static Course addOrUpdate(Course course) {
+		play.Logger.debug(TAG + ".addOrUpdate: id=" + course.id + ", name=" + course.name);
+		if (course != null) {
+			if (course.id == null) {// 新增
+				course.id = finder.nextId();
+				course.save();
+			} else {// 更新
+				course.update();
+			}
+			return course;
+		}
 		return null;
 	}
 
@@ -108,8 +151,7 @@ public class Course extends Model {
 	 * @param form
 	 * @return
 	 */
-	public static Page<Course> findPage(DynamicForm form, int page,
-			Integer pageSize) {
+	public static Page<Course> findPage(DynamicForm form, int page,	Integer pageSize) {
 		return new QueryHelper<Course>().findPage(finder, form, page, pageSize);
 	}
 }
