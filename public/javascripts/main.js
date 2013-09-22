@@ -33,7 +33,8 @@ var ajaxSubmitOptions = {
 		return true;
 	},
 	error : function(obj) {
-		$('#content').before('<div class="alert alert-danger myprompt"><center>' + obj.responseText + '</center></div>');
+		var message = obj.responseText || '服务器错误';
+		$('#content').html('<div class="alert alert-danger myprompt"><center>' + message + '</center></div>');
 		$('.spinner').hide();
 		return false;
 	}
@@ -71,7 +72,8 @@ function ajaxBasic(ajaxUrl, ajaxData, method, promptObj) {
 			return true;
 		},
 		error : function(obj) {
-			$(promptObj).before('<div class="alert alert-danger"><center>' + obj.responseText + '</center></div>');
+			var message = obj.responseText || '服务器错误';
+			$(promptObj).html('<div class="alert alert-danger"><center>' + message + '</center></div>');
 			return false;
 		}
 	}
@@ -109,7 +111,8 @@ function ajaxDelete(ajaxUrl, ajaxData, method, promptObj){
 			return true;
 		},
 		error : function(obj) {
-			$(promptObj).before('<div class="alert alert-danger myprompt"><center>' + obj.responseText + '</center></div>');
+			var message = obj.responseText || '服务器错误';
+			$(promptObj).html('<div class="alert alert-danger myprompt"><center>' + message + '</center></div>');
 			$('.spinner').hide();
 			return false;
 		}
