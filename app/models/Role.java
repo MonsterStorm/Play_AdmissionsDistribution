@@ -15,7 +15,12 @@ import play.db.ebean.*;
 @Entity
 @Table(name = "role")
 public class Role extends Model {
-
+	public static final int ROLE_ADMIN = 1;//管理员
+	public static final int ROLE_EDU = 2;//教育机构
+	public static final int ROLE_INSTRUCTOR = 3;//讲师
+	public static final int ROLE_AGENT = 4;//代理机构
+	public static final int ROLE_REGISTED_USER = 5;//注册用户
+	
 	@Id
 	public Long id;
 

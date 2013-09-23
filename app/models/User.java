@@ -130,10 +130,120 @@ public class User extends Model implements IModel {
 		}
 		return null;
 	}
+	
+	/**
+	 * has role
+	 * @param roldId
+	 * @return
+	 */
+	public boolean hasRole(Long roleId){
+		if(this.roles != null){
+			for(Role role : roles){
+				if(role.id == roleId)
+					return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * get roles string, return :role1_id:role2_id:...:rolen_id:;
+	 * @return
+	 */
+	public String getRoles(){
+		StringBuilder roleStr = new StringBuilder();
+		if(this.roles != null){
+			for(int i = 0; i < this.roles.size(); i++){
+				if(i == 0){
+					roleStr.append(":");
+				}
+				roleStr.append(roles.get(i).id);
+				if (i == this.roles.size() - 1){
+					roleStr.append(":");
+				}
+			}
+		}
+		if(roleStr.length() > 0){
+			return roleStr.toString();
+		} else {
+			return null;
+		}
+	}
+	
+	/**
+	 * get Model string
+	 * @return
+	 */
+	public String getModles(){
+		StringBuilder moduleStr = new StringBuilder();
+		if(this.roles != null){
+			boolean isFirst = true;
+			for(int i = 0; i < this.roles.size(); i++){
+				Role role = this.roles.get(i);
+				if(role != null && role.modules != null){
+					List<Module> modules = role.modules;
+					for(int j = 0; j < modules.size(); j++){
+						if(isFirst){
+							moduleStr.append(":");
+							isFirst = false;
+						}
+						moduleStr.append(modules.get(i).id);
+					}
+				}
+			}
+			if(isFirst == false){
+				moduleStr.append(":");
+			}
+		}
+		
+		if(moduleStr.length() > 0){
+			return moduleStr.toString();
+		} else {
+			return null;
+		}
+	}
+	
+	/**
+	 * get function string
+	 * @return
+	 */
+	public String getFunctions(){
+		StringBuilder functionStr = new StringBuilder();
+		if(this.roles != null){
+			boolean isFirst = true;
+			for(int i = 0; i < this.roles.size(); i++){//roles
+				Role role = this.roles.get(i);
+				if(role != null && role.modules != null){
+					List<Module> modules = role.modules;
+					for(int j = 0; j < modules.size(); j++){//models
+						Module module = modules.get(j);
+						if(module != null && module.functions != null){
+							List<Function> functions = module.functions;
+							for(int k = 0; k < functions.size(); k++){//functions
+								if(isFirst){
+									functionStr.append(":");
+									isFirst = false;
+								}
+								functionStr.append(functions.get(i).id);
+							}
+						}
+					}
+				}
+			}
+			if(isFirst == false){
+				functionStr.append(":");
+			}
+		}
+		
+		if(functionStr.length() > 0){
+			return functionStr.toString();
+		} else {
+			return null;
+		}
+	}
 
 	// -- 查询
-	public static Model.Finder<Long, User> finder = new Model.Finder(
-			Long.class, User.class);
+	public static Model.Finder<Long, User> finder = new Model.Finder(Long.class, User.class);
 
 	/**
 	 * find all user
@@ -216,7 +326,7 @@ public class User extends Model implements IModel {
 		User user = find(id);
 		return user.bypassAccounts != null && user.bypassAccounts.size() > 0;
 	}
-
+	
 	/**
 	 * 新增或更新一个用户
 	 * @param form

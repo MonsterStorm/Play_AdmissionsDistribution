@@ -25,7 +25,7 @@ public class QueryHelper<T> {
 		
 		final String auditStatus = form.get("auditStatus");
 		if(StringHelper.isValidate(auditStatus) && Integer.valueOf(auditStatus) >= 0){
-			query = finder.where().eq("auditStatus", Integer.valueOf(auditStatus)).query();
+			query = finder.where().eq("audit.status", Integer.valueOf(auditStatus)).query();
 		}
 		
 		final String orderby = form.get("orderby");

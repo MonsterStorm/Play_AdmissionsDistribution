@@ -39,7 +39,8 @@ public class Course extends Model {
 
 	public String contact;// 联系方式，包括联系人，电话等
 
-	public int auditStatus;// 审核状态，课程需要被审核
+	@OneToOne
+	public Audit audit;// 审核状态，课程需要被审核，当前审核状态
 
 	@ManyToOne
 	public CourseType courseType;// 课程类别
@@ -144,6 +145,20 @@ public class Course extends Model {
 		return null;
 	}
 
+	/**
+	 * delete an edu
+	 * @param form
+	 * @return
+	 */
+	public static Course delete(Long id){
+		Course course = find(id);
+		if(course != null){
+			course.delete();
+			return course;
+		}
+		return null;
+	}
+	
 	/**
 	 * find page with filter
 	 * 

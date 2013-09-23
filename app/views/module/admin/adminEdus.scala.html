@@ -79,7 +79,8 @@ $('#toolbar').tooltip(options);
 				<tr>
 					<td>@model.id</td>
 					<td><a href="#" onclick="getCommonPage(this, 'eduDetail', 'id=@model.id');">@model.name</a></td>
-					@if(model.courses.size() > 0){
+
+					@if(model.courses != null && model.courses.size() > 0){
 						<td><a href="#" onclick="getCommonPage(this, 'courseDetail', 'id=@model.courses.get(0).id');">@model.courses.get(0).name</a></td>
 					} else {
 						<td>-尚未创建课程-</td>

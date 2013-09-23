@@ -39,10 +39,22 @@
 </div>
 } 
 
-@toolbar={
+@toolbar(course: Course)={
 <!-- <script type="text/javascript">
 $('#toolbar').tooltip(options);
 </script> -->
+
+@dialogDelete("删除课程", Course.TABLE_NAME, course.id){
+	确定删除&nbsp;
+	<b style="font-size:x-large;color:red">
+	@{
+		if(course.name != null){
+			course.name
+		}
+	}
+	</b>&nbsp;？
+}
+
 <div class="pull-left" style="width:130px;">
 	<div class="btn-group" id="toolbar">
 		<a class="btn btn-success" data-toggle="审核通过" href="#"><i
@@ -50,7 +62,7 @@ $('#toolbar').tooltip(options);
 			data-toggle="拒绝通过" href="#"><i class="icon-ban-circle icon-white"></i></a>
 	</div>
 	<div class="btn-group">
-		<a class="btn btn-danger" data-toggle="删除，请谨慎操作！" href="#"><i
+		<a class="btn btn-danger" data-toggle="删除，请谨慎操作！" href="#" onclick="doDelete(@course.id)"><i
 			class="icon-remove icon-white"></i></a>
 	</div>
 </div>
@@ -101,7 +113,7 @@ $('#toolbar').tooltip(options);
 					} else {
 						<td>-未设置-</td>
 					}
-					<td>@toolbar</td>
+					<td>@toolbar(model)</td>
 				</tr>
 				}
 			</tbody>

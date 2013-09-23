@@ -16,6 +16,10 @@ import static play.data.Form.*;
 public class LoginController extends BaseController {
 	public static final String KEY_USER_ACCOUNT = "account";
 	public static final String KEY_USER_ID = "user_id";
+	public static final String KEY_USER_ROLES = "user_roles";//:role1_id:role2_id:...:rolen_id:
+	public static final String KEY_USER_MODULES = "user_modules";//:module1_id:module2_id:...:modulen_id:
+	public static final String KEY_USER_FUNCTINS = "user_functions";//:function1_id:function2_id:...:functionn_id:
+	
 	// -- Authentication
 
 	public static class Login {
@@ -51,10 +55,7 @@ public class LoginController extends BaseController {
 		Form<Login> loginForm = form(Login.class).bindFromRequest();
 		if (loginForm.hasErrors()) {
 			return badRequest(views.html.module.admin.login.render(loginForm));
-			// return
-			// badRequest(views.html.module.admin.login.render(form(Login.class)));
-		} else {
-			//登录成功，将accout添加到session，这样就可以访问AdminController的函数了
+		} else {//登录成功，将accout添加到session，这样就可以访问AdminController的函数了
 			saveSession(loginForm.get());
 			return redirect(controllers.routes.AdminController.page("index"));
 		}
@@ -71,6 +72,9 @@ public class LoginController extends BaseController {
 			session(KEY_USER_ACCOUNT, login.account);
 		
 		session(KEY_USER_ID, login.user.id.toString());//存用户id
+		session(KEY_USER_ROLES, login.user.getRoles());//存用户角色
+		session(KEY_USER_MODULES, login.user.getModles());//存用户模块权限
+		session(KEY_USER_FUNCTINS, login.user.getFunctions());//存用户功能权限
 	}
 
 	/**

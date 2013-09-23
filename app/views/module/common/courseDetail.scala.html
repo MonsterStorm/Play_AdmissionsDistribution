@@ -106,7 +106,7 @@ $('#toolbar').tooltip(options);
 					@if(model == null){
       			<input class="input-large" type="text" name="startTime">
 					} else {
-						<input class="input-large" type="text" name="startTime" value="@model.startTime" readonly="readonly">
+						<input class="input-large" type="text" name="startTime" value="@datetime_formatter(model.startTime, true)" readonly="readonly">
 					}
     		</div>
   		</div>

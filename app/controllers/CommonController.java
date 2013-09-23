@@ -38,7 +38,7 @@ public class CommonController extends Controller{
 		} else if (PAGE_TEMPLATE_TYPE_DETAIL.equalsIgnoreCase(page)) {//模板类型
 			return pageTemplateTypeDetail();
 		} else if (PAGE_INSTRUCTOR_TYPE_DETAIL.equalsIgnoreCase(page)) {//讲师详情
-			return pageInstructorDetail();
+			return pageInstructorDetail(null);
 		} else if (PAGE_USER_DETAIL.equalsIgnoreCase(page)) {//用户详情
 			return pageUserDetail(null);
 		} else {
@@ -56,8 +56,10 @@ public class CommonController extends Controller{
 			return addOrUpdateEdu(); 
 		} else if (User.TABLE_NAME.equalsIgnoreCase(table)) {//用户信息的新增或者更新
 			return addOrUpdateUser();
-		} else if (Course.TABLE_NAME.equalsIgnoreCase(table)) {//用户信息的新增或者更新
+		} else if (Course.TABLE_NAME.equalsIgnoreCase(table)) {//课程信息的新增或者更新
 			return addOrUpdateCourse();
+		} else if (Instructor.TABLE_NAME.equalsIgnoreCase(table)) {//讲师信息的新增或者更新
+			return addOrUpdateInstructor();
 		} else {
 			return badRequest(Constants.MSG_PAGE_NOT_FOUND);
 		}
@@ -70,6 +72,10 @@ public class CommonController extends Controller{
 		String table = form().bindFromRequest().get("table");
 		if(EducationInstitution.TABLE_NAME.equalsIgnoreCase(table)){//教育机构删除
 			return deleteEdu();
+		} else if (Course.TABLE_NAME.equalsIgnoreCase(table)) {//课程信息删除
+			return deleteCourse();
+		} else if (Instructor.TABLE_NAME.equalsIgnoreCase(table)) {//讲师信息删除
+			return deleteInstructor();
 		} else {
 			return badRequest(Constants.MSG_PAGE_NOT_FOUND);
 		}
@@ -127,12 +133,62 @@ public class CommonController extends Controller{
 	}
 	
 	/**
+	 * add or update instructor
+	 * @return
+	 */
+	public static Result addOrUpdateInstructor(){
+		Form<Instructor> form = form(Instructor.class).bindFromRequest();
+		if(form != null && form.hasErrors() == false){
+			Instructor course = Instructor.addOrUpdate(form.get());
+			if(course != null){
+				return pageInstructorDetail(course);
+			}
+		} else if(form.hasErrors()) {
+			String error = FormHelper.getFirstError(form.errors());
+			play.Logger.debug("error:" + error);
+			if(error != null){
+				return badRequest(error);
+			}
+		}
+		return internalServerError(Constants.MSG_INTERNAL_ERROR);
+	}
+	
+	/**
 	 * delete edu
 	 * @return
 	 */
 	public static Result deleteEdu(){
-		EducationInstitution edu = EducationInstitution.delete(form().bindFromRequest());
-		if(edu != null){
+		Long id = FormHelper.getLong(form().bindFromRequest(), "id");
+		if(id != null){
+			EducationInstitution edu = EducationInstitution.delete(id);
+			return ok(Constants.MSG_SUCCESS);
+		} else {
+			return internalServerError(Constants.MSG_INTERNAL_ERROR);
+		}
+	}
+	
+	/**
+	 * 删除课程
+	 * @return
+	 */
+	public static Result deleteCourse(){
+		Long id = FormHelper.getLong(form().bindFromRequest(), "id");
+		if(id != null){
+			Course course = Course.delete(id);
+			return ok(Constants.MSG_SUCCESS);
+		} else {
+			return internalServerError(Constants.MSG_INTERNAL_ERROR);
+		}
+	}
+	
+	/**
+	 * delete instructor
+	 * @return
+	 */
+	public static Result deleteInstructor(){
+		Long id = FormHelper.getLong(form().bindFromRequest(), "id");
+		if(id != null){
+			Instructor instructor = Instructor.delete(id);
 			return ok(Constants.MSG_SUCCESS);
 		} else {
 			return internalServerError(Constants.MSG_INTERNAL_ERROR);
@@ -204,9 +260,19 @@ public class CommonController extends Controller{
 	 * 讲师详情
 	 * @return
 	 */
-	public static Result pageInstructorDetail(){
-		Long id = Long.valueOf(form().bindFromRequest().get("id"));
-		Instructor instructor = Instructor.find(id);
+	public static Result pageInstructorDetail(Instructor instructor){
+		boolean isAddNew = FormHelper.isAddNew(form().bindFromRequest());
+		
+		if(isAddNew){
+			return ok(views.html.module.common.instructorDetail.render(null));
+		}
+		
+		if(instructor == null){
+			Long id = FormHelper.getLong(form().bindFromRequest(), "id");
+			if(id != null){
+				instructor = Instructor.find(id);
+			}
+		}
 		return ok(views.html.module.common.instructorDetail.render(instructor));
 	}
 	
@@ -217,9 +283,9 @@ public class CommonController extends Controller{
 	public static Result pageUserDetail(User user){
 		play.Logger.debug("flash:" + flash().get("xxx")+"," + flash().get("yyy"));
 		if(user == null){
-			String strId = form().bindFromRequest().get("id");
-			if(StringHelper.isValidate(strId)){
-				user = User.find(Long.parseLong(strId));
+			Long id = FormHelper.getLong(form().bindFromRequest(), "id");
+			if(id != null){
+				user = User.find(id);
 			}
 		}
 		return ok(views.html.module.common.userDetail.render(user));

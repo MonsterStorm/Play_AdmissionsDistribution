@@ -1,5 +1,5 @@
 @(model: Instructor)
-
+@import basic.common._
 @toolbar_header={
 <div class="row">
 	<div class="span2">
@@ -18,56 +18,83 @@
 </div>
 } 
 
-@toolbar={
-<!-- <script type="text/javascript">
-$('#toolbar').tooltip(options);
-</script> -->
-<div class="pull-left" style="width:130px;">
-	<div class="btn-group" id="toolbar">
-		<a class="btn btn-success" data-toggle="审核通过" href="#"><i
-			class="icon-ok icon-white"></i></a> 
-    <a class="btn btn-info"
-			data-toggle="拒绝通过" href="#"><i class="icon-ban-circle icon-white"></i></a>
-	</div>
-	<div class="btn-group">
-		<a class="btn btn-danger" data-toggle="删除，请谨慎操作！" href="#"><i
-			class="icon-remove icon-white"></i></a>
-	</div>
-</div>
-} 
-
-@paging={
-<div class="pagination">
-	<ul>
-		<li><a href="#">&laquo;</a></li>
-		<li><a href="#">1</a></li>
-		<li><a href="#">2</a></li>
-		<li><a href="#">3</a></li>
-		<li><a href="#">4</a></li>
-		<li><a href="#">5</a></li>
-		<li><a href="#">&raquo;</a></li>
-	</ul>
-</div>
-} 
+<script type="text/javascript">
+    $(document).ready( function() {
+			$('#myform').submit(function() {
+		    $(this).ajaxSubmit(ajaxSubmitOptions);
+		    return false;
+			});
+		});
+</script>
 
 @toolbar_header
 
 <div class="table-responsive">
 	<div style="overflow: auto">
-		<form class="form-horizontal" id="myform">
+		<form class="form-horizontal" id="myform" method="post" action="@routes.CommonController.addOrUpdateEntity()">
+		
+			@form_validate_info()
+  
   		<div class="control-group">
     		<label class="control-label">讲师名</label>
     		<div class="controls">
-      		<input class="input-xxlarge" type="text" value="@model.user.username" readonly="readonly">
+					@if(model != null && model.user != null && model.user.nickname){
+      			<input class="input-xxlarge" type="text" value="@model.user.nickname" readonly="readonly" disabled>
+					} else {
+						<input class="input-xxlarge" type="text" readonly="readonly" disabled>
+					}
     		</div>
   		</div>
 
+			<div class="control-group">
+    		<label class="control-label">职称</label>
+    		<div class="controls">
+					@if(model != null){
+      			<input class="input-xxlarge" type="text" name="jobTitle" value="@model.jobTitle" readonly="readonly">
+					} else {
+						<input class="input-xxlarge" type="text" name="jobTitle">
+					}
+    		</div>
+  		</div>
+  		
+  		<div class="control-group">
+    		<label class="control-label" for="inputEmail">简介</label>
+    		<div class="controls">
+					@if(model != null){
+      			<textarea rows="5" class="input-xxlarge" type="text" name="info" readonly="readonly">@model.info</textarea>
+      		} else {
+      			<textarea rows="5" class="input-xxlarge" type="text" name="info"></textarea>
+      		}
+    		</div>
+  		</div>
+  		
+  		<div class="control-group">
+    		<label class="control-label">注册时间</label>
+    		<div class="controls">
+					@if(model != null && model.createTime != null){
+      			<input class="input-xxlarge" type="text" name="createTime" value="@datetime_formatter(model.createTime, true)" readonly="readonly">
+					} else {
+						<input class="input-xxlarge" type="text" name="createTime" readonly="readonly">
+					}
+    		</div>
+  		</div>
+
+			<input class="input-large" type="hidden" name="table" value="@Instructor.TABLE_NAME">
+			@if(model != null){
+				<input class="input-large" type="hidden" name="id" value="@model.id">
+			} else {
+				<input class="input-large" type="hidden" name="id">
+			}
 			<hr>
 			<div class="control-group row">
     		<div class="controls">
-      		<button type="button" class="btn btn-large btn-success btn-block span2 disabled">提交</button>
-    	</div>
-  </div>
-</form>
+      		@if(model != null){
+							<button type="submit" class="btn btn-large btn-success btn-block span2 disabled">提交</button>
+					} else {
+							<button type="submit" class="btn btn-large btn-success btn-block span2">提交</button>
+					}
+    		</div>
+  		</div>
+		</form>
 	</div>
 </div>

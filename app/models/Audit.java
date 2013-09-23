@@ -30,7 +30,7 @@ public class Audit extends Model {
 	@ManyToOne
 	public User creator;// 发起人，审核发起人，一个发起人对应多个审核，一个审核对应一个发起人
 
-	public Long createTile;// 发起时间
+	public Long createTime;// 发起时间
 
 	@ManyToOne
 	public User auditor;// 审核人，一个审核对应一个审核人，一个审核人对应多个审核

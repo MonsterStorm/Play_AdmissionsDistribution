@@ -35,7 +35,8 @@ public class EducationInstitution extends Model {
 	@OneToMany(mappedBy="edu", cascade=CascadeType.ALL)
 	public List<Course> courses;// 教育机构对应的课程列表，一个教育机构可以有多个课程
 
-	public int auditStatus;//教育机构状态，状态在Audit类中
+	@OneToOne
+	public Audit audit;//教育机构状态，状态在Audit类中
 	
 	// 其他属性字段
 	public String name;// 教育机构名称
@@ -133,15 +134,11 @@ public class EducationInstitution extends Model {
 	 * @param form
 	 * @return
 	 */
-	public static EducationInstitution delete(DynamicForm form){
-		final String id = form.get("id");
-		
-		if(StringHelper.isValidate(id)){
-			EducationInstitution edu = find(Long.valueOf(id));
-			if(edu != null){
-				edu.delete();
-				return edu;
-			}
+	public static EducationInstitution delete(Long id){
+		EducationInstitution edu = find(id);
+		if(edu != null){
+			edu.delete();
+			return edu;
 		}
 		return null;
 	}
