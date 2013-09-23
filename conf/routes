@@ -13,7 +13,10 @@ GET     /common/:page               controllers.CommonController.page(page: Stri
 	
 
 #Platform
+POST	/platform/login				controllers.LoginController.loginPlatform()
+GET		/platform/logout			controllers.PlatformController.logout()
 GET		/platform/:page				controllers.PlatformController.page(page: String)
+POST    /platform/addUser           controllers.RegisterController.addUser()
 
 #Login
 
