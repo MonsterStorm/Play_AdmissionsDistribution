@@ -70,11 +70,13 @@ public class LoginController extends BaseController {
 			session(KEY_USER_ACCOUNT, login.user.nickname);
 		else
 			session(KEY_USER_ACCOUNT, login.account);
-		
 		session(KEY_USER_ID, login.user.id.toString());//存用户id
-		session(KEY_USER_ROLES, login.user.getRoles());//存用户角色
-		session(KEY_USER_MODULES, login.user.getModles());//存用户模块权限
-		session(KEY_USER_FUNCTINS, login.user.getFunctions());//存用户功能权限
+		if(StringHelper.isValidate(login.user.getRoles()))
+			session(KEY_USER_ROLES, login.user.getRoles());//存用户角色
+		if(StringHelper.isValidate(login.user.getModles()))
+			session(KEY_USER_MODULES, login.user.getModles());//存用户模块权限
+		if(StringHelper.isValidate(login.user.getFunctions()))
+			session(KEY_USER_FUNCTINS, login.user.getFunctions());//存用户功能权限
 	}
 
 	/**
@@ -114,4 +116,23 @@ public class LoginController extends BaseController {
 		User user = User.find(userId);
 		return user;
 	}
+
+	/**
+	 * add by khx
+	 * 平台登录操作
+	 * @return
+	 */
+	public static Result loginPlatform() {
+		Form<Login> loginForm = form(Login.class).bindFromRequest();
+		if (loginForm.hasErrors()) {
+			return badRequest(views.html.module.platform.login.render(loginForm));
+			// return
+			// badRequest(views.html.module.admin.login.render(form(Login.class)));
+		} else {
+			//登录成功，将accout添加到session，这样就可以访问AdminController的函数了
+			saveSession(loginForm.get());
+			return redirect(controllers.routes.PlatformController.page("index"));
+		}
+	}
+
 }

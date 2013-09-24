@@ -356,5 +356,23 @@ public class User extends Model implements IModel {
 	public String toString() {
 		return "User(id: " + id + ", username: " + username + ")";
 	}
+	/**
+	 * 注册时验证 用户名 邮箱 是否存在 若存在则无法注册add by khx
+	 * 
+	 * @param username
+	 * @param email
+	 * @return
+	 */
+	public static int canRegister(String username, String email) {
+		User user = finder.where().eq("username", username).findUnique();
+		if (user != null) {
+			return Constants.INT_USERNAME_EXIST;
+		}
+		user = finder.where().eq("email", email).findUnique();
+		if (user != null) {
+			return Constants.INT_EMAIL_EXIST;
+		}
+		return Constants.INT_CAN_REGISTER;
+	}
 
 }

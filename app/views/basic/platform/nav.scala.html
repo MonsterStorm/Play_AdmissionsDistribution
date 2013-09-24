@@ -7,6 +7,14 @@
 				<li><a href="@routes.PlatformController.page("successful_case")">成功案例</a></li>
 				<li><a href="@routes.PlatformController.page("news")">行业新闻</a></li>
 				<li><a href="@routes.PlatformController.page("contact_us")">联系我们</a></li>
+				<li><a href="@routes.PlatformController.page("register")">注册</a></li>
+				@if(session.contains("account")) {
+				<li><a href="#">欢迎&nbsp;<span class="label label-info">@session.get("account")</span></a></li>
+				<li><a href="@routes.PlatformController.logout()">注销</a></li>
+				}
+				@if(!session.contains("account")) {
+				<li><a href="@routes.PlatformController.page("login")">登录</a></li>
+				}
 				<li></li>
 			</ul>
 		</div>

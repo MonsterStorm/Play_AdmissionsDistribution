@@ -19,5 +19,15 @@ public class Constants {
 	//----------------------------------表单错误提示-----------------------------
 	public static final String MSG_FORM_COURSE_REQUIRED_NAME = "课程名不能为空";
 	public static final String MSG_FORM_COURSE_REQUIRED_MONEY = "学费不能为空"; 
+
+	//---------------------------------注册相关错误提示----------------------------------
+	public static final String MSG_USERNAME_EXIST = "该用户名已经存在";
+	public static final String MSG_EMAIL_EXIST = "该邮箱已被注册";
+	public static final String MSG_PASSWORD_NOT_SAME = "两次输入的密码不一致";
+	
+	public static final int INT_CAN_REGISTER = 0;
+	public static final int INT_USERNAME_EXIST = 1;
+	public static final int INT_EMAIL_EXIST = 2;
+	public static final int INT_PASSWORD_NOT_SAME = 3;
 	
 }

@@ -1,0 +1,47 @@
+@(form: Form[LoginController.Login]) 
+@import basic.platform._
+@import basic.common._
+@basic.platform.main("登录"){@meta()}{@styles()}{@scripts()}{@nav()}{@header()}{
+<style type="text/css">
+.form-signin {
+	max-width: 350px;
+	padding: 19px 29px 29px;
+	margin: 0 auto 20px;
+	background-color: #fff;
+	border: 1px solid #e5e5e5;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	-webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, .05);
+	-moz-box-shadow: 0 1px 2px rgba(0, 0, 0, .05);
+	box-shadow: 0 1px 2px rgba(0, 0, 0, .05);
+}
+</style>
+<script type="text/javascript">
+    $(document).ready( function() {
+			$('#myform').submit(function() {
+		    $(this).ajaxSubmit(ajaxSubmitOptions);
+		    return false;
+			});
+		});
+</script>
+<!-- content -->
+<div class="container">
+	<div class="row">
+		<div class="span12">
+				<form class="form-signin" id="myform" method="post" action="@routes.LoginController.loginPlatform()">
+					@if(form.hasGlobalErrors){
+						<div class="alert alert-danger">@form.globalError.message</div>
+					} 
+					@form_validate_info()
+					<h5>用户名</h5>
+					<input type="text" name="account" class="input-block-level"  value="@form("account").value"> 
+					<h5>密码</h5>
+					<input type="password" name="password" class="input-block-level" placeholder="密码"  value="@form("password").value"> 	
+					<button class="btn btn-large btn-primary btn-block" type="submit">登录</button>
+					
+				</form>
+		</div>
+	</div>
+</div>
+}{@footer()}
