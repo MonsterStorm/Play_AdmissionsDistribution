@@ -7,6 +7,7 @@ import java.util.*;
 import models.*;
 import play.data.*;
 import play.mvc.*;
+import play.mvc.Http.Request;
 
 import common.*;
 /**
@@ -21,6 +22,7 @@ public class CommonController extends Controller{
 	private static final String PAGE_TEMPLATE_TYPE_DETAIL = "templateTypeDetail";//模板类型详情
 	private static final String PAGE_INSTRUCTOR_TYPE_DETAIL = "instructorDetail";//讲师详情
 	private static final String PAGE_USER_DETAIL = "userDetail";//用户详情
+	private static final String PAGE_STUDENT_DETAIL = "studentDetail";//学员想起
 	
 	/**
 	 * common pages
@@ -33,6 +35,8 @@ public class CommonController extends Controller{
 			return pageCourseDetail(null);
 		} else if (PAGE_EDU_DETAIL.equalsIgnoreCase(page)) {//教育机构
 			return pageEduDetail(null);
+		} else if (PAGE_STUDENT_DETAIL.equalsIgnoreCase(page)) {//用户详情
+			return pageStudentDetail(null);
 		} else if (PAGE_MESSAGE_DETAIL.equalsIgnoreCase(page)) {//留言
 			return pageMessageDetail();
 		} else if (PAGE_TEMPLATE_TYPE_DETAIL.equalsIgnoreCase(page)) {//模板类型
@@ -60,6 +64,8 @@ public class CommonController extends Controller{
 			return addOrUpdateCourse();
 		} else if (Instructor.TABLE_NAME.equalsIgnoreCase(table)) {//讲师信息的新增或者更新
 			return addOrUpdateInstructor();
+		} else if (Student.TABLE_NAME.equalsIgnoreCase(table)) {//学员信息的新增或者更新
+			return addOrUpdateStudent();
 		} else {
 			return badRequest(Constants.MSG_PAGE_NOT_FOUND);
 		}
@@ -154,6 +160,27 @@ public class CommonController extends Controller{
 	}
 	
 	/**
+	 * add or update instructor
+	 * @return
+	 */
+	public static Result addOrUpdateStudent(){
+		Form<Student> form = form(Student.class).bindFromRequest();
+		if(form != null && form.hasErrors() == false){
+			Student student = Student.addOrUpdate(form.get());
+			if(student != null){
+				return pageStudentDetail(student);
+			}
+		} else if(form.hasErrors()) {
+			String error = FormHelper.getFirstError(form.errors());
+			play.Logger.debug("error:" + error);
+			if(error != null){
+				return badRequest(error);
+			}
+		}
+		return internalServerError(Constants.MSG_INTERNAL_ERROR);
+	}
+	
+	/**
 	 * delete edu
 	 * @return
 	 */
@@ -234,6 +261,27 @@ public class CommonController extends Controller{
 			}
 		}
 		return ok(views.html.module.common.eduDetail.render(edu));
+	}
+	
+	/**
+	 * 学员详情
+	 * @return
+	 */
+	public static Result pageStudentDetail(Student student){
+		boolean isAddNew = FormHelper.isAddNew(form().bindFromRequest());
+		
+		if(isAddNew){
+			return ok(views.html.module.common.studentDetail.render(null));
+		}
+		
+		if(student == null){
+			Long id = FormHelper.getLong(form().bindFromRequest(), "id");
+			if(id != null){
+				student = Student.find(id);
+			}
+		}
+		//form(Student.class).fill(student))
+		return ok(views.html.module.common.studentDetail.render(student));
 	}
 	
 	/**

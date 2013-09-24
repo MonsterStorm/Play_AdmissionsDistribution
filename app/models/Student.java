@@ -9,22 +9,49 @@ import play.db.ebean.*;
 
 import com.avaje.ebean.*;
 import common.*;
+import controllers.*;
 
 /**
  * 学员，该类包含学员的基本信息，填写报名信息的时候为该表
+ * 
  * @author MonsterStorm
- *
+ * 
  */
 @Entity
 @Table(name = Student.TABLE_NAME)
 public class Student extends Model {
 	public static final String TABLE_NAME = "student";
+	
 	@Id
 	public Long id;
 
 	@OneToOne
 	public User user;
+
+	// -- 报名所属
+	@ManyToOne
+	public User fromAgent;// 来源代理人，一个代理人可以有多个报名信息，一个报名信息只能隶属于一个代理人，如果是直接通过平台过来，则该字段为空
+
+	@ManyToOne
+	public EducationInstitution edu;// 所属教育机构，一个教育机构可以有多个报名信息，一个报名信息隶属于一个教育机构。
+
+	// -- 报名确认信息
+	@OneToOne
+	public Audit auditOfAgent;// 代理人审核
 	
+	@OneToOne
+	public Audit auditOfEdu;// 教育机构的审核信息
+
+	// -- 收款确认信息
+	@OneToOne
+	public ConfirmReceipt confirmOfEdu;// 教育机构收款信息
+
+	@OneToOne
+	public ConfirmReceipt confirmOfPlatform;// 平台收款信息
+
+	@OneToOne
+	public ConfirmReceipt confirmOfAgent;// 代理人收款信息
+
 	// --其他属性--
 	public Long enrollTime;// 报名时间
 
@@ -55,7 +82,7 @@ public class Student extends Model {
 	public String email;// 邮箱
 
 	public String info;// 额外信息
-	
+
 	// -- 查询
 	public static Model.Finder<Long, Student> finder = new Model.Finder(Long.class, Student.class);
 
@@ -77,7 +104,7 @@ public class Student extends Model {
 	public static Student find(Long id) {
 		return finder.where().eq("id", id).findUnique();
 	}
-	
+
 	/**
 	 * find page with filter
 	 * 
@@ -87,5 +114,26 @@ public class Student extends Model {
 	 */
 	public static Page<Student> findPage(DynamicForm form, int page, Integer pageSize) {
 		return new QueryHelper<Student>().findPage(finder, form, page, pageSize);
+	}
+	
+	/**
+	 * 新增或更新一个用户
+	 * 
+	 * @param form
+	 * @return
+	 */
+	public static Student addOrUpdate(Student student) {
+		if (student != null) {
+			if (student.id == null) {// 新增
+				User user = LoginController.getSessionUser();//创建用户必须是当前用户
+				student.user = user;//绑定到当前用户
+				student.id = finder.nextId();
+				student.save();
+			} else {// 更新
+				student.update();
+			}
+			return student;
+		}
+		return null;
 	}
 }

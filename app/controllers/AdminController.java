@@ -90,7 +90,8 @@ public class AdminController extends BaseController {
 		// get page
 		int page = FormHelper.getPage(form().bindFromRequest());
 
-		Page<Course> courses = Course.findPage(form().bindFromRequest(), page, null);
+		Page<Course> courses = Course.findPage(form().bindFromRequest(), page,
+				null);
 
 		FormHelper.resetFlash(form().bindFromRequest(), flash());
 
@@ -124,7 +125,8 @@ public class AdminController extends BaseController {
 		// get page
 		int page = FormHelper.getPage(form().bindFromRequest());
 
-		Page<Instructor> instructors = Instructor.findPage(form().bindFromRequest(), page, null);
+		Page<Instructor> instructors = Instructor.findPage(form()
+				.bindFromRequest(), page, null);
 
 		// reset flash
 		FormHelper.resetFlash(form().bindFromRequest(), flash());
@@ -138,8 +140,15 @@ public class AdminController extends BaseController {
 	 * @return
 	 */
 	public static Result pageAdminStudents() {
-		List<User> users = User.findAll();
-		return ok(views.html.module.admin.adminStudents.render(users));
+		// get page
+		int page = FormHelper.getPage(form().bindFromRequest());
+
+		Page<Student> students = Student.findPage(form().bindFromRequest(), page, null);
+
+		// reset flash
+		FormHelper.resetFlash(form().bindFromRequest(), flash());
+
+		return ok(views.html.module.admin.adminStudents.render(students));
 	}
 
 	/**
