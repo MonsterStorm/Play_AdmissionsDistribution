@@ -7,7 +7,6 @@ import java.util.*;
 import models.*;
 import play.data.*;
 import play.mvc.*;
-import play.mvc.Http.Request;
 
 import common.*;
 /**
@@ -82,6 +81,8 @@ public class CommonController extends Controller{
 			return deleteCourse();
 		} else if (Instructor.TABLE_NAME.equalsIgnoreCase(table)) {//讲师信息删除
 			return deleteInstructor();
+		} else if (Student.TABLE_NAME.equalsIgnoreCase(table)) {//学员信息删除
+			return deleteStudent();
 		} else {
 			return badRequest(Constants.MSG_PAGE_NOT_FOUND);
 		}
@@ -221,6 +222,21 @@ public class CommonController extends Controller{
 			return internalServerError(Constants.MSG_INTERNAL_ERROR);
 		}
 	}
+	
+	/**
+	 * delete instructor
+	 * @return
+	 */
+	public static Result deleteStudent(){
+		Long id = FormHelper.getLong(form().bindFromRequest(), "id");
+		if(id != null){
+			Student student = Student.delete(id);
+			return ok(Constants.MSG_SUCCESS);
+		} else {
+			return internalServerError(Constants.MSG_INTERNAL_ERROR);
+		}
+	}
+	
 	
 	/**
 	 * 课程详情

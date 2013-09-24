@@ -136,4 +136,18 @@ public class Student extends Model {
 		}
 		return null;
 	}
+	
+	/**
+	 * delete an edu
+	 * @param form
+	 * @return
+	 */
+	public static Student delete(Long id){
+		Student student = find(id);
+		if(student != null){
+			student.delete();
+			return student;
+		}
+		return null;
+	}
 }
