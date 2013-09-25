@@ -1,0 +1,16 @@
+@(label: String, name: String, time: Long = null, readonly: Boolean = true, disabled : Boolean = false, clazz: String = new String("my_readyonly"))
+
+@import basic.common.datetime_formatter
+
+
+<div class="control-group">
+  <label class="control-label" for="@name">@label</label>
+  	<div class="controls">
+			<div class="input-append date form_datetime">
+				<input class="@clazz" size="16" type="text" @if(time!=null){value="@datetime_formatter(time, true)"} @if(readonly){readonly="readonly"} @if(disabled){disabled}>
+			<span class="add-on"><i class="icon-th"></i></span>
+			</div>
+ 		</div>
+ </div>
+
+<input id="form_datatime_long" type="hidden" @if(name){name="@name"} @if(time!=null){value="@time"}>

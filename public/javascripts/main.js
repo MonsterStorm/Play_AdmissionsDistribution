@@ -34,7 +34,7 @@ var ajaxSubmitOptions = {
 	},
 	error : function(obj) {
 		var message = obj.responseText || '服务器错误';
-		$('#content').html('<div class="alert alert-danger myprompt"><center>' + message + '</center></div>');
+		$('#content').before('<div class="alert alert-danger myprompt"><center>' + message + '</center></div>');
 		$('.spinner').hide();
 		return false;
 	}
@@ -112,7 +112,7 @@ function ajaxDelete(ajaxUrl, ajaxData, method, promptObj){
 		},
 		error : function(obj) {
 			var message = obj.responseText || '服务器错误';
-			$(promptObj).html('<div class="alert alert-danger myprompt"><center>' + message + '</center></div>');
+			$(promptObj).before('<div class="alert alert-danger myprompt"><center>' + message + '</center></div>');
 			$('.spinner').hide();
 			return false;
 		}

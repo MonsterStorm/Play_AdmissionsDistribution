@@ -1,6 +1,9 @@
 @(model: EducationInstitution)
 
 @import basic.common._
+@import basic.common.basicform._
+
+@bootstrapDatetimepicker()
 
 @toolbar_header={
 <div class="row">
@@ -38,49 +41,29 @@
 		
 			@form_validate_info()
     
-  		<div class="control-group">
-    		<label class="control-label">机构名称</label>
-    		<div class="controls">
-					@if(model != null){
-      			<input class="input-xxlarge" type="text" name="name" value="@model.name" readonly="readonly">
-					} else {
-						<input class="input-xxlarge" type="text" name="name">
-					}
-    		</div>
-  		</div>
+  		@if(model != null){
+				@inputText("机构名称", "name", model.name, true)
+			} else {
+				@inputText("机构名称", "name", null, false)
+			}
   		
-  		<div class="control-group">
-    		<label class="control-label">机构简介</label>
-    		<div class="controls">
-					@if(model != null){
-      			<textarea rows="20" class="input-xxlarge" type="text" name="info" readonly="readonly">@model.info</textarea>
-					} else {
-						<textarea rows="20" class="input-xxlarge" type="text" name="info"></textarea>
-					}
-    		</div>
-  		</div>
-	  		
-			<div class="control-group">
-    		<label class="control-label">创建者</label>
-    		<div class="controls">
-					@if(model != null){
-      			<input class="input-large" type="text" value="@model.creator.username" disabled>
-					} else {
-						<input class="input-large" type="text" disabled>
-					}
-    		</div>
-  		</div>
+  		@if(model != null){
+				@textarea("机构简介", "info", model.info, true)
+			} else {
+				@textarea("机构简介", "info", null, false)
+			}
 
-			<div class="control-group">
-    		<label class="control-label">创建日期</label>
-    		<div class="controls">
-					@if(model != null && model.createTime != null){
-      			<input class="input-large" type="text" value="@datetime_formatter(model.createTime, true)" disabled>
-					} else {
-						<input class="input-large" type="text" disabled>
-					}
-    		</div>
-  		</div>
+			@if(model != null){
+				@inputText("创建者", null, model.creator.username, true, true)
+			} else {
+				@inputText("创建者", null, null, false, true)
+			}	  		
+	
+			@if(model != null && model.createTime != null){
+				@datetimePicker("创建日期", "startTime", model.createTime, true, true)				
+			} else {
+				@datetimePicker("创建日期", "startTime", null, true, true)
+			}
 			
 			<input class="input-large" type="hidden" name="table" value="@EducationInstitution.TABLE_NAME">
 			@if(model != null){

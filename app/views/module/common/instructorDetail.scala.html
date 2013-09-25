@@ -1,5 +1,6 @@
 @(model: Instructor)
 @import basic.common._
+@import basic.common.basicform._
 @toolbar_header={
 <div class="row">
 	<div class="span2">
@@ -34,50 +35,31 @@
 		<form class="form-horizontal" id="myform" method="post" action="@routes.CommonController.addOrUpdateEntity()">
 		
 			@form_validate_info()
-  
-  		<div class="control-group">
-    		<label class="control-label">讲师名</label>
-    		<div class="controls">
-					@if(model != null && model.user != null && model.user.nickname){
-      			<input class="input-xxlarge" type="text" value="@model.user.nickname" readonly="readonly" disabled>
-					} else {
-						<input class="input-xxlarge" type="text" readonly="readonly" disabled>
-					}
-    		</div>
-  		</div>
+  		
+  		@if(model != null && model.user != null && model.user.nickname){
+				@inputText("职称", null, model.user.nickname, true)
+			} else {
+				@inputText("职称", null, null, false)
+			}
 
-			<div class="control-group">
-    		<label class="control-label">职称</label>
-    		<div class="controls">
-					@if(model != null){
-      			<input class="input-xxlarge" type="text" name="jobTitle" value="@model.jobTitle" readonly="readonly">
-					} else {
-						<input class="input-xxlarge" type="text" name="jobTitle">
-					}
-    		</div>
-  		</div>
+  		@if(model != null){
+				@inputText("职称", "jobTitle", model.jobTitle, true)
+			} else {
+				@inputText("职称", "jobTitle", null, false)
+			}
   		
-  		<div class="control-group">
-    		<label class="control-label" for="inputEmail">简介</label>
-    		<div class="controls">
-					@if(model != null){
-      			<textarea rows="5" class="input-xxlarge" type="text" name="info" readonly="readonly">@model.info</textarea>
-      		} else {
-      			<textarea rows="5" class="input-xxlarge" type="text" name="info"></textarea>
-      		}
-    		</div>
-  		</div>
   		
-  		<div class="control-group">
-    		<label class="control-label">注册时间</label>
-    		<div class="controls">
-					@if(model != null && model.createTime != null){
-      			<input class="input-xxlarge" type="text" name="createTime" value="@datetime_formatter(model.createTime, true)" readonly="readonly">
-					} else {
-						<input class="input-xxlarge" type="text" name="createTime" readonly="readonly">
-					}
-    		</div>
-  		</div>
+  		@if(model != null){
+				@textarea("简介", "info", model.info, true)
+			} else {
+				@textarea("简介", "info", null, false)
+			}
+  		
+  		@if(model != null){
+				@datetimePicker("注册时间", "createTime", model.createTime)				
+			} else {
+				@datetimePicker("注册时间", "createTime")
+			}
 
 			<input class="input-large" type="hidden" name="table" value="@Instructor.TABLE_NAME">
 			@if(model != null){

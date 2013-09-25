@@ -1,6 +1,9 @@
 @(model: Course, types: List[CourseType])
 
 @import basic.common._
+@import basic.common.basicform._
+
+@bootstrapDatetimepicker()
 
 @toolbar_header={
 <div class="row">
@@ -56,110 +59,64 @@ $('#toolbar').tooltip(options);
 	
 			@form_validate_info()
 	
-  		<div class="control-group">
-    		<label class="control-label" for="inputEmail">课程名称</label>
-    		<div class="controls">
-					@if(model != null){
-      			<input class="input-xxlarge" name="name" type="text" value="@model.name" readonly="readonly">
-					} else {
-						<input class="input-xxlarge" name="name" type="text">
-					}
-    		</div>
-  		</div>
-	  		
-			<div class="control-group">
-    		<label class="control-label" for="inputEmail">课程类别</label>
-				<div class="controls">
-					@if(model != null){
-						<select value="@model.courseType.name" name="courseType" readonly="readonly">
-							@for(t <- types){
-	      				<option value="@t.id" onclick="changeValue('#btnCourseType', '@t.name')">@t.name</option>
-      				}
-						</select>
-					} else {
-						<select name="courseType">
-							@for((t, index) <- types.zipWithIndex){
-	      			  <option value="@t.id" onclick="changeValue('#btnCourseType', '@t.name')">@t.name</option>
-      				}
-						</select>
-					}
-				</div>
-			</div>
+			@if(model != null){
+				@inputText("课程名称", "name", model.name, true)
+			} else {
+				@inputText("课程名称", "name", null, false)
+			}
+	  	
 
-			<div class="control-group">
-    		<label class="control-label" for="inputEmail">学费</label>
-    		<div class="controls">
-					<div class="input-prepend input-append">
-						@if(model != null){
-  						<input class="input span2" type="text" value="@model.money" name="money" readonly="readonly">
-						} else {
-							<input class="input span2" type="text" name="money">
-						}
-  					<span class="add-on">元</span>
-					</div>
-    		</div>
-  		</div>
-
-			<div class="control-group">
-    		<label class="control-label" for="inputEmail">开课时间</label>
-    		<div class="controls">
-					@if(model == null){
-      			<input class="input-large" type="text" name="startTime">
-					} else {
-						<input class="input-large" type="text" name="startTime" value="@datetime_formatter(model.startTime, true)" readonly="readonly">
-					}
-    		</div>
-  		</div>
-
-			<div class="control-group">
-    		<label class="control-label" for="inputEmail">联系方式</label>
-    		<div class="controls">
-					@if(model != null){
-      			<textarea rows="3" class="input-large" type="text" name="contact" readonly="readonly">@model.contact</textarea>
-      		} else {
-      			<textarea rows="3" class="input-large" type="text" name="contact"></textarea>
+			@if(model != null){
+				@inputSelect("课程类别", "courseType", model.courseType.name, true){
+					@for((t, index) <- types.zipWithIndex){
+	    		  <option value="@t.id" onclick="changeValue('#btnCourseType', '@t.name')">@t.name</option>
+      		}	
+				}
+			} else {
+				@inputSelect("课程类别", "courseType", null, false){
+					@for((t, index) <- types.zipWithIndex){
+	    		  <option value="@t.id" onclick="changeValue('#btnCourseType', '@t.name')">@t.name</option>
       		}
-    		</div>
-  		</div>
+				}
+			}
+  		
+  		@if(model != null){
+				@inputText_money("学费", "money", {String.valueOf(model.money)}, true)  			
+  		} else {
+  			@inputText_money("学费", "money", null, false)
+  		}
 
-			<div class="control-group">
-    		<label class="control-label" for="inputEmail">课程简介</label>
-    		<div class="controls">
-					@if(model != null){
-      			<textarea rows="3" class="input-xxlarge" type="text" name="info" readonly="readonly">@model.info</textarea>
-      		} else {
-      			<textarea rows="3" class="input-xxlarge" type="text" name="info"></textarea>
-      		}
-    		</div>
-  		</div>
-
-			<div class="control-group">
-    		<label class="control-label" for="inputEmail">课程详细信息</label>
-    		<div class="controls">
-					@if(model != null){
-      			<textarea rows="20" class="input-xxlarge" type="text" name="detail" readonly="readonly">@model.detail</textarea>
-      		} else {
-      			<textarea rows="20" class="input-xxlarge" type="text" name="detail"></textarea>
-      		}
-    		</div>
-  		</div>
-
-			@if(model != null && model.edu != null){
-			<div class="control-group">
-    		<label class="control-label" for="inputEmail">教育机构</label>
-    		<div class="controls">
-      		<input class="input-large" type="text" value="@model.edu.name" readonly="readonly">
-    		</div>
-  		</div>
+			@if(model != null){
+				@datetimePicker("开课时间", "startTime", model.startTime)				
+			} else {
+				@datetimePicker("开课时间", "startTime")
 			}
 
+			@if(model != null){
+				@textarea("联系方式", "contact", model.contact, true)
+			} else {
+				@textarea("联系方式", "contact", null, false)
+			}
+			
+			@if(model != null){
+				@textarea("课程简介", "info", model.info, true)
+			} else {
+				@textarea("课程简介", "info", null, false)
+			}
+
+			@if(model != null){
+				@textarea("课程详细信息", "detail", model.detail, true, 20)
+			} else {
+				@textarea("课程详细信息", "detail", null, false)
+			}
+
+			@if(model != null && model.edu != null){
+				@inputText("教育机构", null, model.edu.name, true)
+			}
+
+
 			@if(model != null && model.instructor != null){
-			<div class="control-group">
-    		<label class="control-label" for="inputEmail">讲师</label>
-    		<div class="controls">
-      		<input class="input-large" type="text" value="@model.instructor.user.username" readonly="readonly">
-    		</div>
-  		</div>
+				@inputText("讲师", null, model.instructor.user.username, true)
 			}
 
 			<input class="input-large" type="hidden" name="table" value="@Course.TABLE_NAME">
@@ -173,7 +130,7 @@ $('#toolbar').tooltip(options);
 			<div class="control-group row">
     		<div class="controls">
 					@if(model != null){
-      			<button type="submit" class="btn btn-large btn-success btn-block span2 disabled">提交</button>
+      			<button type="submit" class="btn btn-large btn-success btn-block span2 disabled" disabled="disabled">提交</button>
       		} else {
       			<button type="submit" class="btn btn-large btn-success btn-block span2">提交</button>
       		}

@@ -31,7 +31,6 @@
 	function toggleActive(item, div){
 		var items = div + ".active";
 		$(items).removeClass("active");
-		
 		$(item).addClass("active");
 	}
 
@@ -47,12 +46,21 @@
 		var editors = $(parent + " [readonly='readonly']");
 	  if(editors && editors.length > 0){
 	  	editors.removeAttr("readonly");
+	  	toggleDisabled(parent + " button");
+	  	
+	  	$(parent + " .my_readyonly").prop("readonly", true);//所有标记为noedit的域重新添加readonly
+	  	$(parent + " button[type=submit]").removeClass("disabled");
+			$(parent + " button[type=submit]").removeAttr("disabled");
 	  } else {
 			$(parent + " input").attr("readonly", "readonly");
 			$(parent + " textarea").attr("readonly", "readonly");
 			$(parent + " select").attr("readonly", "readonly");
+			toggleDisabled(parent + " button");
+			
+			$(parent + " button[type=submit]").addClass("disabled");
+			$(parent + " button[type=submit]").prop("disabled", true);
 		}
-		toggleDisabled(parent + " button");
+		
 		toggleActive(item);
 	}
 	
@@ -62,10 +70,13 @@
     if(editors && editors.length > 0){
 	  	editors.removeAttr("readonly");
 	  }
+	  $(parent + " .my_readyonly").prop("readonly", true);//所有标记为noedit的域重新添加readonly
+	  
 	  $(parent + " input[name!='table']").attr("value", "");//把属性不是table的值置为空
 	  $(parent + " textarea").html("");
 		$(parent + " select").attr("selectedIndex", "0");
-		$(parent + " button").removeClass("disabled");
+		$(parent + " button[type=submit]").removeClass("disabled");
+		$(parent + " button[type=submit]").prop("disabled", false);
 	}
 	
 	function doEdit(item){

@@ -1,14 +1,16 @@
 package models;
 
+import java.text.*;
 import java.util.*;
 
 import javax.persistence.*;
 
 import play.data.*;
+import play.data.format.*;
+import play.data.format.Formatters.SimpleFormatter;
 import play.db.ebean.*;
 
 import com.avaje.ebean.*;
-import com.avaje.ebean.Query;
 import common.*;
 
 import controllers.*;

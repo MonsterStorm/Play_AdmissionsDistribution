@@ -32,7 +32,7 @@
 				<form class="form-signin" id="myform" method="post" action="@routes.LoginController.loginPlatform()">
 					@if(form.hasGlobalErrors){
 						<div class="alert alert-danger">@form.globalError.message</div>
-					} 
+					}
 					@form_validate_info()
 					<h5>用户名</h5>
 					<input type="text" name="account" class="input-block-level"  value="@form("account").value"> 

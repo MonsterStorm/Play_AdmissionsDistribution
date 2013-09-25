@@ -1,0 +1,7 @@
+@(model: Object, tablename: String, id: String)
+<input class="input-large" type="hidden" name="table" value="@tablename">
+@if(model != null){
+	<input class="input-large" type="hidden" name="id" value="@id">
+} else {
+	<input class="input-large" type="hidden" name="id">
+}
