@@ -1,8 +1,9 @@
 @(model: Student)
 
 @import basic.common._
-@import helper.twitterBootstrap._
+@import basic.common.basicform._
 
+@bootstrapDatetimepicker()
 @toolbar_header={
 <div class="row">
 	<div class="span2">
@@ -39,177 +40,103 @@
 	
 			@form_validate_info()
 
-  		<div class="control-group">
-    		<label class="control-label" for="name">学员名称</label>
-    		<div class="controls">
-					@if(model != null){
-      			<input class="input-xxlarge" name="name" type="text" value="@model.name" readonly="readonly">
-					} else {
-						<input class="input-xxlarge" name="name" type="text">
-					}
-    		</div>
-  		</div>
+			@if(model != null){
+				@inputText("学员名称", "name", model.name, true)
+			} else {
+				@inputText("学员名称", "name", null, false)
+			}
   		
-  		<div class="control-group">
-    		<label class="control-label" for="sex">性别</label>
-				<div class="controls">
-					@if(model != null){
-						<select value="@model.sex" name="sex" readonly="readonly">
-								<option value="1" onclick="changeValue('#btnCourseType', '男')">男</option>
-	      				<option value="0" onclick="changeValue('#btnCourseType', '女')">女</option>
-						</select>
-					} else {
-						<select value="1" name="sex">
-								<option value="1" onclick="changeValue('#btnCourseType', '男')">男</option>
-	      				<option value="0" onclick="changeValue('#btnCourseType', '女')">女</option>
-						</select>
-					}
-				</div>
-			</div>
+			@if(model != null){
+				@inputSelect("性别", "sex", String.valueOf(model.sex), true){
+					<option value="1" onclick="changeValue('#btnCourseType', '男')">男</option>
+	      	<option value="0" onclick="changeValue('#btnCourseType', '女')">女</option>
+				}
+			} else {
+				@inputSelect("性别", "sex", null, false){
+					<option value="1" onclick="changeValue('#btnCourseType', '男')">男</option>
+	      	<option value="0" onclick="changeValue('#btnCourseType', '女')">女</option>
+				}
+			}
 			
-			<div class="control-group">
-    		<label class="control-label" for="companyName">公司名称</label>
-    		<div class="controls">
-					@if(model != null){
-      			<input class="input-xxlarge" name="companyName" type="text" value="@model.companyName" readonly="readonly">
-					} else {
-						<input class="input-xxlarge" name="companyName" type="text">
-					}
-    		</div>
-  		</div>
+			@if(model != null){
+				@inputText("公司名称", "companyName", model.companyName, true)
+			} else {
+				@inputText("公司名称", "companyName", null, false)
+			}
 			
-			<div class="control-group">
-    		<label class="control-label" for="position">职务</label>
-    		<div class="controls">
-					@if(model != null){
-      			<input class="input-xxlarge" name="position" type="text" value="@model.position" readonly="readonly">
-					} else {
-						<input class="input-xxlarge" name="position" type="text">
-					}
-    		</div>
-  		</div>
+			@if(model != null){
+				@inputText("职务", "position", model.position, true)
+			} else {
+				@inputText("职务", "position", null, false)
+			}
+				
+			@if(model != null){
+				@inputText("身份证号", "idcard", model.idcard, true)
+			} else {
+				@inputText("身份证号", "idcard", null, false)
+			}
+  		
+			@if(model != null){
+				@datetimePicker("出生日期", "birth", model.birth)				
+			} else {
+				@datetimePicker("出生日期", "birth")
+			}
 			
-			<div class="control-group">
-    		<label class="control-label" for="inputEmail">身份证号</label>
-    		<div class="controls">
-					@if(model != null){
-      			<input class="input-xxlarge" name="idcard" type="text" value="@model.idcard" readonly="readonly">
-					} else {
-						<input class="input-xxlarge" name="idcard" type="text">
-					}
-    		</div>
-  		</div>
+			@if(model != null){
+				@inputText("座机号码", "phone", model.phone, true)
+			} else {
+				@inputText("座机号码", "phone", null, false)
+			}
+	
+			@if(model != null){
+				@inputText("手机号码", "mobile", model.mobile, true)
+			} else {
+				@inputText("手机号码", "mobile", null, false)
+			}
+				
+			@if(model != null){
+				@inputText("QQ号码", "qq", model.qq, true)
+			} else {
+				@inputText("QQ号码", "qq", null, false)
+			}
   		
-  		<div class="control-group">
-    		<label class="control-label" for="inputEmail">出生日期</label>
-    		<div class="controls">
-					@if(model != null){
-      			<input class="input-xxlarge" name="birth" type="text" value="@datetime_formatter(model.birth, true)" readonly="readonly">
-					} else {
-						<input class="input-xxlarge" name="birth" type="text">
-					}
-    		</div>
-  		</div>
-
-  		<div class="control-group">
-    		<label class="control-label" for="phone">座机号码</label>
-    		<div class="controls">
-					@if(model != null){
-      			<input class="input-xxlarge" name="phone" type="text" value="@model.phone" readonly="readonly">
-					} else {
-						<input class="input-xxlarge" name="phone" type="text">
-					}
-    		</div>
-  		</div>
-  		
-  		<div class="control-group">
-    		<label class="control-label" for="mobile">手机号码</label>
-    		<div class="controls">
-					@if(model != null){
-      			<input class="input-xxlarge" name="mobile" type="text" value="@model.mobile" readonly="readonly">
-					} else {
-						<input class="input-xxlarge" name="mobile" type="text">
-					}
-    		</div>
-  		</div>
-  		
-  		<div class="control-group">
-    		<label class="control-label" for="qq">QQ号码</label>
-    		<div class="controls">
-					@if(model != null){
-      			<input class="input-xxlarge" name="qq" type="text" value="@model.qq" readonly="readonly">
-					} else {
-						<input class="input-xxlarge" name="qq" type="text">
-					}
-    		</div>
-  		</div>
-  		
-  		<div class="control-group">
-    		<label class="control-label" for="email">Email</label>
-    		<div class="controls">
-					@if(model != null){
-      			<input class="input-xxlarge" name="email" type="text" value="@model.email" readonly="readonly">
-					} else {
-						<input class="input-xxlarge" name="email" type="text">
-					}
-    		</div>
-  		</div>
-
-			<div class="control-group">
-    		<label class="control-label" for="address">联系地址</label>
-    		<div class="controls">
-					@if(model != null){
-      			<textarea rows="3" class="input-xxlarge" type="text" name="address" readonly="readonly">@model.address</textarea>
-      		} else {
-      			<textarea rows="3" class="input-xxlarge" type="text" name="address"></textarea>
-      		}
-    		</div>
-  		</div>
-
-			<div class="control-group">
-    		<label class="control-label" for="info">额外信息</label>
-    		<div class="controls">
-					@if(model != null){
-      			<textarea rows="3" class="input-xxlarge" type="text" name="info" readonly="readonly">@model.info</textarea>
-      		} else {
-      			<textarea rows="3" class="input-xxlarge" type="text" name="info"></textarea>
-      		}
-    		</div>
-  		</div>
+  		@if(model != null){
+				@inputText("Email", "email", model.email, true)
+			} else {
+				@inputText("Email", "email", null, false)
+			}
 			
-			<div class="control-group">
-    		<label class="control-label" for="enrollTime">报名时间</label>
-    		<div class="controls">
-					@if(model != null){
-      			<input class="input-xxlarge" name="enrollTime" type="text" value="@datetime_formatter(model.enrollTime, true)" readonly="readonly" disabled>
-					} else {
-						<input class="input-xxlarge" name="enrollTime" type="text" disabled>
-					}
-    		</div>
-  		</div>
+			@if(model != null){
+				@textarea("联系地址", "address", model.address, true)
+			} else {
+				@textarea("联系地址", "address", null, false)
+			}
+			
+			@if(model != null){
+				@textarea("额外信息", "info", model.info, true)
+			} else {
+				@textarea("额外信息", "info", null, false)
+			}
 
-			<div class="control-group">
-    		<label class="control-label" for="enrollIp">报名IP</label>
-    		<div class="controls">
-					@if(model != null){
-      			<input class="input-xxlarge" name="enrollIp" type="text" value="@model.enrollIp" readonly="readonly" disabled>
-					} else {
-						<input class="input-xxlarge" name="enrollIp" type="text" disabled>
-					}
-    		</div>
-  		</div>
+			
+			@if(model != null){
+				@datetimePicker("报名时间", "enrollTime", model.enrollTime, true, true)				
+			} else {
+				@datetimePicker("报名时间", "enrollTime", null, true, true)
+			}
+			
+			@if(model != null){
+				@inputText("报名IP", "enrollIp", model.enrollIp, true, true)
+			} else {
+				@inputText("报名IP", "enrollIp", null, false, true)
+			}
+
+			@if(model != null){
+				@inputText("报名域名", "enrollDomain", model.enrollDomain, true, true)
+			} else {
+				@inputText("报名域名", "enrollDomain", null, false, true)
+			}
   		
-  		<div class="control-group">
-    		<label class="control-label" for="enrollDomain">报名域名</label>
-    		<div class="controls">
-					@if(model != null){
-      			<input class="input-xxlarge" name="enrollDomain" type="text" value="@model.enrollDomain" readonly="readonly" disabled>
-					} else {
-						<input class="input-xxlarge" name="enrollDomain" type="text" disabled>
-					}
-    		</div>
-  		</div>
-
 			<input class="input-large" type="hidden" name="table" value="@Student.TABLE_NAME">
 			@if(model != null){
 				<input class="input-large" type="hidden" name="id" value="@model.id">

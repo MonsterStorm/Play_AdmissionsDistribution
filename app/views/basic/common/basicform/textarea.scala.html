@@ -1,11 +1,7 @@
-@(label: String, name: String, value: String, readonly: Boolean, rows: Integer = new Integer(5))
+@(label: String, name: String, value: String, readonly: Boolean, rows: Integer = new Integer(5), disabled: Boolean = false)
 <div class="control-group">
    <label class="control-label" for="@name">@label</label>
    <div class="controls">
-			@if(readonly){
-      	<textarea rows="@rows" class="input-xxlarge" type="text" name="@name" readonly="readonly">@value</textarea>
-      } else {
-      	<textarea rows="@rows" class="input-xxlarge" type="text" name="@name">@value</textarea>
-      }
+      	<textarea rows="@rows" class="input-xxlarge" type="text" @if(name){name="@name"} @if(readonly){readonly="readonly"} @if(disabled){disabled}>@value</textarea>
    </div>
 </div>

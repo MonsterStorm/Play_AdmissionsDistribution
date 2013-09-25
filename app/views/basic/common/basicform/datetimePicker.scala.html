@@ -2,13 +2,19 @@
 
 @import basic.common.datetime_formatter
 
-
 <div class="control-group">
   <label class="control-label" for="@name">@label</label>
   	<div class="controls">
-			<div class="input-append date form_datetime">
+			<div class="input-append date form_datetime" id="@label"><!--为了区分不同的时间空间，用label作为id-->
 				<input class="@clazz" size="16" type="text" @if(time!=null){value="@datetime_formatter(time, true)"} @if(readonly){readonly="readonly"} @if(disabled){disabled}>
-			<span class="add-on"><i class="icon-th"></i></span>
+				@if(disabled){
+					<script type="text/javascript">
+						$('#@label').datetimepicker('remove');
+					</script>
+					<span class="add-on" onclick="return true;"><i class="icon-th"></i></span>
+				} else {
+					<span class="add-on"><i class="icon-th"></i></span>
+				}
 			</div>
  		</div>
  </div>

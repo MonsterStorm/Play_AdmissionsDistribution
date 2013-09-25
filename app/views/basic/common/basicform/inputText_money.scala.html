@@ -1,21 +1,9 @@
-@(label: String, name: String, value: String, readonly: Boolean)
+@(label: String, name: String, value: String, readonly: Boolean, disabled: Boolean = false)
 <div class="control-group">
 	<label class="control-label" for="inputEmail">@label</label>
  		<div class="controls">
 			<div class="input-prepend input-append">
-				@if(value != null){
-					@if(readonly){
-						<input class="input span2" type="text" value="@value" name="@name" readonly="readonly">
-					} else {
-						<input class="input span2" type="text" value="@value" name="@name">
-					}
-				} else {
-					@if(readonly){
-						<input class="input span2" type="text" name="@name"  readonly="readonly">
-					} else {
-						<input class="input span2" type="text" name="@name">
-					}
-				}
+				<input class="input span2" type="text" @if(value){value="@value"} @if(name){name="@name"} @if(readonly){readonly="readonly"} @if(disabled){disabled}>
 				<span class="add-on">元</span>
 		</div>
 	</div>

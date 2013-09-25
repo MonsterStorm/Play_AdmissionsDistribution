@@ -15,7 +15,7 @@
     }).on('changeDate', function(ev){
     	console.dir(ev.date.valueOf());
     	console.dir(ev.date.getTime());
-    	console.dir(ev.date.getTimezoneOffset());
-    	$("#form_datatime_long").attr("value", ev.date.getTime());//+8的问题
+    	console.dir(ev.date.getTimezoneOffset());//小时算的offset
+    	$("#form_datatime_long").attr("value", ev.date.getTime() + ev.date.getTimezoneOffset() * 60 * 1000);//+8的问题，需要用毫秒
 		});
 </script>

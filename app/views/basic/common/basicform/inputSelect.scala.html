@@ -1,15 +1,9 @@
-@(label: String, name: String, value: String, readonly: Boolean)(options: Html)
+@(label: String, name: String, value: String, readonly: Boolean, disabled: Boolean = false)(options: Html)
 <div class="control-group">
     <label class="control-label" for="@name">@label</label>
 		<div class="controls">
-			@if(value != null){
-				<select value="@value" name="@name" readonly="readonly">
+				<select @if(value){value="@value"} @if(name){name="@name"} @if(readonly){readonly="readonly"} @if(disabled){disabled}>
 					@options
 				</select>
-			} else {
-				<select name="@name">
-					@options
-				</select>
-			}
 		</div>
 </div>
