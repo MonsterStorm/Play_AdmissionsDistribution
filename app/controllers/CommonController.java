@@ -22,6 +22,8 @@ public class CommonController extends Controller{
 	private static final String PAGE_INSTRUCTOR_TYPE_DETAIL = "instructorDetail";//讲师详情
 	private static final String PAGE_USER_DETAIL = "userDetail";//用户详情
 	private static final String PAGE_STUDENT_DETAIL = "studentDetail";//学员想起
+	private static final String PAGE_AGENT_DETAIL = "agentDetail";//代理人详情
+	private static final String PAGE_CONTRACT_DETAIL = "contractDetail";//协议详情
 	
 	/**
 	 * common pages
@@ -44,6 +46,8 @@ public class CommonController extends Controller{
 			return pageInstructorDetail(null);
 		} else if (PAGE_USER_DETAIL.equalsIgnoreCase(page)) {//用户详情
 			return pageUserDetail(null);
+		} else if (PAGE_CONTRACT_DETAIL.equalsIgnoreCase(page)) {//协议详情
+			return pageContractDetail(null);
 		} else {
 			return badRequest(Constants.MSG_PAGE_NOT_FOUND);
 		}
@@ -65,6 +69,10 @@ public class CommonController extends Controller{
 			return addOrUpdateInstructor();
 		} else if (Student.TABLE_NAME.equalsIgnoreCase(table)) {//学员信息的新增或者更新
 			return addOrUpdateStudent();
+		} else if (Agent.TABLE_NAME.equalsIgnoreCase(table)) {//代理人信息的新增或者更新
+			return addOrUpdateAgent();
+		} else if (Contract.TABLE_NAME.equalsIgnoreCase(table)) {//协议信息的新增或者更新
+			return addOrUpdateContract();
 		} else {
 			return badRequest(Constants.MSG_PAGE_NOT_FOUND);
 		}
@@ -170,6 +178,48 @@ public class CommonController extends Controller{
 			Student student = Student.addOrUpdate(form.get());
 			if(student != null){
 				return pageStudentDetail(student);
+			}
+		} else if(form.hasErrors()) {
+			String error = FormHelper.getFirstError(form.errors());
+			play.Logger.debug("error:" + error);
+			if(error != null){
+				return badRequest(error);
+			}
+		}
+		return internalServerError(Constants.MSG_INTERNAL_ERROR);
+	}
+	
+	/**
+	 * add or update instructor
+	 * @return
+	 */
+	public static Result addOrUpdateAgent(){
+		Form<Agent> form = form(Agent.class).bindFromRequest();
+		if(form != null && form.hasErrors() == false){
+			Agent agent = Agent.addOrUpdate(form.get());
+			if(agent != null){
+				return pageAgentDetail(agent);
+			}
+		} else if(form.hasErrors()) {
+			String error = FormHelper.getFirstError(form.errors());
+			play.Logger.debug("error:" + error);
+			if(error != null){
+				return badRequest(error);
+			}
+		}
+		return internalServerError(Constants.MSG_INTERNAL_ERROR);
+	}
+	
+	/**
+	 * add or update instructor
+	 * @return
+	 */
+	public static Result addOrUpdateContract(){
+		Form<Contract> form = form(Contract.class).bindFromRequest();
+		if(form != null && form.hasErrors() == false){
+			Contract contract = Contract.addOrUpdate(form.get());
+			if(contract != null){
+				return pageContractDetail(contract);
 			}
 		} else if(form.hasErrors()) {
 			String error = FormHelper.getFirstError(form.errors());
@@ -341,7 +391,7 @@ public class CommonController extends Controller{
 	}
 	
 	/**
-	 * 讲师详情
+	 * 用户详情
 	 * @return
 	 */
 	public static Result pageUserDetail(User user){
@@ -353,5 +403,41 @@ public class CommonController extends Controller{
 			}
 		}
 		return ok(views.html.module.common.userDetail.render(user));
+	}
+	
+	/**
+	 * 用户详情
+	 * @return
+	 */
+	public static Result pageContractDetail(Contract contract){
+		boolean isAddNew = FormHelper.isAddNew(form().bindFromRequest());
+		List<ContractType> types = ContractType.findAll();
+		
+		if(isAddNew){
+			return ok(views.html.module.common.contractDetail.render(null, types));
+		}
+		
+		if(contract == null){
+			Long id = FormHelper.getLong(form().bindFromRequest(), "id");
+			if(id != null){
+				contract = Contract.find(id);
+			}
+		}
+		
+		return ok(views.html.module.common.contractDetail.render(contract, types));
+	}
+	
+	/**
+	 * 代理人详情
+	 * @return
+	 */
+	public static Result pageAgentDetail(Agent agent){
+		if(agent == null){
+			Long id = FormHelper.getLong(form().bindFromRequest(), "id");
+			if(id != null){
+				agent = Agent.find(id);
+			}
+		}
+		return ok(views.html.module.common.agentDetail.render(agent));
 	}
 }

@@ -4,7 +4,12 @@ import java.util.*;
 
 import javax.persistence.*;
 
+import com.avaje.ebean.*;
+import common.*;
+
+import play.data.*;
 import play.db.ebean.*;
+import controllers.*;
 
 /**
  * 代理人
@@ -15,7 +20,7 @@ import play.db.ebean.*;
 @Entity
 @Table(name = "agent")
 public class Agent extends Model {
-
+	public static final String TABLE_NAME = "agent";
 	@Id
 	public Long id;
 
@@ -25,11 +30,18 @@ public class Agent extends Model {
 	@OneToMany
 	public List<Domain> domain;// 代理人对应的域名信息，一个代理人对应多个域名，一个域名隶属于一个代理人（也可以没有代理人）
 
-	// -- 基本信息
+	@OneToOne
+	public Audit audit;//是否认证
 
+	// -- 基本信息
+	public String name;//代理机构名称
+	
+	public String info;//代理机构简介
+	
+	public String contact;//联系方式
+	
 	// -- 查询
-	public static Model.Finder<String, Agent> finder = new Model.Finder(
-			Long.class, Agent.class);
+	public static Model.Finder<Long, Agent> finder = new Model.Finder(Long.class, Agent.class);
 
 	/**
 	 * find all user
@@ -49,4 +61,37 @@ public class Agent extends Model {
 	public static Agent find(Long id) {
 		return finder.where().eq("id", id).findUnique();
 	}
+	
+	/**
+	 * find page with filter
+	 * 
+	 * @param page
+	 * @param form
+	 * @return
+	 */
+	public static Page<Agent> findPage(DynamicForm form, int page, Integer pageSize) {
+		return new QueryHelper<Agent>().findPage(finder, form, page, pageSize);
+	}
+	
+	/**
+	 * 新增或更新一个用户
+	 * 
+	 * @param form
+	 * @return
+	 */
+	public static Agent addOrUpdate(Agent agent) {
+		if (agent != null) {
+			if (agent.id == null) {// 新增
+				User user = LoginController.getSessionUser();//创建用户必须是当前用户
+				agent.user = user;//绑定到当前用户
+				agent.id = finder.nextId();
+				agent.save();
+			} else {// 更新
+				agent.update();
+			}
+			return agent;
+		}
+		return null;
+	}
+	
 }

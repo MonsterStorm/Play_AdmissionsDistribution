@@ -1,0 +1,107 @@
+@(model: Contract, types: List[ContractType])
+
+@import basic.common._
+@import basic.common.basicform._
+
+@bootstrapDatetimepicker()
+@baseUrl=@{
+	var url = "adminContract";
+	url
+}
+
+@toolbar_header={
+<div class="row">
+	<div class="span2">
+		<h4>协议</h4>
+	</div>
+	<div class="btn-toolbar pull-right" role="toolbar">
+	<div class="btn-group" id="toolbar">
+		<a class="btn btn-success" data-toggle="新增" href="#" onclick="doAddNew('#myform')"><i
+				class="icon-plus icon-white"></i>新增</a>
+ 		<a class="btn btn-info"	data-toggle="编辑" href="#" onclick="toggleAllEdit(this, '#myform')"><i class="icon-pencil icon-white"></i>编辑</a>
+	</div>
+	</div>
+</div>
+} 
+
+<script type="text/javascript">
+    $(document).ready( function() {
+			$('#myform').submit(function() {
+		    $(this).ajaxSubmit(ajaxSubmitOptions);
+		    return false;
+			});
+		});
+</script>
+
+@toolbar_header
+
+<div class="table-responsive">
+	<div style="overflow: auto">
+	<form class="form-horizontal" id="myform" method="post" action="@routes.CommonController.addOrUpdateEntity()">
+		
+			@form_validate_info()
+    
+  		@if(model != null){
+				@inputText("协议名称", "name", model.name, true)
+			} else {
+				@inputText("协议名称", "name", null, false)
+			}
+					
+			@if(model != null && model.contractType != null){
+				@inputSelect("协议类型", "contractType", model.contractType.name, true){
+					@for((t, index) <- types.zipWithIndex){
+	    		  <option value="@t.id" onclick="changeValue('#btnContractType', '@t.name')">@t.name</option>
+      		}	
+				}
+			} else {
+				@inputSelect("协议类型", "contractType", null, false){
+					@for((t, index) <- types.zipWithIndex){
+	    		  <option value="@t.id" onclick="changeValue('#btnContractType', '@t.name')">@t.name</option>
+      		}
+				}
+			}			
+
+  		@if(model != null){
+				@textarea("协议详情", "detail", model.detail, true, 20)
+			} else {
+				@textarea("协议详情", "detail", null, false, 20)
+			}
+			
+			@if(model != null){
+				@textarea("协议说明", "info", model.info, true)
+			} else {
+				@textarea("协议说明", "info", null, false)
+			}
+			
+			@if(model != null){
+				@datetimePicker("最近修改时间", "lastModified", model.lastModified, true, true)				
+			} else {
+				@datetimePicker("最近修改时间", "lastModified", null, true, true)
+			}
+
+			@if(model != null){
+				@datetimePicker("创建时间", "createTime", model.createTime, true, true)				
+			} else {
+				@datetimePicker("创建时间", "createTime", null, true, true)
+			}
+			
+			<input class="input-large" type="hidden" name="table" value="@Contract.TABLE_NAME">
+			@if(model != null){
+				<input class="input-large" type="hidden" name="id" value="@model.id">
+			} else {
+				<input class="input-large" type="hidden" name="id">
+			}
+			<hr>
+			<div class="control-group row">
+    		<div class="controls">
+					@if(model != null){
+							<button type="submit" class="btn btn-large btn-success btn-block span2 disabled">提交</button>
+					} else {
+							<button type="submit" class="btn btn-large btn-success btn-block span2">提交</button>
+					}
+    		</div>
+  		</div>
+		
+	</form>
+	</div>
+</div>
