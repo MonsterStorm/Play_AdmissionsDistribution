@@ -171,7 +171,7 @@ create table news (
   id                        bigint auto_increment not null,
   title                     varchar(255),
   detail                    longtext,
-  type_id                   bigint,
+  news_type_id              bigint,
   time                      bigint,
   constraint pk_news primary key (id))
 ;
@@ -382,8 +382,8 @@ alter table log_operation add constraint fk_log_operation_user_19 foreign key (u
 create index ix_log_operation_user_19 on log_operation (user_id);
 alter table log_operation add constraint fk_log_operation_function_20 foreign key (function_id) references function (id) on delete restrict on update restrict;
 create index ix_log_operation_function_20 on log_operation (function_id);
-alter table news add constraint fk_news_type_21 foreign key (type_id) references news_type (id) on delete restrict on update restrict;
-create index ix_news_type_21 on news (type_id);
+alter table news add constraint fk_news_newsType_21 foreign key (news_type_id) references news_type (id) on delete restrict on update restrict;
+create index ix_news_newsType_21 on news (news_type_id);
 alter table rebate add constraint fk_rebate_course_22 foreign key (course_id) references course (id) on delete restrict on update restrict;
 create index ix_rebate_course_22 on rebate (course_id);
 alter table rebate add constraint fk_rebate_lastReceiptOfEdu_23 foreign key (last_receipt_of_edu_id) references confirm_receipt (id) on delete restrict on update restrict;

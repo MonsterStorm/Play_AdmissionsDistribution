@@ -22,7 +22,9 @@ public class CommonController extends Controller{
 	private static final String PAGE_INSTRUCTOR_TYPE_DETAIL = "instructorDetail";//讲师详情
 	private static final String PAGE_USER_DETAIL = "userDetail";//用户详情
 	private static final String PAGE_STUDENT_DETAIL = "studentDetail";//学员想起
-	
+	private static final String PAGE_NEWS_TYPE_DEATIL = "newsTypeDetail";//新闻类型
+	private static final String PAGE_NEWS_DEATIL = "newsDetail";//新闻类型
+
 	/**
 	 * common pages
 	 * 
@@ -44,7 +46,12 @@ public class CommonController extends Controller{
 			return pageInstructorDetail(null);
 		} else if (PAGE_USER_DETAIL.equalsIgnoreCase(page)) {//用户详情
 			return pageUserDetail(null);
-		} else {
+		}else if (PAGE_NEWS_TYPE_DEATIL.equalsIgnoreCase(page)) {//新闻类型
+			return pageNewsTypeDetail(null);
+		} else if (PAGE_NEWS_DEATIL.equalsIgnoreCase(page)) {//新闻类型
+			return pageNewsDetail(null);
+		}  
+		else {
 			return badRequest(Constants.MSG_PAGE_NOT_FOUND);
 		}
 	}
@@ -65,7 +72,11 @@ public class CommonController extends Controller{
 			return addOrUpdateInstructor();
 		} else if (Student.TABLE_NAME.equalsIgnoreCase(table)) {//学员信息的新增或者更新
 			return addOrUpdateStudent();
-		} else {
+		}else if (NewsType.TABLE_NAME.equalsIgnoreCase(table)) {//新闻类型的新增或者更新
+			return addOrUpdateNewsType();
+		} else if (News.TABLE_NAME.equalsIgnoreCase(table)) {//新闻类型的新增或者更新
+			return addOrUpdateNews();
+		}else {
 			return badRequest(Constants.MSG_PAGE_NOT_FOUND);
 		}
 	}
@@ -83,7 +94,11 @@ public class CommonController extends Controller{
 			return deleteInstructor();
 		} else if (Student.TABLE_NAME.equalsIgnoreCase(table)) {//学员信息删除
 			return deleteStudent();
-		} else {
+		} else if (NewsType.TABLE_NAME.equalsIgnoreCase(table)) {//学员信息删除
+			return deleteNewsType();
+		}  else if (News.TABLE_NAME.equalsIgnoreCase(table)) {//学员信息删除
+			return deleteNews();
+		}else {
 			return badRequest(Constants.MSG_PAGE_NOT_FOUND);
 		}
 	}
@@ -180,6 +195,45 @@ public class CommonController extends Controller{
 		}
 		return internalServerError(Constants.MSG_INTERNAL_ERROR);
 	}
+
+	/**
+	 * add or update news
+	 */
+	public static Result addOrUpdateNewsType(){
+		Form<NewsType> form = form(NewsType.class).bindFromRequest();
+		if(form != null && form.hasErrors() == false){
+			NewsType newsType = NewsType.addOrUpdate(form.get());
+			if(newsType != null){
+				return pageNewsTypeDetail(newsType);
+			}
+		} else if(form.hasErrors()) {
+			String error = FormHelper.getFirstError(form.errors());
+			play.Logger.debug("error:" + error);
+			if(error != null){
+				return badRequest(error);
+			}
+		}
+		return internalServerError(Constants.MSG_INTERNAL_ERROR);
+	}
+	/**
+	 * add or update news
+	 */
+	public static Result addOrUpdateNews(){
+		Form<News> form = form(News.class).bindFromRequest();
+		if(form != null && form.hasErrors() == false){
+			News news = News.addOrUpdate(form.get());
+			if(news != null){
+				return pageNewsDetail(news);
+			}
+		} else if(form.hasErrors()) {
+			String error = FormHelper.getFirstError(form.errors());
+			play.Logger.debug("error:" + error);
+			if(error != null){
+				return badRequest(error);
+			}
+		}
+		return internalServerError(Constants.MSG_INTERNAL_ERROR);
+	}
 	
 	/**
 	 * delete edu
@@ -231,6 +285,32 @@ public class CommonController extends Controller{
 		Long id = FormHelper.getLong(form().bindFromRequest(), "id");
 		if(id != null){
 			Student student = Student.delete(id);
+			return ok(Constants.MSG_SUCCESS);
+		} else {
+			return internalServerError(Constants.MSG_INTERNAL_ERROR);
+		}
+	}
+	/**
+	 * delete instructor
+	 * @return
+	 */
+	public static Result deleteNewsType(){
+		Long id = FormHelper.getLong(form().bindFromRequest(), "id");
+		if(id != null){
+			NewsType newsType = NewsType.delete(id);
+			return ok(Constants.MSG_SUCCESS);
+		} else {
+			return internalServerError(Constants.MSG_INTERNAL_ERROR);
+		}
+	}
+	/**
+	 * delete instructor
+	 * @return
+	 */
+	public static Result deleteNews(){
+		Long id = FormHelper.getLong(form().bindFromRequest(), "id");
+		if(id != null){
+			News news = News.delete(id);
 			return ok(Constants.MSG_SUCCESS);
 		} else {
 			return internalServerError(Constants.MSG_INTERNAL_ERROR);
@@ -353,5 +433,44 @@ public class CommonController extends Controller{
 			}
 		}
 		return ok(views.html.module.common.userDetail.render(user));
+	}
+
+	/**
+	 * 新闻类型详情
+	 * @return
+	 */
+	public static Result pageNewsTypeDetail(NewsType newsType){
+		boolean isAddNew = FormHelper.isAddNew(form().bindFromRequest());
+
+		if(isAddNew){
+			return ok(views.html.module.common.newsTypeDetail.render(null));
+		}
+		
+		if(newsType == null){
+			Long id = FormHelper.getLong(form().bindFromRequest(), "id");
+			if(id != null){
+				newsType = NewsType.find(id);
+			}
+		} 
+		return ok(views.html.module.common.newsTypeDetail.render(newsType));
+	}
+	/**
+	 * 新闻详情
+	 * @return
+	 */
+	public static Result pageNewsDetail(News news){
+		boolean isAddNew = FormHelper.isAddNew(form().bindFromRequest());
+		List<NewsType> types = NewsType.findAll(); 
+		if(isAddNew){
+			return ok(views.html.module.common.newsDetail.render(null,types));
+		}
+		
+		if(news == null){
+			Long id = FormHelper.getLong(form().bindFromRequest(), "id");
+			if(id != null){
+				news = News.find(id);
+			}
+		} 
+		return ok(views.html.module.common.newsDetail.render(news,types));
 	}
 }

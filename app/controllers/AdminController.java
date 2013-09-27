@@ -37,6 +37,8 @@ public class AdminController extends BaseController {
 	private static final String PAGE_ADMIN_LOGIN_LOGS = "adminLoginLogs";// 登录日志
 	private static final String PAGE_ADMIN_MESSAGES = "adminMessages";// 留言管理
 	private static final String PAGE_ADMIN_OPERATINO_LOGS = "adminOperationLogs";// 操作日志
+	private static final String PAGE_ADMIN_NEWS_TYPE = "adminNewsType";// 新闻类型
+	private static final String PAGE_ADMIN_NEWS = "adminNews";//新闻信息
 
 	/**
 	 * adming pages
@@ -75,7 +77,12 @@ public class AdminController extends BaseController {
 			return pageAdminLoginLogs();
 		} else if (PAGE_ADMIN_OPERATINO_LOGS.equalsIgnoreCase(page)) {
 			return pageAdminOperationLogs();
-		} else {
+		}  else if (PAGE_ADMIN_NEWS_TYPE.equalsIgnoreCase(page)) {// 新闻类型管理
+			return pageAdminNewsType();
+		} else if (PAGE_ADMIN_NEWS.equalsIgnoreCase(page)) {// 新闻信息管理
+			return pageAdminNews();
+		} 
+		else {
 			return badRequest("页面不存在");
 		}
 	}
@@ -232,4 +239,41 @@ public class AdminController extends BaseController {
 		LoginController.clearSession();
 		return redirect(controllers.routes.AdminController.page(PAGE_LOGIN));
 	}
+
+
+	/**
+	 * 新闻类型管理
+	 * 
+	 * @return
+	 */
+	public static Result pageAdminNewsType() {
+		play.Logger.error(form().bindFromRequest().get("page"));
+		// get page
+		int page = FormHelper.getPage(form().bindFromRequest());
+
+		Page<NewsType> newstype = NewsType.findPage(form().bindFromRequest(), page,
+				null);
+
+		FormHelper.resetFlash(form().bindFromRequest(), flash());
+
+		return ok(views.html.module.admin.adminNewsType.render(newstype));
+	}
+	/**
+	 * 新闻类型管理
+	 * 
+	 * @return
+	 */
+	public static Result pageAdminNews() {
+		play.Logger.error(form().bindFromRequest().get("page"));
+		// get page
+		int page = FormHelper.getPage(form().bindFromRequest());
+
+		Page<News> news = News.findPage(form().bindFromRequest(), page,
+				null);
+
+		FormHelper.resetFlash(form().bindFromRequest(), flash());
+
+		return ok(views.html.module.admin.adminNews.render(news));
+	}
+
 }
