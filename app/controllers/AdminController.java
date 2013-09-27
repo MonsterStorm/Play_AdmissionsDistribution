@@ -150,7 +150,8 @@ public class AdminController extends BaseController {
 		// get page
 		int page = FormHelper.getPage(form().bindFromRequest());
 
-		Page<Student> students = Student.findPage(form().bindFromRequest(), page, null);
+		Page<Student> students = Student.findPage(form().bindFromRequest(),
+				page, null);
 
 		// reset flash
 		FormHelper.resetFlash(form().bindFromRequest(), flash());
@@ -164,7 +165,15 @@ public class AdminController extends BaseController {
 	 * @return
 	 */
 	public static Result pageAdminAgents() {
-		List<Agent> agents = Agent.findAll();
+		// get page
+		int page = FormHelper.getPage(form().bindFromRequest());
+
+		Page<Agent> agents = Agent.findPage(form().bindFromRequest(), page,
+				null);
+
+		// reset flash
+		FormHelper.resetFlash(form().bindFromRequest(), flash());
+
 		return ok(views.html.module.admin.adminAgents.render(agents));
 	}
 
@@ -174,8 +183,15 @@ public class AdminController extends BaseController {
 	 * @return
 	 */
 	public static Result pageAdminContracts() {
-		Contract contract = Contract.findUnique();
-		return ok(views.html.module.admin.adminContracts.render(contract));
+		// get page
+		int page = FormHelper.getPage(form().bindFromRequest());
+
+		Page<Contract> contracts = Contract.findPage(form().bindFromRequest(), page, null);
+
+		// reset flash
+		FormHelper.resetFlash(form().bindFromRequest(), flash());
+
+		return ok(views.html.module.admin.adminContracts.render(contracts));
 	}
 
 	/**

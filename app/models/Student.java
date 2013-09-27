@@ -9,6 +9,7 @@ import play.db.ebean.*;
 
 import com.avaje.ebean.*;
 import common.*;
+
 import controllers.*;
 
 /**
@@ -113,7 +114,7 @@ public class Student extends Model {
 	 * @return
 	 */
 	public static Page<Student> findPage(DynamicForm form, int page, Integer pageSize) {
-		return new QueryHelper<Student>().findPage(finder, form, page, pageSize);
+		return new QueryHelper<Student>(finder, form).addEq("auditOfAgent.status", "auditStatus", Integer.class).addOrderBy("orderby").findPage(page, pageSize);
 	}
 	
 	/**
