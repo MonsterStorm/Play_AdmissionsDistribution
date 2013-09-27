@@ -161,7 +161,7 @@ news:
     - !!models.News
         title: 新闻标题
         detail: 这是一条火热的新闻
-        type: !!models.NewsType
+        newsType: !!models.NewsType
                id: 1
         
 # NewsType
