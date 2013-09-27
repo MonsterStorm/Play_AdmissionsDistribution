@@ -4,6 +4,10 @@ import java.util.*;
 
 import javax.persistence.*;
 
+import com.avaje.ebean.*;
+import common.*;
+
+import play.data.*;
 import play.db.ebean.*;
 
 /**
@@ -50,5 +54,17 @@ public class TemplateType extends Model {
 	 */
 	public static TemplateType find(Long id) {
 		return finder.where().eq("id", id).findUnique();
+	}
+	
+	
+	/**
+	 * find page with filter
+	 * 
+	 * @param page
+	 * @param form
+	 * @return
+	 */
+	public static Page<TemplateType> findPage(DynamicForm form, int page, Integer pageSize) {
+		return new QueryHelper<TemplateType>().findPage(finder, form, page, pageSize);
 	}
 }

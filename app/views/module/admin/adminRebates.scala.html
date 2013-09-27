@@ -1,4 +1,11 @@
-@(models: List[Rebate])
+@(models: com.avaje.ebean.Page[Rebate])
+
+@import basic.common._
+
+@baseUrl=@{
+	var url = "adminRebates";
+	url
+}
 
 @toolbar_header={
 <div class="row">
@@ -16,37 +23,27 @@
 				排序 <span class="caret"></span>
 			</a>
 			<ul class="dropdown-menu">
-				<li><a href="#">按时间</a></li>
-				<li><a href="#">按名称</a></li>
+				<li class="@checkActive("orderby", "course.name-asc")"><a onclick="@buildAction({baseUrl}, "admin", Array("orderby"), Array("course.name-asc"))">按名称-升序</a></li>
+				<li class="@checkActive("orderby", "course.name-desc")"><a onclick="@buildAction({baseUrl}, "admin", Array("orderby"), Array("course.name-desc"))">按名称-降序</a></li>
 			</ul>
 		</div>
 	</div>
 </div>
 } 
 
-@toolbar={
+@toolbar(rebate: Rebate)={
 <!-- <script type="text/javascript">
 $('#toolbar').tooltip(options);
 </script> -->
 <div class="pull-left" style="width:130px;">
 	<div class="btn-group" id="toolbar">
+		<a class="btn btn-info" data-toggle="查看详细" href="#" onclick="getCommonPage(this, 'rebateDetail', 'id=@rebate.id');"><i
+			class="icon-eye-open icon-white"></i></a> 
+	</div>
+	<div class="btn-group" id="toolbar">
 		<a class="btn btn-success" data-toggle="确认收款" href="#"><i class="icon-ok icon-white"></i></a> 
     <a class="btn btn-info"	data-toggle="拒绝通过" href="#"><i class="icon-ban-circle icon-white"></i></a>
 	</div>
-</div>
-} 
-
-@paging={
-<div class="pagination">
-	<ul>
-		<li><a href="#">&laquo;</a></li>
-		<li><a href="#">1</a></li>
-		<li><a href="#">2</a></li>
-		<li><a href="#">3</a></li>
-		<li><a href="#">4</a></li>
-		<li><a href="#">5</a></li>
-		<li><a href="#">&raquo;</a></li>
-	</ul>
 </div>
 } 
 
@@ -71,19 +68,64 @@ $('#toolbar').tooltip(options);
 				</tr>
 			</thead>
 			<tbody>
-				@for(model <- models){
+				@for(model <- models.getList()){
 				<tr>
 					<td>@model.id</td>
-					<td><a href="#" onclick="getCommonPage(this, 'courseDetail', 'id=@model.course.id');">@model.course.name</a></td>
-					<td>@model.numOfStudents</td>
-					<td>@model.totalMoney</td>
-					<td>@model.numEduAdmit</td>
-					<td>@model.moneyEduAdmit</td>
-					<td>@model.numPlatformAdmit</td>
-					<td>@model.moneyPlatformAdmit</td>
-					<td>@model.numAgentAdmit</td>
-					<td>@model.moneyAgentAdmit</td>
-					<td>@toolbar</td>
+					@if(model.course != null){
+						<td><a href="#" onclick="getCommonPage(this, 'courseDetail', 'id=@model.course.id');">@model.course.name</a></td>
+					} else {
+						<td>-未设置-</td>
+					}
+					
+
+					@if(model.numOfStudents != null){
+						<td>@model.numOfStudents</td>
+					} else {
+						<td>-未设置-</td>
+					}
+					@if(model.totalMoney != null){
+						<td>@model.totalMoney</td>
+					} else {
+						<td>-未设置-</td>
+					}
+					
+
+					@if(model.numEduAdmit != null){
+						<td>@model.numEduAdmit</td>
+					} else {
+						<td>-未设置-</td>
+					}
+					@if(model.moneyEduAdmit != null){
+						<td>@model.moneyEduAdmit</td>
+					} else {
+						<td>-未设置-</td>
+					}
+					
+
+					@if(model.numPlatformAdmit != null){
+						<td>@model.numPlatformAdmit</td>
+					} else {
+						<td>-未设置-</td>
+					}
+					@if(model.moneyPlatformAdmit != null){
+						<td>@model.moneyPlatformAdmit</td>
+					} else {
+						<td>-未设置-</td>
+					}
+					
+
+					@if(model.numAgentAdmit != null){
+						<td>@model.numAgentAdmit</td>
+					} else {
+						<td>-未设置-</td>
+					}
+					
+					@if(model.moneyAgentAdmit != null){
+						<td>@model.moneyAgentAdmit</td>
+					} else {
+						<td>-未设置-</td>
+					}
+					<td>@toolbar(model)</td>
 				</tr>
 				}
 			</tbody>
@@ -91,4 +133,4 @@ $('#toolbar').tooltip(options);
 	</div>
 </div>
 
-@paging
+@paging(models, {baseUrl}, "admin")

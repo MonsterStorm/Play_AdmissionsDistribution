@@ -1,5 +1,10 @@
-@(models: List[TemplateType])
+@(models: com.avaje.ebean.Page[TemplateType])
+@import basic.common._
 
+@baseUrl=@{
+	var url = "adminTemplateTypes";
+	url
+}
 @toolbar_header={
 <div class="row">
 	<div class="span2">
@@ -15,40 +20,28 @@
 				排序 <span class="caret"></span>
 			</a>
 			<ul class="dropdown-menu">
-				<li><a href="#">按时间</a></li>
-				<li><a href="#">按名称</a></li>
+				<li class="@checkActive("orderby", "name-asc", true)"><a onclick="@buildAction({baseUrl}, "admin", Array("orderby"), Array("name-asc"))">按名称-升序</a></li>
+				<li class="@checkActive("orderby", "name-desc")"><a onclick="@buildAction({baseUrl}, "admin", Array("orderby"), Array("name-desc"))">按名称-降序</a></li>
+				<li class="@checkActive("orderby", "lastModified-asc")"><a onclick="@buildAction({baseUrl}, "admin", Array("orderby"), Array("lastModified-asc"))">按最近修改时间-升序</a></li>
+				<li class="@checkActive("orderby", "lastModified-desc")"><a onclick="@buildAction({baseUrl}, "admin", Array("orderby"), Array("lastModified-desc"))">按最近修改时间-降序</a></li>
 			</ul>
 		</div>
 	</div>
 </div>
 } 
-@toolbar(id: Html)={
+@toolbar(templateType: TemplateType)={
 <!-- <script type="text/javascript">
 $('#toolbar').tooltip(options);
 </script> -->
 <div class="pull-left" style="width:130px;">
 	<div class="btn-group" id="toolbar">
-		<a class="btn btn-info" data-toggle="修改" href="#" onclick="getCommonPage(this, 'templateTypeDetail', 'id=@id');"><i
+		<a class="btn btn-info" data-toggle="修改" href="#" onclick="getCommonPage(this, 'templateTypeDetail', 'id=@templateType.id');"><i
 			class="icon-edit icon-white"></i></a>
 	</div>
 	<div class="btn-group">
 		<a class="btn btn-danger" data-toggle="删除，请谨慎操作！" href="#"><i
 			class="icon-remove icon-white"></i></a>
 	</div>
-</div>
-} 
-
-@paging={
-<div class="pagination">
-	<ul>
-		<li><a href="#">&laquo;</a></li>
-		<li><a href="#">1</a></li>
-		<li><a href="#">2</a></li>
-		<li><a href="#">3</a></li>
-		<li><a href="#">4</a></li>
-		<li><a href="#">5</a></li>
-		<li><a href="#">&raquo;</a></li>
-	</ul>
 </div>
 } 
 
@@ -68,14 +61,32 @@ $('#toolbar').tooltip(options);
 				</tr>
 			</thead>
 			<tbody>
-				@for(model <- models){
+				@for(model <- models.getList()){
 				<tr>
 					<td>@model.id</td>
-					<td>@model.name</td>
-					<td>@model.info</td>
-					<td>@model.url</td>
-					<td>@model.lastModified</td>
-					<td>@toolbar{@model.id}</td>
+					@if(model.name != null){
+						<td>@model.name</td>
+					} else {
+						<td>-未设置-</td>
+					}
+					@if(model.info){
+						<td>@model.info</td>
+					} else {
+						<td>-未设置-</td>
+					}
+					
+					@if(model.url){
+						<td>@model.url</td>
+					} else {
+						<td>-未设置-</td>
+					}
+					
+					@if(model != null && model.lastModified != null){
+						<td>@datetime_formatter(model.lastModified, true)</td>
+					} else {
+						<td>-未设置-</td>
+					}
+					<td>@toolbar(model)</td>
 				</tr>
 				}
 			</tbody>
@@ -83,4 +94,4 @@ $('#toolbar').tooltip(options);
 	</div>
 </div>
 
-@paging
+@paging(models, {baseUrl}, "admin")

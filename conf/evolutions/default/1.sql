@@ -139,7 +139,7 @@ create table log_login (
   id                        bigint auto_increment not null,
   user_id                   bigint,
   time                      bigint,
-  type                      integer,
+  log_type                  integer,
   constraint pk_log_login primary key (id))
 ;
 

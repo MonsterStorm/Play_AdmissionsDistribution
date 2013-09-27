@@ -4,6 +4,10 @@ import java.util.*;
 
 import javax.persistence.*;
 
+import com.avaje.ebean.*;
+import common.*;
+
+import play.data.*;
 import play.db.ebean.*;
 
 @Entity
@@ -42,5 +46,16 @@ public class LogOperation extends Model {
 	 */
 	public static LogOperation find(Long id) {
 		return finder.where().eq("id", id).findUnique();
+	}
+	
+	/**
+	 * find page with filter
+	 * 
+	 * @param page
+	 * @param form
+	 * @return
+	 */
+	public static Page<LogOperation> findPage(DynamicForm form, int page, Integer pageSize) {
+		return new QueryHelper<LogOperation>().findPage(finder, form, page, pageSize);
 	}
 }

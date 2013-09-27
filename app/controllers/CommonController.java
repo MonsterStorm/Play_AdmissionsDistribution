@@ -24,6 +24,7 @@ public class CommonController extends Controller{
 	private static final String PAGE_STUDENT_DETAIL = "studentDetail";//学员想起
 	private static final String PAGE_AGENT_DETAIL = "agentDetail";//代理人详情
 	private static final String PAGE_CONTRACT_DETAIL = "contractDetail";//协议详情
+	private static final String PAGE_REBATE_DETAIL = "rebateDetail";//返利详情
 	
 	/**
 	 * common pages
@@ -48,6 +49,8 @@ public class CommonController extends Controller{
 			return pageUserDetail(null);
 		} else if (PAGE_CONTRACT_DETAIL.equalsIgnoreCase(page)) {//协议详情
 			return pageContractDetail(null);
+		} else if (PAGE_REBATE_DETAIL.equalsIgnoreCase(page)) {//返利详情
+			return pageRebateDetail(null);
 		} else {
 			return badRequest(Constants.MSG_PAGE_NOT_FOUND);
 		}
@@ -425,6 +428,23 @@ public class CommonController extends Controller{
 		}
 		
 		return ok(views.html.module.common.contractDetail.render(contract, types));
+	}
+	
+	/**
+	 * 用户详情
+	 * @return
+	 */
+	public static Result pageRebateDetail(Rebate rebate){
+		boolean isAddNew = FormHelper.isAddNew(form().bindFromRequest());
+		
+		if(rebate == null){
+			Long id = FormHelper.getLong(form().bindFromRequest(), "id");
+			if(id != null){
+				rebate = Rebate.find(id);
+			}
+		}
+		
+		return ok(views.html.module.common.rebateDetail.render(rebate));
 	}
 	
 	/**

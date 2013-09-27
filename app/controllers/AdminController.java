@@ -179,7 +179,8 @@ public class AdminController extends BaseController {
 		// get page
 		int page = FormHelper.getPage(form().bindFromRequest());
 
-		Page<Contract> contracts = Contract.findPage(form().bindFromRequest(), page, null);
+		Page<Contract> contracts = Contract.findPage(form().bindFromRequest(),
+				page, null);
 
 		// reset flash
 		FormHelper.resetFlash(form().bindFromRequest(), flash());
@@ -193,9 +194,16 @@ public class AdminController extends BaseController {
 	 * @return
 	 */
 	public static Result pageAdminTemplateTypes() {
-		List<TemplateType> templateTypes = TemplateType.findAll();
-		return ok(views.html.module.admin.adminTemplateTypes
-				.render(templateTypes));
+		// get page
+		int page = FormHelper.getPage(form().bindFromRequest());
+
+		Page<TemplateType> templateTypes = TemplateType.findPage(form().bindFromRequest(), page,
+				null);
+
+		// reset flash
+		FormHelper.resetFlash(form().bindFromRequest(), flash());
+
+		return ok(views.html.module.admin.adminTemplateTypes.render(templateTypes));
 	}
 
 	/**
@@ -204,7 +212,15 @@ public class AdminController extends BaseController {
 	 * @return
 	 */
 	public static Result pageAdminRebates() {
-		List<Rebate> rebates = Rebate.findAll();
+		// get page
+		int page = FormHelper.getPage(form().bindFromRequest());
+
+		Page<Rebate> rebates = Rebate.findPage(form().bindFromRequest(), page,
+				null);
+
+		// reset flash
+		FormHelper.resetFlash(form().bindFromRequest(), flash());
+
 		return ok(views.html.module.admin.adminRebates.render(rebates));
 	}
 
@@ -214,7 +230,15 @@ public class AdminController extends BaseController {
 	 * @return
 	 */
 	public static Result pageAdminMessages() {
-		List<Message> messages = Message.findAll();
+		// get page
+		int page = FormHelper.getPage(form().bindFromRequest());
+
+		Page<Message> messages = Message.findPage(form().bindFromRequest(),
+				page, null);
+
+		// reset flash
+		FormHelper.resetFlash(form().bindFromRequest(), flash());
+
 		return ok(views.html.module.admin.adminMessages.render(messages));
 	}
 
@@ -224,7 +248,15 @@ public class AdminController extends BaseController {
 	 * @return
 	 */
 	public static Result pageAdminLoginLogs() {
-		List<LogLogin> logs = LogLogin.findAll();
+		// get page
+		int page = FormHelper.getPage(form().bindFromRequest());
+
+		Page<LogLogin> logs = LogLogin.findPage(form().bindFromRequest(), page,
+				null);
+
+		// reset flash
+		FormHelper.resetFlash(form().bindFromRequest(), flash());
+
 		return ok(views.html.module.admin.adminLoginLogs.render(logs));
 	}
 
@@ -234,7 +266,15 @@ public class AdminController extends BaseController {
 	 * @return
 	 */
 	public static Result pageAdminOperationLogs() {
-		List<LogOperation> logs = LogOperation.findAll();
+		// get page
+		int page = FormHelper.getPage(form().bindFromRequest());
+
+		Page<LogOperation> logs = LogOperation.findPage(form()
+				.bindFromRequest(), page, null);
+
+		// reset flash
+		FormHelper.resetFlash(form().bindFromRequest(), flash());
+
 		return ok(views.html.module.admin.adminOperationLogs.render(logs));
 	}
 

@@ -4,6 +4,10 @@ import java.util.*;
 
 import javax.persistence.*;
 
+import com.avaje.ebean.*;
+import common.*;
+
+import play.data.*;
 import play.db.ebean.*;
 
 /**
@@ -13,9 +17,9 @@ import play.db.ebean.*;
  * 
  */
 @Entity
-@Table(name = "rebate")
+@Table(name = Rebate.TABLE_NAME)
 public class Rebate extends Model {
-
+	public static final String TABLE_NAME = "rebate";
 	@Id
 	public Long id;
 
@@ -61,7 +65,7 @@ public class Rebate extends Model {
 	public ConfirmReceipt lastReceiptOfAgent;//代理人最后确认收款信息
 
 	// -- 查询
-	public static Model.Finder<String, Rebate> finder = new Model.Finder(Long.class, Rebate.class);
+	public static Model.Finder<Long, Rebate> finder = new Model.Finder(Long.class, Rebate.class);
 
 	/**
 	 * find all user
@@ -80,5 +84,30 @@ public class Rebate extends Model {
 	 */
 	public static Rebate find(Long id) {
 		return finder.where().eq("id", id).findUnique();
+	}
+	
+	/**
+	 * delete an edu
+	 * @param form
+	 * @return
+	 */
+	public static Rebate delete(Long id){
+		Rebate rebate = find(id);
+		if(rebate != null){
+			rebate.delete();
+			return rebate;
+		}
+		return null;
+	}
+	
+	/**
+	 * find page with filter
+	 * 
+	 * @param page
+	 * @param form
+	 * @return
+	 */
+	public static Page<Rebate> findPage(DynamicForm form, int page, Integer pageSize) {
+		return new QueryHelper<Rebate>().findPage(finder, form, page, pageSize);
 	}
 }

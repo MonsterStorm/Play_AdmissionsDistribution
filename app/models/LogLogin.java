@@ -4,6 +4,10 @@ import java.util.*;
 
 import javax.persistence.*;
 
+import com.avaje.ebean.*;
+import common.*;
+
+import play.data.*;
 import play.db.ebean.*;
 
 @Entity
@@ -18,11 +22,10 @@ public class LogLogin extends Model {
 
 	public Long time;// 登录时间
 
-	public int type;// 0登录，1登出
+	public int logType;// 0登录，1登出
 
 	// -- 查询
-	public static Model.Finder<Long, LogLogin> finder = new Model.Finder(
-			Long.class, LogLogin.class);
+	public static Model.Finder<Long, LogLogin> finder = new Model.Finder(Long.class, LogLogin.class);
 
 	/**
 	 * find all user
@@ -41,5 +44,16 @@ public class LogLogin extends Model {
 	 */
 	public static LogLogin find(Long id) {
 		return finder.where().eq("id", id).findUnique();
+	}
+	
+	/**
+	 * find page with filter
+	 * 
+	 * @param page
+	 * @param form
+	 * @return
+	 */
+	public static Page<LogLogin> findPage(DynamicForm form, int page, Integer pageSize) {
+		return new QueryHelper<LogLogin>().findPage(finder, form, page, pageSize);
 	}
 }
