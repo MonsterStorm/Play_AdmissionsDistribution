@@ -16,9 +16,9 @@ import play.db.ebean.*;
  * @author MonsterStorm
  */
 @Entity
-@Table(name = "template_type")
+@Table(name = TemplateType.TABLE_NAME)
 public class TemplateType extends Model {
-
+	public static final String TABLE_NAME = "template_type";
 	@Id
 	public Long id;
 

@@ -21,7 +21,7 @@ import controllers.*;
  */
 @Entity
 @Table(name = User.TABLE_NAME)
-public class User extends Model implements IModel {
+public class User extends Model{
 	public static final String TABLE_NAME = "user";
 	public static final String LOGO_DEFAULT = "default.png";
 	// 帐号状态

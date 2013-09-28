@@ -1,4 +1,8 @@
 @(model: TemplateType)
+@import basic.common._
+@import basic.common.basicform._
+
+@bootstrapDatetimepicker()
 
 @toolbar_header={
 <div class="row">
@@ -35,68 +39,71 @@ $('#toolbar').tooltip(options);
 	</div>
 </div>
 } 
-
-@paging={
-<div class="pagination">
-	<ul>
-		<li><a href="#">&laquo;</a></li>
-		<li><a href="#">1</a></li>
-		<li><a href="#">2</a></li>
-		<li><a href="#">3</a></li>
-		<li><a href="#">4</a></li>
-		<li><a href="#">5</a></li>
-		<li><a href="#">&raquo;</a></li>
-	</ul>
-</div>
-} 
+<script type="text/javascript">
+    $(document).ready( function() {
+			$('#myform').submit(function() {
+		    $(this).ajaxSubmit(ajaxSubmitOptions);
+		    return false;
+			});
+		});
+</script>
 
 @toolbar_header
 
 <div class="table-responsive">
 	<div style="overflow: auto">
-		<form class="form-horizontal" id="myform">
-  		<div class="control-group">
-    		<label class="control-label" for="inputEmail">模板名称</label>
-    		<div class="controls">
-      		<input class="input-xxlarge" type="text" value="@model.name" readonly="readonly">
-    		</div>
-  		</div>
+		<form class="form-horizontal" id="myform" method="post" action="@routes.CommonController.addOrUpdateEntity()" encrypt="multipart/form-data">
+			@form_validate_info()
+	
+			@if(model != null){
+				@inputText("模板名称", "name", model.name, true)
+			} else {
+				@inputText("模板名称", "name", null, false)
+			}
+	  	
+			@if(model != null){
+				@textarea("简介", "info", model.info, true)
+			} else {
+				@textarea("简介", "info", null, false)
+			}
 			
-			<div class="control-group">
-    		<label class="control-label" for="inputEmail">简介</label>
-    		<div class="controls">
-      		<textarea rows="5" class="input-xxlarge" type="text" readonly="readonly">@model.info</textarea>
-    		</div>
-  		</div>
-
 			<div class="control-group">
     		<label class="control-label" for="inputEmail">模板缩略图</label>
     		<div class="controls">
       		<img data-src="holder.js/140x140" class="img-rounded" alt="140x140" style="width: 140px; height: 140px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIwAAACMCAYAAACuwEE+AAADHklEQVR4Xu3XQU7qYABGUR2xMZbNmpgz0mDSiKTQXi2VkvOG8kl99z9p4f14PH68+afAzALvwMwsZfZVABgQUgFgUi5jYBhIBYBJuYyBYSAVACblMgaGgVQAmJTLGBgGUgFgUi5jYBhIBYBJuYyBYSAVACblMgaGgVQAmJTLGBgGUgFgUi5jYBhIBYBJuYyBYSAVACblMgaGgVQAmJTLGBgGUgFgUi5jYBhIBYBJuYyBYSAVACblMgaGgVQAmJTLGBgGUgFgUi5jYBhIBYBJuYyBYSAVACblMgaGgVQAmJTLGBgGUgFgUi5jYBhIBYBJuYyBYSAVACblMgaGgVQAmJTLGBgGUgFgUi5jYBhIBYBJuYyBYSAVACblMgaGgVQAmJTLGBgGUgFgUi5jYBhIBYBJuYyBYSAVACblMgaGgVQAmJTLePNgDofD1ynu9/vR0xx7ffjZ8Au3fnfsDde+3rMR3TSYy4MfO/Sx168PfArA5YGtfb1nw3L+ezYN5vwfuHXg55/vdru30+n04w70FzD/cb1nQwPMxSNtwHQJ7fpxtzZQYBYucO8zyvkxNXVHGXt97M40/NlLX2/hHA9/u5e+w1zXmwPo3mNn6pH02+s9/JQXvMDLgrl1R5hzx6l3mLEPxsOH8KnrLXiWq7zVpsHM+Xp875vS9dfqqc8wS19vlRNe+CKbBrNwC283owAwMyKZfBcAhoZUAJiUyxgYBlIBYFIuY2AYSAWASbmMgWEgFQAm5TIGhoFUAJiUyxgYBlIBYFIuY2AYSAWASbmMgWEgFQAm5TIGhoFUAJiUyxgYBlIBYFIuY2AYSAWASbmMgWEgFQAm5TIGhoFUAJiUyxgYBlIBYFIuY2AYSAWASbmMgWEgFQAm5TIGhoFUAJiUyxgYBlIBYFIuY2AYSAWASbmMgWEgFQAm5TIGhoFUAJiUyxgYBlIBYFIuY2AYSAWASbmMgWEgFQAm5TIGhoFUAJiUyxgYBlIBYFIuY2AYSAWASbmMgWEgFQAm5TIGhoFUAJiUyxgYBlIBYFIuY2AYSAWASbmMgWEgFQAm5TL+BPn285fsB0YAAAAAAElFTkSuQmCC">
     		</div>
 				<div class="controls">
-					<input class="input-large" type="file" value="选择文件" readonly="readonly">
+					<input class="input-large" type="file" name="logo" value="选择文件" readonly="readonly">
     		</div>
   		</div>
 
-			<div class="control-group">
-    		<label class="control-label" for="inputEmail">路径</label>
-    		<div class="controls">
-      		<input class="input-large" type="text" value="@model.url" disabled>
-    		</div>
-  		</div>
+			@if(model != null){
+				@inputText("模板路径", null, model.url, true, true)
+			} else {
+				@inputText("模板路径", null, null, true, true)
+			}
 			
-			<div class="control-group">
-    		<label class="control-label" for="inputEmail">最近修改时间</label>
-    		<div class="controls">
-      		<input class="input-large" type="text" value="@model.lastModified" disabled>
-    		</div>
-  		</div>
+			@if(model != null){
+				@datetimePicker("最近修改时间", null, model.lastModified, true, true)				
+			} else {
+				@datetimePicker("最近修改时间", null, null, true, true)
+			}
+
+			<input class="input-large" type="hidden" name="table" value="@TemplateType.TABLE_NAME">
+			@if(model != null){
+				<input class="input-large" type="hidden" name="id" value="@model.id">
+			} else {
+				<input class="input-large" type="hidden" name="id">
+			}
 
 			<hr>
 			<div class="control-group row">
     		<div class="controls">
-      		<button type="button" class="btn btn-large btn-success btn-block span2 disabled">提交</button>
+					@if(model != null){
+      			<button type="submit" class="btn btn-large btn-success btn-block span2 disabled" disabled="disabled">提交</button>
+      		} else {
+      			<button type="submit" class="btn btn-large btn-success btn-block span2">提交</button>
+      		}
     	</div>
   </div>
 </form>

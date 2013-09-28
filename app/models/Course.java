@@ -58,29 +58,7 @@ public class Course extends Model {
 	public Instructor instructor;// 一个课程只能被一个讲师拥有，一个讲师可以有多个课程
 
 	static {
-		Formatters.register(CourseType.class, new SimpleFormatter<CourseType>() {
-
-			@Override
-			public CourseType parse(String arg, Locale l) throws ParseException {
-				try{
-					Long courseTypeId = Long.parseLong(arg);
-					CourseType courseType = CourseType.find(courseTypeId);
-					return courseType;
-				} catch (Exception e){
-					e.printStackTrace();
-				}
-				return null;
-			}
-
-			@Override
-			public String print(CourseType type, Locale l) {
-				if(type != null){
-					return type.name;
-				}
-				return null;
-			}
-
-		});
+		FormFormatter.registerCourseType();
 	}
 
 	/**

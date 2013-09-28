@@ -4,11 +4,12 @@ import java.util.*;
 
 import javax.persistence.*;
 
+import play.data.*;
+import play.db.ebean.*;
+
 import com.avaje.ebean.*;
 import common.*;
 
-import play.data.*;
-import play.db.ebean.*;
 import controllers.*;
 
 /**
@@ -18,8 +19,8 @@ import controllers.*;
  * 
  */
 @Entity
-@Table(name = "agent")
-public class Agent extends Model {
+@Table(name = Agent.TABLE_NAME)
+public class Agent extends Model{
 	public static final String TABLE_NAME = "agent";
 	@Id
 	public Long id;
@@ -71,6 +72,15 @@ public class Agent extends Model {
 	 */
 	public static Page<Agent> findPage(DynamicForm form, int page, Integer pageSize) {
 		return new QueryHelper<Agent>().findPage(finder, form, page, pageSize);
+	}
+	
+	/**
+	 * 删除一个新闻类型
+	 * @param form
+	 * @return
+	 */
+	public static Agent delete(Long id){
+		return QueryHelper.deleteEntity(finder, id);
 	}
 	
 	/**

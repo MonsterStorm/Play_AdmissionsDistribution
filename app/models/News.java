@@ -39,34 +39,11 @@ public class News extends Model {
 	public Long time;// 时间
 
 	static {
-		Formatters.register(NewsType.class, new SimpleFormatter<NewsType>() {
-
-			@Override
-			public NewsType parse(String arg, Locale l) throws ParseException {
-				try{
-					Long newsTypeId = Long.parseLong(arg);
-					NewsType newsType = NewsType.find(newsTypeId);
-					return newsType;
-				} catch (Exception e){
-					e.printStackTrace();
-				}
-				return null;
-			}
-
-			@Override
-			public String print(NewsType type, Locale l) {
-				if(type != null){
-					return type.name;
-				}
-				return null;
-			}
-
-		});
+		FormFormatter.registerNewsType();
 	}
 
 	// -- 查询
-	public static Model.Finder<Long, News> finder = new Model.Finder(
-			Long.class, News.class);
+	public static Model.Finder<Long, News> finder = new Model.Finder(Long.class, News.class);
 
 	/**
 	 * find all user

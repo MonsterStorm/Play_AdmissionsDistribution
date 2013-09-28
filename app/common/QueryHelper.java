@@ -4,7 +4,18 @@ import play.data.*;
 import play.db.ebean.*;
 
 import com.avaje.ebean.*;
-
+/**
+ * 查询帮助类
+ * @author MonsterStorm
+ *
+ * @param <T>
+ */
+/**
+ * 查询帮助类
+ * @author MonsterStorm
+ *
+ * @param <T>
+ */
 public class QueryHelper<T> {
 	private static final String TAG = QueryHelper.class.getSimpleName();
 	
@@ -19,6 +30,13 @@ public class QueryHelper<T> {
 		this.form = form;
 	}
 	
+	/**
+	 * 添加等于字段
+	 * @param field
+	 * @param paramStr
+	 * @param clazz
+	 * @return
+	 */
 	public QueryHelper<T> addEq(String field, String paramStr, Class<?> clazz){
 		if(query == null){
 			final String valueStr = FormHelper.getString(form, paramStr);
@@ -155,4 +173,21 @@ public class QueryHelper<T> {
 			return finder.findPagingList(pageSize).getPage(page);//get all
 		}
 	}
+	
+	/**
+	 * delete an entity
+	 * @param finder
+	 * @param id
+	 * @return
+	 */
+	public static <T extends Model> T deleteEntity(Model.Finder<Long, T> finder, Long id){
+		T t = finder.where().eq("id", id).findUnique();
+		if(t != null){
+			t.delete();
+			return t;
+		}
+		return null;
+  
+	}
+	
 }

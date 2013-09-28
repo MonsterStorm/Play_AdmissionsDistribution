@@ -38,7 +38,7 @@ public class InitialData {
 				Ebean.saveManyToManyAssociations(module, "functions");
 			}
 
-			Insert roles first
+			//Insert roles first
 			Ebean.save(all.get("roles"));
 			for (Object role : all.get("roles")) {// save many to many
 				Ebean.saveManyToManyAssociations(role, "modules");
@@ -47,7 +47,7 @@ public class InitialData {
 			// Insert userinfos first
 			Ebean.save(all.get("userinfos"));
 
-			Insert users first
+//			Insert users first
 			Ebean.save(all.get("users"));
 			for (Object user : all.get("users")) {// save many to many
 				Ebean.saveManyToManyAssociations(user, "roles");

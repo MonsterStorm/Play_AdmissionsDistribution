@@ -74,15 +74,15 @@
 			}
 			
 			@if(model != null){
-				@datetimePicker("最近修改时间", "lastModified", model.lastModified, true, true)				
+				@datetimePicker("最近修改时间", null, model.lastModified, true, true)				
 			} else {
-				@datetimePicker("最近修改时间", "lastModified", null, true, true)
+				@datetimePicker("最近修改时间", null, null, true, true)
 			}
 
 			@if(model != null){
-				@datetimePicker("创建时间", "createTime", model.createTime, true, true)				
+				@datetimePicker("创建时间", null, model.createTime, true, true)				
 			} else {
-				@datetimePicker("创建时间", "createTime", null, true, true)
+				@datetimePicker("创建时间", null, null, true, true)
 			}
 			
 			<input class="input-large" type="hidden" name="table" value="@Contract.TABLE_NAME">
@@ -95,7 +95,7 @@
 			<div class="control-group row">
     		<div class="controls">
 					@if(model != null){
-							<button type="submit" class="btn btn-large btn-success btn-block span2 disabled">提交</button>
+							<button type="submit" class="btn btn-large btn-success btn-block span2 disabled" disabled="disabled">提交</button>
 					} else {
 							<button type="submit" class="btn btn-large btn-success btn-block span2">提交</button>
 					}

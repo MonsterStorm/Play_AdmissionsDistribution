@@ -4,13 +4,11 @@ import java.util.*;
 
 import javax.persistence.*;
 
-import com.avaje.ebean.*;
-import common.*;
-
-import controllers.*;
-
 import play.data.*;
 import play.db.ebean.*;
+
+import com.avaje.ebean.*;
+import common.*;
 
 @Entity
 @Table(name = Contract.TABLE_NAME)
@@ -36,6 +34,11 @@ public class Contract extends Model {
 
 	// -- 其他基本信息
 
+	
+	static {
+		FormFormatter.registerContractType();
+	}
+	
 	// -- 查询
 	public static Model.Finder<Long, Contract> finder = new Model.Finder(Long.class, Contract.class);
 
@@ -74,7 +77,16 @@ public class Contract extends Model {
 	 * @return
 	 */
 	public static Page<Contract> findPage(DynamicForm form, int page, Integer pageSize) {
-		return new QueryHelper<Contract>(finder, form).addEq("contractType.id", "type", Long.class).addOrderBy("orderby").findPage(page, pageSize);
+		return new QueryHelper<Contract>(finder, form).addEq("contractType.id", "contractType", Long.class).addOrderBy("orderby").findPage(page, pageSize);
+	}
+	
+	/**
+	 * 删除一个新闻类型
+	 * @param form
+	 * @return
+	 */
+	public static Contract delete(Long id){
+		return QueryHelper.deleteEntity(finder, id);
 	}
 	
 	/**
