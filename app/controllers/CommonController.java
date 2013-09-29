@@ -8,10 +8,11 @@ import java.util.*;
 import models.*;
 import play.data.*;
 import play.mvc.*;
-import play.mvc.Http.*;
-import play.mvc.Http.MultipartFormData.*;
+import play.mvc.Http.MultipartFormData;
+import play.mvc.Http.MultipartFormData.FilePart;
 
 import common.*;
+import common.FileHelper.ErrorType;
 
 /**
  * 通用controller，存放公用页面
@@ -319,13 +320,22 @@ public class CommonController extends Controller {
 		MultipartFormData body = request().body().asMultipartFormData();
 		FilePart logo = body.getFile("logo");
 		if (logo != null) {
-			String fileName = logo.getFilename();
-			String contentType = logo.getContentType();
-			File file = logo.getFile();
-			FileHelper.saveFile(file);
-			Long id = Long.valueOf(form().bindFromRequest().get("id"));
-			TemplateType templateType = TemplateType.find(id);
-			return ok(views.html.module.common.templateTypeDetail.render(templateType));
+			ErrorType errorType = FileHelper.saveDefaultLogo(logo);
+			switch(errorType){
+			case ERROR_NONE:
+				Long id = FormHelper.getLong(form().bindFromRequest(), "id");
+				TemplateType templateType = TemplateType.find(id);
+				return ok(views.html.module.common.templateTypeDetail.render(templateType));
+			case ERROR_FILE_EMPTY:
+			case ERROR_FILE_TOO_LARGE:
+			case ERROR_FILE_TOO_SMALL:
+			case ERROR_INVALIDATE_NAME:
+			case ERROR_INVALIDATE_TYPE:
+			case ERROR_INTERNAL:
+			default:
+				return internalServerError(Constants.MSG_INTERNAL_ERROR);
+			}
+			
 		} else {
 			return internalServerError(Constants.MSG_INTERNAL_ERROR);
 		}
