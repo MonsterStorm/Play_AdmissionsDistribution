@@ -2,7 +2,6 @@ package controllers;
 
 import static play.data.Form.form;
 
-import java.io.*;
 import java.util.*;
 
 import models.*;
@@ -50,7 +49,7 @@ public class CommonController extends Controller {
 		} else if (PAGE_MESSAGE_DETAIL.equalsIgnoreCase(page)) {// 留言
 			return pageMessageDetail();
 		} else if (PAGE_TEMPLATE_TYPE_DETAIL.equalsIgnoreCase(page)) {// 模板类型
-			return pageTemplateTypeDetail();
+			return pageTemplateTypeDetail(null);
 		} else if (PAGE_INSTRUCTOR_TYPE_DETAIL.equalsIgnoreCase(page)) {// 讲师详情
 			return pageInstructorDetail(null);
 		} else if (PAGE_USER_DETAIL.equalsIgnoreCase(page)) {// 用户详情
@@ -317,28 +316,45 @@ public class CommonController extends Controller {
 	 * @return
 	 */
 	public static Result addOrUpdateTemplateType() {
-		MultipartFormData body = request().body().asMultipartFormData();
-		FilePart logo = body.getFile("logo");
-		if (logo != null) {
-			ErrorType errorType = FileHelper.saveDefaultLogo(logo);
-			switch(errorType){
-			case ERROR_NONE:
-				Long id = FormHelper.getLong(form().bindFromRequest(), "id");
-				TemplateType templateType = TemplateType.find(id);
-				return ok(views.html.module.common.templateTypeDetail.render(templateType));
-			case ERROR_FILE_EMPTY:
-			case ERROR_FILE_TOO_LARGE:
-			case ERROR_FILE_TOO_SMALL:
-			case ERROR_INVALIDATE_NAME:
-			case ERROR_INVALIDATE_TYPE:
-			case ERROR_INTERNAL:
-			default:
-				return internalServerError(Constants.MSG_INTERNAL_ERROR);
+		Form<TemplateType> form = form(TemplateType.class).bindFromRequest();
+		if (form != null && form.hasErrors() == false) {
+			MultipartFormData body = request().body().asMultipartFormData();
+			if(body != null){
+				FilePart logo = body.getFile("logo");
+				ErrorType errorType = FileHelper.checkValidate(logo);
+				switch(errorType){
+				case ERROR_NONE: // 文件正常
+				case ERROR_FILE_EMPTY: // 文件空，执行其他保存
+					TemplateType templateType = TemplateType.addOrUpdate(form.get(), logo);
+					if(templateType != null){
+						return pageTemplateTypeDetail(templateType);
+					}
+					break;
+				case ERROR_FILE_TOO_LARGE: // 文件太大
+					return internalServerError(Constants.MSG_FILE_TOO_LARGE);
+				case ERROR_FILE_TOO_SMALL: // 文件太小
+					return internalServerError(Constants.MSG_FILE_TOO_SMALL);
+				case ERROR_INVALIDATE_TYPE: // 文件类型不合法
+					return internalServerError(Constants.MSG_FILE_INVALIDATE_TYPE);
+				case ERROR_INVALIDATE_NAME: // 文件名不合法
+					return internalServerError(Constants.MSG_FILE_INVALIDATE_NAME);
+				case ERROR_INTERNAL://内部错误
+					return internalServerError(Constants.MSG_FILE_INTERNAL);
+				}
+			} else {
+				TemplateType templateType = TemplateType.addOrUpdate(form.get(), null);
+				if(templateType != null){
+					return pageTemplateTypeDetail(templateType);
+				}
 			}
-			
-		} else {
-			return internalServerError(Constants.MSG_INTERNAL_ERROR);
+		} else if (form.hasErrors()) {
+			String error = FormHelper.getFirstError(form.errors());
+			play.Logger.debug("error:" + error);
+			if (error != null) {
+				return badRequest(error);
+			}
 		}
+		return internalServerError(Constants.MSG_INTERNAL_ERROR);
 	}
 
 	/**
@@ -536,17 +552,26 @@ public class CommonController extends Controller {
 		Message message = Message.find(id);
 		return ok(views.html.module.common.messageDetail.render(message));
 	}
-
+	
 	/**
 	 * 模板类型详情
 	 * 
 	 * @return
 	 */
-	public static Result pageTemplateTypeDetail() {
-		Long id = Long.valueOf(form().bindFromRequest().get("id"));
-		TemplateType templateType = TemplateType.find(id);
-		return ok(views.html.module.common.templateTypeDetail
-				.render(templateType));
+	public static Result pageTemplateTypeDetail(TemplateType templateType){
+		boolean isAddNew = FormHelper.isAddNew(form().bindFromRequest());
+
+		if (isAddNew) {
+			return ok(views.html.module.common.templateTypeDetail.render(null));
+		}
+
+		if (templateType == null) {
+			Long id = FormHelper.getLong(form().bindFromRequest(), "id");
+			if (id != null) {
+				templateType = TemplateType.find(id);
+			}
+		}
+		return ok(views.html.module.common.templateTypeDetail.render(templateType));
 	}
 
 	/**

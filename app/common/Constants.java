@@ -12,6 +12,14 @@ public class Constants {
 	public static final String MSG_SUCCESS = "成功";
 	public static final String MSG_USER_USERNAME_EXIST = "该用户名已经被占用";
 	
+	//文件
+	public static final String MSG_FILE_TOO_LARGE = "文件太大"; // 文件太大
+	public static final String MSG_FILE_TOO_SMALL = "文件太小"; // 文件太小
+	public static final String MSG_FILE_INVALIDATE_TYPE = "文件类型不合法"; // 文件类型不合法
+	public static final String MSG_FILE_INVALIDATE_NAME = "文件名不合法"; // 文件名不合法
+	public static final String MSG_FILE_EMPTY = "文件不能为空"; // 文件空
+	public static final String MSG_FILE_INTERNAL = "内部错误";//内部错误
+	
 	//分页大小
 	public static final int PAGE_SIZE = 10;
 	

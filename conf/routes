@@ -29,3 +29,8 @@ GET		/admin/:page				controllers.AdminController.page(page: String)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
+
+# Map static resources form the /datas folder to the /datas URL path
+GET  	/default/logos/*file    	controllers.Assets.at(path="/datas/default/logos", file)
+GET  	/default/templates/*file    controllers.Assets.at(path="/datas/default/templates", file)
+

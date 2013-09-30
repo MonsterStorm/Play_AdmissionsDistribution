@@ -15,6 +15,6 @@ public class HashHelper {
 	public static String md5(String str){
 		if(StringHelper.isValidate(str)){
 		}
-		return null;
+		return str;
 	}
 }
