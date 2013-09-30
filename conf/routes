@@ -33,4 +33,5 @@ GET     /assets/*file               controllers.Assets.at(path="/public", file)
 # Map static resources form the /datas folder to the /datas URL path
 GET  	/default/logos/*file    	controllers.Assets.at(path="/datas/default/logos", file)
 GET  	/default/templates/*file    controllers.Assets.at(path="/datas/default/templates", file)
+GET  	/advertisments/*file    	controllers.Assets.at(path="/datas/advertisments", file)
 

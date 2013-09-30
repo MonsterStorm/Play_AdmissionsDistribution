@@ -1,9 +1,6 @@
 package controllers;
 
 import static play.data.Form.form;
-
-import java.util.*;
-
 import models.*;
 import play.mvc.*;
 
@@ -38,7 +35,8 @@ public class AdminController extends BaseController {
 	private static final String PAGE_ADMIN_MESSAGES = "adminMessages";// 留言管理
 	private static final String PAGE_ADMIN_OPERATINO_LOGS = "adminOperationLogs";// 操作日志
 	private static final String PAGE_ADMIN_NEWS_TYPE = "adminNewsType";// 新闻类型
-	private static final String PAGE_ADMIN_NEWS = "adminNews";//新闻信息
+	private static final String PAGE_ADMIN_NEWS = "adminNews";// 新闻信息
+	private static final String PAGE_ADMIN_ADVERTISMENTS = "adminAdvertisments";// 广告信息
 
 	/**
 	 * adming pages
@@ -77,12 +75,13 @@ public class AdminController extends BaseController {
 			return pageAdminLoginLogs();
 		} else if (PAGE_ADMIN_OPERATINO_LOGS.equalsIgnoreCase(page)) {
 			return pageAdminOperationLogs();
-		}  else if (PAGE_ADMIN_NEWS_TYPE.equalsIgnoreCase(page)) {// 新闻类型管理
+		} else if (PAGE_ADMIN_NEWS_TYPE.equalsIgnoreCase(page)) {// 新闻类型管理
 			return pageAdminNewsType();
 		} else if (PAGE_ADMIN_NEWS.equalsIgnoreCase(page)) {// 新闻信息管理
 			return pageAdminNews();
-		} 
-		else {
+		} else if (PAGE_ADMIN_ADVERTISMENTS.equalsIgnoreCase(page)) {// 广告管理
+			return pageAdminAdvertisments();
+		} else {
 			return badRequest("页面不存在");
 		}
 	}
@@ -204,13 +203,14 @@ public class AdminController extends BaseController {
 		// get page
 		int page = FormHelper.getPage(form().bindFromRequest());
 
-		Page<TemplateType> templateTypes = TemplateType.findPage(form().bindFromRequest(), page,
-				null);
+		Page<TemplateType> templateTypes = TemplateType.findPage(form()
+				.bindFromRequest(), page, null);
 
 		// reset flash
 		FormHelper.resetFlash(form().bindFromRequest(), flash());
 
-		return ok(views.html.module.admin.adminTemplateTypes.render(templateTypes));
+		return ok(views.html.module.admin.adminTemplateTypes
+				.render(templateTypes));
 	}
 
 	/**
@@ -296,40 +296,55 @@ public class AdminController extends BaseController {
 		return redirect(controllers.routes.AdminController.page(PAGE_LOGIN));
 	}
 
-
 	/**
 	 * 新闻类型管理
 	 * 
 	 * @return
 	 */
 	public static Result pageAdminNewsType() {
-		play.Logger.error(form().bindFromRequest().get("page"));
 		// get page
 		int page = FormHelper.getPage(form().bindFromRequest());
 
-		Page<NewsType> newstype = NewsType.findPage(form().bindFromRequest(), page,
-				null);
+		Page<NewsType> newstype = NewsType.findPage(form().bindFromRequest(),
+				page, null);
 
 		FormHelper.resetFlash(form().bindFromRequest(), flash());
 
 		return ok(views.html.module.admin.adminNewsType.render(newstype));
 	}
+
 	/**
 	 * 新闻类型管理
 	 * 
 	 * @return
 	 */
 	public static Result pageAdminNews() {
-		play.Logger.error(form().bindFromRequest().get("page"));
 		// get page
 		int page = FormHelper.getPage(form().bindFromRequest());
 
-		Page<News> news = News.findPage(form().bindFromRequest(), page,
-				null);
+		Page<News> news = News.findPage(form().bindFromRequest(), page, null);
 
 		FormHelper.resetFlash(form().bindFromRequest(), flash());
 
 		return ok(views.html.module.admin.adminNews.render(news));
+	}
+
+	/**
+	 * 广告管理
+	 * 
+	 * @return
+	 */
+	public static Result pageAdminAdvertisments() {
+		// get page
+		int page = FormHelper.getPage(form().bindFromRequest());
+
+		Page<Advertisment> advertisments = Advertisment.findPage(form()
+				.bindFromRequest(), page, null);
+
+		FormHelper.resetFlash(form().bindFromRequest(), flash());
+
+		return ok(views.html.module.admin.adminAdvertisments
+				.render(advertisments));
 	}
 
 }

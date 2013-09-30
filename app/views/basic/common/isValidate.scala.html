@@ -1,0 +1,20 @@
+@(param: String)
+
+
+@{
+	import java.lang.String;
+	var result = false;
+	result = param != null && param.equalsIgnoreCase("") == false && param.equalsIgnoreCase("null") == false;
+	result
+	
+	/*import java.lang.String;
+	
+	var result = false;
+	if(param != null && param.getClass() == String.getClass()){
+		var paramStr = (String)param;
+		result = paramStr != null && paramStr.equalsIgnoreCase("") == false && paramStr.equalsIgnoreCase("null") == false;
+	} else {
+		result = param != null;
+	}
+	result*/
+}

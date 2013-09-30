@@ -55,7 +55,7 @@ $('#toolbar').tooltip(options);
 					<th>ID</th>
 					<th>模板名称</th>
 					<th>模板简介</th>
-					<th>系统路径</th>
+					<th>模板图片</th>
 					<th>最近修改时间</th>
 					<th>操作</th> 
 				</tr>
@@ -75,11 +75,13 @@ $('#toolbar').tooltip(options);
 						<td>-未设置-</td>
 					}
 					
-					@if(model.url){
-						<td>@model.url</td>
+					@if(model.logo){
+						<td><img id="myImgPreview" class="img-rounded" alt="40x40" style="width: 40px; height: 40px;" src="@routes.Assets.at("/datas/default/templates", {model.logo})"></td>
 					} else {
 						<td>-未设置-</td>
 					}
+					
+					
 					
 					@if(model != null && model.lastModified != null){
 						<td>@datetime_formatter(model.lastModified, true)</td>

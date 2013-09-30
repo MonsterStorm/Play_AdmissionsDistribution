@@ -80,7 +80,7 @@ public class TemplateType extends Model {
 		if (templateType != null) {
 			
 			if (fileLogo != null) {
-				String logo = FileHelper.saveDefaultLogo(fileLogo);
+				String logo = FileHelper.saveDefaultTemplateTypeLogo(fileLogo);
 				templateType.logo = logo;
 			} else {
 				if(templateType.id != null){//更新，不更新logo
@@ -90,10 +90,10 @@ public class TemplateType extends Model {
 			}
 			
 			if (templateType.id == null) {// 新增
-				templateType.id = finder.nextId();
-				templateType.url = FileHelper.PATH_TEMPLATES_DEFAULT + templateType.id + File.separator;
 				templateType.lastModified = System.currentTimeMillis();
 				templateType.save();
+				templateType.url = FileHelper.PATH_TEMPLATES_DEFAULT + templateType.id + File.separator;
+				templateType.update();//更新一下链接
 			} else {// 更新
 				templateType.lastModified = System.currentTimeMillis();
 				templateType.update();

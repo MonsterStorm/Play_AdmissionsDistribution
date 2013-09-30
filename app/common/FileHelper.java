@@ -14,10 +14,11 @@ import play.mvc.Http.MultipartFormData.FilePart;
 public class FileHelper {
 	private static final long MAX_FILE_SIZE = 10 * 1024 * 1024;// 最大10M的图片
 
-	public static final String PATH_TEMPLATES = "datas/templates/";
-	public static final String PATH_LOGOS = "datas/templates/";
-	public static final String PATH_TEMPLATES_DEFAULT = "datas/default/templates/";
-	public static final String PATH_LOGOS_DEFAULT = "datas/default/logos/";
+	public static final String PATH_TEMPLATES = "datas/templates/";// 用户模板
+	public static final String PATH_LOGOS = "datas/templates/";// 用户头像
+	public static final String PATH_TEMPLATES_DEFAULT = "datas/default/templates/";// 默认模板位置
+	public static final String PATH_LOGOS_DEFAULT = "datas/default/logos/";// 默认人头像
+	public static final String PATH_ADVERTASEMENTS = "datas/advertisments/";// 广告图片
 
 	private static final String VALIDATE_FILE_TYPE = "^.(jpg|jpeg|png|bmp|gif)";// 支持的文件类型
 
@@ -68,14 +69,35 @@ public class FileHelper {
 	 * @param filePart
 	 * @return
 	 */
-	public static String saveDefaultLogo(FilePart filePart) {
+	public static String saveDefaultAdvertismentLogo(FilePart filePart) {
+		return saveDefaultLogo(PATH_ADVERTASEMENTS, filePart);
+	}
+	
+	/**
+	 * save default logo
+	 * 
+	 * @param filePart
+	 * @return
+	 */
+	public static String saveDefaultTemplateTypeLogo(FilePart filePart) {
+		return saveDefaultLogo(PATH_TEMPLATES_DEFAULT, filePart);
+	}
+
+	/**
+	 * save default logo
+	 * @param filePath
+	 * @param filePart
+	 * @return
+	 */
+	private static String saveDefaultLogo(String filePath, FilePart filePart){
 		String newFileName = buildFileName(filePart);
-		if (StringHelper.isValidate(newFileName) && saveFile(filePart, PATH_TEMPLATES_DEFAULT, newFileName) == ErrorType.ERROR_NONE) {
+		if (StringHelper.isValidate(newFileName)
+				&& saveFile(filePart, filePath, newFileName) == ErrorType.ERROR_NONE) {
 			return newFileName;
 		}
 		return null;
 	}
-
+	
 	/**
 	 * save file with given name
 	 * 

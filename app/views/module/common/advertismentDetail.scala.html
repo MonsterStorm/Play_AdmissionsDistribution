@@ -1,0 +1,107 @@
+@(model: Advertisment)
+
+@import basic.common._
+@import basic.common.basicform._
+
+@bootstrapDatetimepicker()
+
+@toolbar_header={
+<div class="row">
+	<div class="span2">
+		<h4>广告详情</h4>
+	</div>
+	<div class="btn-toolbar pull-right" role="toolbar">
+		<div class="btn-group">
+			<a class="btn btn-success" data-toggle="新增" href="#" onclick="doAddNew('#myform')"><i
+				class="icon-plus icon-white"></i>新增</a>
+		</div>
+		<div class="btn-group">
+			<a class="btn btn-info" data-toggle="编辑" href="#" onclick="toggleAllEdit(this, '#myform')"><i
+				class="icon-edit icon-white"></i>编辑</a>
+		</div>
+	</div>
+</div>
+} 
+
+<script type="text/javascript">
+    $(document).ready( function() {
+			$('#myform').submit(function() {
+		    $(this).ajaxSubmit(ajaxSubmitOptions);
+		    return false;
+			});
+		});
+</script>
+@toolbar_header
+
+<div id="aaa"></div>
+
+<div class="table-responsive">
+	<div style="overflow: auto">
+	<form class="form-horizontal" id="myform" method="post" action="@routes.CommonController.addOrUpdateEntity()">
+		
+			@form_validate_info()
+    
+  		@if(model != null){
+				@inputText("广告标题", "title", model.title, true)
+			} else {
+				@inputText("广告标题", "title", null, false)
+			}
+  		
+  		@if(model != null){
+				@inputText("链接地址", "url", model.url, true)
+			} else {
+				@inputText("链接地址", "url", null, false)
+			}
+
+			<div class="control-group">
+    		<label class="control-label" for="inputEmail">广告图片</label>
+    		<div class="controls">
+					@if(model != null && model.logo != null){
+						<img id="myImgPreview" class="img-rounded" alt="140x140" style="width: 140px; height: 140px;" src="@routes.Assets.at("/datas/advertisments", {model.logo})">
+					} else {
+						<img id="myImgPreview" data-src="holder.js/140x140" class="img-rounded" alt="140x140" style="width: 140px; height: 140px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIwAAACMCAYAAACuwEE+AAADHklEQVR4Xu3XQU7qYABGUR2xMZbNmpgz0mDSiKTQXi2VkvOG8kl99z9p4f14PH68+afAzALvwMwsZfZVABgQUgFgUi5jYBhIBYBJuYyBYSAVACblMgaGgVQAmJTLGBgGUgFgUi5jYBhIBYBJuYyBYSAVACblMgaGgVQAmJTLGBgGUgFgUi5jYBhIBYBJuYyBYSAVACblMgaGgVQAmJTLGBgGUgFgUi5jYBhIBYBJuYyBYSAVACblMgaGgVQAmJTLGBgGUgFgUi5jYBhIBYBJuYyBYSAVACblMgaGgVQAmJTLGBgGUgFgUi5jYBhIBYBJuYyBYSAVACblMgaGgVQAmJTLGBgGUgFgUi5jYBhIBYBJuYyBYSAVACblMgaGgVQAmJTLGBgGUgFgUi5jYBhIBYBJuYyBYSAVACblMgaGgVQAmJTLePNgDofD1ynu9/vR0xx7ffjZ8Au3fnfsDde+3rMR3TSYy4MfO/Sx168PfArA5YGtfb1nw3L+ezYN5vwfuHXg55/vdru30+n04w70FzD/cb1nQwPMxSNtwHQJ7fpxtzZQYBYucO8zyvkxNXVHGXt97M40/NlLX2/hHA9/u5e+w1zXmwPo3mNn6pH02+s9/JQXvMDLgrl1R5hzx6l3mLEPxsOH8KnrLXiWq7zVpsHM+Xp875vS9dfqqc8wS19vlRNe+CKbBrNwC283owAwMyKZfBcAhoZUAJiUyxgYBlIBYFIuY2AYSAWASbmMgWEgFQAm5TIGhoFUAJiUyxgYBlIBYFIuY2AYSAWASbmMgWEgFQAm5TIGhoFUAJiUyxgYBlIBYFIuY2AYSAWASbmMgWEgFQAm5TIGhoFUAJiUyxgYBlIBYFIuY2AYSAWASbmMgWEgFQAm5TIGhoFUAJiUyxgYBlIBYFIuY2AYSAWASbmMgWEgFQAm5TIGhoFUAJiUyxgYBlIBYFIuY2AYSAWASbmMgWEgFQAm5TIGhoFUAJiUyxgYBlIBYFIuY2AYSAWASbmMgWEgFQAm5TIGhoFUAJiUyxgYBlIBYFIuY2AYSAWASbmMgWEgFQAm5TL+BPn285fsB0YAAAAAAElFTkSuQmCC">						
+					}
+    		</div>
+				<div class="controls">
+					<input class="input-large" type="file" name="logo" value="选择文件" readonly="readonly" onchange="readURL(this);">
+    		</div>
+  		</div>  		
+
+  		@if(model != null){
+				@textarea("备注", "info", model.info, true)
+			} else {
+				@textarea("备注", "info", null, false)
+			}
+			
+			@if(model != null && model.createTime != null){
+				@datetimePicker("创建日期", null, model.createTime, true, true)				
+			} else {
+				@datetimePicker("创建日期", null, null, true, true)
+			}
+			
+			@if(model != null && model.lastModified != null){
+				@datetimePicker("最近修改日期", null, model.lastModified, true, true)				
+			} else {
+				@datetimePicker("最近修改日期", null, null, true, true)
+			}
+
+			<input class="input-large" type="hidden" name="table" value="@Advertisment.TABLE_NAME">
+			@if(model != null){
+				<input class="input-large" type="hidden" name="id" value="@model.id">
+			} else {
+				<input class="input-large" type="hidden" name="id">
+			}
+			<hr>
+			<div class="control-group row">
+    		<div class="controls">
+					@if(model != null){
+							<button type="submit" class="btn btn-large btn-success btn-block span2 disabled"  disabled="disabled">提交</button>
+					} else {
+							<button type="submit" class="btn btn-large btn-success btn-block span2">提交</button>
+					}
+    	</div>
+  		</div>
+		
+	</form>
+	</div>
+</div>
