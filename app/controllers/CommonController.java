@@ -2,16 +2,16 @@ package controllers;
 
 import static play.data.Form.form;
 
-import java.io.*;
 import java.util.*;
 
 import models.*;
 import play.data.*;
 import play.mvc.*;
-import play.mvc.Http.*;
-import play.mvc.Http.MultipartFormData.*;
+import play.mvc.Http.MultipartFormData;
+import play.mvc.Http.MultipartFormData.FilePart;
 
 import common.*;
+import common.FileHelper.ErrorType;
 
 /**
  * 通用controller，存放公用页面
@@ -32,6 +32,7 @@ public class CommonController extends Controller {
 	private static final String PAGE_AGENT_DETAIL = "agentDetail";// 代理人详情
 	private static final String PAGE_CONTRACT_DETAIL = "contractDetail";// 协议详情
 	private static final String PAGE_REBATE_DETAIL = "rebateDetail";// 返利详情
+	private static final String PAGE_ADVERTISEMENT_DETAIL = "advertismentDetail";// 广告详情
 
 	/**
 	 * common pages
@@ -49,7 +50,7 @@ public class CommonController extends Controller {
 		} else if (PAGE_MESSAGE_DETAIL.equalsIgnoreCase(page)) {// 留言
 			return pageMessageDetail();
 		} else if (PAGE_TEMPLATE_TYPE_DETAIL.equalsIgnoreCase(page)) {// 模板类型
-			return pageTemplateTypeDetail();
+			return pageTemplateTypeDetail(null);
 		} else if (PAGE_INSTRUCTOR_TYPE_DETAIL.equalsIgnoreCase(page)) {// 讲师详情
 			return pageInstructorDetail(null);
 		} else if (PAGE_USER_DETAIL.equalsIgnoreCase(page)) {// 用户详情
@@ -64,6 +65,8 @@ public class CommonController extends Controller {
 			return pageContractDetail(null);
 		} else if (PAGE_REBATE_DETAIL.equalsIgnoreCase(page)) {// 返利详情
 			return pageRebateDetail(null);
+		} else if (PAGE_ADVERTISEMENT_DETAIL.equalsIgnoreCase(page)) {//广告详情
+			return pageAdvertismentDetail(null);
 		} else {
 			return badRequest(Constants.MSG_PAGE_NOT_FOUND);
 		}
@@ -96,6 +99,8 @@ public class CommonController extends Controller {
 			return addOrUpdateContract();
 		} else if (TemplateType.TABLE_NAME.equalsIgnoreCase(table)) {// 添加或删除模板类型
 			return addOrUpdateTemplateType();
+		} else if (Advertisment.TABLE_NAME.equalsIgnoreCase(table)) {// 添加或删除广告
+			return addOrUpdateAdvertisment();
 		} else {
 			return badRequest(Constants.MSG_PAGE_NOT_FOUND);
 		}
@@ -316,19 +321,94 @@ public class CommonController extends Controller {
 	 * @return
 	 */
 	public static Result addOrUpdateTemplateType() {
-		MultipartFormData body = request().body().asMultipartFormData();
-		FilePart logo = body.getFile("logo");
-		if (logo != null) {
-			String fileName = logo.getFilename();
-			String contentType = logo.getContentType();
-			File file = logo.getFile();
-			FileHelper.saveFile(file);
-			Long id = Long.valueOf(form().bindFromRequest().get("id"));
-			TemplateType templateType = TemplateType.find(id);
-			return ok(views.html.module.common.templateTypeDetail.render(templateType));
-		} else {
-			return internalServerError(Constants.MSG_INTERNAL_ERROR);
+		Form<TemplateType> form = form(TemplateType.class).bindFromRequest();
+		if (form != null && form.hasErrors() == false) {
+			MultipartFormData body = request().body().asMultipartFormData();
+			if (body != null) {
+				FilePart logo = body.getFile("logo");
+				ErrorType errorType = FileHelper.checkValidate(logo);
+				switch (errorType) {
+				case ERROR_NONE: // 文件正常
+				case ERROR_FILE_EMPTY: // 文件空，执行其他保存
+					TemplateType templateType = TemplateType.addOrUpdate(
+							form.get(), logo);
+					if (templateType != null) {
+						return pageTemplateTypeDetail(templateType);
+					}
+					break;
+				case ERROR_FILE_TOO_LARGE: // 文件太大
+					return internalServerError(Constants.MSG_FILE_TOO_LARGE);
+				case ERROR_FILE_TOO_SMALL: // 文件太小
+					return internalServerError(Constants.MSG_FILE_TOO_SMALL);
+				case ERROR_INVALIDATE_TYPE: // 文件类型不合法
+					return internalServerError(Constants.MSG_FILE_INVALIDATE_TYPE);
+				case ERROR_INVALIDATE_NAME: // 文件名不合法
+					return internalServerError(Constants.MSG_FILE_INVALIDATE_NAME);
+				case ERROR_INTERNAL:// 内部错误
+					return internalServerError(Constants.MSG_FILE_INTERNAL);
+				}
+			} else {
+				TemplateType templateType = TemplateType.addOrUpdate(
+						form.get(), null);
+				if (templateType != null) {
+					return pageTemplateTypeDetail(templateType);
+				}
+			}
+		} else if (form.hasErrors()) {
+			String error = FormHelper.getFirstError(form.errors());
+			play.Logger.debug("error:" + error);
+			if (error != null) {
+				return badRequest(error);
+			}
 		}
+		return internalServerError(Constants.MSG_INTERNAL_ERROR);
+	}
+	
+	/**
+	 * add or update instructor
+	 * 
+	 * @return
+	 */
+	public static Result addOrUpdateAdvertisment() {
+		Form<Advertisment> form = form(Advertisment.class).bindFromRequest();
+		if (form != null && form.hasErrors() == false) {
+			MultipartFormData body = request().body().asMultipartFormData();
+			if (body != null) {
+				FilePart logo = body.getFile("logo");
+				ErrorType errorType = FileHelper.checkValidate(logo);
+				switch (errorType) {
+				case ERROR_NONE: // 文件正常
+				case ERROR_FILE_EMPTY: // 文件空，执行其他保存
+					Advertisment advertisment = Advertisment.addOrUpdate(form.get(), logo);
+					if (advertisment != null) {
+						return pageAdvertismentDetail(advertisment);
+					}
+					break;
+				case ERROR_FILE_TOO_LARGE: // 文件太大
+					return internalServerError(Constants.MSG_FILE_TOO_LARGE);
+				case ERROR_FILE_TOO_SMALL: // 文件太小
+					return internalServerError(Constants.MSG_FILE_TOO_SMALL);
+				case ERROR_INVALIDATE_TYPE: // 文件类型不合法
+					return internalServerError(Constants.MSG_FILE_INVALIDATE_TYPE);
+				case ERROR_INVALIDATE_NAME: // 文件名不合法
+					return internalServerError(Constants.MSG_FILE_INVALIDATE_NAME);
+				case ERROR_INTERNAL:// 内部错误
+					return internalServerError(Constants.MSG_FILE_INTERNAL);
+				}
+			} else {
+				Advertisment advertisment= Advertisment.addOrUpdate(form.get(), null);
+				if (advertisment != null) {
+					return pageAdvertismentDetail(advertisment);
+				}
+			}
+		} else if (form.hasErrors()) {
+			String error = FormHelper.getFirstError(form.errors());
+			play.Logger.debug("error:" + error);
+			if (error != null) {
+				return badRequest(error);
+			}
+		}
+		return internalServerError(Constants.MSG_INTERNAL_ERROR);
 	}
 
 	/**
@@ -532,9 +612,19 @@ public class CommonController extends Controller {
 	 * 
 	 * @return
 	 */
-	public static Result pageTemplateTypeDetail() {
-		Long id = Long.valueOf(form().bindFromRequest().get("id"));
-		TemplateType templateType = TemplateType.find(id);
+	public static Result pageTemplateTypeDetail(TemplateType templateType) {
+		boolean isAddNew = FormHelper.isAddNew(form().bindFromRequest());
+
+		if (isAddNew) {
+			return ok(views.html.module.common.templateTypeDetail.render(null));
+		}
+
+		if (templateType == null) {
+			Long id = FormHelper.getLong(form().bindFromRequest(), "id");
+			if (id != null) {
+				templateType = TemplateType.find(id);
+			}
+		}
 		return ok(views.html.module.common.templateTypeDetail
 				.render(templateType));
 	}
@@ -660,6 +750,24 @@ public class CommonController extends Controller {
 		}
 
 		return ok(views.html.module.common.rebateDetail.render(rebate));
+	}
+	
+	/**
+	 * 用户详情
+	 * 
+	 * @return
+	 */
+	public static Result pageAdvertismentDetail(Advertisment advertisment) {
+		boolean isAddNew = FormHelper.isAddNew(form().bindFromRequest());
+
+		if (advertisment == null) {
+			Long id = FormHelper.getLong(form().bindFromRequest(), "id");
+			if (id != null) {
+				advertisment = Advertisment.find(id);
+			}
+		}
+
+		return ok(views.html.module.common.advertismentDetail.render(advertisment));
 	}
 
 	/**

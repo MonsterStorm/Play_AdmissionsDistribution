@@ -5,11 +5,11 @@
 <div class="control-group">
   <label class="control-label" for="@name">@label</label>
   	<div class="controls">
-			<div class="input-append date form_datetime" id="@name"><!--为了区分不同的控件，用label作为id-->
+			<div class="input-append date form_datetime" id="@if(name == null){@label}else{@name}"><!--为了区分不同的控件，用label作为id-->
 				<input class="@clazz" size="16" type="text" @if(time!=null){value="@datetime_formatter(time, true)"} @if(readonly){readonly="readonly"} @if(disabled){disabled}>
 				@if(disabled){
 					<script type="text/javascript">
-						$('#@name').datetimepicker('remove');
+						$('#@if(name == null){@label}else{@name}').datetimepicker('remove');
 					</script>
 					<span class="add-on"><i class="icon-th"></i></span>
 				} else {

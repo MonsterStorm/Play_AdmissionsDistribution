@@ -118,5 +118,22 @@ function ajaxDelete(ajaxUrl, ajaxData, method, promptObj){
 		}
 	}
 	$.ajax(ajaxOptions);
-	
+}
+
+/**
+ * <form id="form1" runat="server">
+        <input type='file' id="imgInp" />
+        <img id="blah" src="#" alt="your image" />
+    </form>
+ * @param input
+ */
+function readURL(input, imgTarget) {
+	imgTarget = imgTarget || "#myImgPreview";
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            $(imgTarget).attr('src', e.target.result);
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
 }

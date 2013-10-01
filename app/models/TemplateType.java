@@ -1,14 +1,16 @@
 package models;
 
+import java.io.*;
 import java.util.*;
 
 import javax.persistence.*;
 
-import com.avaje.ebean.*;
-import common.*;
-
 import play.data.*;
 import play.db.ebean.*;
+import play.mvc.Http.MultipartFormData.FilePart;
+
+import com.avaje.ebean.*;
+import common.*;
 
 /**
  * 模板类型
@@ -66,5 +68,38 @@ public class TemplateType extends Model {
 	 */
 	public static Page<TemplateType> findPage(DynamicForm form, int page, Integer pageSize) {
 		return new QueryHelper<TemplateType>().findPage(finder, form, page, pageSize);
+	}
+	
+	/**
+	 * add or update
+	 * @param form
+	 * @param logo
+	 * @return
+	 */
+	public static TemplateType addOrUpdate(TemplateType templateType, FilePart fileLogo){
+		if (templateType != null) {
+			
+			if (fileLogo != null) {
+				String logo = FileHelper.saveDefaultTemplateTypeLogo(fileLogo);
+				templateType.logo = logo;
+			} else {
+				if(templateType.id != null){//更新，不更新logo
+					TemplateType oldType = TemplateType.find(templateType.id);
+					templateType.logo = oldType.logo;//不更新logo
+				}
+			}
+			
+			if (templateType.id == null) {// 新增
+				templateType.lastModified = System.currentTimeMillis();
+				templateType.save();
+				templateType.url = FileHelper.PATH_TEMPLATES_DEFAULT + templateType.id + File.separator;
+				templateType.update();//更新一下链接
+			} else {// 更新
+				templateType.lastModified = System.currentTimeMillis();
+				templateType.update();
+			}
+			return templateType;
+		}
+		return null;
 	}
 }

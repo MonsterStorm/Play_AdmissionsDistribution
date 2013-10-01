@@ -16,7 +16,15 @@ object ApplicationBuild extends Build {
   )
 
   val main = play.Project(appName, appVersion, appDependencies).settings(
-    // Add your own project settings here      
+    // Add your own project settings here
+      
+    // 添加公用资源文件夹的静态访问
+    //默认头像
+    playAssetsDirectories <+= baseDirectory / "datas/default/logos",
+    //默认模板
+	playAssetsDirectories <+= baseDirectory / "datas/default/templates",
+	//广告图片
+	playAssetsDirectories <+= baseDirectory / "datas/advertisments"
   )
 
 }

@@ -10,6 +10,7 @@ import java.util.*;
 public class DateHelper {
 	public static final String FORMAT_DATE_DEFAULT = "yyyy-MM-dd";
 	public static final String FORMAT_DATETIME_DEFAULT = "yyyy-MM-dd hh:mm:ss";
+	public static final String FORMAT_CURRENT_DEFAULT = "yyyyMMddhhmmss";
 	
 	/**
 	 * format datatime
@@ -17,8 +18,7 @@ public class DateHelper {
 	 * @return
 	 */
 	public static String formatDateTime(Long dateTime){
-		SimpleDateFormat sdf = new SimpleDateFormat(FORMAT_DATETIME_DEFAULT);
-		return sdf.format(new Date(dateTime));
+		return format(dateTime, FORMAT_DATETIME_DEFAULT);
 	}
 	
 	/**
@@ -27,7 +27,25 @@ public class DateHelper {
 	 * @return
 	 */
 	public static String formatDate(Long dateTime){
-		SimpleDateFormat sdf = new SimpleDateFormat(FORMAT_DATE_DEFAULT);
+		return format(dateTime, FORMAT_DATE_DEFAULT);
+	}
+	
+	/**
+	 * format date with given format
+	 * @param dateTime
+	 * @param format
+	 * @return
+	 */
+	public static String format(Long dateTime, String format){
+		SimpleDateFormat sdf = new SimpleDateFormat(format);
 		return sdf.format(new Date(dateTime));
+	}
+	
+	/**
+	 * get current time
+	 * @return
+	 */
+	public static String getCurrent(){
+		return format(System.currentTimeMillis(), FORMAT_CURRENT_DEFAULT);
 	}
 }
