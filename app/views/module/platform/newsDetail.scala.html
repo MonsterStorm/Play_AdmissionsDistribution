@@ -1,0 +1,10 @@
+@(model: News)
+
+@import basic.common._
+@import basic.common.basicform._
+
+<div>
+	<h2>@model.title</h2>
+	<p></p>@model.newsType.name<p></p>
+	@model.detail;
+</div>

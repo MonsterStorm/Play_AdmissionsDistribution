@@ -6,6 +6,11 @@ import play.mvc.*;
 import static play.data.Form.*;
 import controllers.RegisterController.Register;
 import controllers.LoginController.Login;
+import com.avaje.ebean.*;
+import common.*;
+import java.io.*;
+import java.util.*;
+
 public class PlatformController extends BaseController {
 	//pages
 	private static final String PAGE_INDEX = "index";
@@ -18,6 +23,8 @@ public class PlatformController extends BaseController {
 	private static final String PAGE_REGISTER_EDUCATION = "education_register";
 	private static final String PAGE_REGISTER = "register";
 	private static final String PAGE_LOGIN = "login";
+	private static final String PAGE_NEWS_DETAIL = "newsDetail";
+
 	/**
 	 * get a page
 	 * @param page
@@ -32,7 +39,8 @@ public class PlatformController extends BaseController {
 		} else if (PAGE_SUCCESSFUL_CASE.equalsIgnoreCase(page)){
 			return ok(views.html.module.platform.successfual_case.render());
 		} else if (PAGE_NEWS.equalsIgnoreCase(page)){
-			return ok(views.html.module.platform.news.render());
+			return pagePlatformNews();
+			//return ok(views.html.module.platform.news.render());
 		} else if (PAGE_REGISTER_AND_LOGIN.equalsIgnoreCase(page)){
 			return ok(views.html.module.platform.register_and_login.render());
 		} else if(PAGE_CONTACT_US.equalsIgnoreCase(page)){
@@ -52,6 +60,8 @@ public class PlatformController extends BaseController {
 		}else if(PAGE_LOGIN.equalsIgnoreCase(page)){
 			//教育机构注册
 			return ok(views.html.module.platform.login.render(form(Login.class)));
+		}else if (PAGE_NEWS_DETAIL.equalsIgnoreCase(page)){
+			return pageNewsDetail();
 		}
 		else {
 			return ok(views.html.module.platform.index.render());
@@ -68,4 +78,41 @@ public class PlatformController extends BaseController {
 		LoginController.clearSession();
 		return redirect(controllers.routes.PlatformController.page(PAGE_INDEX));
 	}
+
+
+
+	/**
+	 * 返回新闻列表
+	 * 
+	 * @return
+	 */
+	public static Result pagePlatformNews() {
+		play.Logger.error(form().bindFromRequest().get("page"));
+		// get page
+		int page = FormHelper.getPage(form().bindFromRequest());
+
+		Page<News> news = News.findPage(form().bindFromRequest(), page,
+				null);
+
+		FormHelper.resetFlash(form().bindFromRequest(), flash());
+
+		return ok(views.html.module.platform.news.render(news));
+	}
+
+
+	/**
+	 * 新闻详情
+	 * 
+	 * @return
+	 */
+	public static Result pageNewsDetail() {
+		Long id = FormHelper.getLong(form().bindFromRequest(), "id");
+		News news = null;
+		if (id != null) {
+			news = News.find(id);
+		}
+		return ok(views.html.module.platform.newsDetail.render(news));
+	}
+
+
 }
