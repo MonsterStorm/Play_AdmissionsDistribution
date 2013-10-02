@@ -24,7 +24,8 @@ public class PlatformController extends BaseController {
 	private static final String PAGE_REGISTER = "register";
 	private static final String PAGE_LOGIN = "login";
 	private static final String PAGE_NEWS_DETAIL = "newsDetail";
-
+	private static final String PAGE_COURSE = "course";
+	private static final String PAGE_COURSE_DETAIL = "courseDetail";
 	/**
 	 * get a page
 	 * @param page
@@ -62,6 +63,10 @@ public class PlatformController extends BaseController {
 			return ok(views.html.module.platform.login.render(form(Login.class)));
 		}else if (PAGE_NEWS_DETAIL.equalsIgnoreCase(page)){
 			return pageNewsDetail();
+		}else if(PAGE_COURSE.equalsIgnoreCase(page)){
+			return pagePlatformCourse();
+		}else if(PAGE_COURSE_DETAIL.equalsIgnoreCase(page)){
+			return pageCourseDetail();
 		}
 		else {
 			return ok(views.html.module.platform.index.render());
@@ -112,6 +117,37 @@ public class PlatformController extends BaseController {
 			news = News.find(id);
 		}
 		return ok(views.html.module.platform.newsDetail.render(news));
+	}
+
+	/**
+	 * 返回课程列表
+	 * 
+	 * @return
+	 */
+	public static Result pagePlatformCourse() {
+		play.Logger.error(form().bindFromRequest().get("page"));
+		// get page
+		int page = FormHelper.getPage(form().bindFromRequest());
+
+		Page<Course> course = Course.findPage(form().bindFromRequest(), page,
+				null);
+
+		FormHelper.resetFlash(form().bindFromRequest(), flash());
+
+		return ok(views.html.module.platform.course.render(course));
+	}
+	/**
+	 * 课程详情
+	 * 
+	 * @return
+	 */
+	public static Result pageCourseDetail() {
+		Long id = FormHelper.getLong(form().bindFromRequest(), "id");
+		Course course = null;
+		if (id != null) {
+			course = Course.find(id);
+		}
+		return ok(views.html.module.platform.courseDetail.render(course));
 	}
 
 

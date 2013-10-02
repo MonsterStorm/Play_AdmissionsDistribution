@@ -9,17 +9,10 @@
 
 @basic.platform.main("行业新闻"){@meta()}{@styles()}{@scripts()}{@nav()}{@header()}{
 <script type="text/javascript">
-	function getPlatformPage(li, url, data){
+function getPlatformPage(li, url, data){
   	data = data||"";
   	ajaxBasic("/platform/" +url,data,"GET","#content");
-  	function getTime(time){
-  		document.write(
-	"<p>",new DateTime(time).ToLocalTime(); "</p>"
-	); 
-
-  	}
   }
-
 </script>
 <script type="text/javascript">
 function showLocale(objD)

@@ -1,0 +1,29 @@
+@(model: Course)
+
+@import basic.common._
+@import basic.common.basicform._
+
+<div>
+	<h2>@model.name</h2>
+	<p></p>
+	课程类别：@if(model.courseType!=null && model.courseType.name!=null){@model.courseType.name}
+	<p></p>
+	教育机构：@if(model != null && model.edu != null && model.edu.name != null){@model.edu.name}
+	<p></p>
+	讲师：@if(model.instructor != null && model.instructor.user != null && model.instructor.user.username != null){@model.instructor.user.username}
+	<p></p>
+	开课时间：<script  type="text/javascript">
+	var today;
+	today = new Date(@model.startTime);
+	showLocale(today);</script>
+	<p></p>
+	课程费用：@model.money
+	<p></p>
+	联系方式：@model.contact
+	<p></p>
+	课程简介：@model.info
+	<p></p>
+	详细信息：@model.detail
+	<p></p>
+	@model.detail;
+</div>
