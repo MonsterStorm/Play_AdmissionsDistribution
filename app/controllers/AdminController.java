@@ -37,7 +37,7 @@ public class AdminController extends BaseController {
 	private static final String PAGE_ADMIN_NEWS_TYPE = "adminNewsType";// 新闻类型
 	private static final String PAGE_ADMIN_NEWS = "adminNews";// 新闻信息
 	private static final String PAGE_ADMIN_ADVERTISMENTS = "adminAdvertisments";// 广告信息
-
+	private static final String PAGE_ADMIN_COURSE_TYPE = "adminCourseType";// 课程类型管理
 	/**
 	 * adming pages
 	 * 
@@ -81,7 +81,9 @@ public class AdminController extends BaseController {
 			return pageAdminNews();
 		} else if (PAGE_ADMIN_ADVERTISMENTS.equalsIgnoreCase(page)) {// 广告管理
 			return pageAdminAdvertisments();
-		} else {
+		}else if(PAGE_ADMIN_COURSE_TYPE.equalsIgnoreCase(page)) {
+			return pageAdminCourseType();
+		}else {
 			return badRequest("页面不存在");
 		}
 	}
@@ -345,6 +347,21 @@ public class AdminController extends BaseController {
 
 		return ok(views.html.module.admin.adminAdvertisments
 				.render(advertisments));
+	}
+	/**
+	 * 课程类型详情
+	 * 
+	 * @return
+	 */
+	public static Result pageAdminCourseType() {
+		// get page
+		int page = FormHelper.getPage(form().bindFromRequest());
+
+		Page<CourseType> courseType = CourseType.findPage(form().bindFromRequest(), page, null);
+
+		FormHelper.resetFlash(form().bindFromRequest(), flash());
+
+		return ok(views.html.module.admin.adminCourseType.render(courseType));
 	}
 
 }

@@ -1,10 +1,17 @@
 <div class="ym-wrapper">
-	<div class="ym-wbox teaser">
-		<img src="@routes.Assets.at("/public", "yaml4/images/1200x360.gif")" alt="dummy image"
-						class="flexible" />
-		<div class="overlay">
-			<h3>关注教育，专注培训</h3>
-			<p>我们是一家有责任感的公司。为社会各界人士提供优质教育，整合教育资源。</p>
-		</div>
+	<div class="ym-wbox">
+		<section class ="box info">
+			<div id="advPic"></div>
+		</section>
 	</div>
 </div>
+<script type="text/javascript">
+	function getAdvPage(li, url, data){
+		 data = data || "";
+     ajaxBasic("/platform/" + url, data, "GET", "#advPic");
+		 $("#navList li.active").removeClass("active");
+		 $(li).addClass("active");
+	}
+
+	getAdvPage(this, "platformAdv");
+</script>

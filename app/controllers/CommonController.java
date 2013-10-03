@@ -33,6 +33,7 @@ public class CommonController extends Controller {
 	private static final String PAGE_CONTRACT_DETAIL = "contractDetail";// 协议详情
 	private static final String PAGE_REBATE_DETAIL = "rebateDetail";// 返利详情
 	private static final String PAGE_ADVERTISEMENT_DETAIL = "advertismentDetail";// 广告详情
+	private static final String PAGE_COURSE_TYPE_DETAIL = "courseTypeDetail";// 课程类别详情
 
 	/**
 	 * common pages
@@ -67,7 +68,9 @@ public class CommonController extends Controller {
 			return pageRebateDetail(null);
 		} else if (PAGE_ADVERTISEMENT_DETAIL.equalsIgnoreCase(page)) {//广告详情
 			return pageAdvertismentDetail(null);
-		} else {
+		} else if (PAGE_COURSE_TYPE_DETAIL.equalsIgnoreCase(page)) {//广告详情
+			return pageCourseTypeDetail(null);
+		}   else {
 			return badRequest(Constants.MSG_PAGE_NOT_FOUND);
 		}
 	}
@@ -101,6 +104,8 @@ public class CommonController extends Controller {
 			return addOrUpdateTemplateType();
 		} else if (Advertisment.TABLE_NAME.equalsIgnoreCase(table)) {// 添加或删除广告
 			return addOrUpdateAdvertisment();
+		}else if (CourseType.TABLE_NAME.equalsIgnoreCase(table)) {// 添加或删除课程类型
+			return addOrUpdateCourseType();
 		} else {
 			return badRequest(Constants.MSG_PAGE_NOT_FOUND);
 		}
@@ -127,7 +132,9 @@ public class CommonController extends Controller {
 			return deleteContract();
 		} else if (Agent.TABLE_NAME.equalsIgnoreCase(table)) {// 代理人信息删除
 			return deleteAgent();
-		} else {
+		}else if (CourseType.TABLE_NAME.equalsIgnoreCase(table)) {// 代理人信息删除
+			return deleteCourseType();
+		}  else {
 			return badRequest(Constants.MSG_PAGE_NOT_FOUND);
 		}
 	}
@@ -410,6 +417,28 @@ public class CommonController extends Controller {
 		}
 		return internalServerError(Constants.MSG_INTERNAL_ERROR);
 	}
+	/**
+	 * add or update instructor
+	 * 
+	 * @return
+	 */
+	public static Result addOrUpdateCourseType() {
+		Form<CourseType> form = form(CourseType.class).bindFromRequest();
+		if (form != null && form.hasErrors() == false) {
+			CourseType courseType = CourseType.addOrUpdate(form.get());
+			if (courseType != null) {
+				return pageCourseTypeDetail(courseType);
+			}
+		} else if (form.hasErrors()) {
+			String error = FormHelper.getFirstError(form.errors());
+			play.Logger.debug("error:" + error);
+			if (error != null) {
+				return badRequest(error);
+			}
+		}
+		return internalServerError(Constants.MSG_INTERNAL_ERROR);
+	}
+
 
 	/**
 	 * delete edu
@@ -525,6 +554,20 @@ public class CommonController extends Controller {
 		Long id = FormHelper.getLong(form().bindFromRequest(), "id");
 		if (id != null) {
 			Agent agent = Agent.delete(id);
+			return ok(Constants.MSG_SUCCESS);
+		} else {
+			return internalServerError(Constants.MSG_INTERNAL_ERROR);
+		}
+	}
+	/**
+	 * delete courseType
+	 * 
+	 * @return
+	 */
+	public static Result deleteCourseType() {
+		Long id = FormHelper.getLong(form().bindFromRequest(), "id");
+		if (id != null) {
+			CourseType courseTyoe = CourseType.delete(id);
 			return ok(Constants.MSG_SUCCESS);
 		} else {
 			return internalServerError(Constants.MSG_INTERNAL_ERROR);
@@ -784,4 +827,25 @@ public class CommonController extends Controller {
 		}
 		return ok(views.html.module.common.agentDetail.render(agent));
 	}
+	/**
+	 * 课程类型详情
+	 * 
+	 * @return
+	 */
+	public static Result pageCourseTypeDetail(CourseType courseType) {
+		boolean isAddNew = FormHelper.isAddNew(form().bindFromRequest());
+
+		if (isAddNew) {
+			return ok(views.html.module.common.courseTypeDetail.render(null));
+		}
+
+		if (courseType == null) {
+			Long id = FormHelper.getLong(form().bindFromRequest(), "id");
+			if (id != null) {
+				courseType = CourseType.find(id);
+			}
+		}
+		return ok(views.html.module.common.courseTypeDetail.render(courseType));
+	}
+	
 }
