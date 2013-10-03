@@ -83,17 +83,20 @@ function tick(time,id)
 						<li>加盟商 D</li>
 						<li>加盟商 E</li>
 					</ul>
-					<h5>广告</h5>
-					<ul>
-						<li>广告 1</li>
-						<li>广告 2</li>
-						<li>广告 3</li>
-						<li>广告 4</li>
-						<li>广告 5</li>
-					</ul>
+					<div id="platformAdv2"></div>
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
 }{@footer()}
+<script type="text/javascript">
+function getAdvPage2(li, url, data){
+		 data = data || "";
+     ajaxBasic("/platform/" + url, data, "GET", "#platformAdv2");
+		 $("#navList li.active").removeClass("active");
+		 $(li).addClass("active");
+	}
+
+	getAdvPage2(this, "platformAdv2");
+</script>

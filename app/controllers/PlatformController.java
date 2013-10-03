@@ -26,7 +26,8 @@ public class PlatformController extends BaseController {
 	private static final String PAGE_NEWS_DETAIL = "newsDetail";
 	private static final String PAGE_COURSE = "course";
 	private static final String PAGE_COURSE_DETAIL = "courseDetail";
-	private static final String PAGE_PLATFORM_ADV = "platformAdv";
+	private static final String PAGE_PLATFORM_ADV = "platformAdv";//图片广告
+	private static final String PAGE_PLATFORM_ADV2= "platformAdv2";//侧栏连接广告
 	/**
 	 * get a page
 	 * @param page
@@ -70,6 +71,8 @@ public class PlatformController extends BaseController {
 			return pageCourseDetail();
 		}else if(PAGE_PLATFORM_ADV.equalsIgnoreCase(page)){
 			return pagePlatformAdv();
+		}else if(PAGE_PLATFORM_ADV2.equalsIgnoreCase(page)){
+			return pagePlatformAdv2();
 		}
 		else {
 			return ok(views.html.module.platform.index.render());
@@ -168,6 +171,23 @@ public class PlatformController extends BaseController {
 		FormHelper.resetFlash(form().bindFromRequest(), flash());
 
 		return ok(views.html.module.platform.platformAdv.render(advertisment));
+	}
+	/**
+	 * 侧栏链接广告详情
+	 * 
+	 * @return
+	 */
+	public static Result pagePlatformAdv2() {
+		play.Logger.error(form().bindFromRequest().get("page"));
+		// get page
+		int page = FormHelper.getPage(form().bindFromRequest());
+
+		Page<Advertisment> advertisment = Advertisment.findPage(form().bindFromRequest(), page,
+				null);
+
+		FormHelper.resetFlash(form().bindFromRequest(), flash());
+
+		return ok(views.html.module.platform.platformAdv2.render(advertisment));
 	}
 
 }

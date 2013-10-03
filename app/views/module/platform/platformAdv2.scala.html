@@ -1,0 +1,10 @@
+@(models: com.avaje.ebean.Page[Advertisment])
+@import basic.platform._
+@import basic.common._
+
+<h5>广告</h5>
+<ul>
+	@for(model <- models.getList()){
+		<li><a href="@model.url">@model.title</a></li>
+	}
+</ul>
