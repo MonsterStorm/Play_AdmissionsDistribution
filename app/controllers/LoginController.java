@@ -135,4 +135,64 @@ public class LoginController extends BaseController {
 		}
 	}
 
+	/**
+	 * 处理学生登录操作
+	 * 
+	 * @return
+	 */
+	public static Result loginStudent() {
+		Form<Login> loginForm = form(Login.class).bindFromRequest();
+		if (loginForm.hasErrors()) {
+			return badRequest(views.html.module.student.login.render(loginForm));
+		} else {//登录成功，将accout添加到session，这样就可以访问AdminController的函数了
+			saveSession(loginForm.get());
+			return redirect(controllers.routes.StudentController.page("index"));
+		}
+	}
+
+	/**
+	 * 处理教师登录操作
+	 * 
+	 * @return
+	 */
+	public static Result loginTeacher() {
+		Form<Login> loginForm = form(Login.class).bindFromRequest();
+		if (loginForm.hasErrors()) {
+			return badRequest(views.html.module.teacher.login.render(loginForm));
+		} else {//登录成功，将accout添加到session，这样就可以访问AdminController的函数了
+			saveSession(loginForm.get());
+			return redirect(controllers.routes.TeacherController.page("index"));
+		}
+	}
+
+	/**
+	 * 处理代理人登录操作
+	 * 
+	 * @return
+	 */
+	public static Result loginAgent() {
+		Form<Login> loginForm = form(Login.class).bindFromRequest();
+		if (loginForm.hasErrors()) {
+			return badRequest(views.html.module.agent.login.render(loginForm));
+		} else {//登录成功，将accout添加到session，这样就可以访问AdminController的函数了
+			saveSession(loginForm.get());
+			return redirect(controllers.routes.AgentController.page("index"));
+		}
+	}
+
+	/**
+	 * 处理教育机构登录操作
+	 * 
+	 * @return
+	 */
+	public static Result loginEducation() {
+		Form<Login> loginForm = form(Login.class).bindFromRequest();
+		if (loginForm.hasErrors()) {
+			return badRequest(views.html.module.education.login.render(loginForm));
+		} else {//登录成功，将accout添加到session，这样就可以访问AdminController的函数了
+			saveSession(loginForm.get());
+			return redirect(controllers.routes.EducationController.page("index"));
+		}
+	}
+
 }

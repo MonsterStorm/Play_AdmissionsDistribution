@@ -1,0 +1,18 @@
+@(title: String)(meta: Html)(styles: Html)(scripts: Html)(header:
+Html)(content: Html)(footer: Html)
+
+<!DOCTYPE html>
+
+<html>
+<head>
+<title>@title</title> @meta @styles @scripts
+
+</head>
+<body>
+	<div class="container">
+		@header
+		@content
+		@footer
+	</div>
+</body>
+</html>

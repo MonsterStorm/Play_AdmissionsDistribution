@@ -1,9 +1,42 @@
 # Routes
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
+#Login
+
+POST	/student/login				controllers.LoginController.loginStudent()
+
+#Student
+GET		/student/login				controllers.Application.student()
+GET		/student/logout				controllers.StudentController.logout()
+GET		/student/:page				controllers.StudentController.page(page: String)
+
+#Login
+
+POST	/education/login				controllers.LoginController.loginEducation()
+
+#Education
+GET		/education/login				controllers.Application.education()
+GET		/education/logout				controllers.EducationController.logout()
+GET		/education/:page				controllers.EducationController.page(page: String)
+
+#Login
+
+POST	/agent/login				controllers.LoginController.loginAgent()
+
+#Agent
+GET		/agent/login				controllers.Application.agent()
+GET		/agent/logout				controllers.AgentController.logout()
+GET		/agent/:page				controllers.AgentController.page(page: String)
+#Login
+
+POST	/teacher/login				controllers.LoginController.loginTeacher()
+
+#Teacher
+GET		/teacher/logout				controllers.TeacherController.logout()
+GET		/teacher/login				controllers.Application.teacher()
+GET		/teacher/:page				controllers.TeacherController.page(page: String)
 
 # Home page
-GET     /                           controllers.Application.index()
 GET		/admin/login				controllers.Application.admin()
 
 # Common 
@@ -36,3 +69,4 @@ GET  	/default/logos/*file    	controllers.Assets.at(path="/datas/default/logos"
 GET  	/default/templates/*file    controllers.Assets.at(path="/datas/default/templates", file)
 GET  	/advertisments/*file    	controllers.Assets.at(path="/datas/advertisments", file)
 
+GET     /                           controllers.Application.index()
