@@ -80,6 +80,9 @@
 				@inputText("邮箱地址", "email", null, false)
 			}
   		
+  		
+  		
+  		
   		@if(model != null && model.audit != null){
 				@inputText("帐号状态", "status", String.valueOf(model.audit.status), true, true)
 			} else {

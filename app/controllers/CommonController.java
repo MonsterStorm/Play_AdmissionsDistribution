@@ -743,12 +743,21 @@ public class CommonController extends Controller {
 	 * @return
 	 */
 	public static Result pageUserDetail(User user) {
+		boolean isAddNew = FormHelper.isAddNew(form().bindFromRequest());
+
+		if (isAddNew) {
+			return ok(views.html.module.common.userDetail.render(null));
+		}
+		
 		if (user == null) {
 			Long id = FormHelper.getLong(form().bindFromRequest(), "id");
 			if (id != null) {
 				user = User.find(id);
 			}
 		}
+		
+//		List<Role> roles = Role.findAll();
+		
 		return ok(views.html.module.common.userDetail.render(user));
 	}
 

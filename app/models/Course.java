@@ -56,6 +56,9 @@ public class Course extends Model {
 
 	@ManyToOne
 	public Instructor instructor;// 一个课程只能被一个讲师拥有，一个讲师可以有多个课程
+	
+	@ManyToMany(mappedBy="courses")
+	public List<Agent> agents;//代理该课程的代理人列表，一个代理人可以代理多个课程，一个课程可以被多个代理人代理
 
 	static {
 		FormFormatter.registerCourseType();

@@ -397,7 +397,10 @@ public class User extends Model {
 				}
 			}
 
-			if (user.id == null) {// 新增
+			if (user.id == null) {// 新增，由于没有密码字段，因而需要自动生成，并发送到用户的邮箱
+				if(StringHelper.isValidate(user.password) == false){//密码不合法
+					user.password = buildRandomPassword();
+				}
 				user.save();
 				user.update();// 更新一下链接
 			} else {// 更新
@@ -441,6 +444,14 @@ public class User extends Model {
 	public static String buildPassword(String password) {
 		// hash操作
 		return password;
+	}
+	
+	/**
+	 * 生成一个随机密码
+	 * @return
+	 */
+	public static String buildRandomPassword(){
+		return "123456";
 	}
 
 }
