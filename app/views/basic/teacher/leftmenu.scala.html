@@ -1,0 +1,120 @@
+<script type="text/javascript">
+  function getPage(li, domain, url, data){
+     data = data || "";
+  
+     ajaxBasic("/" + domain + "/" + url, data, "GET", "#content");
+		 $("#navList li.active").removeClass("active");
+		 $(li).addClass("active");
+  }
+	
+	function getTeacherPage(li, url, data){
+		 data = data || "";
+     ajaxBasic("/teacher/" + url, data, "GET", "#content");
+		 $("#navList li.active").removeClass("active");
+		 $(li).addClass("active");
+	}
+	
+  function getCommonPage(li, url, data){
+     data = data || "";
+     ajaxBasic("/common/" + url, data, "GET", "#content");
+  }
+  
+  function changeValue(item, value){
+      $(item).html(value);
+  }
+  
+	function toggleActive(item){
+  	  $(item).toggleClass("active");
+  }
+  
+	/*toggle actives*/
+	function toggleActive(item, div){
+		var items = div + ".active";
+		$(items).removeClass("active");
+		$(item).addClass("active");
+	}
+
+	function toggleEdit(parent){
+		$(parent).toggleClass("readonly");
+	}
+	
+	function toggleDisabled(parent){
+		$(parent).toggleClass("disabled");
+	}
+	
+	function toggleAllEdit(item, parent){
+		var editors = $(parent + " [readonly='readonly']");
+	  if(editors && editors.length > 0){
+	  	editors.removeAttr("readonly");
+	  	toggleDisabled(parent + " button");
+	  	
+	  	$(parent + " .my_readyonly").prop("readonly", true);//所有标记为noedit的域重新添加readonly
+	  	$(parent + " button[type=submit]").removeClass("disabled");
+			$(parent + " button[type=submit]").removeAttr("disabled");
+	  } else {
+			$(parent + " input").attr("readonly", "readonly");
+			$(parent + " textarea").attr("readonly", "readonly");
+			$(parent + " select").attr("readonly", "readonly");
+			toggleDisabled(parent + " button");
+			
+			$(parent + " button[type=submit]").addClass("disabled");
+			$(parent + " button[type=submit]").prop("disabled", true);
+		}
+		
+		toggleActive(item);
+	}
+	
+	//add a new 
+	function doAddNew(parent){
+		var editors = $(parent + " [readonly='readonly']");
+    if(editors && editors.length > 0){
+	  	editors.removeAttr("readonly");
+	  }
+	  $(parent + " .my_readyonly").prop("readonly", true);//所有标记为noedit的域重新添加readonly
+	  
+	  $(parent + " input[name!='table']").attr("value", "");//把属性不是table的值置为空
+	  $(parent + " textarea").html("");
+		$(parent + " select").attr("selectedIndex", "0");
+		$(parent + " button[type=submit]").removeClass("disabled");
+		$(parent + " button[type=submit]").prop("disabled", false);
+	}
+	
+	function doEdit(item){
+			var editors = $("#contractDetail [readonly='readonly']");
+			console.dir(editors);
+	    if(editors && editors.length > 0){
+	       editors.removeAttr("readonly");
+	    } else {
+	       $("#contractDetail input").attr("readonly", "readonly");
+	       $("#contractDetail textarea").attr("readonly", "readonly");
+	    }
+	    
+	    toggleActive(item);
+	}
+	
+  function doDelete(id){
+  	 var dialog = '#dialogModal_' + id;
+     $(dialog).modal();
+  }
+  
+	function doDeleteEntity(id, data){
+     ajaxDelete("/common/delete", data, "POST", "#content");
+     var dialog = '#dialogModal_' + id;
+     $(dialog).modal('hide');
+	}
+	
+	
+</script>
+
+
+<ul class="nav nav-list" id="navList">
+	<li class="nav-header">讲师</li>
+	<li><a href="#">主页</a></li>
+	<li><a href="#">培训课程管理</a></li>
+	<li><a href="#">奖励机制管理</a></li>
+	<li><a href="#">统计及结算</a></li>
+	<li><a href="#">专属推广页面</a></li>
+	<li><a href="#">常见问题及解答</a></li>
+	<li><a href="#">问答辅助功能</a></li>
+	
+</ul>

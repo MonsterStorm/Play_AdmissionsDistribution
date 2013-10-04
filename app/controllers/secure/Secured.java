@@ -19,7 +19,15 @@ public class Secured extends Security.Authenticator {
     	final String path = ctx._requestHeader().path();//"/admin/index"
     	if(path.startsWith("/admin")){
 			return redirect(controllers.routes.Application.admin());
-    	} else {
+    	}else if(path.startsWith("/agent")){
+                return redirect(controllers.routes.Application.agent());
+            } else if(path.startsWith("/student")){
+                return redirect(controllers.routes.Application.student());
+            }else if(path.startsWith("/teacher")){
+                return redirect(controllers.routes.Application.teacher());
+            }else if(path.startsWith("/education")){
+                return redirect(controllers.routes.Application.education());
+            }else {
     		return redirect(controllers.routes.Application.index());
     	}
     }

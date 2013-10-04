@@ -1,0 +1,32 @@
+@(title: String)(meta: Html)(styles: Html)(scripts: Html)(header:
+Html)(leftmenu: Html)(nav: Html)(content: Html)(footer: Html)
+
+<!DOCTYPE html>
+
+<html>
+<head>
+<title>@title</title> @meta @styles @scripts
+
+</head>
+<body>
+	<div class="container">
+		<div class="row">
+				@header
+		</div>
+		<div class="row">
+			<div class="span2">
+				<div class="sider-bar nav well">@leftmenu</div>
+			</div>
+			<div class="span10">
+				<div class="well">
+					@nav
+					<div id="content" style="min-height:500px;"><!--自定义的id，用于ajax替换-->
+						@content
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">@footer</div>
+	</div>
+</body>
+</html>

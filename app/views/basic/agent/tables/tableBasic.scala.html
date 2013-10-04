@@ -1,0 +1,26 @@
+@(heads: List[String], models: List[User], properties: List[String])
+
+<div class="table-responsive">
+	<div style="overflow: auto">
+		<table class="table table-hover table-bordered table-striped">
+			<thead>
+				<tr>
+					<th>#</th> 
+					@for(head <- heads) {
+						<th>@head</th> 
+					}
+				</tr>
+			</thead>
+			<tbody>
+				@for(model <- models){
+				<tr>
+					<td>#</td>
+					@for(property <- properties) {
+						<td>@{model.get(property)}</td> 
+					}
+				</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+</div>
