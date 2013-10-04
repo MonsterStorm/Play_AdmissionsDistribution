@@ -40,7 +40,7 @@
 $('#toolbar').tooltip(options);
 </script> -->
 
-@dialogDelete("删除学员信息", Student.TABLE_NAME, student.id){确定删除&nbsp;<b style="font-size:x-large;color:red">@student.name</b>&nbsp;？}
+@dialogDelete("删除学员信息", Student.TABLE_NAME, student.id){确定删除&nbsp;<b style="font-size:x-large;color:red">@if(student.user != null){@student.user.username}</b>&nbsp;？}
 
 <div class="pull-left" style="width:130px;">
 	<div class="btn-group" id="toolbar">
@@ -67,8 +67,8 @@ $('#toolbar').tooltip(options);
 					<th>姓名</th>
 					<th>职位</th>
 					<th>公司</th>
-					<th>报名域名</th>
-					<th>报名时间</th>
+					<th>最新报名课程</th>
+					<th>最近报名时间</th>
 					<th>操作</th> 
 				</tr>
 			</thead>
@@ -76,8 +76,8 @@ $('#toolbar').tooltip(options);
 				@for(model <- models.getList()){
 				<tr>
 					<td>@model.id</td>
-					@if(model.name != null){
-						<td><a href="#" onclick="getCommonPage(this, 'studentDetail', 'id=@model.id');">@model.name</a></td>
+					@if(model.user != null){
+						<td><a href="#" onclick="getCommonPage(this, 'studentDetail', 'id=@model.id');">@model.user.username</a></td>
 					} else {
 						<td>-未设置-</td>
 					}
@@ -94,14 +94,14 @@ $('#toolbar').tooltip(options);
 						<td>-未设置-</td>
 					}
 					
-					@if(model.enrollDomain != null){
-						<td>@model.enrollDomain</td>
+					@if(model.enrolls != null && model.enrolls.size() > 0 && model.enrolls(0).enrollDomain != null){
+						<td>@model.enrolls(0).enrollDomain</td>
 					} else {
 						<td>-未设置-</td>
 					}
 					
-					@if(model.enrollTime != null){
-						<td>@datetime_formatter(model.enrollTime, true)</td>
+					@if(model.enrolls != null && model.enrolls.size() > 0 && model.enrolls(0).enrollTime != null){
+						<td>@datetime_formatter(model.enrolls(0).enrollTime, true)</td>
 					} else {
 						<td>-未设置-</td>
 					}

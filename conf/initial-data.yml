@@ -21,7 +21,6 @@ users:
         mobile: 1234567890
         email: zhangsan@gmail.com  
         logo: /photos/131231.png
-        status: 0
         basicInfo: *userinfo1
         edus: 
            - !!models.EducationInstitution
@@ -34,7 +33,6 @@ users:
         mobile: 2222222
         email: lisi@gmail.com  
         logo: /photos/131231.png
-        status: 0
         parentAccount: *user1
         
 # Roles
@@ -138,23 +136,6 @@ courseTypes:
         
     - !!models.CourseType
         name: 金融私募
-
-# Enrolls
-enrolls:
-    - !!models.Enroll
-        name: 张三那
-        sex: 1
-        idcard: 360402190003288745
-        companyName: 某个创业公司
-        position: 总裁
-        phone: 3456879
-        mobile: 1234567890
-        address: 浙江杭州某个地方
-        qq: 10086
-        email: zhangsan@gmail.com  
-        info: 我只是想学个课程而已。。
-        enrollIp: 127.0.0.1
-        enrollDomain: www.baidu.com
         
 # News
 news:

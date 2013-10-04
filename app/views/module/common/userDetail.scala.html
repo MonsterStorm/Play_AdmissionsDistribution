@@ -97,8 +97,8 @@
   		<div class="control-group">
     		<label class="control-label">帐号状态</label>
     		<div class="controls">
-					@if(model != null){
-      			<input class="input-xxlarge" type="text" name="status" value="@model.status" readonly="readonly">
+					@if(model != null && model.audit != null){
+      			<input class="input-xxlarge" type="text" name="status" value="@model.audit.status" readonly="readonly">
 					} else {
 						<input class="input-xxlarge" type="text" name="status">
 					}

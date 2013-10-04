@@ -34,6 +34,7 @@ public class CommonController extends Controller {
 	private static final String PAGE_REBATE_DETAIL = "rebateDetail";// 返利详情
 	private static final String PAGE_ADVERTISEMENT_DETAIL = "advertismentDetail";// 广告详情
 	private static final String PAGE_COURSE_TYPE_DETAIL = "courseTypeDetail";// 课程类别详情
+	private static final String PAGE_CHANGE_PASSWORD_WITHOUT_AUTH = "changePasswordWithoutAuth";//修改密码
 
 	/**
 	 * common pages
@@ -70,7 +71,9 @@ public class CommonController extends Controller {
 			return pageAdvertismentDetail(null);
 		} else if (PAGE_COURSE_TYPE_DETAIL.equalsIgnoreCase(page)) {//广告详情
 			return pageCourseTypeDetail(null);
-		}   else {
+		} else if (PAGE_CHANGE_PASSWORD_WITHOUT_AUTH.equalsIgnoreCase(page)) {//广告详情
+			return pageChangePasswordWithoutAuth();
+		} else {
 			return badRequest(Constants.MSG_PAGE_NOT_FOUND);
 		}
 	}
@@ -132,11 +135,19 @@ public class CommonController extends Controller {
 			return deleteContract();
 		} else if (Agent.TABLE_NAME.equalsIgnoreCase(table)) {// 代理人信息删除
 			return deleteAgent();
-		}else if (CourseType.TABLE_NAME.equalsIgnoreCase(table)) {// 代理人信息删除
+		} else if (CourseType.TABLE_NAME.equalsIgnoreCase(table)) {// 代理人信息删除
 			return deleteCourseType();
-		}  else {
+		} else {
 			return badRequest(Constants.MSG_PAGE_NOT_FOUND);
 		}
+	}
+	
+	public static Result updateEntity(){
+		String table = form().bindFromRequest().get("table");
+		if(User.TABLE_NAME.equalsIgnoreCase(table)){//用户信息更新
+			return updatePasswordWithoutAuth();
+		}
+		return badRequest(Constants.MSG_PAGE_NOT_FOUND);
 	}
 
 	/**
@@ -699,8 +710,6 @@ public class CommonController extends Controller {
 	 * @return
 	 */
 	public static Result pageUserDetail(User user) {
-		play.Logger.debug("flash:" + flash().get("xxx") + ","
-				+ flash().get("yyy"));
 		if (user == null) {
 			Long id = FormHelper.getLong(form().bindFromRequest(), "id");
 			if (id != null) {
@@ -848,4 +857,44 @@ public class CommonController extends Controller {
 		return ok(views.html.module.common.courseTypeDetail.render(courseType));
 	}
 	
+	/**
+	 * 打开修改密码页面
+	 * @return
+	 */
+	public static Result pageChangePasswordWithoutAuth(){
+		User user = LoginController.getSessionUser();
+		if(user != null){
+			return ok(views.html.module.common.changePasswordWithoutAuth.render(user));
+		}
+		return badRequest(Constants.MSG_NOT_LOGIN);
+	}
+	
+	/**
+	 * 修改用户密码，非认证方式
+	 * @param user
+	 * @return
+	 */
+	public static Result updatePasswordWithoutAuth(){
+		User user = LoginController.getSessionUser();
+		if(user != null){
+			DynamicForm form = form().bindFromRequest();
+			String oPassword = FormHelper.getString(form, "opassword");
+			String nPassword = FormHelper.getString(form, "npassword");
+			String rPassword = FormHelper.getString(form, "rpassword");
+			
+			if(StringHelper.isValidate(oPassword) && User.buildPassword(oPassword).equals(user.password)){//老密码正确
+				if(StringHelper.isValidate(nPassword) && StringHelper.isValidate(rPassword) && nPassword.equals(rPassword)){//新密码，重复密码一致
+					user.password = User.buildPassword(nPassword);
+					user.save();
+					LoginController.updateSession(user);
+					return ok(Constants.MSG_SUCCESS);//成功
+				} else {
+					return badRequest(Constants.MSG_PASSWORD_NOT_SAME);//两次密码不一致
+				}
+			} else {
+				return badRequest(Constants.MSG_OLD_PASSWORD_ERROR);
+			}
+		}
+		return badRequest(Constants.MSG_NOT_LOGIN);
+	}
 }

@@ -10,8 +10,10 @@
 	function getAdminPage(li, url, data){
 		 data = data || "";
      ajaxBasic("/admin/" + url, data, "GET", "#content");
-		 $("#navList li.active").removeClass("active");
-		 $(li).addClass("active");
+     if(li){//如果给定了li才改变选中状态，否则不改变
+		 	$("#navList li.active").removeClass("active");
+		 	$(li).addClass("active");
+		 }
 	}
 	
   function getCommonPage(li, url, data){
@@ -115,6 +117,7 @@
 	<li onclick="getAdminPage(this, 'adminEdus')"><a href="#">教育机构管理</a></li>
 	<li onclick="getAdminPage(this, 'adminInstructors')"><a href="#">讲师管理</a></li>
 	<li onclick="getAdminPage(this, 'adminStudents')"><a href="#">学员管理</a></li>
+	<li onclick="getAdminPage(this, 'adminUsers')"><a href="#">用户管理</a></li>
 	<li onclick="getAdminPage(this, 'adminAgents')"><a href="#">代理人管理</a></li>
 	<li onclick="getAdminPage(this, 'adminContracts')"><a href="#">协议管理</a></li>
 	<li onclick="getAdminPage(this, 'adminRebates')"><a href="#">业务返点</a></li>

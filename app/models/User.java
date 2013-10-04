@@ -5,10 +5,10 @@ import java.util.*;
 
 import javax.persistence.*;
 
-import models.interfaces.*;
 import play.data.*;
 import play.db.ebean.*;
 
+import com.avaje.ebean.*;
 import common.*;
 
 import controllers.*;
@@ -24,10 +24,6 @@ import controllers.*;
 public class User extends Model{
 	public static final String TABLE_NAME = "user";
 	public static final String LOGO_DEFAULT = "default.png";
-	// 帐号状态
-	public static int STATUS_NOT_AUTHED = 0;
-	public static int STATUS_AUTHED = 1;
-	public static int STATUS_AUTH_FAILED = 2;
 
 	@Id
 	public Long id;
@@ -44,7 +40,8 @@ public class User extends Model{
 
 	public String logo;// 个人头像，或者教育机构的照片
 
-	public int status;// 帐号状态，0：待审核（新注册用户为待审核，只有少量权限）1：审核通过（普通）2：审核未通过（提示审核不通过原因）3：禁用（禁用以后登录提示需要管理员激活）
+	@OneToOne(cascade=CascadeType.ALL)
+	public Audit audit;// 帐号状态，0：待审核（新注册用户为待审核，只有少量权限）1：审核通过（普通）2：审核未通过（提示审核不通过原因）3：禁用（禁用以后登录提示需要管理员激活）
 
 	@OneToOne(cascade=CascadeType.ALL)
 	public UserInfo basicInfo;// 用户基本信息，一个用户对应一个基本信息，一个基本信息对应一个用户
@@ -87,7 +84,11 @@ public class User extends Model{
 		this.nickname = nickname;
 		this.mobile = mobile;
 		this.email = email;
-		this.status = User.STATUS_NOT_AUTHED;//新增用户的状态为未认证
+		
+		Audit audit = new Audit();
+		audit.save();
+		audit.status = Audit.STATUS_WAIT;//新增用户的状态为未认证
+		this.audit = audit;
 		this.logo = User.LOGO_DEFAULT;//默认头像
 		this.basicInfo = userInfo;
 	}
@@ -274,6 +275,17 @@ public class User extends Model{
 	}
 
 	/**
+	 * find page with filter
+	 * 
+	 * @param page
+	 * @param form
+	 * @return
+	 */
+	public static Page<User> findPage(DynamicForm form, int page, Integer pageSize) {
+		return new QueryHelper<User>(finder, form).addEq("audit.status", "auditStatus", Integer.class).findPage(page, pageSize);
+	}
+	
+	/**
 	 * 认证用户名/邮箱/手机号，密码组合是否存在，存在则可以正常登录
 	 * 
 	 * @param username
@@ -373,6 +385,15 @@ public class User extends Model{
 			return Constants.INT_EMAIL_EXIST;
 		}
 		return Constants.INT_CAN_REGISTER;
+	}
+	
+	/**
+	 * 生成密码
+	 * @return
+	 */
+	public static String buildPassword(String password){
+		//hash操作
+		return password;
 	}
 
 }

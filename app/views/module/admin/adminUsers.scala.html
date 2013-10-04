@@ -1,0 +1,114 @@
+@(models: com.avaje.ebean.Page[User])
+@import basic.common._
+
+@baseUrl=@{
+	var url = "adminUsers";
+	url
+}
+@toolbar_header={
+<div class="row">
+	<div class="span2">
+		<h4>用户管理</h4>
+	</div>
+	<div class="btn-toolbar pull-right" role="toolbar">
+		<div class="btn-group">
+			<a class="btn btn-success" data-toggle="新增" href="#"><i
+				class="icon-plus icon-white"></i>新增</a>
+		</div>
+		<div class="btn-group">
+			<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+				排序 <span class="caret"></span>
+			</a>
+			<ul class="dropdown-menu">
+				<li class="@checkActive("orderby", "username-asc", true)"><a onclick="@buildAction({baseUrl}, "admin", Array("orderby"), Array("username-asc"))">按用户名-升序</a></li>
+				<li class="@checkActive("orderby", "username-desc")"><a onclick="@buildAction({baseUrl}, "admin", Array("orderby"), Array("username-desc"))">按用户名-降序</a></li>
+				<li class="@checkActive("orderby", "auditStatus-asc")"><a onclick="@buildAction({baseUrl}, "admin", Array("orderby"), Array("auditStatus-asc"))">按帐号状态-升序</a></li>
+				<li class="@checkActive("orderby", "auditStatus-desc")"><a onclick="@buildAction({baseUrl}, "admin", Array("orderby"), Array("auditStatus-desc"))">按帐号状态-降序</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+} 
+@toolbar(user: User)={
+<!-- <script type="text/javascript">
+$('#toolbar').tooltip(options);
+</script> -->
+
+@dialogDelete("删除用户", User.TABLE_NAME, user.id){确定删除&nbsp;<b style="font-size:x-large;color:red">@user.username</b>&nbsp;？}
+
+<div class="pull-left" style="width:130px;">
+	<div class="btn-group" id="toolbar">
+		<a class="btn btn-info" data-toggle="修改" href="#" onclick="getCommonPage(this, 'userDetail', 'id=@user.id');"><i
+			class="icon-edit icon-white"></i></a>
+	</div>
+	<div class="btn-group">
+		@if(user.id == session.get("user_id")){
+			<a class="btn btn-danger" data-toggle="删除，请谨慎操作！" href="#"><i	class="icon-remove icon-white" onclick="doDelete(@user.id)"></i></a>
+		} else {
+			<span class="btn btn-danger disabled" data-toggle="删除，请谨慎操作！" href="#"><i	class="icon-remove icon-white"></i></span>
+		}		
+	</div>
+</div>
+} 
+
+@toolbar_header
+
+<div class="table-responsive">
+	<div style="overflow: auto">
+		<table class="table table-hover table-bordered table-striped">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>账户名</th>
+					<th>昵称</th>
+					<th>头像</th>
+					<th>帐号状态</th>
+					<th>操作</th> 
+				</tr>
+			</thead>
+			<tbody>
+				@for(model <- models.getList()){
+				<tr>
+					<td>@model.id</td>
+					@if(model.username != null){
+						<td>@model.username</td>
+					} else {
+						<td>-未设置-</td>
+					}
+					
+					@if(model.nickname){
+						<td>@model.nickname</td>
+					} else {
+						<td>-未设置-</td>
+					}
+					
+					@if(model.logo){
+						<td><img id="myImgPreview" class="img-rounded" alt="40x40" style="width: 40px; height: 40px;" src="@routes.Assets.at("/datas/default/templates", {model.logo})"></td>
+					} else {
+						<td>-未设置-</td>
+					}
+					
+					@if(model != null && model.audit != null){
+						if(model.audit.status == Audit.STATUS_WAIT){
+							<td>未认证</td>
+						} else if (model.audit.status == Audit.STATUS_SUCCESS){
+							<td>已认证</td>
+						} else if (model.audit.status == Audit.STATUS_FAILED){
+							<td>认证失败</td>
+						} else if (model.audit.status == Audit.STATUS_DISABLED){
+							<td>禁用</td>
+						} else {
+							<td>-未设置-</td>
+						}
+					} else {
+						<td>-未设置-</td>
+					}
+					<td>@toolbar(model)</td>
+				</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+</div>
+
+@paging(models, {baseUrl}, "admin")

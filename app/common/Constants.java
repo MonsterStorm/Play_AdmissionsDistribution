@@ -5,6 +5,7 @@ package common;
  *
  */
 public class Constants {
+	public static final String MSG_NOT_LOGIN = "尚未登录，请先登录";
 	public static final String MSG_PAGE_NOT_FOUND = "页面不存在";
 	public static final String MSG_BAD_REQUEST = "请求错误";
 	public static final String MSG_INTERNAL_ERROR = "服务器内部错误";
@@ -19,6 +20,9 @@ public class Constants {
 	public static final String MSG_FILE_INVALIDATE_NAME = "文件名不合法"; // 文件名不合法
 	public static final String MSG_FILE_EMPTY = "文件不能为空"; // 文件空
 	public static final String MSG_FILE_INTERNAL = "内部错误";//内部错误
+	
+	//修改密码
+	public static final String MSG_OLD_PASSWORD_ERROR = "原始密码错误";//老密码错误
 	
 	//分页大小
 	public static final int PAGE_SIZE = 10;

@@ -38,6 +38,7 @@ public class AdminController extends BaseController {
 	private static final String PAGE_ADMIN_NEWS = "adminNews";// 新闻信息
 	private static final String PAGE_ADMIN_ADVERTISMENTS = "adminAdvertisments";// 广告信息
 	private static final String PAGE_ADMIN_COURSE_TYPE = "adminCourseType";// 课程类型管理
+	private static final String PAGE_ADMIN_USERS = "adminUsers";//用户管理
 	/**
 	 * adming pages
 	 * 
@@ -61,6 +62,8 @@ public class AdminController extends BaseController {
 			return pageAdminInstructors();
 		} else if (PAGE_ADMIN_STUDENTS.equalsIgnoreCase(page)) {
 			return pageAdminStudents();
+		} else if(PAGE_ADMIN_USERS.equalsIgnoreCase(page)) {
+			return pageAdminUsers();
 		} else if (PAGE_ADMIN_AGENTS.equalsIgnoreCase(page)) {
 			return pageAdminAgents();
 		} else if (PAGE_ADMIN_CONTRACTS.equalsIgnoreCase(page)) {
@@ -81,9 +84,9 @@ public class AdminController extends BaseController {
 			return pageAdminNews();
 		} else if (PAGE_ADMIN_ADVERTISMENTS.equalsIgnoreCase(page)) {// 广告管理
 			return pageAdminAdvertisments();
-		}else if(PAGE_ADMIN_COURSE_TYPE.equalsIgnoreCase(page)) {
+		} else if(PAGE_ADMIN_COURSE_TYPE.equalsIgnoreCase(page)) {
 			return pageAdminCourseType();
-		}else {
+		} else {
 			return badRequest("页面不存在");
 		}
 	}
@@ -158,6 +161,23 @@ public class AdminController extends BaseController {
 		FormHelper.resetFlash(form().bindFromRequest(), flash());
 
 		return ok(views.html.module.admin.adminStudents.render(students));
+	}
+	
+	/**
+	 * 教育讲师
+	 * 
+	 * @return
+	 */
+	public static Result pageAdminUsers() {
+		// get page
+		int page = FormHelper.getPage(form().bindFromRequest());
+
+		Page<User> users = User.findPage(form().bindFromRequest(), page, null);
+
+		// reset flash
+		FormHelper.resetFlash(form().bindFromRequest(), flash());
+
+		return ok(views.html.module.admin.adminUsers.render(users));
 	}
 
 	/**

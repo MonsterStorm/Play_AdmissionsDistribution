@@ -16,6 +16,7 @@ public class Audit extends Model {
 	public static final int STATUS_WAIT = 0;//等待审核
 	public static final int STATUS_SUCCESS = 1;//审核通过
 	public static final int STATUS_FAILED = 2;//审核失败
+	public static final int STATUS_DISABLED = 3;//禁用
 	
 	@Id
 	public Long id;

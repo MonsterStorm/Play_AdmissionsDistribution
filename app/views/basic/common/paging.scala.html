@@ -21,21 +21,21 @@
   	<div class="pagination">
 		<ul>
 		@if(models.hasPrev()){
-			<li><a href="#" onclick="getAdminPage(this, '@url', {@params page:@(models.getPageIndex() - 1)})">&laquo;</a></li>
+			<li><a href="#" onclick="getAdminPage(null, '@url', {@params page:@(models.getPageIndex() - 1)})">&laquo;</a></li>
 		} else {
 			<li class="disabled"><a href="#">&laquo;</a></li>
 		}
 		
 		@for(i <- 1 to models.getTotalPageCount()){
 			@if(i == models.getPageIndex() + 1){
-				<li class="active"><a href="#" onclick="getAdminPage(this, '@url', {@params page:@(i-1)})">@i</a></li>
+				<li class="active"><a href="#" onclick="getAdminPage(null, '@url', {@params page:@(i-1)})">@i</a></li>
 			} else {
-				<li><a href="#" onclick="getAdminPage(this, '@url', {@params page:@(i-1)})">@i</a></li>
+				<li><a href="#" onclick="getAdminPage(null, '@url', {@params page:@(i-1)})">@i</a></li>
 			}
 		}
 		
 		@if(models.hasNext()){
-			<li><a href="#" onclick="getAdminPage(this, '@url', {@params page:@(models.getPageIndex() + 1)})">&raquo;</a></li>
+			<li><a href="#" onclick="getAdminPage(null, '@url', {@params page:@(models.getPageIndex() + 1)})">&raquo;</a></li>
 		} else {
 			<li class="disabled"><a href="#">&raquo;</a></li>
 		}
@@ -50,21 +50,21 @@
   	<div class="pagination">
 		<ul>
 		@if(models.hasPrev()){
-			<li><a href="#" onclick="getPlatformPage(this, '@url', {@params page:@(models.getPageIndex() - 1)})">&laquo;</a></li>
+			<li><a href="#" onclick="getPlatformPage(null, '@url', {@params page:@(models.getPageIndex() - 1)})">&laquo;</a></li>
 		} else {
 			<li class="disabled"><a href="#">&laquo;</a></li>
 		}
 		
 		@for(i <- 1 to models.getTotalPageCount()){
 			@if(i == models.getPageIndex() + 1){
-				<li class="active"><a href="#" onclick="getPlatformPage(this, '@url', {@params page:@(i-1)})">@i</a></li>
+				<li class="active"><a href="#" onclick="getPlatformPage(null, '@url', {@params page:@(i-1)})">@i</a></li>
 			} else {
-				<li><a href="#" onclick="getPlatformPage(this, '@url', {@params page:@(i-1)})">@i</a></li>
+				<li><a href="#" onclick="getPlatformPage(null, '@url', {@params page:@(i-1)})">@i</a></li>
 			}
 		}
 		
 		@if(models.hasNext()){
-			<li><a href="#" onclick="getPlatformPage(this, '@url', {@params page:@(models.getPageIndex() + 1)})">&raquo;</a></li>
+			<li><a href="#" onclick="getPlatformPage(null, '@url', {@params page:@(models.getPageIndex() + 1)})">&raquo;</a></li>
 		} else {
 			<li class="disabled"><a href="#">&raquo;</a></li>
 		}
