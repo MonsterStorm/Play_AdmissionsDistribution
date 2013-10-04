@@ -171,18 +171,51 @@ public class CommonController extends Controller {
 	 * @return
 	 */
 	public static Result addOrUpdateUser() {
-		User user = User.addOrUpdate(form().bindFromRequest());
-		if (user != null) {
-			return pageUserDetail(user);
-		} else {
-			final String username = FormHelper.getString(form()
-					.bindFromRequest(), "username");
-			if (User.findByUsername(username) == null) {
-				return internalServerError(Constants.MSG_INTERNAL_ERROR);
+		Form<User> form = form(User.class).bindFromRequest();
+		if (form != null && form.hasErrors() == false) {
+			MultipartFormData body = request().body().asMultipartFormData();
+			if (body != null) {
+				FilePart logo = body.getFile("logo");
+				ErrorType errorType = FileHelper.checkValidate(logo);
+				switch (errorType) {
+				case ERROR_NONE: // 文件正常
+				case ERROR_FILE_EMPTY: // 文件空，执行其他保存
+					User user = User.addOrUpdate(form.get(), logo);
+					if (user != null) {
+						return pageUserDetail(user);
+					} else {
+						final String username = FormHelper.getString(form().bindFromRequest(), "username");
+						if (User.findByUsername(username) == null) {
+							return internalServerError(Constants.MSG_INTERNAL_ERROR);
+						} else {
+							return badRequest(Constants.MSG_USER_USERNAME_EXIST);
+						}
+					}
+				case ERROR_FILE_TOO_LARGE: // 文件太大
+					return internalServerError(Constants.MSG_FILE_TOO_LARGE);
+				case ERROR_FILE_TOO_SMALL: // 文件太小
+					return internalServerError(Constants.MSG_FILE_TOO_SMALL);
+				case ERROR_INVALIDATE_TYPE: // 文件类型不合法
+					return internalServerError(Constants.MSG_FILE_INVALIDATE_TYPE);
+				case ERROR_INVALIDATE_NAME: // 文件名不合法
+					return internalServerError(Constants.MSG_FILE_INVALIDATE_NAME);
+				case ERROR_INTERNAL:// 内部错误
+					return internalServerError(Constants.MSG_FILE_INTERNAL);
+				}
 			} else {
-				return badRequest(Constants.MSG_USER_USERNAME_EXIST);
+				User user = User.addOrUpdate(form.get(), null);
+				if (user != null) {
+					return pageUserDetail(user);
+				}
+			}
+		} else if (form.hasErrors()) {
+			String error = FormHelper.getFirstError(form.errors());
+			play.Logger.debug("error:" + error);
+			if (error != null) {
+				return badRequest(error);
 			}
 		}
+		return internalServerError(Constants.MSG_INTERNAL_ERROR);
 	}
 
 	/**

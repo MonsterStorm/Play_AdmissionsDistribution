@@ -21,6 +21,8 @@ object ApplicationBuild extends Build {
     // 添加公用资源文件夹的静态访问
     //默认头像
     playAssetsDirectories <+= baseDirectory / "datas/default/logos",
+    //用户头像
+    playAssetsDirectories <+= baseDirectory / "datas/logos",
     //默认模板
 	playAssetsDirectories <+= baseDirectory / "datas/default/templates",
 	//广告图片

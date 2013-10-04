@@ -15,7 +15,7 @@ public class FileHelper {
 	private static final long MAX_FILE_SIZE = 10 * 1024 * 1024;// 最大10M的图片
 
 	public static final String PATH_TEMPLATES = "datas/templates/";// 用户模板
-	public static final String PATH_LOGOS = "datas/templates/";// 用户头像
+	public static final String PATH_LOGOS = "datas/logos/";// 用户头像
 	public static final String PATH_TEMPLATES_DEFAULT = "datas/default/templates/";// 默认模板位置
 	public static final String PATH_LOGOS_DEFAULT = "datas/default/logos/";// 默认人头像
 	public static final String PATH_ADVERTASEMENTS = "datas/advertisments/";// 广告图片
@@ -64,13 +64,24 @@ public class FileHelper {
 	}
 
 	/**
+	 * save user logo
+	 * @param filePart
+	 * @return
+	 */
+	public static String saveUserLogo(String userId, FilePart filePart){
+		String path = buildPath(PATH_LOGOS, userId);
+		String fileName = saveFile(path, filePart);
+		return buildPath(null, userId) + fileName;
+	}
+	
+	/**
 	 * save default logo
 	 * 
 	 * @param filePart
 	 * @return
 	 */
 	public static String saveDefaultAdvertismentLogo(FilePart filePart) {
-		return saveDefaultLogo(PATH_ADVERTASEMENTS, filePart);
+		return saveFile(PATH_ADVERTASEMENTS, filePart);
 	}
 	
 	/**
@@ -80,16 +91,16 @@ public class FileHelper {
 	 * @return
 	 */
 	public static String saveDefaultTemplateTypeLogo(FilePart filePart) {
-		return saveDefaultLogo(PATH_TEMPLATES_DEFAULT, filePart);
+		return saveFile(PATH_TEMPLATES_DEFAULT, filePart);
 	}
 
 	/**
-	 * save default logo
+	 * save file
 	 * @param filePath
 	 * @param filePart
 	 * @return
 	 */
-	private static String saveDefaultLogo(String filePath, FilePart filePart){
+	private static String saveFile(String filePath, FilePart filePart){
 		String newFileName = buildFileName(filePart);
 		if (StringHelper.isValidate(newFileName)
 				&& saveFile(filePart, filePath, newFileName) == ErrorType.ERROR_NONE) {
@@ -191,4 +202,17 @@ public class FileHelper {
 		return null;
 	}
 
+	/**
+	 * 
+	 * @param basePath
+	 * @param appendPath
+	 * @return
+	 */
+	public static String buildPath(String basePath, String appendPath){
+		if(basePath != null){
+			return basePath + appendPath + "/";
+		} else {
+			return appendPath + "/";
+		}
+	}
 }
