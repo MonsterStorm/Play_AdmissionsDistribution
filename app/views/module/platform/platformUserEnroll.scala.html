@@ -14,9 +14,30 @@
 
 
 <script type="text/javascript">
+var ajaxSubmitOptionsEnroll = {
+	beforeSubmit : function() {
+		$('.myprompt').hide();
+		var target = document.getElementById('platformUserEnroll');
+		var spinner = new Spinner(spinOptions).spin(target);
+		//$('#content').html('<div class="progress progress-striped active"><div class="bar" style="width: 100%;">加载中...</div><div>');
+	},
+	success : function(html) { // 请求成功的返回数据
+		if(!html) return false;
+		$('#platformUserEnroll').html(html);
+		$('#platformUserEnroll').before('<div class="alert alert-success myprompt"><center>成功!</center></div>');
+		$(".myprompt").fadeOut({speed:"slow"});
+		return true;
+	},
+	error : function(obj) {
+		var message = obj.responseText || '服务器错误';
+		$('#platformUserEnroll').before('<div class="alert alert-danger myprompt"><center>' + message + '</center></div>');
+		$('.spinner').hide();
+		return false;
+	}
+};
     $(document).ready( function() {
 			$('#myform').submit(function() {
-		    $(this).ajaxSubmit(ajaxSubmitOptions);
+		    $(this).ajaxSubmit(ajaxSubmitOptionsEnroll);
 		    return false;
 			});
 		});
