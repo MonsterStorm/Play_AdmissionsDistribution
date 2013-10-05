@@ -68,7 +68,7 @@ public class User extends Model {
 
 	@OneToOne
 	public Student student;// 学员，一个用户对于一个学员，一个学员只能是一个用户
-
+	
 	public User() {
 	}
 
@@ -316,6 +316,14 @@ public class User extends Model {
 					.eq("password", password).findUnique();
 		}
 		return user;
+	}
+	
+	/**
+	 * 本来是通过角色来判断，这里通过是否是教育机构，是否是讲师，是否是代理人来判断
+	 * @return
+	 */
+	public boolean hasTemplate(){
+		return (this.edus != null && this.edus.size() > 0) || this.instructor != null || this.agent != null;
 	}
 
 	/**

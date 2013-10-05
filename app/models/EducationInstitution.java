@@ -1,13 +1,10 @@
 package models;
 
-import java.text.*;
 import java.util.*;
 
 import javax.persistence.*;
 
 import play.data.*;
-import play.data.format.*;
-import play.data.format.Formatters.SimpleFormatter;
 import play.db.ebean.*;
 
 import com.avaje.ebean.*;
@@ -39,6 +36,9 @@ public class EducationInstitution extends Model {
 
 	@OneToOne
 	public Audit audit;//教育机构状态，状态在Audit类中
+	
+	@OneToOne
+	public Template template;//一个教育机构有一个专属推广页面
 	
 	// 其他属性字段
 	public String name;// 教育机构名称

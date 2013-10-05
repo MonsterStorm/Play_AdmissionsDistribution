@@ -35,6 +35,9 @@ public class Agent extends Model{
 	public List<Course> courses;//代理人代理的课程列表，一个代理人可以代理多个课程，一个课程可以被多个代理人代理
 
 	@OneToOne
+	public Template template;//一个代理人有一个专属推广页面
+	
+	@OneToOne
 	public Audit audit;//是否认证
 
 	// -- 基本信息

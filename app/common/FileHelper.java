@@ -14,13 +14,15 @@ import play.mvc.Http.MultipartFormData.FilePart;
 public class FileHelper {
 	private static final long MAX_FILE_SIZE = 10 * 1024 * 1024;// 最大10M的图片
 
-	public static final String PATH_TEMPLATES = "datas/templates/";// 用户模板
+	public static final String PATH_TEMPLATES = "app/views/template/";// 用户模板
+
 	public static final String PATH_LOGOS = "datas/logos/";// 用户头像
 	public static final String PATH_TEMPLATES_DEFAULT = "datas/default/templates/";// 默认模板位置
 	public static final String PATH_LOGOS_DEFAULT = "datas/default/logos/";// 默认人头像
 	public static final String PATH_ADVERTASEMENTS = "datas/advertisments/";// 广告图片
 
-	private static final String VALIDATE_FILE_TYPE = "^.(jpg|jpeg|png|bmp|gif)";// 支持的文件类型
+	private static final String VALIDATE_IMAGE_FILE_TYPE = "^.(jpg|jpeg|png|bmp|gif)";// 支持的图片文件类型
+	private static final String VALIDATE_TEMPLATE_FILE_TYPE = "^.(html|htm|scala.html|scala.htm)";// 支持的模板文件类型
 
 	public static enum ErrorType {
 		ERROR_NONE, // 文件正常
@@ -64,16 +66,66 @@ public class FileHelper {
 	}
 
 	/**
+	 * copy files
+	 * 
+	 * @param userId
+	 * @param modelId
+	 * @param templatePath
+	 */
+	public static void copyDefaultTemplateFiles(String userId, String modelId, String templateTypeId) {
+		final String srcPath = buildPath(PATH_TEMPLATES_DEFAULT, templateTypeId);
+		final String destPath = buildValidatePath(PATH_TEMPLATES, userId, modelId);
+		play.Logger.debug(srcPath + "--->" + destPath);
+		File destFile = new File(destPath);
+		File srcFile = new File(srcPath);
+		try {
+			if(!destFile.exists()){
+				destFile.mkdirs();
+			}
+			copyDirectory(srcFile, destFile);
+			// FileUtils.copyDirectory(srcFile, destFile);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	//copy directory
+	public static void copyDirectory(File sourceLocation, File targetLocation) throws IOException {
+		if (sourceLocation.isDirectory()) {
+			if (!targetLocation.exists()) {
+				targetLocation.mkdir();
+			}
+
+			String[] children = sourceLocation.list();
+			for (int i = 0; i < children.length; i++) {
+				copyDirectory(new File(sourceLocation, children[i]), new File(targetLocation, children[i]));
+			}
+		} else {
+			InputStream in = new FileInputStream(sourceLocation);
+			OutputStream out = new FileOutputStream(targetLocation);
+			// Copy the bits from instream to outstream
+			byte[] buf = new byte[1024];
+			int len;
+			while ((len = in.read(buf)) > 0) {
+				out.write(buf, 0, len);
+			}
+			in.close();
+			out.close();
+		}
+	}
+
+	/**
 	 * save user logo
+	 * 
 	 * @param filePart
 	 * @return
 	 */
-	public static String saveUserLogo(String userId, FilePart filePart){
+	public static String saveUserLogo(String userId, FilePart filePart) {
 		String path = buildPath(PATH_LOGOS, userId);
-		String fileName = saveFile(path, filePart);
+		String fileName = saveFile(path, filePart, VALIDATE_IMAGE_FILE_TYPE);
 		return buildPath(null, userId) + fileName;
 	}
-	
+
 	/**
 	 * save default logo
 	 * 
@@ -81,34 +133,64 @@ public class FileHelper {
 	 * @return
 	 */
 	public static String saveDefaultAdvertismentLogo(FilePart filePart) {
-		return saveFile(PATH_ADVERTASEMENTS, filePart);
+		return saveFile(PATH_ADVERTASEMENTS, filePart, VALIDATE_IMAGE_FILE_TYPE);
 	}
-	
+
 	/**
 	 * save default logo
 	 * 
 	 * @param filePart
 	 * @return
 	 */
-	public static String saveDefaultTemplateTypeLogo(FilePart filePart) {
-		return saveFile(PATH_TEMPLATES_DEFAULT, filePart);
+	public static String saveDefaultTemplateTypeLogo(String templateTypeId,	FilePart filePart) {
+		String path = buildPath(PATH_TEMPLATES_DEFAULT, templateTypeId);
+		String fileName = saveFile(path, filePart, VALIDATE_IMAGE_FILE_TYPE);
+		return buildPath(null, templateTypeId) + fileName;
+	}
+
+	/**
+	 * save default template files
+	 * 
+	 * @param templateTypeId
+	 * @param filePart
+	 * @return
+	 */
+	public static String saveDefaultTemplateFiles(String templateTypeId,
+			FilePart filePart) {
+		String path = buildPath(PATH_TEMPLATES, templateTypeId);
+		String fileName = saveFile(path, filePart, VALIDATE_TEMPLATE_FILE_TYPE);
+		return buildPath(null, templateTypeId) + fileName;
+	}
+
+	/**
+	 * save template files
+	 * 
+	 * @param filePart
+	 * @return
+	 */
+	public static String saveTemplateFiles(String userId, String modelId, FilePart filePart) {
+		String path = buildValidatePath(PATH_TEMPLATES, userId, modelId);
+		String fileName = saveFile(path, filePart, VALIDATE_TEMPLATE_FILE_TYPE);
+		return buildValidatePath(null, userId, modelId) + fileName;
 	}
 
 	/**
 	 * save file
+	 * 
 	 * @param filePath
 	 * @param filePart
 	 * @return
 	 */
-	private static String saveFile(String filePath, FilePart filePart){
+	private static String saveFile(String filePath, FilePart filePart,
+			String validateFileType) {
 		String newFileName = buildFileName(filePart);
 		if (StringHelper.isValidate(newFileName)
-				&& saveFile(filePart, filePath, newFileName) == ErrorType.ERROR_NONE) {
+				&& saveFile(filePart, filePath, newFileName, validateFileType) == ErrorType.ERROR_NONE) {
 			return newFileName;
 		}
 		return null;
 	}
-	
+
 	/**
 	 * save file with given name
 	 * 
@@ -117,9 +199,9 @@ public class FileHelper {
 	 * @return
 	 */
 	public static ErrorType saveFile(FilePart filePart, final String basePath,
-			String newFileName) {
+			String newFileName, String validateFileType) {
 		try {
-			ErrorType type = checkValidate(filePart);
+			ErrorType type = checkValidate(filePart, validateFileType);
 			play.Logger.debug(type.name() + "," + type.ordinal());
 			if (type == ErrorType.ERROR_NONE) {
 				File file = filePart.getFile();
@@ -140,7 +222,7 @@ public class FileHelper {
 		}
 		return ErrorType.ERROR_INTERNAL;
 	}
-
+	
 	/**
 	 * check if a file is validate
 	 * 
@@ -148,6 +230,17 @@ public class FileHelper {
 	 * @return
 	 */
 	public static ErrorType checkValidate(FilePart filePart) {
+		return checkValidate(filePart, VALIDATE_IMAGE_FILE_TYPE);
+	}
+
+	/**
+	 * check if a file is validate
+	 * 
+	 * @param file
+	 * @return
+	 */
+	public static ErrorType checkValidate(FilePart filePart,
+			String validateFileType) {
 		try {
 			File file = null;
 			if (filePart != null && (file = filePart.getFile()) != null) {
@@ -168,7 +261,7 @@ public class FileHelper {
 					return ErrorType.ERROR_INVALIDATE_NAME;
 				}
 
-				if (postfix.toLowerCase().matches(VALIDATE_FILE_TYPE) == false) {// 文件后缀不匹配，类型不匹配
+				if (postfix.toLowerCase().matches(validateFileType) == false) {// 文件后缀不匹配，类型不匹配
 					return ErrorType.ERROR_INVALIDATE_TYPE;
 				}
 
@@ -208,11 +301,48 @@ public class FileHelper {
 	 * @param appendPath
 	 * @return
 	 */
-	public static String buildPath(String basePath, String appendPath){
-		if(basePath != null){
+	public static String buildPath(String basePath, String appendPath) {
+		if (basePath != null) {
 			return basePath + appendPath + "/";
 		} else {
 			return appendPath + "/";
 		}
+	}
+
+	
+	/**
+	 * 
+	 * @param basePath
+	 * @param appendPath
+	 * @return
+	 */
+	public static String buildValidatePath(String basePath, Long appendPathA, Long appendPathB) {//template path, src path must validate java name, start with a-zA-Z_
+		return buildValidatePath(basePath, String.valueOf(appendPathA), String.valueOf(appendPathB));
+	}
+	
+	/**
+	 * 
+	 * @param basePath
+	 * @param appendPath
+	 * @return
+	 */
+	public static String buildValidatePath(String basePath, String appendPathA,	String appendPathB) {//template path, src path must validate java name, start with a-zA-Z_
+		if (basePath != null) {
+			return createValidatePath(basePath) + createValidatePath(appendPathA) + "/" + createValidatePath(appendPathB) + "/";
+		} else {
+			return createValidatePath(appendPathA) + "/" + createValidatePath(appendPathB) + "/";
+		}
+	}
+	
+	/**
+	 * create validate path
+	 * @param path
+	 * @return
+	 */
+	public static String createValidatePath(String path){
+		if(path.matches("^([a-z]|[A-Z]|_).*") == false){//如果不是有效的java名称则转换成Java名称
+			return "F" + path;
+		}
+		return path;
 	}
 }

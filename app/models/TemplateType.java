@@ -80,7 +80,7 @@ public class TemplateType extends Model {
 		if (templateType != null) {
 			
 			if (fileLogo != null) {
-				String logo = FileHelper.saveDefaultTemplateTypeLogo(fileLogo);
+				String logo = FileHelper.saveDefaultTemplateTypeLogo(String.valueOf(templateType.id), fileLogo);
 				templateType.logo = logo;
 			} else {
 				if(templateType.id != null){//更新，不更新logo
