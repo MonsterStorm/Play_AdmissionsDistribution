@@ -6,10 +6,14 @@ import play.mvc.*;
 import static play.data.Form.*;
 import controllers.RegisterController.Register;
 import controllers.LoginController.Login;
+import controllers.secure.*;
+
 import com.avaje.ebean.*;
 import common.*;
 import java.io.*;
 import java.util.*;
+import java.text.*;
+
 
 public class PlatformController extends BaseController {
 	//pages
@@ -28,6 +32,7 @@ public class PlatformController extends BaseController {
 	private static final String PAGE_COURSE_DETAIL = "courseDetail";
 	private static final String PAGE_PLATFORM_ADV = "platformAdv";//图片广告
 	private static final String PAGE_PLATFORM_ADV2= "platformAdv2";//侧栏连接广告
+	private static final String PAGE_USER_ENROLL = "pageUserEnroll";//用户报名课程
 	/**
 	 * get a page
 	 * @param page
@@ -73,6 +78,8 @@ public class PlatformController extends BaseController {
 			return pagePlatformAdv();
 		}else if(PAGE_PLATFORM_ADV2.equalsIgnoreCase(page)){
 			return pagePlatformAdv2();
+		}else if(PAGE_USER_ENROLL.equalsIgnoreCase(page)){
+			return pageUserEnroll();
 		}
 		else {
 			return ok(views.html.module.platform.index.render());
@@ -90,6 +97,20 @@ public class PlatformController extends BaseController {
 		return redirect(controllers.routes.PlatformController.page(PAGE_INDEX));
 	}
 
+	/**
+	 * add or update entity
+	 * 
+	 * @return
+	 */
+	public static Result addOrUpdateEntity() {
+		String table = form().bindFromRequest().get("table");
+		if("student_enroll".equalsIgnoreCase(table)){//学员报名
+			return addOrUpdateStudentEnroll();
+		}
+		 else {
+			return badRequest(Constants.MSG_PAGE_NOT_FOUND);
+		}
+	}
 
 
 	/**
@@ -188,6 +209,146 @@ public class PlatformController extends BaseController {
 		FormHelper.resetFlash(form().bindFromRequest(), flash());
 
 		return ok(views.html.module.platform.platformAdv2.render(advertisment));
+	}
+	/**
+	* 前台用户报名课程
+	* 
+	**/
+	public static Result pageUserEnroll(){
+		play.Logger.error(form().bindFromRequest().get("courseId"));
+		User user =  LoginController.getSessionUser();
+		if(user == null){
+			return badRequest(Constants.MSG_NOT_LOGIN);
+		}
+		Student student = user.student;
+		Long courseId =FormHelper.getLong( form().bindFromRequest(),"courseId");
+		Course course = Course.find(courseId);
+		if(student!=null){
+			
+			if(course!=null){
+				Enroll enroll = Enroll.findByStudentAndCourse(student, course);
+				if(enroll!=null){
+					return badRequest(Constants.MSG_USER_ENROLLED);
+				}
+				//return badRequest(form().bindFromRequest().get("courseId"));
+				return ok(views.html.module.platform.platformUserEnroll.render(null, course ,null ,user ,student));
+
+			}else{
+				return badRequest(Constants.MSG_COURSE_NOT_EXIST);
+			}
+		}
+		//return badRequest("name" + course.name);
+		return ok(views.html.module.platform.platformUserEnroll.render(null, course , null , user ,null));
+
+	}
+
+
+
+
+	/**
+	 * add or update instructor
+	 * 
+	 * @return
+	 */
+	public static Result addOrUpdateStudentEnroll() {
+		play.Logger.error(form().bindFromRequest().get("courseId"));
+		User user =  LoginController.getSessionUser();
+		if(user == null){
+			return badRequest(Constants.MSG_NOT_LOGIN);
+		}
+		Student student = user.student;
+		if(student!=null){
+			Long courseId =  FormHelper.getLong(form().bindFromRequest(),"courseId");
+			Course course = Course.find(courseId);
+			if(course!=null){
+				Enroll enroll = Enroll.findByStudentAndCourse(student, course);
+				if(enroll!=null){
+					return badRequest(Constants.MSG_USER_ENROLLED);
+				}
+			}else{
+				return badRequest(Constants.MSG_COURSE_NOT_EXIST);
+			}
+		}
+
+
+		UserInfo basicInfo = user.basicInfo;
+		if(basicInfo == null){
+			basicInfo = new UserInfo();
+
+			basicInfo.realname = form().bindFromRequest().get("realname");
+			basicInfo.sex = form().bindFromRequest().get("sex");
+			basicInfo.idcard = form().bindFromRequest().get("idcard");
+			basicInfo.birthday = Long.parseLong(form().bindFromRequest().get("birthday"));
+			
+
+			basicInfo.phone = form().bindFromRequest().get("phone");
+			
+			basicInfo.qq = form().bindFromRequest().get("qq");
+			basicInfo.address = form().bindFromRequest().get("address");
+			basicInfo.user = user;
+			basicInfo.save();
+			user.basicInfo = basicInfo;
+			user.mobile = form().bindFromRequest().get("mobile");
+			user.email = form().bindFromRequest().get("email");
+			user.update();
+		}
+		else{
+			basicInfo.realname = form().bindFromRequest().get("realname");
+			basicInfo.sex = form().bindFromRequest().get("sex");
+			basicInfo.idcard = form().bindFromRequest().get("idcard");
+			basicInfo.birthday = Long.parseLong(form().bindFromRequest().get("birthday"));
+
+
+			basicInfo.phone = form().bindFromRequest().get("phone");
+			basicInfo.qq = form().bindFromRequest().get("qq");
+			basicInfo.address = form().bindFromRequest().get("address");
+			basicInfo.user = user;
+			basicInfo.update();
+			user.basicInfo = basicInfo;
+			user.mobile = form().bindFromRequest().get("mobile");
+			user.email = form().bindFromRequest().get("email");
+			user.update();
+
+		}
+		Form<Student> form = form(Student.class).bindFromRequest();
+		if (form != null && form.hasErrors() == false) {
+			student = Student.addOrUpdate(form.get());
+			if (student != null) {
+				user.student = student;
+				user.update();
+				Enroll enroll = new Enroll();
+				Agent agent = null;
+				if(form().bindFromRequest().get("agentId") != null){
+					Long agentId =  FormHelper.getLong(form().bindFromRequest(),"agentId");
+					agent = Agent.find(agentId);
+				}
+				if( form().bindFromRequest().get("courseId") != null){
+					Long courseId =  FormHelper.getLong(form().bindFromRequest(),"courseId");
+					Course course = Course.find(courseId);
+					enroll.course = course;
+					if(course!=null && course.edu!=null){
+						enroll.edu = course.edu;
+					}
+				}
+
+				if(agent!=null){
+					enroll.fromAgent = agent;
+				}
+				enroll.student = student;
+				//enroll.save();
+				Enroll.addOrUpdate(enroll);
+
+
+				return ok(views.html.module.platform.platformUserEnroll.render(enroll, enroll.course ,enroll.fromAgent,enroll.student.user,enroll.student));
+			}
+		} else if (form.hasErrors()) {
+			String error = FormHelper.getFirstError(form.errors());
+			play.Logger.debug("error:" + error);
+			if (error != null) {
+				return badRequest(error);
+			}
+		}
+		return internalServerError(Constants.MSG_INTERNAL_ERROR);
 	}
 
 }

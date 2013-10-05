@@ -1,0 +1,165 @@
+@(model: Student, user:User)
+
+@import basic.common._
+@import basic.common.basicform._
+
+@bootstrapDatetimepicker()
+@toolbar_header={
+<div class="row">
+	<div class="span2">
+		<h4>学员详情</h4>
+	</div>
+	<div class="btn-toolbar pull-right" role="toolbar">
+		<div class="btn-group">
+			<a class="btn btn-info" data-toggle="修改" href="#" onclick="toggleAllEdit(this, '#myform')"><i
+				class="icon-edit icon-white"></i>修改</a>
+		</div>
+	</div>
+</div>
+} 
+
+<script type="text/javascript">
+    $(document).ready( function() {
+			$('#myform').submit(function() {
+		    $(this).ajaxSubmit(ajaxSubmitOptions);
+		    return false;
+			});
+		});
+</script>
+
+
+@toolbar_header
+
+<div class="table-responsive">
+	<div style="overflow: auto">
+		<form class="form-horizontal" id="myform" method="post" action="@routes.StudentController.addOrUpdateEntity()">
+	
+			@form_validate_info()
+			@if(model != null &&model.user!=null && model.user.basicInfo != null){
+				@inputText("学员名称", "realname", model.user.basicInfo.realname, true)
+			}else{ 
+			@if(user!=null && user.basicInfo!=null){
+				@inputText("学员名称", "realname", user.basicInfo.realname, false)
+			} else{
+				@inputText("学员名称", "realname", null, false)
+			}}
+  		
+			@if(model != null && model.user != null && model.user.basicInfo != null){
+				@inputSelect("性别", "sex", String.valueOf(model.user.basicInfo.sex), true){
+					<option value="1" onclick="changeValue('#btnCourseType', '男')">男</option>
+	      	<option value="0" onclick="changeValue('#btnCourseType', '女')">女</option>
+				}
+			} else{
+				@if(user!= null && user.basicInfo!=null ){
+					@inputSelect("性别", "sex", String.valueOf(user.basicInfo.sex), true){
+					<option value="1" onclick="changeValue('#btnCourseType', '男')">男</option>
+					<option value="0" onclick="changeValue('#btnCourseType', '女')">女</option>
+					}
+				} else {
+				@inputSelect("性别", "sex", null, false){
+					<option value="1" onclick="changeValue('#btnCourseType', '男')">男</option>
+	      	<option value="0" onclick="changeValue('#btnCourseType', '女')">女</option>
+				}
+			}}
+			
+			@if(model != null){
+				@inputText("公司名称", "companyName", model.companyName, true)
+			} else {
+				@inputText("公司名称", "companyName", null, false)
+			}
+			
+			@if(model != null){
+				@inputText("职务", "position", model.position, true)
+			} else {
+				@inputText("职务", "position", null, false)
+			}
+				
+			@if(model != null && model.user != null && model.user.basicInfo != null){
+				@inputText("身份证号", "idcard", model.user.basicInfo.idcard, true)
+			} else{
+			@if(user!=null && user.basicInfo!=null){
+				@inputText("身份证号", "idcard", user.basicInfo.idcard, true)
+			}else {
+				@inputText("身份证号", "idcard", null, false)
+			}}
+  		
+			@if(model != null && model.user != null && model.user.basicInfo != null){
+				@datetimePicker("出生日期", "birthday", model.user.basicInfo.birthday)				
+			} else{
+			@if(user!=null && user.basicInfo!=null){
+				@datetimePicker("出生日期", "birthday", user.basicInfo.birthday)	
+			} else {
+				@datetimePicker("出生日期", "birthday")
+			}}
+			
+			@if(model != null && model.user != null && model.user.basicInfo != null){
+				@inputText("座机号码", "phone", model.user.basicInfo.phone, true)
+			} else{
+			@if(user!=null && user.basicInfo!=null){
+				@inputText("座机号码", "phone", user.basicInfo.phone, true)
+			}else {
+				@inputText("座机号码", "phone", null, false)
+			}}
+	
+			@if(model != null && model.user != null){
+				@inputText("手机号码", "mobile", model.user.mobile, true)
+			}else{
+			@if(user!=null){
+				@inputText("手机号码", "mobile", user.mobile, true)
+			}else {
+				@inputText("手机号码", "mobile", null, false)
+			}}
+				
+			@if(model != null && model.user != null && model.user.basicInfo != null){
+				@inputText("QQ号码", "qq", model.user.basicInfo.qq, true)
+			}else{
+			@if(user!=null && user.basicInfo!=null){
+				@inputText("QQ号码", "qq", user.basicInfo.qq, true)
+			}else {
+				@inputText("QQ号码", "qq", null, false)
+			}}
+  		
+  			@if(model != null && model.user != null){
+				@inputText("Email", "email", model.user.email, true)
+			} else{
+			@if(user!=null){
+				@inputText("Email", "email", user.email, true)
+			}else {
+				@inputText("Email", "email", null, false)
+			}}
+			
+			@if(model != null && model.user != null && model.user.basicInfo != null){
+				@textarea("联系地址", "address", model.user.basicInfo.address, true)
+			} else{
+			@if(user!=null && user.basicInfo!=null){
+				@textarea("联系地址", "address", user.basicInfo.address, true)
+			}else {
+				@textarea("联系地址", "address", null, false)
+			}}
+			
+			@if(model != null){
+				@textarea("额外信息", "info", model.info, true)
+			} else {
+				@textarea("额外信息", "info", null, false)
+			}
+  		
+			<input class="input-large" type="hidden" name="table" value="@Student.TABLE_NAME">
+			@if(model != null){
+				<input class="input-large" type="hidden" name="id" value="@model.id">
+			} else {
+				<input class="input-large" type="hidden" name="id">
+			}
+
+			<hr>
+			<div class="control-group row">
+    		<div class="controls">
+					@if(model != null){
+      			<button type="submit" class="btn btn-large btn-success btn-block span2 disabled">提交</button>
+      		} else {
+      			<button type="submit" class="btn btn-large btn-success btn-block span2">提交</button>
+      		}
+    	</div>
+  </div>
+</form>
+	</div>
+</div>

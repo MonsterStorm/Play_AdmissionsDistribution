@@ -12,7 +12,8 @@ public class Constants {
 	public static final String MSG_FORBIDDEN = "无权访问";
 	public static final String MSG_SUCCESS = "成功";
 	public static final String MSG_USER_USERNAME_EXIST = "该用户名已经被占用";
-	
+	public static final String MSG_USER_ENROLLED = "您已报名该课程";
+	public static final String MSG_COURSE_NOT_EXIST = "该课程不存在";
 	//文件
 	public static final String MSG_FILE_TOO_LARGE = "文件太大"; // 文件太大
 	public static final String MSG_FILE_TOO_SMALL = "文件太小"; // 文件太小

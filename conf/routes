@@ -51,7 +51,11 @@ POST    /common/update				controllers.CommonController.updateEntity()
 POST	/common/addOrUpdate			controllers.CommonController.addOrUpdateEntity()
 POST	/common/delete				controllers.CommonController.deleteEntity()
 GET     /common/:page               controllers.CommonController.page(page: String)
-	
+#Student
+POST	/student/addOrUpdate			controllers.StudentController.addOrUpdateEntity()
+
+#platform
+POST	/platform/addOrUpdate			controllers.PlatformController.addOrUpdateEntity()
 
 #Platform
 POST	/platform/login				controllers.LoginController.loginPlatform()
