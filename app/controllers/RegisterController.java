@@ -56,6 +56,7 @@ public class RegisterController extends BaseController {
 			User user = User.addOrUpdate(form().bindFromRequest());
 			if(user != null){
 				session(KEY_USER_ACCOUNT, user.username);
+				session(KEY_USER_ID, user.id.toString());//存用户id
 				return redirect(controllers.routes.PlatformController.page("index"));
 			}
 			return internalServerError(Constants.MSG_INTERNAL_ERROR);

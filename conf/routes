@@ -47,6 +47,9 @@ GET     /common/:page               controllers.CommonController.page(page: Stri
 #Student
 POST	/student/addOrUpdate			controllers.StudentController.addOrUpdateEntity()
 
+#platform
+POST	/platform/addOrUpdate			controllers.PlatformController.addOrUpdateEntity()
+
 #Platform
 POST	/platform/login				controllers.LoginController.loginPlatform()
 GET		/platform/logout			controllers.PlatformController.logout()

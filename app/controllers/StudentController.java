@@ -62,7 +62,10 @@ public class StudentController extends BaseController {
 		String table = form().bindFromRequest().get("table");
 		if (Student.TABLE_NAME.equalsIgnoreCase(table)) {// 学员更新或添加
 			return addOrUpdateStudent();
-		} else {
+		} if("student_enroll".equalsIgnoreCase(table)){//学员报名
+			return addOrUpdateStudentEnroll();
+		}
+		 else {
 			return badRequest(Constants.MSG_PAGE_NOT_FOUND);
 		}
 	}
@@ -143,6 +146,109 @@ public class StudentController extends BaseController {
 			Student student = Student.addOrUpdate(form.get());
 			if (student != null) {
 				return ok(views.html.module.student.studentInfo.render(student, user));
+			}
+		} else if (form.hasErrors()) {
+			String error = FormHelper.getFirstError(form.errors());
+			play.Logger.debug("error:" + error);
+			if (error != null) {
+				return badRequest(error);
+			}
+		}
+		return internalServerError(Constants.MSG_INTERNAL_ERROR);
+	}
+
+	/**
+	 * add or update instructor
+	 * 
+	 * @return
+	 */
+	public static Result addOrUpdateStudentEnroll() {
+		User user =  LoginController.getSessionUser();
+		if(user == null){
+			return badRequest(Constants.MSG_NOT_LOGIN);
+		}
+		Student student = user.student;
+		if(student!=null){
+			Long courseId =  FormHelper.getLong(form().bindFromRequest(),"courseId");
+			Course course = Course.find(courseId);
+			if(course!=null){
+				Enroll enroll = Enroll.findByStudentAndCourse(student, course);
+				if(enroll!=null){
+					return badRequest(Constants.MSG_USER_ENROLLED);
+				}
+			}else{
+				return badRequest(Constants.MSG_COURSE_NOT_EXIST);
+			}
+		}
+
+
+		UserInfo basicInfo = user.basicInfo;
+		if(basicInfo == null){
+			basicInfo = new UserInfo();
+
+			basicInfo.realname = form().bindFromRequest().get("realname");
+			basicInfo.sex = form().bindFromRequest().get("sex");
+			basicInfo.idcard = form().bindFromRequest().get("idcard");
+			basicInfo.birthday = Long.parseLong(form().bindFromRequest().get("birthday"));
+			
+
+			basicInfo.phone = form().bindFromRequest().get("phone");
+			
+			basicInfo.qq = form().bindFromRequest().get("qq");
+			basicInfo.address = form().bindFromRequest().get("address");
+			basicInfo.user = user;
+			basicInfo.save();
+			user.basicInfo = basicInfo;
+			user.mobile = form().bindFromRequest().get("mobile");
+			user.email = form().bindFromRequest().get("email");
+			user.update();
+		}
+		else{
+			basicInfo.realname = form().bindFromRequest().get("realname");
+			basicInfo.sex = form().bindFromRequest().get("sex");
+			basicInfo.idcard = form().bindFromRequest().get("idcard");
+			basicInfo.birthday = Long.parseLong(form().bindFromRequest().get("birthday"));
+
+
+			basicInfo.phone = form().bindFromRequest().get("phone");
+			basicInfo.qq = form().bindFromRequest().get("qq");
+			basicInfo.address = form().bindFromRequest().get("address");
+			basicInfo.user = user;
+			basicInfo.update();
+			user.basicInfo = basicInfo;
+			user.mobile = form().bindFromRequest().get("mobile");
+			user.email = form().bindFromRequest().get("email");
+			user.update();
+
+		}
+		Form<Student> form = form(Student.class).bindFromRequest();
+		if (form != null && form.hasErrors() == false) {
+			student = Student.addOrUpdate(form.get());
+			if (student != null) {
+
+				Agent agent = null;
+				if(form().bindFromRequest().get("agentId") != null){
+					Long agentId =  FormHelper.getLong(form().bindFromRequest(),"agentId");
+					agent = Agent.find(agentId);
+				}
+				Course course = null;
+				if( form().bindFromRequest().get("courseId") != null){
+					Long courseId =  FormHelper.getLong(form().bindFromRequest(),"courseId");
+					course = Course.find(courseId);
+				}
+
+				Enroll enroll = new Enroll();
+				enroll.course = course;
+				if(agent!=null){
+					enroll.fromAgent = agent;
+				}
+				enroll.edu = course.edu;
+				enroll.student = student;
+				//enroll.save();
+				Enroll.addOrUpdate(enroll);
+
+
+				return ok(views.html.module.student.enrollInfo.render(enroll, enroll.course ,enroll.fromAgent,enroll.student.user,enroll.student));
 			}
 		} else if (form.hasErrors()) {
 			String error = FormHelper.getFirstError(form.errors());

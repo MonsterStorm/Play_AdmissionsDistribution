@@ -2,7 +2,14 @@
 
 @import basic.common._
 @import basic.common.basicform._
-
+<script type="text/javascript">
+function pageUserEnroll(li, url, data){
+		 data = data || "";
+     ajaxBasic("/platform/" + url, data, "GET", "#platformUserEnroll");
+		 $("#navList li.active").removeClass("active");
+		 $(li).addClass("active");
+	}
+</script>
 <div>
 	<h2>@model.name</h2>
 	<p></p>
@@ -25,5 +32,7 @@
 	<p></p>
 	详细信息：@model.detail
 	<p></p>
-	@model.detail;
+	<div id="platformUserEnroll"></div>
+	<button type="submit" class="ym-button ym-success ym-large" onClick = "pageUserEnroll(this, 'pageUserEnroll', 'courseId=@model.id')">我要报名</button>
+
 </div>
