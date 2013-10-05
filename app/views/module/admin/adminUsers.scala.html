@@ -12,7 +12,7 @@
 	</div>
 	<div class="btn-toolbar pull-right" role="toolbar">
 		<div class="btn-group">
-			<a class="btn btn-success" data-toggle="新增" href="#"><i
+			<a class="btn btn-success" data-toggle="新增" href="#" onclick="getCommonPage(this, 'userDetail', 'addNew=true');"><i
 				class="icon-plus icon-white"></i>新增</a>
 		</div>
 		<div class="btn-group">
@@ -83,7 +83,7 @@ $('#toolbar').tooltip(options);
 					}
 					
 					@if(model.logo){
-						<td><img id="myImgPreview" class="img-rounded" alt="40x40" style="width: 40px; height: 40px;" src="@routes.Assets.at("/datas/default/templates", {model.logo})"></td>
+						<td><img id="myImgPreview" class="img-rounded" alt="40x40" style="width: 40px; height: 40px;" src="@routes.Assets.at("/datas/logos", {model.logo})"></td>
 					} else {
 						<td>-未设置-</td>
 					}

@@ -1,0 +1,7 @@
+@(label: String, name: String, keys: List[String], values: List[String], readonly: Boolean, disabled: Boolean = false)
+<div class="control-group">
+   <label class="control-label" for="inputEmail">@label</label>
+   <div class="controls">
+				<input type="checkbox" @if(name){name="@name"} @if(readonly){readonly="readonly"} @if(disabled){disabled}>
+   </div>
+</div>

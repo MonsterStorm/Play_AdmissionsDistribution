@@ -30,6 +30,9 @@ public class Agent extends Model{
 
 	@OneToMany
 	public List<Domain> domain;// 代理人对应的域名信息，一个代理人对应多个域名，一个域名隶属于一个代理人（也可以没有代理人）
+	
+	@ManyToMany(cascade=CascadeType.ALL)
+	public List<Course> courses;//代理人代理的课程列表，一个代理人可以代理多个课程，一个课程可以被多个代理人代理
 
 	@OneToOne
 	public Audit audit;//是否认证

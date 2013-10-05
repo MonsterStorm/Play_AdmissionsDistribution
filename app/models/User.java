@@ -1,5 +1,6 @@
 package models;
 
+import java.io.*;
 import java.lang.reflect.*;
 import java.util.*;
 
@@ -7,6 +8,7 @@ import javax.persistence.*;
 
 import play.data.*;
 import play.db.ebean.*;
+import play.mvc.Http.MultipartFormData.FilePart;
 
 import com.avaje.ebean.*;
 import common.*;
@@ -21,7 +23,7 @@ import controllers.*;
  */
 @Entity
 @Table(name = User.TABLE_NAME)
-public class User extends Model{
+public class User extends Model {
 	public static final String TABLE_NAME = "user";
 	public static final String LOGO_DEFAULT = "default.png";
 
@@ -40,10 +42,10 @@ public class User extends Model{
 
 	public String logo;// 个人头像，或者教育机构的照片
 
-	@OneToOne(cascade=CascadeType.ALL)
+	@OneToOne(cascade = CascadeType.ALL)
 	public Audit audit;// 帐号状态，0：待审核（新注册用户为待审核，只有少量权限）1：审核通过（普通）2：审核未通过（提示审核不通过原因）3：禁用（禁用以后登录提示需要管理员激活）
 
-	@OneToOne(cascade=CascadeType.ALL)
+	@OneToOne(cascade = CascadeType.ALL)
 	public UserInfo basicInfo;// 用户基本信息，一个用户对应一个基本信息，一个基本信息对应一个用户
 
 	@ManyToMany(cascade = CascadeType.ALL)
@@ -67,52 +69,54 @@ public class User extends Model{
 	@OneToOne
 	public Student student;// 学员，一个用户对于一个学员，一个学员只能是一个用户
 
-	public User(){}
-	
-	public User(DynamicForm form){
+	public User() {
+	}
+
+	public User(DynamicForm form) {
 		final String username = form.get("username");
 		final String password = form.get("password");
 		final String nickname = form.get("nickname");
 		final String mobile = form.get("mobile");
 		final String email = form.get("email");
 		final String logo = form.get("logo");
-		
+
 		UserInfo userInfo = new UserInfo(form);
-		
+
 		this.username = username;
 		this.password = password;
 		this.nickname = nickname;
 		this.mobile = mobile;
 		this.email = email;
-		
+
 		Audit audit = new Audit();
 		audit.save();
-		audit.status = Audit.STATUS_WAIT;//新增用户的状态为未认证
+		audit.status = Audit.STATUS_WAIT;// 新增用户的状态为未认证
 		this.audit = audit;
-		this.logo = User.LOGO_DEFAULT;//默认头像
+		this.logo = User.LOGO_DEFAULT;// 默认头像
 		this.basicInfo = userInfo;
 	}
-	
+
 	/**
 	 * update info
+	 * 
 	 * @param user
 	 * @param form
 	 */
-	public static void update(User user, DynamicForm form){
+	public static void update(User user, DynamicForm form) {
 		final String nickname = form.get("nickname");
 		final String mobile = form.get("mobile");
 		final String email = form.get("email");
 		final String logo = form.get("logo");
-		
+
 		user.nickname = nickname;
 		user.mobile = mobile;
 		user.email = email;
-		
+
 		UserInfo.update(user.basicInfo, form);
-		
+
 		user.update();
 	}
-	
+
 	/**
 	 * 根据类的属性名称，获取属性值
 	 * 
@@ -131,60 +135,63 @@ public class User extends Model{
 		}
 		return null;
 	}
-	
+
 	/**
 	 * has role
+	 * 
 	 * @param roldId
 	 * @return
 	 */
-	public boolean hasRole(Long roleId){
-		if(this.roles != null){
-			for(Role role : roles){
-				if(role.id == roleId)
+	public boolean hasRole(Long roleId) {
+		if (this.roles != null) {
+			for (Role role : roles) {
+				if (role.id == roleId)
 					return true;
 			}
 		}
 		return false;
 	}
-	
+
 	/**
 	 * get roles string, return :role1_id:role2_id:...:rolen_id:;
+	 * 
 	 * @return
 	 */
-	public String getRoles(){
+	public String getRoles() {
 		StringBuilder roleStr = new StringBuilder();
-		if(this.roles != null){
-			for(int i = 0; i < this.roles.size(); i++){
-				if(i == 0){
+		if (this.roles != null) {
+			for (int i = 0; i < this.roles.size(); i++) {
+				if (i == 0) {
 					roleStr.append(":");
 				}
 				roleStr.append(roles.get(i).id);
-				if (i == this.roles.size() - 1){
+				if (i == this.roles.size() - 1) {
 					roleStr.append(":");
 				}
 			}
 		}
-		if(roleStr.length() > 0){
+		if (roleStr.length() > 0) {
 			return roleStr.toString();
 		} else {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * get Model string
+	 * 
 	 * @return
 	 */
-	public String getModles(){
+	public String getModles() {
 		StringBuilder moduleStr = new StringBuilder();
-		if(this.roles != null){
+		if (this.roles != null) {
 			boolean isFirst = true;
-			for(int i = 0; i < this.roles.size(); i++){
+			for (int i = 0; i < this.roles.size(); i++) {
 				Role role = this.roles.get(i);
-				if(role != null && role.modules != null){
+				if (role != null && role.modules != null) {
 					List<Module> modules = role.modules;
-					for(int j = 0; j < modules.size(); j++){
-						if(isFirst){
+					for (int j = 0; j < modules.size(); j++) {
+						if (isFirst) {
 							moduleStr.append(":");
 							isFirst = false;
 						}
@@ -192,36 +199,37 @@ public class User extends Model{
 					}
 				}
 			}
-			if(isFirst == false){
+			if (isFirst == false) {
 				moduleStr.append(":");
 			}
 		}
-		
-		if(moduleStr.length() > 0){
+
+		if (moduleStr.length() > 0) {
 			return moduleStr.toString();
 		} else {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * get function string
+	 * 
 	 * @return
 	 */
-	public String getFunctions(){
+	public String getFunctions() {
 		StringBuilder functionStr = new StringBuilder();
-		if(this.roles != null){
+		if (this.roles != null) {
 			boolean isFirst = true;
-			for(int i = 0; i < this.roles.size(); i++){//roles
+			for (int i = 0; i < this.roles.size(); i++) {// roles
 				Role role = this.roles.get(i);
-				if(role != null && role.modules != null){
+				if (role != null && role.modules != null) {
 					List<Module> modules = role.modules;
-					for(int j = 0; j < modules.size(); j++){//models
+					for (int j = 0; j < modules.size(); j++) {// models
 						Module module = modules.get(j);
-						if(module != null && module.functions != null){
+						if (module != null && module.functions != null) {
 							List<Function> functions = module.functions;
-							for(int k = 0; k < functions.size(); k++){//functions
-								if(isFirst){
+							for (int k = 0; k < functions.size(); k++) {// functions
+								if (isFirst) {
 									functionStr.append(":");
 									isFirst = false;
 								}
@@ -231,12 +239,12 @@ public class User extends Model{
 					}
 				}
 			}
-			if(isFirst == false){
+			if (isFirst == false) {
 				functionStr.append(":");
 			}
 		}
-		
-		if(functionStr.length() > 0){
+
+		if (functionStr.length() > 0) {
 			return functionStr.toString();
 		} else {
 			return null;
@@ -244,7 +252,8 @@ public class User extends Model{
 	}
 
 	// -- 查询
-	public static Model.Finder<Long, User> finder = new Model.Finder(Long.class, User.class);
+	public static Model.Finder<Long, User> finder = new Model.Finder(
+			Long.class, User.class);
 
 	/**
 	 * find all user
@@ -264,13 +273,14 @@ public class User extends Model{
 	public static User find(Long id) {
 		return finder.where().eq("id", id).findUnique();
 	}
-	
+
 	/**
 	 * find user by account
+	 * 
 	 * @param account
 	 * @return
 	 */
-	public static User findByUsername(String username){
+	public static User findByUsername(String username) {
 		return finder.where().eq("username", username).findUnique();
 	}
 
@@ -281,10 +291,12 @@ public class User extends Model{
 	 * @param form
 	 * @return
 	 */
-	public static Page<User> findPage(DynamicForm form, int page, Integer pageSize) {
-		return new QueryHelper<User>(finder, form).addEq("audit.status", "auditStatus", Integer.class).findPage(page, pageSize);
+	public static Page<User> findPage(DynamicForm form, int page,
+			Integer pageSize) {
+		return new QueryHelper<User>(finder, form).addEq("audit.status",
+				"auditStatus", Integer.class).findPage(page, pageSize);
 	}
-	
+
 	/**
 	 * 认证用户名/邮箱/手机号，密码组合是否存在，存在则可以正常登录
 	 * 
@@ -338,9 +350,10 @@ public class User extends Model{
 		User user = find(id);
 		return user.bypassAccounts != null && user.bypassAccounts.size() > 0;
 	}
-	
+
 	/**
 	 * 新增或更新一个用户
+	 * 
 	 * @param form
 	 * @return
 	 */
@@ -355,9 +368,44 @@ public class User extends Model{
 				return user;
 			}
 		}
-		if(User.findByUsername(username) == null){// 插入
+		if (User.findByUsername(username) == null) {// 插入
 			User user = new User(form);
 			user.save();
+			return user;
+		}
+		return null;
+	}
+
+	/**
+	 * 
+	 * @param form
+	 * @param fileLogo
+	 * @return
+	 */
+	public static User addOrUpdate(User user, FilePart fileLogo) {
+		if (user != null) {
+			if (fileLogo != null) {
+				if(user.id != null){//更新
+					user.logo = FileHelper.saveUserLogo(String.valueOf(user.id), fileLogo);
+				} else {//新增
+					user.logo = FileHelper.saveUserLogo(String.valueOf(finder.nextId()), fileLogo);
+				}
+			} else {
+				if (user.id != null) {// 更新，不更新logo
+					User oldUser = User.find(user.id);
+					user.logo = oldUser.logo;// 不更新logo
+				}
+			}
+
+			if (user.id == null) {// 新增，由于没有密码字段，因而需要自动生成，并发送到用户的邮箱
+				if(StringHelper.isValidate(user.password) == false){//密码不合法
+					user.password = buildRandomPassword();
+				}
+				user.save();
+				user.update();// 更新一下链接
+			} else {// 更新
+				user.update();
+			}
 			return user;
 		}
 		return null;
@@ -368,6 +416,7 @@ public class User extends Model{
 	public String toString() {
 		return "User(id: " + id + ", username: " + username + ")";
 	}
+
 	/**
 	 * 注册时验证 用户名 邮箱 是否存在 若存在则无法注册add by khx
 	 * 
@@ -386,14 +435,23 @@ public class User extends Model{
 		}
 		return Constants.INT_CAN_REGISTER;
 	}
-	
+
 	/**
 	 * 生成密码
+	 * 
 	 * @return
 	 */
-	public static String buildPassword(String password){
-		//hash操作
+	public static String buildPassword(String password) {
+		// hash操作
 		return password;
+	}
+	
+	/**
+	 * 生成一个随机密码
+	 * @return
+	 */
+	public static String buildRandomPassword(){
+		return "123456";
 	}
 
 }

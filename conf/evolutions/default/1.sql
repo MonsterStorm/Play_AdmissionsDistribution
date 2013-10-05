@@ -336,6 +336,12 @@ create table user_info (
 ;
 
 
+create table agent_course (
+  agent_id                       bigint not null,
+  course_id                      bigint not null,
+  constraint pk_agent_course primary key (agent_id, course_id))
+;
+
 create table module_function (
   module_id                      bigint not null,
   function_id                    bigint not null,
@@ -456,6 +462,10 @@ create index ix_user_info_user_50 on user_info (user_id);
 
 
 
+alter table agent_course add constraint fk_agent_course_agent_01 foreign key (agent_id) references agent (id) on delete restrict on update restrict;
+
+alter table agent_course add constraint fk_agent_course_course_02 foreign key (course_id) references course (id) on delete restrict on update restrict;
+
 alter table module_function add constraint fk_module_function_module_01 foreign key (module_id) references module (id) on delete restrict on update restrict;
 
 alter table module_function add constraint fk_module_function_function_02 foreign key (function_id) references function (id) on delete restrict on update restrict;
@@ -479,6 +489,8 @@ drop table advertisment_statistics;
 drop table advertisment_visit;
 
 drop table agent;
+
+drop table agent_course;
 
 drop table audit;
 

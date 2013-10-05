@@ -37,9 +37,9 @@
 			@form_validate_info()
   		
   		@if(model != null && model.user != null && model.user.nickname){
-				@inputText("职称", null, model.user.nickname, true)
+				@inputText("用户名", null, model.user.nickname, true)
 			} else {
-				@inputText("职称", null, null, false)
+				@inputText("用户名", null, null, true, true)
 			}
 
   		@if(model != null){

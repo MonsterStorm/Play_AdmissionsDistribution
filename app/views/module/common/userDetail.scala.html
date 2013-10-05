@@ -1,6 +1,9 @@
 @(model: User)
 
 @import basic.common._
+@import basic.common.basicform._
+
+@bootstrapDatetimepicker()
 
 @toolbar_header={
 <div class="row">
@@ -38,73 +41,53 @@
 		
 			@form_validate_info()
     
-  		<div class="control-group">
-    		<label class="control-label">帐号</label>
+
+			@if(model != null){
+				@inputText("帐号", "username", model.username, true)
+			} else {
+				@inputText("帐号", "username", null, false)
+			}
+  		
+  		@if(model != null){
+				@inputText("昵称", "nickname", model.nickname, true)
+			} else {
+				@inputText("昵称", "nickname", null, false)
+			}
+			
+			<div class="control-group">
+    		<label class="control-label" for="inputEmail">头像</label>
     		<div class="controls">
-					@if(model != null){
-      			<input class="input-xxlarge" type="text" name="username" value="@model.username" readonly="readonly">
+					@if(model != null && model.logo != null){
+						<img id="myImgPreview" class="img-rounded" alt="140x140" style="width: 140px; height: 140px;" src="@routes.Assets.at("/datas/logos", {model.logo})">
 					} else {
-						<input class="input-xxlarge" type="text" name="username">
+						<img id="myImgPreview" data-src="holder.js/140x140" class="img-rounded" alt="140x140" style="width: 140px; height: 140px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIwAAACMCAYAAACuwEE+AAADHklEQVR4Xu3XQU7qYABGUR2xMZbNmpgz0mDSiKTQXi2VkvOG8kl99z9p4f14PH68+afAzALvwMwsZfZVABgQUgFgUi5jYBhIBYBJuYyBYSAVACblMgaGgVQAmJTLGBgGUgFgUi5jYBhIBYBJuYyBYSAVACblMgaGgVQAmJTLGBgGUgFgUi5jYBhIBYBJuYyBYSAVACblMgaGgVQAmJTLGBgGUgFgUi5jYBhIBYBJuYyBYSAVACblMgaGgVQAmJTLGBgGUgFgUi5jYBhIBYBJuYyBYSAVACblMgaGgVQAmJTLGBgGUgFgUi5jYBhIBYBJuYyBYSAVACblMgaGgVQAmJTLGBgGUgFgUi5jYBhIBYBJuYyBYSAVACblMgaGgVQAmJTLGBgGUgFgUi5jYBhIBYBJuYyBYSAVACblMgaGgVQAmJTLePNgDofD1ynu9/vR0xx7ffjZ8Au3fnfsDde+3rMR3TSYy4MfO/Sx168PfArA5YGtfb1nw3L+ezYN5vwfuHXg55/vdru30+n04w70FzD/cb1nQwPMxSNtwHQJ7fpxtzZQYBYucO8zyvkxNXVHGXt97M40/NlLX2/hHA9/u5e+w1zXmwPo3mNn6pH02+s9/JQXvMDLgrl1R5hzx6l3mLEPxsOH8KnrLXiWq7zVpsHM+Xp875vS9dfqqc8wS19vlRNe+CKbBrNwC283owAwMyKZfBcAhoZUAJiUyxgYBlIBYFIuY2AYSAWASbmMgWEgFQAm5TIGhoFUAJiUyxgYBlIBYFIuY2AYSAWASbmMgWEgFQAm5TIGhoFUAJiUyxgYBlIBYFIuY2AYSAWASbmMgWEgFQAm5TIGhoFUAJiUyxgYBlIBYFIuY2AYSAWASbmMgWEgFQAm5TIGhoFUAJiUyxgYBlIBYFIuY2AYSAWASbmMgWEgFQAm5TIGhoFUAJiUyxgYBlIBYFIuY2AYSAWASbmMgWEgFQAm5TIGhoFUAJiUyxgYBlIBYFIuY2AYSAWASbmMgWEgFQAm5TIGhoFUAJiUyxgYBlIBYFIuY2AYSAWASbmMgWEgFQAm5TL+BPn285fsB0YAAAAAAElFTkSuQmCC">						
 					}
     		</div>
-  		</div>
-  		
-  		<div class="control-group">
-    		<label class="control-label">密码</label>
-    		<div class="controls">
-					@if(model != null){
-      			<input class="input-xxlarge" type="text" name="password" value="@model.password" readonly="readonly">
-					} else {
-						<input class="input-xxlarge" type="text" name="password">
-					}
+				<div class="controls">
+					<input class="input-large" type="file" name="logo" value="选择文件" readonly="readonly" onchange="readURL(this);">
     		</div>
-  		</div>
+  		</div>  		
+
+  		@if(model != null){
+				@inputText("移动电话", "mobile", model.mobile, true)
+			} else {
+				@inputText("移动电话", "mobile", null, false)
+			}
   		
-  		<div class="control-group">
-    		<label class="control-label">昵称</label>
-    		<div class="controls">
-					@if(model != null){
-      			<input class="input-xxlarge" type="text" name="nickname" value="@model.nickname" readonly="readonly">
-					} else {
-						<input class="input-xxlarge" type="text" name="nickname">
-					}
-    		</div>
-  		</div>
+  		@if(model != null){
+				@inputText("邮箱地址", "email", model.email, true)
+			} else {
+				@inputText("邮箱地址", "email", null, false)
+			}
   		
   		
-  		<div class="control-group">
-    		<label class="control-label">移动电话</label>
-    		<div class="controls">
-					@if(model != null){
-      			<input class="input-xxlarge" type="text" name="mobile" value="@model.mobile" readonly="readonly">
-					} else {
-						<input class="input-xxlarge" type="text" name="mobile">
-					}
-    		</div>
-  		</div>
   		
-  		<div class="control-group">
-    		<label class="control-label">邮箱地址</label>
-    		<div class="controls">
-					@if(model != null){
-      			<input class="input-xxlarge" type="text" name="email" value="@model.email" readonly="readonly">
-					} else {
-						<input class="input-xxlarge" type="text" name="email">
-					}
-    		</div>
-  		</div>
   		
-  		<div class="control-group">
-    		<label class="control-label">帐号状态</label>
-    		<div class="controls">
-					@if(model != null && model.audit != null){
-      			<input class="input-xxlarge" type="text" name="status" value="@model.audit.status" readonly="readonly">
-					} else {
-						<input class="input-xxlarge" type="text" name="status">
-					}
-    		</div>
-  		</div>
-  		
+  		@if(model != null && model.audit != null){
+				@inputText("帐号状态", "status", String.valueOf(model.audit.status), true, true)
+			} else {
+				@inputText("帐号状态", "status", null, true, true)
+			}
 			
 			<input class="input-large" type="hidden" name="table" value="@User.TABLE_NAME">
 			@if(model != null){
@@ -116,7 +99,7 @@
 			<div class="control-group row">
     		<div class="controls">
 					@if(model != null){
-							<button type="submit" class="btn btn-large btn-success btn-block span2 disabled">提交</button>
+							<button type="submit" class="btn btn-large btn-success btn-block span2" disabled="disabled">提交</button>
 					} else {
 							<button type="submit" class="btn btn-large btn-success btn-block span2">提交</button>
 					}
