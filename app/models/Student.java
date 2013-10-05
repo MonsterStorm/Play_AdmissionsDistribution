@@ -31,7 +31,7 @@ public class Student extends Model {
 	
 	@OneToMany(cascade=CascadeType.ALL)
 	public List<Enroll> enrolls;//学员报名信息
-	
+
 	// --其他属性，只在报名第一次用到，其他时候公用该信息--
 
 	public String companyName;// 公司名称
@@ -60,6 +60,15 @@ public class Student extends Model {
 	 */
 	public static Student find(Long id) {
 		return finder.where().eq("id", id).findUnique();
+	}
+	/**
+	 * find one by id
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public static Student find(User user) {
+		return finder.where().eq("user", user).findUnique();
 	}
 
 	/**

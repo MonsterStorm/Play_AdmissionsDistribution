@@ -320,6 +320,7 @@ create table user (
 create table user_info (
   id                        bigint auto_increment not null,
   user_id                   bigint,
+  realname                  varchar(255),
   idcard                    varchar(255),
   birthday                  bigint,
   sex                       varchar(255),

@@ -26,6 +26,8 @@ public class UserInfo extends Model {
 	public User user;// 用户信息所属的用户，一个用户只有一个用户信息，一个用户信息隶属与一个用户
 
 	// -------------用于普通用户--------------
+	public String realname; //真实姓名
+
 	public String idcard;// 身份证
 
 	public Long birthday;// 出生日期
@@ -54,6 +56,7 @@ public class UserInfo extends Model {
 	public UserInfo (){}
 	
 	public UserInfo (DynamicForm form){
+		final String realname = form.get("realname");
 		final String address = form.get("address");
 		final String idcard = form.get("idcard");
 		final String birthday = form.get("birthday");
@@ -61,7 +64,7 @@ public class UserInfo extends Model {
 		final String phone = form.get("phone");
 		final String qq = form.get("qq");
 		final String info = form.get("info");
-		
+		this.realname = realname;
 		this.address = address;
 		this.idcard = idcard;
 		if(birthday != null)
