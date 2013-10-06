@@ -14,16 +14,23 @@
 		 	$("#navList li.active").removeClass("active");
 		 	$(li).addClass("active");
 		 }
+		 $('#' + url).addClass("active");
 	}
 	
   function getCommonPage(li, url, data){
      data = data || "";
      ajaxBasic("/common/" + url, data, "GET", "#content");
+     $('#' + url).addClass("active");
   }
   
 	function getTemplatePage(li, url, data){
      data = data || "";
      ajaxBasic("/template/" + url, data, "GET", "#content");
+     if(li){//如果给定了li才改变选中状态，否则不改变
+		 	$("#navList li.active").removeClass("active");
+		 	$(li).addClass("active");
+		 }
+		 $('#' + url).addClass("active");
   }
   
   function changeValue(item, value){
@@ -127,28 +134,39 @@
 
 <ul class="nav nav-list" id="navList">
 	<li class="nav-header">管理员</li>
-	<li class="active" onclick="getAdminPage(this, 'home')"><a href="#">主页</a></li>
-	<li onclick="getAdminPage(this, 'adminCourseType')"><a href="#">培训项目类型管理</a></li>
-	<li onclick="getAdminPage(this, 'adminCourses')"><a href="#">培训项目管理</a></li>
-	<li onclick="getAdminPage(this, 'adminEdus')"><a href="#">教育机构管理</a></li>
-	<li onclick="getAdminPage(this, 'adminInstructors')"><a href="#">讲师管理</a></li>
-	<li onclick="getAdminPage(this, 'adminStudents')"><a href="#">学员管理</a></li>
-	<li onclick="getAdminPage(this, 'adminUsers')"><a href="#">用户管理</a></li>
-	<li onclick="getAdminPage(this, 'adminAgents')"><a href="#">代理人管理</a></li>
-	<li onclick="getAdminPage(this, 'adminContracts')"><a href="#">协议管理</a></li>
-	<li onclick="getAdminPage(this, 'adminRebates')"><a href="#">业务返点</a></li>
-	<li onclick="getAdminPage(this, 'adminTemplateTypes')"><a href="#">模板管理</a></li>
-	<li onclick="getAdminPage(this, 'adminAdvertisments')"><a href="#">广告和统计</a></li>
-	<li onclick="getAdminPage(this, 'adminLoginLogs')"><a href="#">系统日志</a></li>
-	<li onclick="getAdminPage(this, 'adminMessages')"><a href="#">查看留言</a></li>
-	<li onclick="getAdminPage(this, 'adminNewsType')"><a href="#">新闻类型管理</a></li>
-	<li onclick="getAdminPage(this, 'adminNews')"><a href="#">新闻管理</a></li>
-
-
-	<li onclick="getTemplatePage(this, 'useTemplate')"><a href="#">使用模板</a></li>
+	<li id="home" class="active" onclick="getAdminPage(this, 'home')"><a href="#">主页</a></li>
 	<li class="divider"></li>
+	<li class="nav-header">常用管理</li>
+	<li id="adminCourses" onclick="getAdminPage(this, 'adminCourses')"><a href="#">培训项目管理</a></li>
+	<li id="adminNews" onclick="getAdminPage(this, 'adminNews')"><a href="#">新闻管理</a></li>
+	<li id="adminMessages" onclick="getAdminPage(this, 'adminMessages')"><a href="#">查看留言</a></li>
 
-	<li class="nav-header">普通用户</li>
+	<li class="divider"></li>
+	<li class="nav-header">人员管理</li>
+	<li id="adminEdus" onclick="getAdminPage(this, 'adminEdus')"><a href="#">教育机构管理</a></li>
+	<li id="adminInstructors" onclick="getAdminPage(this, 'adminInstructors')"><a href="#">讲师管理</a></li>
+	<li id="adminStudents" onclick="getAdminPage(this, 'adminStudents')"><a href="#">学员管理</a></li>
+	<li id="adminAgents" onclick="getAdminPage(this, 'adminAgents')"><a href="#">代理人管理</a></li>
+	<li id="adminUsers" onclick="getAdminPage(this, 'adminUsers')"><a href="#">用户管理</a></li>
+	<li id="useTemplate" onclick="getTemplatePage(this, 'useTemplate')"><a href="#">使用模板</a></li>
+
+	<li class="divider"></li>
+	<li class="nav-header">数据和统计</li>
+	<li id="adminRebates" onclick="getAdminPage(this, 'adminRebates')"><a href="#">业务返点</a></li>
+	<li id="adminAdvertisments" onclick="getAdminPage(this, 'adminAdvertisments')"><a href="#">广告和统计</a></li>	
+	
+	<li class="divider"></li>
+	<li class="nav-header">系统设置</li>
+	<li id="adminContracts" onclick="getAdminPage(this, 'adminContracts')"><a href="#">协议管理</a></li>
+	<li id="adminTemplateTypes" onclick="getAdminPage(this, 'adminTemplateTypes')"><a href="#">模板管理</a></li>
+	<li id="adminCourseType" onclick="getAdminPage(this, 'adminCourseType')"><a href="#">项目类型管理</a></li>
+	<li id="adminNewsType" onclick="getAdminPage(this, 'adminNewsType')"><a href="#">新闻类型管理</a></li>
+	
+	<li class="divider"></li>
+	<li class="nav-header">日志</li>
+	<li id="adminLoginLogs" onclick="getAdminPage(this, 'adminLoginLogs')"><a href="#">系统日志</a></li>
+
+	<!--<li class="nav-header">普通用户</li>
 	<li><a href="#">主页</a></li>
 	<li><a href="#">在线报名</a></li>
 	<li><a href="#">我的课程</a></li>
@@ -184,6 +202,6 @@
 	<li><a href="#">在线留言</a></li>
 	<li><a href="#">在线咨询</a></li>
 	<li><a href="#">在线报名</a></li>
-	<li><a href="#">查看报名情况</a></li>
+	<li><a href="#">查看报名情况</a></li>-->
 	
 </ul>
