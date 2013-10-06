@@ -138,6 +138,12 @@
 			} else {
 				@inputText("职称", "jobTitle", null, false)
 			}
+
+			@if(model != null){
+				@inputText("擅长领域", "field", model.field, true)
+			} else {
+				@inputText("擅长领域", "field", null, false)
+			}
   		
 			<input class="input-large" type="hidden" name="table" value="@Instructor.TABLE_NAME">
 			@if(model != null){
