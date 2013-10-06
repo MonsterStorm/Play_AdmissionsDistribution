@@ -21,6 +21,11 @@
      ajaxBasic("/common/" + url, data, "GET", "#content");
   }
   
+	function getTemplatePage(li, url, data){
+     data = data || "";
+     ajaxBasic("/template/" + url, data, "GET", "#content");
+  }
+  
   function changeValue(item, value){
       $(item).html(value);
   }
@@ -99,10 +104,21 @@
      $(dialog).modal();
   }
   
+	function showConfirm(id){
+		var dialog = '#dialogModal_' + id;
+     $(dialog).modal();
+	}
+  
 	function doDeleteEntity(id, data){
      ajaxDelete("/common/delete", data, "POST", "#content");
      var dialog = '#dialogModal_' + id;
      $(dialog).modal('hide');
+	}
+	
+	function doUseTemplate(id, data){
+		ajaxBasic("/template/use", data, "POST", "#content");
+		var dialog = '#dialogModal_' + id;
+    $(dialog).modal('hide');
 	}
 	
 	
@@ -127,6 +143,9 @@
 	<li onclick="getAdminPage(this, 'adminMessages')"><a href="#">查看留言</a></li>
 	<li onclick="getAdminPage(this, 'adminNewsType')"><a href="#">新闻类型管理</a></li>
 	<li onclick="getAdminPage(this, 'adminNews')"><a href="#">新闻管理</a></li>
+
+
+	<li onclick="getTemplatePage(this, 'useTemplate')"><a href="#">使用模板</a></li>
 	<li class="divider"></li>
 
 	<li class="nav-header">普通用户</li>
