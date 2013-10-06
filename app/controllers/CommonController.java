@@ -35,6 +35,8 @@ public class CommonController extends Controller {
 	private static final String PAGE_ADVERTISEMENT_DETAIL = "advertismentDetail";// 广告详情
 	private static final String PAGE_COURSE_TYPE_DETAIL = "courseTypeDetail";// 课程类别详情
 	private static final String PAGE_CHANGE_PASSWORD_WITHOUT_AUTH = "changePasswordWithoutAuth";//修改密码
+	private static final String PAGE_STUDENT_WORDS_DEATIL = "studentWordsDetail";//学员感言
+
 
 	/**
 	 * common pages
@@ -73,7 +75,9 @@ public class CommonController extends Controller {
 			return pageCourseTypeDetail(null);
 		} else if (PAGE_CHANGE_PASSWORD_WITHOUT_AUTH.equalsIgnoreCase(page)) {//广告详情
 			return pageChangePasswordWithoutAuth();
-		} else {
+		}else if (PAGE_STUDENT_WORDS_DEATIL.equalsIgnoreCase(page)) {// 用户详情
+			return pageStudentWordsDetail(null);
+		}  else {
 			return badRequest(Constants.MSG_PAGE_NOT_FOUND);
 		}
 	}
@@ -109,6 +113,8 @@ public class CommonController extends Controller {
 			return addOrUpdateAdvertisment();
 		}else if (CourseType.TABLE_NAME.equalsIgnoreCase(table)) {// 添加或删除课程类型
 			return addOrUpdateCourseType();
+		}else if (StudentWords.TABLE_NAME.equalsIgnoreCase(table)) {// 添加或删除学员感言
+			return addOrUpdateStudentWords();
 		} else {
 			return badRequest(Constants.MSG_PAGE_NOT_FOUND);
 		}
@@ -139,6 +145,8 @@ public class CommonController extends Controller {
 			return deleteCourseType();
 		} else if (Advertisment.TABLE_NAME.equalsIgnoreCase(table)) {// 代理人信息删除
 			return deleteAdvertisment();
+		} else if (StudentWords.TABLE_NAME.equalsIgnoreCase(table)) {// 学员感言删除
+			return deleteStudentWords();
 		} else {
 			return badRequest(Constants.MSG_PAGE_NOT_FOUND);
 		}
@@ -487,6 +495,28 @@ public class CommonController extends Controller {
 
 
 	/**
+	 * add or update studentWords
+	 * 
+	 * @return
+	 */
+	public static Result addOrUpdateStudentWords() {
+		Form<StudentWords> form = form(StudentWords.class).bindFromRequest();
+		if (form != null && form.hasErrors() == false) {
+			StudentWords studentWords = StudentWords.addOrUpdate(form.get());
+			if (studentWords != null) {
+				return pageStudentWordsDetail(studentWords);
+			}
+		} else if (form.hasErrors()) {
+			String error = FormHelper.getFirstError(form.errors());
+			play.Logger.debug("error:" + error);
+			if (error != null) {
+				return badRequest(error);
+			}
+		}
+		return internalServerError(Constants.MSG_INTERNAL_ERROR);
+	}
+
+	/**
 	 * delete edu
 	 * 
 	 * @return
@@ -654,6 +684,21 @@ public class CommonController extends Controller {
 			}
 		}
 		return ok(views.html.module.common.courseDetail.render(course, types));
+	}
+
+	/**
+	 * delete 学员感言
+	 * 
+	 * @return
+	 */
+	public static Result deleteStudentWords() {
+		Long id = FormHelper.getLong(form().bindFromRequest(), "id");
+		if (id != null) {
+			StudentWords studentWords = StudentWords.delete(id);
+			return ok(Constants.MSG_SUCCESS);
+		} else {
+			return internalServerError(Constants.MSG_INTERNAL_ERROR);
+		}
 	}
 
 	/**
@@ -915,6 +960,26 @@ public class CommonController extends Controller {
 		return ok(views.html.module.common.courseTypeDetail.render(courseType));
 	}
 	
+	/**
+	 * 学员感言详情
+	 * 
+	 * @return
+	 */
+	public static Result pageStudentWordsDetail(StudentWords studentWords) {
+		boolean isAddNew = FormHelper.isAddNew(form().bindFromRequest());
+
+		if (isAddNew) {
+			return ok(views.html.module.common.studentWordsDetail.render(null));
+		}
+
+		if (studentWords == null) {
+			Long id = FormHelper.getLong(form().bindFromRequest(), "id");
+			if (id != null) {
+				studentWords = StudentWords.find(id);
+			}
+		}
+		return ok(views.html.module.common.studentWordsDetail.render(studentWords));
+	}
 	/**
 	 * 打开修改密码页面
 	 * @return

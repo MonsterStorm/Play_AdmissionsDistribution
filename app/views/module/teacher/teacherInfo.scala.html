@@ -1,4 +1,4 @@
-@(model: Student, user:User)
+@(model: Instructor, user:User)
 
 @import basic.common._
 @import basic.common.basicform._
@@ -7,7 +7,7 @@
 @toolbar_header={
 <div class="row">
 	<div class="span2">
-		<h4>学员详情</h4>
+		<h4>讲师详情</h4>
 	</div>
 	<div class="btn-toolbar pull-right" role="toolbar">
 		<div class="btn-group">
@@ -32,7 +32,7 @@
 
 <div class="table-responsive">
 	<div style="overflow: auto">
-		<form class="form-horizontal" id="myform" method="post" action="@routes.StudentController.addOrUpdateEntity()">
+		<form class="form-horizontal" id="myform" method="post" action="@routes.TeacherController.addOrUpdateEntity()">
 	
 			@form_validate_info()
 			@if(model != null &&model.user!=null && model.user.basicInfo != null){
@@ -62,17 +62,7 @@
 				}
 			}}
 			
-			@if(model != null){
-				@inputText("公司名称", "companyName", model.companyName, true)
-			} else {
-				@inputText("公司名称", "companyName", null, false)
-			}
 			
-			@if(model != null){
-				@inputText("职务", "position", model.position, true)
-			} else {
-				@inputText("职务", "position", null, false)
-			}
 				
 			@if(model != null && model.user != null && model.user.basicInfo != null){
 				@inputText("身份证号", "idcard", model.user.basicInfo.idcard, true)
@@ -138,12 +128,24 @@
 			}}
 			
 			@if(model != null){
-				@textarea("额外信息", "info", model.info, true)
+				@textarea("个人简介", "info", model.info, true)
 			} else {
-				@textarea("额外信息", "info", null, false)
+				@textarea("个人简介", "info", null, false)
+			}
+
+			@if(model != null){
+				@inputText("职称", "jobTitle", model.jobTitle, true)
+			} else {
+				@inputText("职称", "jobTitle", null, false)
+			}
+
+			@if(model != null){
+				@inputText("擅长领域", "field", model.field, true)
+			} else {
+				@inputText("擅长领域", "field", null, false)
 			}
   		
-			<input class="input-large" type="hidden" name="table" value="@Student.TABLE_NAME">
+			<input class="input-large" type="hidden" name="table" value="@Instructor.TABLE_NAME">
 			@if(model != null){
 				<input class="input-large" type="hidden" name="id" value="@model.id">
 			} else {

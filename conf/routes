@@ -53,6 +53,12 @@ POST	/common/delete				controllers.CommonController.deleteEntity()
 GET     /common/:page               controllers.CommonController.page(page: String)
 #Student
 POST	/student/addOrUpdate			controllers.StudentController.addOrUpdateEntity()
+#Agent
+POST	/agent/addOrUpdate			controllers.AgentController.addOrUpdateEntity()
+#Education
+POST	/education/addOrUpdate		controllers.EducationController.addOrUpdateEntity()
+#teacher
+POST	/teacher/addOrUpdate			controllers.TeacherController.addOrUpdateEntity()
 
 #platform
 POST	/platform/addOrUpdate			controllers.PlatformController.addOrUpdateEntity()

@@ -161,6 +161,7 @@ create table instructor (
   audit_id                  bigint,
   create_time               bigint,
   info                      longtext,
+  field                     varchar(255),
   constraint pk_instructor primary key (id))
 ;
 
@@ -285,6 +286,14 @@ create table student (
   position                  varchar(255),
   info                      varchar(255),
   constraint pk_student primary key (id))
+;
+
+create table studentwords (
+  id                        bigint auto_increment not null,
+  name                      varchar(255),
+  company                   varchar(255),
+  words                     varchar(255),
+  constraint pk_studentwords primary key (id))
 ;
 
 create table template (
@@ -569,6 +578,8 @@ drop table user_role;
 drop table scholl_fellow;
 
 drop table student;
+
+drop table studentwords;
 
 drop table template;
 

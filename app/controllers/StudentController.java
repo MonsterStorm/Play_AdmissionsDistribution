@@ -121,7 +121,6 @@ public class StudentController extends BaseController {
 			user.basicInfo = basicInfo;
 			user.mobile = form().bindFromRequest().get("mobile");
 			user.email = form().bindFromRequest().get("email");
-			user.update();
 		}
 		else{
 			basicInfo.realname = form().bindFromRequest().get("realname");
@@ -138,14 +137,28 @@ public class StudentController extends BaseController {
 			user.basicInfo = basicInfo;
 			user.mobile = form().bindFromRequest().get("mobile");
 			user.email = form().bindFromRequest().get("email");
-			user.update();
 
 		}
 		Form<Student> form = form(Student.class).bindFromRequest();
 		if (form != null && form.hasErrors() == false) {
-			Student student = Student.addOrUpdate(form.get());
-			if (student != null) {
-				return ok(views.html.module.student.studentInfo.render(student, user));
+			Student student = user.student;
+			if(student == null){
+				Student student2 =  Student.addOrUpdate(form.get());
+				user.student = student2;
+				user.update();
+				if (student2 != null) {
+					return ok(views.html.module.student.studentInfo.render(student2, user));
+				}
+			}else{
+				student.info = FormHelper.getString(form().bindFromRequest(),"info");
+				student.position = FormHelper.getString(form().bindFromRequest(),"position");
+				student.companyName = FormHelper.getString(form().bindFromRequest(),"companyName");
+				Student student2 =  Student.addOrUpdate(student);
+				user.student = student2;
+				user.update();
+				if (student2 != null) {
+					return ok(views.html.module.student.studentInfo.render(student2, user));
+				}
 			}
 		} else if (form.hasErrors()) {
 			String error = FormHelper.getFirstError(form.errors());

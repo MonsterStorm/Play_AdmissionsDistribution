@@ -46,6 +46,8 @@ public class Instructor extends Model {
 	@Lob
 	public String info;// 简介
 
+	public String field;//擅长领域
+
 	// -- 查询
 	public static Model.Finder<Long, Instructor> finder = new Model.Finder(Long.class, Instructor.class);
 

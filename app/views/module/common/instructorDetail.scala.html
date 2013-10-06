@@ -54,6 +54,12 @@
 			} else {
 				@textarea("简介", "info", null, false)
 			}
+			
+		@if(model != null){
+				@textarea("擅长领域", "field", model.field, true)
+			} else {
+				@textarea("擅长领域", "field", null, false)
+			}
   		
   		@if(model != null){
 				@datetimePicker("注册时间", "createTime", model.createTime)				
