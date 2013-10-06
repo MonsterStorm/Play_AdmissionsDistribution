@@ -130,6 +130,26 @@ public class EducationInstitution extends Model {
 		edu.save();
 		return edu;
 	}
+
+	/**
+	 * add or update an education institution
+	 * @return
+	 */
+	public static EducationInstitution addOrUpdate(EducationInstitution edu){
+		if (edu != null) {
+			if (edu.id == null) {// 新增
+				User user = LoginController.getSessionUser();//创建用户必须是当前用户
+				edu.creator = user;//绑定到当前用户
+				edu.id = finder.nextId();
+				edu.createTime = System.currentTimeMillis();
+				edu.save();
+			} else {// 更新
+				edu.update();
+			}
+			return edu;
+		}
+		return null;
+	}
 	
 	/**
 	 * delete an edu
