@@ -69,13 +69,21 @@ $('#toolbar').tooltip(options);
 			@if(model != null){
 				@inputSelect("课程类别", "courseType", model.courseType.name, true){
 					@for((t, index) <- types.zipWithIndex){
-	    		  <option value="@t.id" onclick="changeValue('#btnCourseType', '@t.name')">@t.name</option>
+						@if(model.courseType.id == t.id){
+							<option value="@t.id" onclick="changeValue('#btnCourseType', '@t.name')" selected>@t.name</option>
+						} else {
+	    		  	<option value="@t.id" onclick="changeValue('#btnCourseType', '@t.name')">@t.name</option>
+	    		  }
       		}	
 				}
 			} else {
 				@inputSelect("课程类别", "courseType", null, false){
 					@for((t, index) <- types.zipWithIndex){
-	    		  <option value="@t.id" onclick="changeValue('#btnCourseType', '@t.name')">@t.name</option>
+	    		  @if(model.courseType.id == t.id){
+							<option value="@t.id" onclick="changeValue('#btnCourseType', '@t.name')" selected>@t.name</option>
+						} else {
+	    		  	<option value="@t.id" onclick="changeValue('#btnCourseType', '@t.name')">@t.name</option>
+	    		  }
       		}
 				}
 			}

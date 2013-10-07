@@ -1,5 +1,8 @@
 @(model: Message)
+@import basic.common._
+@import basic.common.basicform._
 
+@bootstrapDatetimepicker()
 @toolbar_header={
 <div class="row">
 	<div class="span2">
@@ -12,25 +15,11 @@
 			<a class="btn btn-default" data-toggle="下一条" href="#"><i
 				class="icon-arrow-right"></i>下一条</a>
 		</div>	
-		<div class="btn-group">
+		<!--<div class="btn-group">
 			<a class="btn btn-danger" data-toggle="删除" href="#"><i
 				class="icon-remove icon-white"></i>删除</a>
-		</div>
+		</div>-->
 	</div>
-</div>
-} 
-
-@paging={
-<div class="pagination">
-	<ul>
-		<li><a href="#">&laquo;</a></li>
-		<li><a href="#">1</a></li>
-		<li><a href="#">2</a></li>
-		<li><a href="#">3</a></li>
-		<li><a href="#">4</a></li>
-		<li><a href="#">5</a></li>
-		<li><a href="#">&raquo;</a></li>
-	</ul>
 </div>
 } 
 
@@ -89,12 +78,11 @@
     		</div>
   		</div>
 
-			<div class="control-group">
-    		<label class="control-label">留言时间</label>
-    		<div class="controls">
-      		<input class="input-large" type="text" value="@model.time" >
-    		</div>
-  		</div>
+			@if(model != null){
+				@datetimePicker("留言时间", null, model.time, true, true)				
+			} else {
+				@datetimePicker("留言时间", null, null, true, true)
+			}
   </div>
 </form>
 	</div>
