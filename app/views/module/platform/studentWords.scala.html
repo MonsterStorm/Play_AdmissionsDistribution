@@ -1,0 +1,60 @@
+@(models: com.avaje.ebean.Page[StudentWords])
+@import basic.platform._
+@import basic.common._
+
+@baseUrl=@{
+	var url = "studentWords";
+	url
+}
+<script type="text/javascript">
+function getPlatformPage(li, url, data){
+  	data = data||"";
+  	ajaxBasic("/platform/" +url,data,"GET","#content");
+  }
+</script>
+<!-- content -->
+<div class="ym-wrapper">
+	<div class="ym-wbox">
+		<div class="ym-grid linearize-level-1">
+			<div class="ym-g66 ym-gl">
+				<div class="ym-gbox-left" id="content">
+					<h2>学员感言</h2>
+					@for(model <- models.getList()){
+						<h5>@model.name</h5>
+						<span>
+							@model.company
+						</span>
+						</p>
+						<h6>@model.words</h6>
+						
+						</p>
+					}
+					@paging(models, {baseUrl}, "platform")
+				</div>
+			</div>
+			<div class="ym-g33 ym-gr">
+				<div class="ym-gbox-right">
+					<h5>加盟商</h5>
+					<ul>
+						<li>加盟商 A</li>
+						<li>加盟商 B</li>
+						<li>加盟商 C</li>
+						<li>加盟商 D</li>
+						<li>加盟商 E</li>
+					</ul>
+					<div id="platformAdv2"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+function getAdvPage2(li, url, data){
+		 data = data || "";
+     ajaxBasic("/platform/" + url, data, "GET", "#platformAdv2");
+		 $("#navList li.active").removeClass("active");
+		 $(li).addClass("active");
+	}
+
+	getAdvPage2(this, "platformAdv2");
+</script>
