@@ -18,9 +18,8 @@
 				}
 				@if(null != t && null != t.user && null != t.user.basicInfo && null != t.user.basicInfo.realname ){
 					<div class="teacher-desc">
-						<a href="#">@t.user.basicInfo.realname</a><br>
+						<a href="#" onclick="getPlatformPage(this, 'teacherDetail', 'id=@t.id');">@t.user.basicInfo.realname</a><br>
 						@t.field
-						<button>详情请点击</button>
 					</div>
 				}
 			</div>

@@ -1,0 +1,14 @@
+@(model: Instructor)
+
+@import basic.common._
+@import basic.common.basicform._
+<div>
+	<h2>@model.user.basicInfo.realname</h2>
+	<p></p>
+	擅长领域：@if(model.field!=null){@model.field}
+	<p></p>
+	职称：@if(model != null && model.jobTitle != null ){@model.jobTitle}
+	<p></p>
+	简介：@model.info
+	<p></p>
+</div>
