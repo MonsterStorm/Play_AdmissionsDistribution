@@ -174,3 +174,10 @@ footerfont{
     line-height: 1.5;
     margin: 0px 0px 1.5em;
 }
+#qqbox {
+    width: 100px;
+    height: 200px;
+    position: fixed;
+    top: 300px;
+    right: 0px;
+}
