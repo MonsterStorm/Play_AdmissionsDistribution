@@ -28,6 +28,10 @@ public class PlatformController extends BaseController {
 	private static final String PAGE_REGISTER = "register";
 	private static final String PAGE_LOGIN = "login";
 	private static final String PAGE_NEWS_DETAIL = "newsDetail";
+	private static final String PAGE_NEWS_COMP = "newsComp";
+	private static final String PAGE_COURSE_COMP = "courseComp";
+	private static final String PAGE_TEACHER_COMP = "teacherComp";
+	private static final String PAGE_STUDENTWORDS_COMP = "studentWordsComp";
 	private static final String PAGE_COURSE = "course";
 	private static final String PAGE_COURSE_DETAIL = "courseDetail";
 	private static final String PAGE_PLATFORM_ADV = "platformAdv";//图片广告
@@ -48,6 +52,18 @@ public class PlatformController extends BaseController {
 			return ok(views.html.module.platform.successfual_case.render());
 		} else if (PAGE_NEWS.equalsIgnoreCase(page)){
 			return pagePlatformNews();
+			//return ok(views.html.module.platform.news.render());
+		} else if (PAGE_NEWS_COMP.equalsIgnoreCase(page)){
+			return pagePlatformNewsComp();
+			//return ok(views.html.module.platform.news.render());
+		} else if (PAGE_STUDENTWORDS_COMP.equalsIgnoreCase(page)){
+			return pageStudentWordsComp();
+			//return ok(views.html.module.platform.news.render());
+		} else if (PAGE_COURSE_COMP.equalsIgnoreCase(page)){
+			return pagePlatformCourseComp();
+			//return ok(views.html.module.platform.news.render());
+		} else if (PAGE_TEACHER_COMP.equalsIgnoreCase(page)){
+			return pagePlatformTeacherComp();
 			//return ok(views.html.module.platform.news.render());
 		} else if (PAGE_REGISTER_AND_LOGIN.equalsIgnoreCase(page)){
 			return ok(views.html.module.platform.register_and_login.render());
@@ -130,7 +146,74 @@ public class PlatformController extends BaseController {
 
 		return ok(views.html.module.platform.news.render(news));
 	}
+	/**
+	 * 返回新闻列表
+	 * 
+	 * @return
+	 */
+	public static Result pagePlatformNewsComp() {
+		play.Logger.error(form().bindFromRequest().get("page"));
+		// get page
+		int page = FormHelper.getPage(form().bindFromRequest());
 
+		Page<News> news = News.findPage(form().bindFromRequest(), page,
+				null);
+
+		FormHelper.resetFlash(form().bindFromRequest(), flash());
+
+		return ok(views.html.module.platform.newsComp.render(news));
+	}
+	/**
+	 * 返回学员感言列表
+	 * 
+	 * @return
+	 */
+	public static Result pageStudentWordsComp() {
+		play.Logger.error(form().bindFromRequest().get("page"));
+		// get page
+		int page = FormHelper.getPage(form().bindFromRequest());
+
+		Page<StudentWords> words = StudentWords.findPage(form().bindFromRequest(), page,
+				null);
+
+		FormHelper.resetFlash(form().bindFromRequest(), flash());
+
+		return ok(views.html.module.platform.studentWordsComp.render(words));
+	}
+	/**
+	 * 返回课程列表
+	 * 
+	 * @return
+	 */
+	public static Result pagePlatformCourseComp() {
+		play.Logger.error(form().bindFromRequest().get("page"));
+		// get page
+		int page = FormHelper.getPage(form().bindFromRequest());
+
+		Page<Course> course = Course.findPage(form().bindFromRequest(), page,
+				null);
+
+		FormHelper.resetFlash(form().bindFromRequest(), flash());
+
+		return ok(views.html.module.platform.courseComp.render(course));
+	}
+	/**
+	 * 返回讲师列表
+	 * 
+	 * @return
+	 */
+	public static Result pagePlatformTeacherComp() {
+		play.Logger.error(form().bindFromRequest().get("page"));
+		
+		int page = FormHelper.getPage(form().bindFromRequest());
+
+		Page<Instructor> instructor = Instructor.findPage(form().bindFromRequest(), page,
+				12);
+
+		FormHelper.resetFlash(form().bindFromRequest(), flash());
+
+		return ok(views.html.module.platform.teacherComp.render(instructor));
+	}
 
 	/**
 	 * 新闻详情

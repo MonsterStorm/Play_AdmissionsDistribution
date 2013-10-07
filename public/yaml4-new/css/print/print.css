@@ -1,0 +1,39 @@
+/** Project: test2
+ *  Description: 
+ *
+ *  @creator       Thinkin-Tags v0.4.1
+ *  @framework     YAML v4.1.2
+ *  @file          print.css
+ */
+
+@media print {
+
+	body {
+		font-size: 10pt;
+	}
+
+	#topnav,
+	#nav,
+	#search {
+		display: none;
+	}
+
+	.ym-grid > .ym-gl,
+	.ym-grid > .ym-gr {
+		display: table;
+		float: none;
+		overflow: visible;
+		width: 100%;
+	}
+
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6 {
+		page-break-after: avoid;
+	}
+
+}
+

@@ -1,0 +1,474 @@
+/** Project: test2
+ *  Description: 
+ *
+ *  @creator       Thinkin-Tags v0.4.1
+ *  @framework     YAML v4.1.2
+ *  @file          typography.css
+ */
+
+@media all {
+
+	html * {
+		font-size: 100.01%;
+	}
+
+	textarea,
+	pre,
+	code,
+	kbd,
+	samp,
+	var,
+	tt {
+		font-family: Consolas, "Lucida Console", "Andale Mono", "Bitstream Vera Sans Mono", "Courier New", Courier;
+	}
+
+	body {
+		color: #444;
+		font-family: Calibri,Geneva,Helvetica,Arial,sans-serif;
+		font-size: 87.50%;
+	}
+
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6 {
+		color: #222;
+		font-family: Calibri,Geneva,Helvetica,Arial,sans-serif;
+		font-weight: normal;
+		margin: 0 0 0.25em 0;
+	}
+
+	h1 {
+		font-size: 250%;
+	}
+
+	h2 {
+		font-size: 200%;
+	}
+
+	h3 {
+		font-size: 150%;
+	}
+
+	h4 {
+		font-size: 133.33%;
+	}
+
+	h5 {
+		border-bottom: 1px dotted #036;
+		color: #036;
+		font-size: 116.67%;
+		text-transform: uppercase;
+	}
+
+	h6 {
+		font-size: 116.67%;
+	}
+
+	ul,
+	ol,
+	dl {
+		line-height: 1.5em;
+		margin: 0 0 1em 1em;
+	}
+
+	ul {
+		list-style-type: disc;
+	}
+
+	ul ul {
+		list-style-type: circle;
+	}
+
+	ol {
+		list-style-type: decimal;
+	}
+
+	ol ol {
+		list-style-type: lower-latin;
+	}
+
+	li {
+		line-height: 1.5em;
+		margin-left: 0.8em;
+	}
+
+	dt {
+		font-weight: bold;
+	}
+
+	dd {
+		margin: 0 0 1em 0.8em;
+	}
+
+	p {
+		line-height: 1.5em;
+		margin: 0 0 1em 0;
+	}
+
+	blockquote,
+	cite,
+	q {
+		font-family: Georgia, "Times New Roman", Times, serif;
+		font-style: italic;
+	}
+
+	blockquote {
+		color: #666;
+		margin: 0 0 1em 1.6em;
+	}
+
+	strong,
+	b {
+		font-weight: bold;
+	}
+
+	em,
+	i {
+		font-style: italic;
+	}
+
+	big {
+		font-size: 116.667%;
+	}
+
+	small {
+		font-size: 91.667%;
+	}
+
+	pre {
+		line-height: 1.5em;
+		margin: 0 0 1em 0;
+	}
+
+	pre,
+	code,
+	kbd,
+	tt,
+	samp,
+	var {
+		font-size: 100%;
+	}
+
+	pre,
+	code {
+		color: #800;
+	}
+
+	kbd,
+	samp,
+	var,
+	tt {
+		color: #666;
+		font-weight: bold;
+	}
+
+	var {
+		font-style: italic;
+	}
+
+	acronym,
+	abbr {
+		border-bottom: 1px #aaa dotted;
+		cursor: help;
+		font-variant: small-caps;
+		letter-spacing: .07em;
+	}
+
+	sub,
+	sup {
+		font-size: 91.6667%;
+	}
+
+	hr {
+		background: transparent;
+		border: 0;
+		border-bottom: 1px #eee solid;
+		color: #fff;
+		margin: 0 0 0.5em 0;
+		padding: 0 0 0.5em 0;
+	}
+
+	a {
+		background: transparent;
+		color: #4D87C7;
+		text-decoration: none;
+	}
+
+	a:visited {
+		color: #036;
+	}
+
+	a:focus,
+	a:hover,
+	a:active {
+		color: #182E7A;
+		text-decoration: underline;
+	}
+
+	p.icaption_left {
+		display: inline;
+		float: left;
+		margin: 0 1em 0.15em 0;
+	}
+
+	p.icaption_right {
+		display: inline;
+		float: right;
+		margin: 0 0 0.15em 1em;
+	}
+
+	p.icaption_left img,
+	p.icaption_right img {
+		border: 1px #888 solid;
+		padding: 0;
+	}
+
+	p.icaption_left strong,
+	p.icaption_right strong {
+		background: #eee;
+		display: block;
+		font-size: 91.667%;
+		font-weight: normal;
+		margin-top: 2px;
+		overflow: hidden;
+		padding: 0.3em 0.5em;
+	}
+
+	.highlight {
+		color: #c30;
+	}
+
+	.dimmed {
+		color: #888;
+	}
+
+	.info {
+		background: #f8f8f8;
+		color: #666;
+		font-size: 91.7%;
+		margin-bottom: 0.5em;
+		padding: 10px;
+	}
+
+	.note {
+		background: #efe;
+		border: 2px #484 solid;
+		color: #040;
+		margin-bottom: 1em;
+		padding: 10px;
+	}
+
+	.important {
+		background: #ffe;
+		border: 2px #884 solid;
+		color: #440;
+		margin-bottom: 1em;
+		padding: 10px;
+	}
+
+	.warning {
+		background: #fee;
+		border: 2px #844 solid;
+		color: #400;
+		margin-bottom: 1em;
+		padding: 10px;
+	}
+
+	.float_left {
+		display: inline;
+		float: left;
+		margin-bottom: 0.15em;
+		margin-right: 1em;
+	}
+
+	.float_right {
+		display: inline;
+		float: right;
+		margin-bottom: 0.15em;
+		margin-left: 1em;
+	}
+
+	.center {
+		display: block;
+		margin: 0.5em auto;
+		text-align: center;
+	}
+
+	table {
+		border-bottom: 2px #888 solid;
+		border-collapse: collapse;
+		border-top: 2px #888 solid;
+		margin-bottom: 0.5em;
+		width: auto;
+	}
+
+	table caption {
+		font-variant: small-caps;
+	}
+
+	table.full {
+		width: 100%;
+	}
+
+	table.fixed {
+		table-layout: fixed;
+	}
+
+	th,
+	td {
+		padding: 0.5em;
+	}
+
+	thead th {
+		border-bottom: 2px #800 solid;
+		color: #000;
+	}
+
+	tbody th {
+		background: #e0e0e0;
+		border-bottom: 1px solid #fff;
+		color: #333;
+		text-align: left;
+	}
+
+	tbody th[scope="row"],
+	tbody th.sub {
+		background: #f0f0f0;
+	}
+
+	tbody td {
+		border-bottom: 1px solid #eee;
+	}
+
+	tbody tr:hover th[scope="row"],
+	tbody tr:hover tbody th.sub {
+		background: #f0e8e8;
+	}
+
+	tbody tr:hover td {
+		background: #fff8f8;
+	}
+
+	#teaser h2 {
+		font-family: Georgia,Times New Roman,serif;
+		font-style: italic;
+		font-weight: normal;
+		margin-top: 50px;
+	}
+
+	#teaser blockquote {
+		color: #888;
+	}
+
+	blockquote cite {
+		color: #006699;
+		font-weight: bold;
+	}
+
+	h3 a {
+		color: #000;
+	}
+
+	a.comments {
+		background: url(http://www.highresolution.info/layout/css/screen/images/vaga/comment.png) no-repeat top left;
+	}
+
+	a.category {
+		background: url(http://www.highresolution.info/layout/css/screen/images/vaga/newspaper.png) no-repeat top left;
+	}
+
+	input[type=text] {
+		-moz-box-shadow: inset 2px 2px 5px rgba(0,0,0,.3);
+		border: #800 1px solid;
+		padding: 4px 4px;
+		width: 70%;
+	}
+
+	input[type=submit] {
+		background: #800;
+		border: 1px #400 solid;
+		color: #fff;
+		margin: 0 0 0 12px;
+		padding: 4px 4px;
+	}
+
+	#topnav a {
+		color: #888;
+	}
+
+	#footer a {
+		color: #888;
+	}
+
+	#footer .nav {
+		color: #444;
+		font-size: 12px;
+		text-align: center;
+		text-transform: uppercase;
+	}
+
+	#content .subcl {
+		border-right: 1px solid #ddd;
+	}
+
+	a.readmore {
+		background: #444 url(http://www.highresolution.info/layout/css/screen/images/bg_linkarrow.gif) no-repeat center right scroll;
+		color: #fff;
+		padding: 4px 20px 4px 4px;
+	}
+
+	ul.latest_comments {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	ul.latest_comments li {
+		margin: 0;
+		padding: 0;
+	}
+
+	ul.latest_comments a {
+		color: #aaa;
+	}
+
+	span.commenter {
+		background: url(http://www.highresolution.info/layout/css/screen/images/vaga/user.png) no-repeat top left;
+		color: #369;
+		padding: 0 4px 0 20px;
+		text-transform: uppercase;
+	}
+
+	a.commenter {
+	}
+
+	span.comments strong {
+		background: url(http://www.highresolution.info/layout/css/screen/images/vaga/comment.png) no-repeat top left;
+		font-size: 12px;
+		padding: 0 0 0 20px;
+	}
+
+	ul.latest_comments q {
+		display: block;
+		font-size: 12px;
+		padding: 0 0 0 20px;
+	}
+
+}
+
+@media screen {
+
+	#header h1 {
+		background: transparent url(http://www.thuemba.com/images/logo.gif) no-repeat top left;
+		height: 100px;
+		position: relative;
+		text-indent: -9000px;
+		top: 0px;
+		width: 500px;
+	}
+
+}
+

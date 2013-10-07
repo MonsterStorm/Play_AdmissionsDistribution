@@ -1,0 +1,175 @@
+/*左侧栏子模块样式开始*/
+
+/*左侧栏和中间栏是在一个大的div中的,给这个大的div添加一个左对齐的样式，来布局左侧栏和中间栏*/
+.leftmiddle div{
+	float:left;
+}
+
+/*左侧栏样式*/
+.left-module{
+	width:33%;
+}
+
+/*左侧栏子模块样式*/
+.left-sub-module{
+	width:90%;
+	margin-bottom:15px;
+}
+
+/*左侧栏子模块标题样式*/
+.left-title{
+	margin-right:65%;
+}
+
+/*左侧栏子模块内容样式*/
+.left-content{
+	width:100%;
+	clear:both;
+	padding:0;
+	margin:0;
+	position:relative;
+}
+
+/*左侧栏子模块内容列表样式*/
+.left-list{
+	margin:5px 0 0 -10px;
+	list-style-type:none;
+}
+
+.left-list li{
+	height:25px;
+}
+
+/*左侧栏子模块具体每条内容的标题样式*/
+.left-detail-title{
+	float: left;
+	width:55%;
+	padding-left:20px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-align: left;
+	text-overflow:ellipsis;
+}
+
+/*左侧栏子模块具体每条内容的时间样式*/
+.left-detail-time{
+	position:absolute;
+	right:5px;
+}
+
+/*学员感言外层div样式*/
+.speak{
+	margin:10px 0 5px 0;
+}
+/*左侧栏子模块样式结束*/
+
+/************************************************************/
+
+/*中间栏外部div样式*/
+.middle-module{
+	width:66%;
+//	border:solid 1px #f00;
+}
+
+/*中间栏子模块样式1开始*/
+
+/*中间栏子模块*/
+.middle-sub-module1{
+	width:100%;
+	margin-bottom:15px;
+}
+
+/*中间栏子模块标题样式*/
+.middle-title{
+	margin-right:84%;
+}
+
+/*中间栏子模块内容样式*/
+.middle-content{
+	width:100%;
+	clear:both;
+	padding:0;
+	margin:0;
+	position:relative;
+}
+
+/*中间栏子模块内容列表样式*/
+.middle-list{
+	margin:5px 0 0 5px;
+}
+
+.middle-list li{
+	height:25px;
+}
+
+/*中间栏子模块具体每条内容的标题样式*/
+.middle-detail-title{
+	width:55%;
+	padding-left:20px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-align: left;
+	text-overflow:ellipsis;
+}
+
+/*中间栏子模块具体每条内容的时间样式*/
+.middle-detail-time{
+	position:absolute;
+	right:10px;
+}
+
+/*中间栏子模块样式1结束*/
+
+/*中间栏子模块样式2开始——可垂直滚动*/
+
+/*中间栏子模块2*/
+.middle-sub-module2{
+	width:100%;
+	margin-bottom:15px;
+}
+
+/*垂直自动滚动模块开始*/
+#news-container 
+{
+	width: 100%; 
+	margin: auto;
+	margin-top: 20px;
+}
+
+.news-sub-container{
+	width:230px;
+	height:100px;
+	float:left;
+//	margin:5px;
+}
+
+#news-container ul
+{
+	list-style-type:none;
+}
+
+.vert-scroll{
+	height:500px;
+}
+/*垂直自动滚动模块结束*/
+
+/*搜索框外部div样式开始*/
+#search-wrapper{
+	position: absolute;
+	right: 150px;
+	top: 30px;
+}
+/*搜索框外部div样式结束*/
+
+.teacher-img{
+	width: 90px;
+	margin:0 15px 20px 0;
+}
+
+.teacher-desc{
+	width: 100px;
+}
+
+.nav1{
+		padding: 6px 0;
+	}

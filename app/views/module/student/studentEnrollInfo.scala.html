@@ -1,0 +1,133 @@
+@(models: com.avaje.ebean.Page[Enroll])
+@import basic.common._
+
+@baseUrl=@{
+	var url = "studentEnrollInfo";
+	url
+}
+@toolbar_header={
+<div class="row">
+	<div class="span2">
+		<h4>我的报名</h4>
+	</div>
+	<div class="btn-toolbar pull-right" role="toolbar">
+		
+		<div class="btn-group">
+			<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+				排序 <span class="caret"></span>
+			</a>
+			<ul class="dropdown-menu">
+				<li class="@checkActive("orderby", "course.name-asc", true)"><a onclick="@buildAction({baseUrl}, "student", Array("orderby"), Array("course.name-asc"))">按课程名称升序</a></li>
+				<li class="@checkActive("orderby", "course.name-desc")"><a onclick="@buildAction({baseUrl}, "student", Array("orderby"), Array("course.name-desc"))">按课程名称-降序</a></li>
+				<li class="@checkActive("orderby", "enrollTime-asc")"><a onclick="@buildAction({baseUrl}, "student", Array("orderby"), Array("enrollTime-asc"))">按报名时间-升序</a></li>
+				<li class="@checkActive("orderby", "enrollTime-desc")"><a onclick="@buildAction({baseUrl}, "student", Array("orderby"), Array("enrollTime-desc"))">按报名时间-降序</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+} 
+@toolbar(enroll: Enroll)={
+
+} 
+
+@toolbar_header
+
+<div class="table-responsive">
+	<div style="overflow: auto">
+		<table class="table table-hover table-bordered table-striped">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>课程名称</th>
+					<th>开课时间</th>
+					<th>课程费用</th>
+					<th>报名时间</th>
+					<th>代理人名称</th>
+					<th>教育机构名称</th> 
+					<th>代理人审核</th>
+					<th>教育机构审核</th> 
+				</tr>
+			</thead>
+			<tbody>
+				@for(model <- models.getList()){
+				<tr>
+					<td>@model.id</td>
+					@if(model.course != null){
+						<td>@model.course.name</td>
+					} else {
+						<td>-未设置-</td>
+					}
+					
+					@if(model.course != null){
+						<td>@datetime_formatter(model.course.startTime, true)</td>
+					} else {
+						<td>-未设置-</td>
+					}
+					
+					@if(model.course !=null){
+						<td>@model.course.money
+						</td>
+					} else {
+						<td>-未设置-</td>
+					}
+
+					@if(model.enrollTime != null){
+						<td>@datetime_formatter(model.enrollTime, true)</td>
+					} else {
+						<td>-未设置-</td>
+					}
+
+					@if(model.fromAgent != null){
+						<td>@model.fromAgent.name</td>
+					} else {
+						<td>-未设置-</td>
+					}
+
+					@if(model.edu != null){
+						<td>@model.edu.name</td>
+					} else {
+						<td>-未设置-</td>
+					}
+
+					
+					@if(model != null && model.auditOfAgent != null && model.auditOfAgent.status != null){
+						if(model.auditOfAgent.status == Audit.STATUS_WAIT){
+							<td>未审核</td>
+						} else if (model.auditOfAgent.status == Audit.STATUS_SUCCESS){
+							<td>已审核</td>
+						} else if (model.auditOfAgent.status == Audit.STATUS_FAILED){
+							<td>审核失败</td>
+						} else if (model.auditOfAgent.status == Audit.STATUS_DISABLED){
+							<td>禁用</td>
+						} else {
+							<td>-未设置-</td>
+						}
+					} else {
+						<td>-未设置-</td>
+					}
+
+					@if(model != null && model.auditOfEdu != null && model.auditOfEdu.status != null){
+						if(model.auditOfEdu.status == Audit.STATUS_WAIT){
+							<td>未审核</td>
+						} else if (model.auditOfEdu.status == Audit.STATUS_SUCCESS){
+							<td>已审核</td>
+						} else if (model.auditOfEdu.status == Audit.STATUS_FAILED){
+							<td>审核失败</td>
+						} else if (model.auditOfEdu.status == Audit.STATUS_DISABLED){
+							<td>禁用</td>
+						} else {
+							<td>-未设置-</td>
+						}
+					} else {
+						<td>-未设置-</td>
+					}
+
+					<td>@toolbar(model)</td>
+				</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+</div>
+
+@paging(models, {baseUrl}, "student")

@@ -1,0 +1,34 @@
+@(instructors: com.avaje.ebean.Page[Instructor])
+@import basic.platform._
+@import basic.common._
+
+<!--推荐讲师-->
+
+<!--该子模块类型为middle-sub-module2，与middle-sub-module1模块有所区别，具体使用参见推荐讲师模块-->
+
+
+	<ul>
+		@for((t, index) <- instructors.getList().zipWithIndex){
+			 @if(0 == index %3){
+				<li style="margin: 0pt; padding: 0pt; height: 38px;">
+			 }
+			<div class="news-sub-container">
+				@if(t!=null && t.user !=null){
+					<div class="teacher-img"><img src="@routes.Assets.at("/datas/logos",{t.user.logo})" ></div>
+				}
+				@if(null != t && null != t.user && null != t.user.basicInfo && null != t.user.basicInfo.realname ){
+					<div class="teacher-desc">
+						<a href="#">@t.user.basicInfo.realname</a><br>
+						@t.field
+						<button>详情请点击</button>
+					</div>
+				}
+			</div>
+			@if(2 == index%3){
+				</li>
+			}
+		}
+	</ul>
+
+
+<!--垂直滚动模块结束-->

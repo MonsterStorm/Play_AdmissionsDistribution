@@ -61,6 +61,15 @@ public class Instructor extends Model {
 	}
 
 	/**
+	 * find all user
+	 * 
+	 * @return
+	 */
+	public static List<Instructor> findLimit(int limit) {
+		return finder.setMaxRows(limit).findList();
+	}
+
+	/**
 	 * find one by id
 	 * 
 	 * @param id

@@ -132,5 +132,51 @@ public class Enroll extends Model {
 		return finder.where().eq("student", student).eq("course",course).findUnique();
 	}
 
+	/**
+	 * find page with filter
+	 * 
+	 * @param page
+	 * @param form
+	 * @return
+	 */
+	public static Page<Enroll> findPageByStudentId(DynamicForm form, int page, Integer pageSize) {
+		return new QueryHelper<Enroll>(finder, form).addEq("student.id", "id", Long.class).addOrderBy("orderby").findPage(page, pageSize);
+	}
+
+	/**
+	 * find page with filter
+	 * 
+	 * @param page
+	 * @param form
+	 * @return
+	 */
+	public static Page<Enroll> findPageByCourseId(DynamicForm form, int page, Integer pageSize) {
+		return new QueryHelper<Enroll>(finder, form).addEq("course.id", "id", Long.class).addOrderBy("orderby").findPage(page, pageSize);
+	}
+
+	/**
+	 * find page with filter
+	 * 
+	 * @param page
+	 * @param form
+	 * @return
+	 */
+	public static Page<Enroll> findPageByAgentId(DynamicForm form, int page, Integer pageSize) {
+		return new QueryHelper<Enroll>(finder, form).addEq("fromAgent.id", "id", Long.class).addOrderBy("orderby").findPage(page, pageSize);
+	}
+
+	/**
+	 * find page with filter
+	 * 
+	 * @param page
+	 * @param form
+	 * @return
+	 */
+	public static Page<Enroll> findPageByEduId(DynamicForm form, int page, Integer pageSize) {
+		return new QueryHelper<Enroll>(finder, form).addEq("edu.id", "id", Long.class).addOrderBy("orderby").findPage(page, pageSize);
+	}
+
+
+
 
 }

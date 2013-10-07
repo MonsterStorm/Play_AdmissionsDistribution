@@ -1,51 +1,147 @@
 @import basic.platform._
 
 @basic.platform.main("平台"){@meta()}{@styles()}{@scripts()}{@nav()}{@header()}{
-<!-- content -->
-<div class="ym-wrapper">
-	<div class="ym-wbox">
-		<div class="ym-grid linearize-level-1">
-			<div class="ym-g33 ym-gl">
-				<div class="ym-gbox-left">
-					<h2>教育机构</h2>
-					<img src="@routes.Assets.at("/public", "yaml4/images/360x96.gif")" alt="dummy image"
-						class="flexible" />
-					<p>教育机构教育机构教育机构教育机构教育机构教育机构教育机构教育机构教育机构教育机构教育机构教育机构教育机构教育机构教育机构教育机构教育机构教育机构教育机构教育机构教育机构教育机构教育机构教育机构教育机构</p>
-					<div class="ym-wrapper">
-						<div class="ym-wbox">
-							<button type="button" class="ym-button ym-success ym-large">立即加入</button>
-						</div>
+  <script type="text/javascript">
+  	function ajaxBasic2(ajaxUrl, ajaxData, method, promptObj) {
+	// 接收提示信息的div有一个默认值'#content'
+	promptObj = promptObj || '#content';
+	// 请求方式method有默认值get
+	method = method || 'post';
+	var ajaxOptions = {
+		url : ajaxUrl,
+		type : method, // 请求数据的方式
+		contentType : "application/x-www-form-urlencoded; charset=utf-8",
+		async : true, // 是否是异步传输
+		cache : false, // 使用缓存
+		dataType : 'html', // 从服务器返回的数据类型
+		data : ajaxData,// 传输到服务器的数据
+		beforeSend : function() {
+			$('.myprompt').hide();
+			$(promptObj).html('<div class="progress progress-striped active"><div class="bar" style="width: 100%;">加载中...</div><div>');
+		},
+		success : function(html) {
+			$(promptObj).html(html);
+			
+			$('#news-container').vTicker({ 
+				speed: 500,
+				pause: 3000,
+				animation: 'fade',
+				mousePause: false,
+				showItems: 5
+			});
+				$('#news-container1').vTicker({
+				speed: 700,
+				pause: 4000,
+				animation: 'fade',
+				mousePause: false,
+				showItems: 1
+			});
+			
+			return true;
+		},
+		error : function(obj) {
+			var message = obj.responseText || '服务器错误';
+			$(promptObj).html('<div class="alert alert-danger"><center>' + message + '</center></div>');
+			return false;
+		}
+	}
+	$.ajax(ajaxOptions);
+}
+
+	function getAdvPage(li, url, data){
+		 data = data || "";
+     ajaxBasic("/platform/" + url, data, "GET", "#advPic");
+		 $("#navList li.active").removeClass("active");
+		 $(li).addClass("active");
+	}
+
+	getAdvPage(this, "platformAdv");
+
+	function getNewsCompPage(li, url, data){
+		 data = data || "";
+     ajaxBasic("/platform/" + url, data, "GET", "#newsComp");
+		 $("#navList li.active").removeClass("active");
+		 $(li).addClass("active");
+	}
+
+	getNewsCompPage(this, "newsComp");
+
+	getAdvPage(this, "platformAdv");
+
+	function getStudentWordsCompPage(li, url, data){
+		 data = data || "";
+     ajaxBasic("/platform/" + url, data, "GET", "#studentWordsComp");
+		 $("#navList li.active").removeClass("active");
+		 $(li).addClass("active");
+	}
+
+	getStudentWordsCompPage(this, "studentWordsComp");
+
+	function getCourseCompPage(li, url, data){
+		 data = data || "";
+     ajaxBasic("/platform/" + url, data, "GET", "#courseComp");
+		 $("#navList li.active").removeClass("active");
+		 $(li).addClass("active");
+	}
+
+	getCourseCompPage(this, "courseComp");
+
+	function getTeacherCompPage(li, url, data){
+		 data = data || "";
+     ajaxBasic2("/platform/" + url, data, "GET", "#news-container");
+		 $("#navList li.active").removeClass("active");
+		 $(li).addClass("active");
+	}
+
+	getTeacherCompPage(this, "teacherComp");
+  </script>
+<!--主模块-->  
+<div id="main"> 	    
+  <div class="ym-wrapper"> 		    
+    <div class="ym-wbox">		        	                
+        	<section class ="box info">
+		<div id="advPic"></div>
+	</section>		        		        
+      <div role="main" id="content" class="ym-grid"> 			        
+        <div> 			            
+          <div class="ym-gbox-left leftmiddle">
+			<div class="left-module">
+				<!--左侧栏模块1开始-->
+				<div class="left-sub-module" id="newsComp"> 		            
+				</div> 	
+				<!--左侧栏模块1结束-->
+				
+				<!--左侧栏模块3开始-->
+				<div class="left-sub-module" id="studentWordsComp"> 		                        			         
+				</div> 	
+				<!--左侧栏模块3结束-->
+			</div>
+			<div class="middle-module"><!--中间部分开始-->
+				<!--中间栏模块1开始-->
+				<div class="middle-sub-module1" id ="courseComp"><!--精品课程-->
+					
+				</div>
+				<!--中间栏模块1结束-->
+				
+				<!--中间栏模块2开始-->
+				<div class="middle-sub-module2" id="teacherComp"><!--推荐讲师-->
+					<!--垂直滚动模块结束-->
+					<h5><strong class="middle-title">推荐讲师</strong>
+					<a href="#">更多</a></h5>
+					<!--垂直滚动模块开始-->
+					<div id="news-container">
 					</div>
 				</div>
-			</div>
-			<div class="ym-g33 ym-gl">
-				<div class="ym-gbox">
-					<h2>分销商</h2>
-					<img src="@routes.Assets.at("/public", "yaml4/images/360x96.gif")" alt="dummy image"
-						class="flexible" />
-					<p>分销商分销商分销商分销商分销商分销商分销商分销商分销商分销商分销商分销商分销商分销商分销商分销商分销商分销商分销商分销商分销商分销商分销商分销商分销商分销商分销商分销商分销商分销商分销商分销商.</p>
-				</div>
-				<div class="ym-wrapper">
-					<div class="ym-wbox">
-						<button type="button" class="ym-button ym-success ym-large">立即加入</button>
-					</div>
-				</div>
-			</div>
-			<div class="ym-g33 ym-gl">
-				<div class="ym-gbox-right">
-					<h2>培训讲师</h2>
-					<img src="@routes.Assets.at("/public", "yaml4/images/360x96.gif")" alt="dummy image"
-						class="flexible" />
-					<p>培训讲师培训讲师培训讲师培训讲师培训讲师培训讲师培训讲师培训讲师培训讲师培训讲师培训讲师培训讲师培训讲师培训讲师培训讲师培训讲师培训讲师培训讲师培训讲师培训讲师</p>
-				</div>
-			</div>
-			<div class="ym-wrapper">
-				<div class="ym-wbox">
-					<button type="button" class="ym-button ym-success ym-large">立即加入</button>
-				</div>
-			</div>
-		</div>
-	</div>
+				<!--中间栏模块2结束-->
+				
+			</div><!--中间部分结束-->
+          </div>			        
+        </div> 			        
+        	        
+      </div> 		    
+    </div>	    
+  </div> 	
 </div>
+
 
 }{@footer()}
