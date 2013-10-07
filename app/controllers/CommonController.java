@@ -143,6 +143,8 @@ public class CommonController extends Controller {
 			return deleteAgent();
 		} else if (CourseType.TABLE_NAME.equalsIgnoreCase(table)) {// 代理人信息删除
 			return deleteCourseType();
+		} else if (Advertisment.TABLE_NAME.equalsIgnoreCase(table)) {// 代理人信息删除
+			return deleteAdvertisment();
 		} else if (StudentWords.TABLE_NAME.equalsIgnoreCase(table)) {// 学员感言删除
 			return deleteStudentWords();
 		} else {
@@ -642,6 +644,20 @@ public class CommonController extends Controller {
 		Long id = FormHelper.getLong(form().bindFromRequest(), "id");
 		if (id != null) {
 			CourseType courseTyoe = CourseType.delete(id);
+			return ok(Constants.MSG_SUCCESS);
+		} else {
+			return internalServerError(Constants.MSG_INTERNAL_ERROR);
+		}
+	}
+	
+	/**
+	 * delete Advertisment
+	 * @return
+	 */
+	public static Result deleteAdvertisment(){
+		Long id = FormHelper.getLong(form().bindFromRequest(), "id");
+		if (id != null) {
+			Advertisment ad = Advertisment.delete(id);
 			return ok(Constants.MSG_SUCCESS);
 		} else {
 			return internalServerError(Constants.MSG_INTERNAL_ERROR);
