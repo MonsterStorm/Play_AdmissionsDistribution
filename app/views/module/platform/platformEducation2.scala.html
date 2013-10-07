@@ -1,0 +1,10 @@
+@(models: com.avaje.ebean.Page[EducationInstitution])
+@import basic.platform._
+@import basic.common._
+
+<h5>加盟商</h5>
+<ul>
+	@for(model <- models.getList()){
+		<li><a href="#">@model.name</a></li>
+	}
+</ul>

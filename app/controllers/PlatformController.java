@@ -40,6 +40,7 @@ public class PlatformController extends BaseController {
 	private static final String PAGE_PLATFORM_ADV = "platformAdv";//图片广告
 	private static final String PAGE_PLATFORM_ADV2= "platformAdv2";//侧栏连接广告
 	private static final String PAGE_USER_ENROLL = "pageUserEnroll";//用户报名课程
+	private static final String PAGE_EDUCATION2= "platformEducation2";//教育机构广告
 	/**
 	 * get a page
 	 * @param page
@@ -104,6 +105,8 @@ public class PlatformController extends BaseController {
 			return pagePlatformAdv();
 		}else if(PAGE_PLATFORM_ADV2.equalsIgnoreCase(page)){
 			return pagePlatformAdv2();
+		}else if(PAGE_EDUCATION2.equalsIgnoreCase(page)){
+			return pageEducation2();
 		}else if(PAGE_USER_ENROLL.equalsIgnoreCase(page)){
 			return pageUserEnroll();
 		}
@@ -344,11 +347,28 @@ public class PlatformController extends BaseController {
 		int page = FormHelper.getPage(form().bindFromRequest());
 
 		Page<Advertisment> advertisment = Advertisment.findPage(form().bindFromRequest(), page,
-				null);
+				5);
 
 		FormHelper.resetFlash(form().bindFromRequest(), flash());
 
 		return ok(views.html.module.platform.platformAdv2.render(advertisment));
+	}
+	/**
+	 * 侧栏链接教育机构
+	 * 
+	 * @return
+	 */
+	public static Result pageEducation2() {
+		play.Logger.error(form().bindFromRequest().get("page"));
+		// get page
+		int page = FormHelper.getPage(form().bindFromRequest());
+
+		Page<EducationInstitution> education = EducationInstitution.findPage(form().bindFromRequest(), page,
+				5);
+
+		FormHelper.resetFlash(form().bindFromRequest(), flash());
+
+		return ok(views.html.module.platform.platformEducation2.render(education));
 	}
 	/**
 	* 前台用户报名课程
