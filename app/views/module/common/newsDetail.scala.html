@@ -79,7 +79,7 @@ $('#toolbar').tooltip(options);
 			} else {
 				@inputSelect("新闻类别", "newsType", null, false){
 					@for((t, index) <- types.zipWithIndex){
-	    		  @if(model.newsType.id == t.id){
+	    		  @if(model!=null && model.newsType.id == t.id){
 							<option value="@t.id" onclick="changeValue('#btnCourseType', '@t.name')" selected>@t.name</option>
 						} else {
 	    		  	<option value="@t.id" onclick="changeValue('#btnCourseType', '@t.name')">@t.name</option>
