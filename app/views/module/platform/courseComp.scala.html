@@ -2,6 +2,12 @@
 @import basic.platform._
 @import basic.common._
 <script type="text/javascript">
+function getPlatformPage(li, url, data){
+  	data = data||"";
+  	ajaxBasic("/platform/" +url,data,"GET","#content");
+  }
+</script>
+<script type="text/javascript">
 function showLocale(objD)
 {
 	var str,colorhead,colorfoot;
@@ -42,12 +48,12 @@ function tick2(time,id)
 </script>
 
 <h5><strong class="middle-title">精品课程</strong>
-<a href="#">更多</a></h5>
+<a onclick="getPlatformPage(this, 'course');">更多</a></h5>
 <div class="middle-content">
 	<ul class="middle-list">
 		@for(model <-models.getList()){
 		<li>
-			<a class="middle-detail-title" href="#" target="_blank" title="@model.name">
+			<a class="middle-detail-title"  onclick="getPlatformPage(this, 'courseDetail', 'id=@model.id');" href="#" title="@model.name">
 			@model.name</a>
 			<span class="middle-detail-time"  id="localtimec@model.id"></span>
 			<script type="text/javascript">

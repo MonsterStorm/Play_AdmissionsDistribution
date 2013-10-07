@@ -1,6 +1,13 @@
 @import basic.platform._
 
 @basic.platform.main("平台"){@meta()}{@styles()}{@scripts()}{@nav()}{@header()}{
+<script type="text/javascript">
+function getPlatformPage(li, url, data){
+  	data = data||"";
+  	ajaxBasic("/platform/" +url,data,"GET","#content");
+  }
+</script>
+
   <script type="text/javascript">
   	function ajaxBasic2(ajaxUrl, ajaxData, method, promptObj) {
 	// 接收提示信息的div有一个默认值'#content'
