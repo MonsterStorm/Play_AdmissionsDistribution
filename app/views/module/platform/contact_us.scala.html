@@ -1,8 +1,14 @@
 @import basic.platform._
 
 @basic.platform.main("平台"){@meta()}{@styles()}{@scripts()}{@nav()}{@header()}{
+<script type="text/javascript">
+function getPlatformPage(li, url, data){
+    data = data||"";
+    ajaxBasic("/platform/" +url,data,"GET","#content");
+  }
+</script>
 <!-- content -->
-<div class="ym-wrapper">
+<div class="ym-wrapper" id="content">
 	<div class="ym-wbox">
 		<div class="ym-grid linearize-level-1">
 			<div class="ym-g66 ym-gl">
