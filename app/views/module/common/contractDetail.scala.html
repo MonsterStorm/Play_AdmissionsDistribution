@@ -60,11 +60,7 @@
 			} else {
 				@inputSelect("协议类型", "contractType", null, false){
 					@for((t, index) <- types.zipWithIndex){
-	    		  @if(model.contractType.id == t.id){
-							<option value="@t.id" onclick="changeValue('#btnContractType', '@t.name')" selected>@t.name</option>
-						} else {
 	    		  	<option value="@t.id" onclick="changeValue('#btnContractType', '@t.name')">@t.name</option>
-	    		  }
       		}
 				}
 			}			
