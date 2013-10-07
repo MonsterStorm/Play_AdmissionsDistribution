@@ -150,6 +150,17 @@ public class Enroll extends Model {
 	 * @param form
 	 * @return
 	 */
+	public static Page<Enroll> findPageByStudent(Student student, DynamicForm form, int page, Integer pageSize) {
+		return new QueryHelper<Enroll>(finder, form).addEqual("student.id", student.id.toString(), Long.class).addOrderBy("orderby").findPage(page, pageSize);
+	}
+
+	/**
+	 * find page with filter
+	 * 
+	 * @param page
+	 * @param form
+	 * @return
+	 */
 	public static Page<Enroll> findPageByCourseId(DynamicForm form, int page, Integer pageSize) {
 		return new QueryHelper<Enroll>(finder, form).addEq("course.id", "id", Long.class).addOrderBy("orderby").findPage(page, pageSize);
 	}

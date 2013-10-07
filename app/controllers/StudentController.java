@@ -32,6 +32,7 @@ public class StudentController extends BaseController {
 	private static final String PAGE_HOME = "home";// 主页
 	private static final String PAGE_LOGIN = "login";// 登录
 	private static final String PAGE_STUDENT_INFO = "studentInfo";//学员信息
+	private static final String PAGE_STUDENT_ENROLL_INFO = "studentEnrollInfo";//学员报名信息
 	/**
 	 * student pages
 	 * 
@@ -47,6 +48,8 @@ public class StudentController extends BaseController {
 			return ok(views.html.module.student.login.render(form(Login.class)));
 		} else if(PAGE_STUDENT_INFO.equalsIgnoreCase(page)){
 			return pageStudentInfo();
+		}else if(PAGE_STUDENT_ENROLL_INFO.equalsIgnoreCase(page)){
+			return pageStudentEnrollInfo();
 		}
 		else {
 			return badRequest("页面不存在");
@@ -90,6 +93,32 @@ public class StudentController extends BaseController {
 			Student student = Student.find(user);
 			return ok(views.html.module.student.studentInfo.render(student,user));
 		}
+		return badRequest(Constants.MSG_NOT_LOGIN);
+	}
+	/**
+	 * 学生报名管理
+	 * 
+	 * @return
+	 */
+	public static Result pageStudentEnrollInfo() {
+		// get page
+		int page = FormHelper.getPage(form().bindFromRequest());
+		User user = LoginController.getSessionUser();
+		if(user!=null){
+			Student student = user.student;
+			if(student == null){
+				 badRequest(Constants.MSG_STUDENT_NOT_EXIST);
+			}
+
+			Page<Enroll> enroll = Enroll.findPageByStudent(student,form()
+				.bindFromRequest(), page, null);
+
+			// reset flash
+			FormHelper.resetFlash(form().bindFromRequest(), flash());
+
+			return ok(views.html.module.student.studentEnrollInfo.render(enroll));
+		}
+
 		return badRequest(Constants.MSG_NOT_LOGIN);
 	}
 	/**
