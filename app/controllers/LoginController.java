@@ -112,6 +112,9 @@ public class LoginController extends BaseController {
 	 * @return
 	 */
 	public static User getSessionUser(){
+		if(getFromSession(KEY_USER_ID)==null){
+			return null;
+		}
 		Long userId = Long.valueOf(getFromSession(KEY_USER_ID));
 		User user = User.find(userId);
 		return user;

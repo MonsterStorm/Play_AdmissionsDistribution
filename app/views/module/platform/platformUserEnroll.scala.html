@@ -44,10 +44,8 @@ var ajaxSubmitOptionsEnroll = {
 </script>
 
 
-@toolbar_header
 @if(enroll != null){
-<div class="table-responsive">
-	<div style="overflow: auto">
+
 
 		@if(enroll.auditOfAgent != null){
 			@datetimePicker("代理人审核状况", "auditOfAgent", enroll.auditOfAgent.status)
@@ -67,19 +65,18 @@ var ajaxSubmitOptionsEnroll = {
 		@textarea("联系地址", "address", user.basicInfo.address, true)
 		@textarea("额外信息", "info", enroll.student.info, true)
 
-	</div>
-</div>
+
+
 }else{
 
-<div class="table-responsive">
-	<div style="overflow: auto">
-		<form class="form-horizontal" id="myform" method="post" action="@routes.PlatformController.addOrUpdateEntity()">
+
+
+		<form id="myform"  class="form-horizontal"  method="post" action="@routes.PlatformController.addOrUpdateEntity()">
 	
 			@form_validate_info()
 			@if(course!=null){
 				@inputText("课程名称", "coursename", course.name, true)		
 				@inputNumber("课程费用", "coursemoney", course.money, true)
-				@datetimePicker("开课时间", "coursetime", course.startTime,true)
 			}
 			@if(model != null &&model.user!=null && model.user.basicInfo != null){
 				@inputText("学员名称", "realname", model.user.basicInfo.realname, false)
@@ -130,12 +127,12 @@ var ajaxSubmitOptionsEnroll = {
 			}}
   		
 			@if(model != null && model.user != null && model.user.basicInfo != null){
-				@datetimePicker("出生日期", "birthday", model.user.basicInfo.birthday)				
+				@datetimePicker("出生日期", "birthday", model.user.basicInfo.birthday,true)				
 			} else{
 			@if(user!=null && user.basicInfo!=null){
-				@datetimePicker("出生日期", "birthday", user.basicInfo.birthday)	
+				@datetimePicker("出生日期", "birthday", user.basicInfo.birthday,true)	
 			} else {
-				@datetimePicker("出生日期", "birthday")
+				@datetimePicker("出生日期", "birthday",null, true)
 			}}
 			
 			@if(model != null && model.user != null && model.user.basicInfo != null){
@@ -222,6 +219,5 @@ var ajaxSubmitOptionsEnroll = {
     	</div>
   </div>
 </form>
-	</div>
-</div>
+
 }

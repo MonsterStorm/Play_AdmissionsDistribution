@@ -142,15 +142,6 @@
 		width: 30%;
 	}
 
-	#content .date span {
-		background: #f4f4f4 url(http://www.highresolution.info/layout/css/screen/images/date_arrow.png) no-repeat bottom center;
-		border-top: 3px solid #ededed;
-		display: block;
-		padding: 6px 4% 36px;
-		text-align: center;
-		text-transform: uppercase;
-	}
-
 	.entrymeta a {
 		color: #888;
 		padding: 0 4px 0 20px;
