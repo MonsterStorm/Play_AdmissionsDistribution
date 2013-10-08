@@ -33,6 +33,8 @@ public class EducationController extends BaseController {
 	private static final String PAGE_LOGIN = "login";// 登录
 	private static final String PAGE_EDUCATION_INFO = "educationInfo";
 	private static final String PAGE_EDUCATION_COURSES = "educationCourses";
+	private static final String PAGE_EDUCATION_COURSES_DETAIL ="courseDetail";
+	private static final String PAGE_EDUCATION_INSTITUTION ="educationInstitution";
 	/**
 	 * education pages
 	 * 
@@ -47,11 +49,14 @@ public class EducationController extends BaseController {
 		} else if (PAGE_LOGIN.equalsIgnoreCase(page)) {// 只做登录页面跳转
 			return ok(views.html.module.education.login.render(form(Login.class)));
 		}else if (PAGE_EDUCATION_INFO.equalsIgnoreCase(page)) {// 
-			User user =  LoginController.getSessionUser();
-			return ok(views.html.module.education.educationInfo.render(null, user));
+			return pageEducationInfo(null);
 		}else if (PAGE_EDUCATION_COURSES.equalsIgnoreCase(page)) {// 
 			return pageEducationCourses();
-		}  else {
+		} else if (PAGE_EDUCATION_COURSES_DETAIL.equalsIgnoreCase(page)) {// 
+			return pageCourseDetail(null);
+		} else if (PAGE_EDUCATION_INSTITUTION.equalsIgnoreCase(page)) {// 
+			return pageEducations();
+		} else {
 			return badRequest("页面不存在");
 		}
 	}
@@ -75,6 +80,8 @@ public class EducationController extends BaseController {
 		String table = form().bindFromRequest().get("table");
 		if (EducationInstitution.TABLE_NAME.equalsIgnoreCase(table)) {// 教育机构更新或添加
 			return addOrUpdateEducation();
+		}if (Course.TABLE_NAME.equalsIgnoreCase(table)) {// 教育机构更新或添加
+			return addOrUpdateCourse();
 		}
 		 else {
 			return badRequest(Constants.MSG_PAGE_NOT_FOUND);
@@ -168,6 +175,58 @@ public class EducationController extends BaseController {
 		return internalServerError(Constants.MSG_INTERNAL_ERROR);
 	}
 
+
+	// /**
+	//  * add or update instructor
+	//  * 
+	//  * @return
+	//  */
+	// public static Result addOrUpdateCourse() {
+	// 	User user =  LoginController.getSessionUser();
+	// 	if(user == null){
+	// 		return badRequest(Constants.MSG_NOT_LOGIN);
+	// 	}
+		
+	// 	Form<Course> form = form(Course.class).bindFromRequest();
+	// 	if (form != null && form.hasErrors() == false) {
+	// 		Course course = Course.addOrUpdate(form.get());
+	// 		if (course != null) {
+	// 			return pageCourseDetail(course);
+	// 		}
+
+	// 	} else if (form.hasErrors()) {
+	// 		String error = FormHelper.getFirstError(form.errors());
+	// 		play.Logger.debug("error:" + error);
+	// 		if (error != null) {
+	// 			return badRequest(error);
+	// 		}
+	// 	}
+	// 	return internalServerError(Constants.MSG_INTERNAL_ERROR);
+	// }
+
+	/**
+	 * add or update course
+	 */
+	/**
+	 * add or update course
+	 */
+	public static Result addOrUpdateCourse() {
+		Form<Course> form = form(Course.class).bindFromRequest();
+		if (form != null && form.hasErrors() == false) {
+			Course course = Course.addOrUpdate(form.get());
+			if (course != null) {
+				return pageCourseDetail(course);
+			}
+		} else if (form.hasErrors()) {
+			String error = FormHelper.getFirstError(form.errors());
+			play.Logger.debug("error:" + error);
+			if (error != null) {
+				return badRequest(error);
+			}
+		}
+		return internalServerError(Constants.MSG_INTERNAL_ERROR);
+	}
+
 	/**
 	 * 教育机构课程
 	 * 
@@ -175,14 +234,93 @@ public class EducationController extends BaseController {
 	 */
 	public static Result pageEducationCourses() {
 		play.Logger.error(form().bindFromRequest().get("page"));
+
+		User user =  LoginController.getSessionUser();
+		if(user == null){
+			return badRequest(Constants.MSG_NOT_LOGIN);
+		}
+		if(user.edus == null){
+			return badRequest(Constants.MSG_EDUCATION_NOT_EXIST);
+		}
 		// get page
 		int page = FormHelper.getPage(form().bindFromRequest());
+		if(form().bindFromRequest().get("eduId") == null){
+			Page<Course> courses  = Course.findPageByEducationUser(user,form().bindFromRequest(),page,null);
+			return ok(views.html.module.education.educationCourses.render(courses));
+		}else{
+			Long eduId = FormHelper.getLong(form().bindFromRequest(), "eduId");
+			EducationInstitution edu = EducationInstitution.find(eduId);
 
-		Page<Course> courses = Course.findPage(form().bindFromRequest(), page,
-				null);
+			Page<Course> courses  = Course.findPageByEducation(edu,form().bindFromRequest(),page,null);
+			return ok(views.html.module.education.educationCourses.render(courses));
+		}
+	}
 
-		FormHelper.resetFlash(form().bindFromRequest(), flash());
+	/**
+	 * 教育机构
+	 * 
+	 * @return
+	 */
+	public static Result pageEducations() {
+		play.Logger.error(form().bindFromRequest().get("page"));
 
-		return ok(views.html.module.education.educationCourses.render(courses));
+		User user =  LoginController.getSessionUser();
+		if(user == null){
+			return badRequest(Constants.MSG_NOT_LOGIN);
+		}
+		int page = FormHelper.getPage(form().bindFromRequest());
+		
+		Page<EducationInstitution> edus  = EducationInstitution.findPageByUser(user,form().bindFromRequest(),page,null);
+		return ok(views.html.module.education.educationInstitution.render(edus));
+		
+	}
+	/**
+	 * 教育机构课程详情
+	 * 
+	 * @return
+	 */
+	public static Result pageCourseDetail(Course course) {
+		boolean isAddNew = FormHelper.isAddNew(form().bindFromRequest());
+		User user =  LoginController.getSessionUser();
+		if(user == null){
+			return badRequest(Constants.MSG_NOT_LOGIN);
+		}
+		List<CourseType> types = CourseType.findAll();
+		if (isAddNew) {
+			return ok(views.html.module.education.courseDetail.render(null, types, user.edus));
+		}
+
+		if (course == null) {
+			Long id = FormHelper.getLong(form().bindFromRequest(), "id");
+			if (id != null) {
+				course = Course.find(id);
+			}
+		}
+		return ok(views.html.module.education.courseDetail.render(course, types,user.edus));
+	}
+
+	/**
+	 * 教育机构详情
+	 * 
+	 * @return
+	 */
+	public static Result pageEducationInfo(EducationInstitution edu) {
+		boolean isAddNew = FormHelper.isAddNew(form().bindFromRequest());
+		User user =  LoginController.getSessionUser();
+		if(user == null){
+			return badRequest(Constants.MSG_NOT_LOGIN);
+		}
+		if (isAddNew) {
+
+			return ok(views.html.module.education.educationInfo.render(null, user));
+		}
+
+		if (edu == null) {
+			Long id = FormHelper.getLong(form().bindFromRequest(), "id");
+			if (id != null) {
+				edu = EducationInstitution.find(id);
+			}
+		}
+		return ok(views.html.module.education.educationInfo.render(edu, user));
 	}
 }

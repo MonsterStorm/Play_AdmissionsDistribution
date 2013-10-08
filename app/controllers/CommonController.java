@@ -37,7 +37,6 @@ public class CommonController extends Controller {
 	private static final String PAGE_CHANGE_PASSWORD_WITHOUT_AUTH = "changePasswordWithoutAuth";//修改密码
 	private static final String PAGE_STUDENT_WORDS_DEATIL = "studentWordsDetail";//学员感言
 
-
 	/**
 	 * common pages
 	 * 
@@ -77,15 +76,6 @@ public class CommonController extends Controller {
 			return pageChangePasswordWithoutAuth();
 		}else if (PAGE_STUDENT_WORDS_DEATIL.equalsIgnoreCase(page)) {// 用户详情
 			return pageStudentWordsDetail(null);
-		}else if ("educationCourseDetail".equalsIgnoreCase(page)) {// 教育机构课程详情
-			boolean isAddNew = FormHelper.isAddNew(form().bindFromRequest());
-
-			List<CourseType> types = CourseType.findAll();
-			if (isAddNew) {
-				return ok(views.html.module.common.educationCourseDetail.render(null, types));
-			}
-			
-			return ok(views.html.module.common.educationCourseDetail.render(null, types));
 		} else {
 			return badRequest(Constants.MSG_PAGE_NOT_FOUND);
 		}
@@ -693,6 +683,28 @@ public class CommonController extends Controller {
 			}
 		}
 		return ok(views.html.module.common.courseDetail.render(course, types));
+	}
+
+	/**
+	 * 教育机构课程详情
+	 * 
+	 * @return
+	 */
+	public static Result pageEducationCourseDetail(Course course) {
+		boolean isAddNew = FormHelper.isAddNew(form().bindFromRequest());
+
+		List<CourseType> types = CourseType.findAll();
+		if (isAddNew) {
+			return ok(views.html.module.common.courseDetail.render(null, types));
+		}
+
+		if (course == null) {
+			Long id = FormHelper.getLong(form().bindFromRequest(), "id");
+			if (id != null) {
+				course = Course.find(id);
+			}
+		}
+		return ok(views.html.module.common.educationCourseDetail.render(course, types));
 	}
 
 	/**

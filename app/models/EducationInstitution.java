@@ -57,6 +57,16 @@ public class EducationInstitution extends Model {
 	public static List<EducationInstitution> findAll() {
 		return finder.findList();
 	}
+
+	/**
+	 * find one by userName
+	 * 
+	 * @param userName
+	 * @return
+	 */
+	public static EducationInstitution findByName(String name) {
+		return finder.where().eq("name", name).findUnique();
+	}
 	
 	/**
 	 * find page
@@ -76,6 +86,21 @@ public class EducationInstitution extends Model {
 	 */
 	public static Page<EducationInstitution> findPage(DynamicForm form, int page, Integer pageSize){
 		return new QueryHelper<EducationInstitution>().findPage(finder, form, page, pageSize);
+	}
+
+	/**
+	 * find page with filter
+	 * 
+	 * @param page
+	 * @param form
+	 * @return
+	 */
+	public static Page<EducationInstitution> findPageByUser(User  user, DynamicForm form, int page, Integer pageSize) {
+		Map<String, String> datas = form.data();
+		datas.put("creatorId", user.id.toString());
+		form = form.bind(datas);
+		return new QueryHelper<EducationInstitution>(finder, form).addEq("creator.id", "creatorId", Long.class).addOrderBy("orderby").findPage(page, pageSize);
+//		return new QueryHelper<EducationInstitution>(finder, form).addEqual("creator.id", user.id.toString(), Long.class).addOrderBy("orderby").findPage(finder, form, page, pageSize);
 	}
 	
 	/**
