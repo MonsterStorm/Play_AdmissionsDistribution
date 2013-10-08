@@ -495,6 +495,7 @@ public class PlatformController extends BaseController {
 					enroll.fromAgent = agent;
 				}
 				enroll.student = student;
+				enroll.enrollTime = System.currentTimeMillis();
 				//enroll.save();
 				Enroll.addOrUpdate(enroll);
 

@@ -1,4 +1,4 @@
-@(model: News, types: List[NewsType])
+@(model: Course, types: List[CourseType])
 
 @import basic.common._
 @import basic.common.basicform._
@@ -8,7 +8,7 @@
 @toolbar_header={
 <div class="row">
 	<div class="span2">
-		<h4>新闻详情</h4>
+		<h4>课程详情</h4>
 	</div>
 	<div class="btn-toolbar pull-right" role="toolbar">
 		<div class="btn-group">
@@ -60,16 +60,16 @@ $('#toolbar').tooltip(options);
 			@form_validate_info()
 	
 			@if(model != null){
-				@inputText("新闻标题", "title", model.title, true)
+				@inputText("课程名称", "name", model.name, true)
 			} else {
-				@inputText("新闻标题", "title", null, false)
+				@inputText("课程名称", "name", null, false)
 			}
 	  	
 
 			@if(model != null){
-				@inputSelect("新闻类别", "newsType", model.newsType.name, true){
+				@inputSelect("课程类别", "courseType", model.courseType.name, true){
 					@for((t, index) <- types.zipWithIndex){
-						@if(model.newsType.id == t.id){
+						@if(model.courseType.id == t.id){
 							<option value="@t.id" onclick="changeValue('#btnCourseType', '@t.name')" selected>@t.name</option>
 						} else {
 	    		  	<option value="@t.id" onclick="changeValue('#btnCourseType', '@t.name')">@t.name</option>
@@ -77,9 +77,9 @@ $('#toolbar').tooltip(options);
       		}	
 				}
 			} else {
-				@inputSelect("新闻类别", "newsType", null, false){
+				@inputSelect("课程类别", "courseType", null, false){
 					@for((t, index) <- types.zipWithIndex){
-	    		  @if(model!=null && model.newsType.id == t.id){
+	    		  @if(model.courseType.id == t.id){
 							<option value="@t.id" onclick="changeValue('#btnCourseType', '@t.name')" selected>@t.name</option>
 						} else {
 	    		  	<option value="@t.id" onclick="changeValue('#btnCourseType', '@t.name')">@t.name</option>
@@ -88,23 +88,46 @@ $('#toolbar').tooltip(options);
 				}
 			}
   		
-  		
+  		@if(model != null){
+				@inputText_money("学费", "money", {String.valueOf(model.money)}, true)  			
+  		} else {
+  			@inputText_money("学费", "money", null, false)
+  		}
 
 			@if(model != null){
-				@datetimePicker("发布时间", "time", model.time,true,true)				
+				@datetimePicker("开课时间", "startTime", model.startTime)				
 			} else {
-				@datetimePicker("发布时间", "time",null,true,true)
+				@datetimePicker("开课时间", "startTime")
+			}
+
+			@if(model != null){
+				@textarea("联系方式", "contact", model.contact, true)
+			} else {
+				@textarea("联系方式", "contact", null, false)
 			}
 			
 			@if(model != null){
-				@textarea("新闻详情", "detail", model.detail, true, 20)
+				@textarea("课程简介", "info", model.info, true)
 			} else {
-				@textarea("新闻详情", "detail", null, false, 20)
+				@textarea("课程简介", "info", null, false)
 			}
 
-			
+			@if(model != null){
+				@textarea("课程详细信息", "detail", model.detail, true, 20)
+			} else {
+				@textarea("课程详细信息", "detail", null, false)
+			}
 
-			<input class="input-large" type="hidden" name="table" value="@News.TABLE_NAME">
+			@if(model != null && model.edu != null){
+				@inputText("教育机构", null, model.edu.name, true)
+			}
+
+
+			@if(model != null && model.instructor != null){
+				@inputText("讲师", null, model.instructor.user.username, true)
+			}
+
+			<input class="input-large" type="hidden" name="table" value="EducationCourse">
 			@if(model != null){
 				<input class="input-large" type="hidden" name="id" value="@model.id">
 			} else {

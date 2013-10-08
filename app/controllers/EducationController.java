@@ -32,6 +32,7 @@ public class EducationController extends BaseController {
 	private static final String PAGE_HOME = "home";// 主页
 	private static final String PAGE_LOGIN = "login";// 登录
 	private static final String PAGE_EDUCATION_INFO = "educationInfo";
+	private static final String PAGE_EDUCATION_COURSES = "educationCourses";
 	/**
 	 * education pages
 	 * 
@@ -48,6 +49,8 @@ public class EducationController extends BaseController {
 		}else if (PAGE_EDUCATION_INFO.equalsIgnoreCase(page)) {// 
 			User user =  LoginController.getSessionUser();
 			return ok(views.html.module.education.educationInfo.render(null, user));
+		}else if (PAGE_EDUCATION_COURSES.equalsIgnoreCase(page)) {// 
+			return pageEducationCourses();
 		}  else {
 			return badRequest("页面不存在");
 		}
@@ -165,4 +168,21 @@ public class EducationController extends BaseController {
 		return internalServerError(Constants.MSG_INTERNAL_ERROR);
 	}
 
+	/**
+	 * 教育机构课程
+	 * 
+	 * @return
+	 */
+	public static Result pageEducationCourses() {
+		play.Logger.error(form().bindFromRequest().get("page"));
+		// get page
+		int page = FormHelper.getPage(form().bindFromRequest());
+
+		Page<Course> courses = Course.findPage(form().bindFromRequest(), page,
+				null);
+
+		FormHelper.resetFlash(form().bindFromRequest(), flash());
+
+		return ok(views.html.module.education.educationCourses.render(courses));
+	}
 }

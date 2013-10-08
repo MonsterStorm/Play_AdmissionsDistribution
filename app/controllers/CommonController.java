@@ -77,7 +77,16 @@ public class CommonController extends Controller {
 			return pageChangePasswordWithoutAuth();
 		}else if (PAGE_STUDENT_WORDS_DEATIL.equalsIgnoreCase(page)) {// 用户详情
 			return pageStudentWordsDetail(null);
-		}  else {
+		}else if ("educationCourseDetail".equalsIgnoreCase(page)) {// 教育机构课程详情
+			boolean isAddNew = FormHelper.isAddNew(form().bindFromRequest());
+
+			List<CourseType> types = CourseType.findAll();
+			if (isAddNew) {
+				return ok(views.html.module.common.educationCourseDetail.render(null, types));
+			}
+			
+			return ok(views.html.module.common.educationCourseDetail.render(null, types));
+		} else {
 			return badRequest(Constants.MSG_PAGE_NOT_FOUND);
 		}
 	}

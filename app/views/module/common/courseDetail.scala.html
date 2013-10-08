@@ -79,7 +79,7 @@ $('#toolbar').tooltip(options);
 			} else {
 				@inputSelect("课程类别", "courseType", null, false){
 					@for((t, index) <- types.zipWithIndex){
-	    		  @if(model.courseType.id == t.id){
+	    		  @if(model!=null && model.courseType!=null && model.courseType.id == t.id){
 							<option value="@t.id" onclick="changeValue('#btnCourseType', '@t.name')" selected>@t.name</option>
 						} else {
 	    		  	<option value="@t.id" onclick="changeValue('#btnCourseType', '@t.name')">@t.name</option>
