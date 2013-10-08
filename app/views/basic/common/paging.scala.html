@@ -97,5 +97,80 @@
 		</ul>
 		</div>
   }
+  case "teacher" => {
+  	<div class="pagination">
+		<ul>
+		@if(models.hasPrev()){
+			<li><a href="#" onclick="getTeacherPage(null, '@url', {@params page:@(models.getPageIndex() - 1)})">&laquo;</a></li>
+		} else {
+			<li class="disabled"><a href="#">&laquo;</a></li>
+		}
+		
+		@for(i <- 1 to models.getTotalPageCount()){
+			@if(i == models.getPageIndex() + 1){
+				<li class="active"><a href="#" onclick="getTeacherPage(null, '@url', {@params page:@(i-1)})">@i</a></li>
+			} else {
+				<li><a href="#" onclick="getTeacherPage(null, '@url', {@params page:@(i-1)})">@i</a></li>
+			}
+		}
+		
+		@if(models.hasNext()){
+			<li><a href="#" onclick="getTeacherPage(null, '@url', {@params page:@(models.getPageIndex() + 1)})">&raquo;</a></li>
+		} else {
+			<li class="disabled"><a href="#">&raquo;</a></li>
+		}
+		</ul>
+		</div>
+  }
+  case "agent" => {
+  	<div class="pagination">
+		<ul>
+		@if(models.hasPrev()){
+			<li><a href="#" onclick="getAgentPage(null, '@url', {@params page:@(models.getPageIndex() - 1)})">&laquo;</a></li>
+		} else {
+			<li class="disabled"><a href="#">&laquo;</a></li>
+		}
+		
+		@for(i <- 1 to models.getTotalPageCount()){
+			@if(i == models.getPageIndex() + 1){
+				<li class="active"><a href="#" onclick="getAgentPage(null, '@url', {@params page:@(i-1)})">@i</a></li>
+			} else {
+				<li><a href="#" onclick="getAgentPage(null, '@url', {@params page:@(i-1)})">@i</a></li>
+			}
+		}
+		
+		@if(models.hasNext()){
+			<li><a href="#" onclick="getAgentPage(null, '@url', {@params page:@(models.getPageIndex() + 1)})">&raquo;</a></li>
+		} else {
+			<li class="disabled"><a href="#">&raquo;</a></li>
+		}
+		</ul>
+		</div>
+  }
+  case "education" => {
+  	<div class="pagination">
+		<ul>
+		@if(models.hasPrev()){
+			<li><a href="#" onclick="getEducationPage(null, '@url', {@params page:@(models.getPageIndex() - 1)})">&laquo;</a></li>
+		} else {
+			<li class="disabled"><a href="#">&laquo;</a></li>
+		}
+		
+		@for(i <- 1 to models.getTotalPageCount()){
+			@if(i == models.getPageIndex() + 1){
+				<li class="active"><a href="#" onclick="getEducationPage(null, '@url', {@params page:@(i-1)})">@i</a></li>
+			} else {
+				<li><a href="#" onclick="getEducationPage(null, '@url', {@params page:@(i-1)})">@i</a></li>
+			}
+		}
+		
+		@if(models.hasNext()){
+			<li><a href="#" onclick="getEducationPage(null, '@url', {@params page:@(models.getPageIndex() + 1)})">&raquo;</a></li>
+		} else {
+			<li class="disabled"><a href="#">&raquo;</a></li>
+		}
+		</ul>
+		</div>
+  }
 }
 

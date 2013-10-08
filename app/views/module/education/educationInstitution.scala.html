@@ -1,0 +1,95 @@
+@(models: com.avaje.ebean.Page[EducationInstitution])
+
+@import basic.common._
+
+@baseUrl=@{
+	var url = "educationInstitution";
+	url
+}
+
+@toolbar_header={
+<div class="row">
+	<div class="span2">
+		<h4>培训项目</h4>
+	</div>
+	<div class="btn-toolbar pull-right" role="toolbar">
+		<div class="btn-group">
+			<a class="btn btn-success" data-toggle="新增" href="#" onclick="getEducationPage(this, 'educationInfo', 'addNew=true');"><i
+				class="icon-plus icon-white"></i>新增</a>
+		</div>
+		<div class="btn-group" id="btnGroup">
+			<button type="button" class="btn btn-default @checkActive("auditStatus", "-1")" onclick="@buildAction({baseUrl}, "education", Array("auditStatus"), Array("-1"))">所有</button>
+			<button type="button" class="btn btn-default @checkActive("auditStatus", {String.valueOf(Audit.STATUS_WAIT)})" onclick="@buildAction({baseUrl}, "education", Array("auditStatus"), Array({String.valueOf(Audit.STATUS_WAIT)}))">所有待审核</button>
+			<button type="button" class="btn btn-default @checkActive("auditStatus", {String.valueOf(Audit.STATUS_SUCCESS)})" onclick="@buildAction({baseUrl}, "education", Array("auditStatus"), Array({String.valueOf(Audit.STATUS_SUCCESS)}))">所有已审核</button>
+		</div>
+		
+	</div>
+</div>
+} 
+
+@toolbar(education: EducationInstitution)={
+<!-- <script type="text/javascript">
+$('#toolbar').tooltip(options);
+</script> -->
+
+@dialogDelete("删除教育机构", EducationInstitution.TABLE_NAME, education.id){
+	确定删除&nbsp;
+	<b style="font-size:x-large;color:red">
+	@{
+		if(education.name != null){
+			education.name
+		}
+	}
+	</b>&nbsp;？
+}
+
+<div class="pull-left" style="width:130px;">
+	<div class="btn-group">
+		<a class="btn btn-danger" data-toggle="删除，请谨慎操作！" href="#" onclick="doDelete(@education.id)"><i
+			class="icon-remove icon-white"></i></a>
+	</div>
+</div>
+} 
+
+@toolbar_header
+
+<div class="table-responsive">
+	<div style="overflow: auto">
+		<table class="table table-hover table-bordered table-striped">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>创建者</th>
+					<th>教育机构</th>
+					<th>创建日期</th>
+					<th>操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				@for(model <- models.getList()){
+				<tr>
+					<td>@model.id</td>
+					@if(model.creator != null){
+						<td>@model.creator.username</td>
+					} else {
+						<td>-未设置-</td>
+					}
+					@if(model.name != null){
+						<td><a href="#" onclick="getEducationPage(this, 'educationInfo', 'id=@model.id');">@model.name</a></td>
+					} else {
+						<td>-未设置-</td>
+					}
+					@if(model.createTime != null){
+						<td>@datetime_formatter(model.createTime, true)</td>
+					} else {
+						<td>-未设置-</td>
+					}
+					<td>@toolbar(model)</td>
+				</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+</div>
+
+@paging(models, {baseUrl}, "education")

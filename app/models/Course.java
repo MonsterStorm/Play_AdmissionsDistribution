@@ -60,6 +60,7 @@ public class Course extends Model {
 
 	static {
 		FormFormatter.registerCourseType();
+		FormFormatter.registerEducationType();
 	}
 
 	/**
@@ -105,7 +106,7 @@ public class Course extends Model {
 	}
 
 	/**
-	 * 新增或更新一个用户
+	 * 新增或更新一个课程
 	 * 
 	 * @param form
 	 * @return
@@ -159,4 +160,62 @@ public class Course extends Model {
 	public static Page<Course> findPageByAgent(DynamicForm form, int page, Integer pageSize){
 		return new QueryHelper<Course>(finder, form).addEq("agents.id", "agentId", Long.class).findPage(page, pageSize);
 	}
+
+
+	/**
+	 * find page with filter
+	 * 
+	 * @param page
+	 * @param form
+	 * @return
+	 */
+	public static Page<Course> findPageByTeacher(Instructor teacher, DynamicForm form, int page, Integer pageSize) {
+		Map<String, String> datas = form.data();
+		datas.put("teacherId", teacher.id.toString());
+		form = form.bind(datas);
+		return new QueryHelper<Course>(finder, form).addEq("instructor.id", "teacherId", Long.class).addOrderBy("orderby").findPage(page, pageSize);
+//		return new QueryHelper<Course>(finder, form).addEqual("instructor.id", teacher.id.toString(), Long.class).addOrderBy("orderby").findPage(finder, form, page, pageSize);
+	}
+
+	/**
+	 * find page with filter
+	 * 
+	 * @param page
+	 * @param form
+	 * @return
+	 */
+	public static Page<Course> findPageByEducation(EducationInstitution edu, DynamicForm form, int page, Integer pageSize) {
+		Map<String, String> datas = form.data();
+		datas.put("eduId", edu.id.toString());
+		form = form.bind(datas);
+		return new QueryHelper<Course>(finder, form).addEq("edu.id", "eduId", Long.class).addOrderBy("orderby").findPage(page, pageSize);
+//		return new QueryHelper<Course>(finder, form).addEqual("edu.id", edu.id.toString(), Long.class).addOrderBy("orderby").findPage(finder, form, page, pageSize);
+	}
+
+	/**
+	 * find page with filter
+	 * 
+	 * @param page
+	 * @param form
+	 * @return
+	 */
+	public static Page<Course> findPageByEducationUser(User  user, DynamicForm form, int page, Integer pageSize) {
+		Map<String, String> datas = form.data();
+		datas.put("creatorId", user.id.toString());
+		form = form.bind(datas);
+		return new QueryHelper<Course>(finder, form).addEq("edu.creator.id", "creatorId", Long.class).addOrderBy("orderby").findPage(page, pageSize);
+//		return new QueryHelper<Course>(finder, form).addEqual("edu.creator.id", user.id.toString(), Long.class).addOrderBy("orderby").findPage(finder, form, page, pageSize);
+	}
+
+
+	// /**
+	//  * find page with filter
+	//  * 
+	//  * @param page
+	//  * @param form
+	//  * @return
+	//  */
+	// public static Page<Course> findPageByAgent(Agent agent, DynamicForm form, int page, Integer pageSize) {
+	// 	return new QueryHelper<Course>(finder, form).addEqual(".id", agent.id.toString(), Long.class).addOrderBy("orderby").findPage(finder, form, page, pageSize);
+	// }
 }
