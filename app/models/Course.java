@@ -216,6 +216,9 @@ public class Course extends Model {
 	 * @return
 	 */
 	public static Page<Course> findPageByAgent(Agent agent, DynamicForm form, int page, Integer pageSize) {
-		return new QueryHelper<Course>(finder, form).addEqual("agents.id", agent.id.toString(), Long.class).addOrderBy("orderby").findPage(finder, form, page, pageSize);
+		Map<String, String> datas = form.data();
+		datas.put("agentId", agent.id.toString());
+		form = form.bind(datas);
+		return new QueryHelper<Course>(finder, form).addEq("agents.id", "agentId", Long.class).findPage(page, pageSize);
 	}
 }
