@@ -34,7 +34,7 @@ public class EducationInstitution extends Model {
 	@OneToMany(mappedBy="edu", cascade=CascadeType.ALL)
 	public List<Course> courses;// 教育机构对应的课程列表，一个教育机构可以有多个课程
 
-	@OneToOne
+	@OneToOne(cascade=CascadeType.ALL)
 	public Audit audit;//教育机构状态，状态在Audit类中
 	
 	@OneToOne

@@ -7,4 +7,4 @@ resolvers += "Typesafe repository" at "http://repo.typesafe.com/typesafe/release
 // Use the Play sbt plugin for Play projects, can not add chars between serval addSbtPlugin
 addSbtPlugin("play" % "sbt-plugin" % "2.1.3")
 
-addSbtPlugin("com.github.play2war" % "play2-war-plugin" % "1.0")
+//addSbtPlugin("com.github.play2war" % "play2-war-plugin" % "1.0")

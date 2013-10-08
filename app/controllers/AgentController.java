@@ -2,23 +2,13 @@ package controllers;
 
 import static play.data.Form.form;
 import models.*;
+import play.data.*;
 import play.mvc.*;
 
-import com.avaje.ebean.*;
 import common.*;
 
 import controllers.LoginController.Login;
 import controllers.secure.*;
-
-import java.util.*;
-import java.text.*;
-
-import play.data.*;
-import play.mvc.Http.MultipartFormData;
-import play.mvc.Http.MultipartFormData.FilePart;
-
-import common.FileHelper.ErrorType;
-
 /**
  * contoller for agent
  * 
@@ -32,6 +22,8 @@ public class AgentController extends BaseController {
 	private static final String PAGE_HOME = "home";// 主页
 	private static final String PAGE_LOGIN = "login";// 登录
 	private static final String PAGE_AGENT_INFO = "agentInfo";// 代理人信息
+	private static final String PAGE_TEMPLATE_AGENT_COURSES = "templateAgentCourses";// 代理人的课程信息模板页面
+
 	/**
 	 * agent pages
 	 * 
@@ -46,12 +38,13 @@ public class AgentController extends BaseController {
 		} else if (PAGE_LOGIN.equalsIgnoreCase(page)) {// 只做登录页面跳转
 			return ok(views.html.module.agent.login.render(form(Login.class)));
 		} else if (PAGE_AGENT_INFO.equalsIgnoreCase(page)) {// 只做登录页面跳转
-			User user =  LoginController.getSessionUser();
+			User user = LoginController.getSessionUser();
 			Agent agent = user.agent;
 
-
 			return ok(views.html.module.agent.agentInfo.render(agent, user));
-		}  else {
+		} else if (PAGE_TEMPLATE_AGENT_COURSES.equalsIgnoreCase(page)) {
+			return getTemplateAgentCourses();
+		} else {
 			return badRequest("页面不存在");
 		}
 	}
@@ -76,8 +69,7 @@ public class AgentController extends BaseController {
 		String table = form().bindFromRequest().get("table");
 		if (Agent.TABLE_NAME.equalsIgnoreCase(table)) {// 代理人更新或添加
 			return addOrUpdateAgent();
-		}
-		 else {
+		} else {
 			return badRequest(Constants.MSG_PAGE_NOT_FOUND);
 		}
 	}
@@ -88,22 +80,22 @@ public class AgentController extends BaseController {
 	 * @return
 	 */
 	public static Result addOrUpdateAgent() {
-		User user =  LoginController.getSessionUser();
-		if(user == null){
+		User user = LoginController.getSessionUser();
+		if (user == null) {
 			return badRequest(Constants.MSG_NOT_LOGIN);
 		}
 		UserInfo basicInfo = user.basicInfo;
-		if(basicInfo == null){
+		if (basicInfo == null) {
 			basicInfo = new UserInfo();
 
 			basicInfo.realname = form().bindFromRequest().get("realname");
 			basicInfo.sex = form().bindFromRequest().get("sex");
 			basicInfo.idcard = form().bindFromRequest().get("idcard");
-			basicInfo.birthday = Long.parseLong(form().bindFromRequest().get("birthday"));
-			
+			basicInfo.birthday = Long.parseLong(form().bindFromRequest().get(
+					"birthday"));
 
 			basicInfo.phone = form().bindFromRequest().get("phone");
-			
+
 			basicInfo.qq = form().bindFromRequest().get("qq");
 			basicInfo.address = form().bindFromRequest().get("address");
 			basicInfo.user = user;
@@ -111,14 +103,13 @@ public class AgentController extends BaseController {
 			user.basicInfo = basicInfo;
 			user.mobile = form().bindFromRequest().get("mobile");
 			user.email = form().bindFromRequest().get("email");
-			
-		}
-		else{
+
+		} else {
 			basicInfo.realname = form().bindFromRequest().get("realname");
 			basicInfo.sex = form().bindFromRequest().get("sex");
 			basicInfo.idcard = form().bindFromRequest().get("idcard");
-			basicInfo.birthday = Long.parseLong(form().bindFromRequest().get("birthday"));
-
+			basicInfo.birthday = Long.parseLong(form().bindFromRequest().get(
+					"birthday"));
 
 			basicInfo.phone = form().bindFromRequest().get("phone");
 			basicInfo.qq = form().bindFromRequest().get("qq");
@@ -128,29 +119,33 @@ public class AgentController extends BaseController {
 			user.basicInfo = basicInfo;
 			user.mobile = form().bindFromRequest().get("mobile");
 			user.email = form().bindFromRequest().get("email");
-			
 
 		}
 		Form<Agent> form = form(Agent.class).bindFromRequest();
 		if (form != null && form.hasErrors() == false) {
 			Agent agent = user.agent;
-			if(agent == null){
+			if (agent == null) {
 				Agent agent2 = Agent.addOrUpdate(form.get());
 				if (agent2 != null) {
 					user.agent = agent2;
 					user.update();
-					return ok(views.html.module.agent.agentInfo.render(agent2, user));
+					return ok(views.html.module.agent.agentInfo.render(agent2,
+							user));
 				}
-			}else{
-				agent.info = FormHelper.getString(form().bindFromRequest(),"info");
-				agent.name = FormHelper.getString(form().bindFromRequest(),"name");
-				agent.contact = FormHelper.getString(form().bindFromRequest(),"contact");
+			} else {
+				agent.info = FormHelper.getString(form().bindFromRequest(),
+						"info");
+				agent.name = FormHelper.getString(form().bindFromRequest(),
+						"name");
+				agent.contact = FormHelper.getString(form().bindFromRequest(),
+						"contact");
 
 				Agent agent2 = Agent.addOrUpdate(agent);
 				if (agent2 != null) {
 					user.agent = agent2;
 					user.update();
-					return ok(views.html.module.agent.agentInfo.render(agent2, user));
+					return ok(views.html.module.agent.agentInfo.render(agent2,
+							user));
 				}
 
 			}
@@ -164,4 +159,19 @@ public class AgentController extends BaseController {
 		return internalServerError(Constants.MSG_INTERNAL_ERROR);
 	}
 
+	/**
+	 * get template agent courses
+	 * @return
+	 */
+	public static Result getTemplateAgentCourses() {
+		Long agentId = FormHelper.getLong(form().bindFromRequest(), "id");
+		if(agentId != null){
+			Agent agent = Agent.find(agentId);
+			play.Logger.debug("agent:" + agent);
+			if(agent != null){
+				return ok(views.html.basic.template.agentCourses.render(agent.courses));
+			}
+		}
+		return internalServerError(Constants.MSG_INTERNAL_ERROR);
+	}
 }
