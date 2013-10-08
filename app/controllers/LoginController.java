@@ -16,6 +16,7 @@ import static play.data.Form.*;
 public class LoginController extends BaseController {
 	public static final String KEY_USER_ACCOUNT = "account";
 	public static final String KEY_USER_ID = "user_id";
+	public static final String KEY_EDU_ID = "edu_id";//当前操作的教育机构的id
 	public static final String KEY_USER_ROLES = "user_roles";//:role1_id:role2_id:...:rolen_id:
 	public static final String KEY_USER_MODULES = "user_modules";//:module1_id:module2_id:...:modulen_id:
 	public static final String KEY_USER_FUNCTINS = "user_functions";//:function1_id:function2_id:...:functionn_id:

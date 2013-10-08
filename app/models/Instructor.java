@@ -32,7 +32,7 @@ public class Instructor extends Model {
 	@OneToMany(mappedBy = "instructor")
 	public List<Course> courses;// 讲师对应的课程，一个讲师可以创建多个课程，一个课程只能被一个讲师创建
 
-	@OneToOne
+	@OneToOne(cascade=CascadeType.ALL)
 	public Template template;//一个讲师有一个专属推广页面
 	
 	// 其他属性字段

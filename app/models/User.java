@@ -51,7 +51,7 @@ public class User extends Model {
 	@ManyToMany(cascade = CascadeType.ALL)
 	public List<Role> roles;// 角色，一个用户可以同时是多个角色，比如同时是教育机构和代理人，一个用户拥有多个角色，一个角色可以被多个用户拥有
 
-	@OneToMany(mappedBy = "creator", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "creator", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	public List<EducationInstitution> edus;// 用户对应的教育机构，一个用户可以对应多个教育机构，一个教育机构只能隶属于一个用户（创建者，但是可以有多个子帐号）
 
 	@OneToMany(mappedBy = "parentAccount", cascade = CascadeType.ALL)
@@ -60,15 +60,15 @@ public class User extends Model {
 	@ManyToOne
 	public User parentAccount;// 根帐号
 
-	@OneToOne
+	@OneToOne(cascade=CascadeType.ALL)
 	public Instructor instructor;// 讲师，一个用户对应于一个讲师，一个讲师只能是一个用户
 
-	@OneToOne
+	@OneToOne(cascade=CascadeType.ALL)
 	public Agent agent;// 代理人，一个用户对应于一个代理人，一个代理人只能是一个用户
 
-	@OneToOne
+	@OneToOne(cascade=CascadeType.ALL)
 	public Student student;// 学员，一个用户对于一个学员，一个学员只能是一个用户
-	
+
 	public User() {
 	}
 
@@ -251,6 +251,22 @@ public class User extends Model {
 		}
 	}
 
+	/**
+	 * update template of user
+	 * @param template
+	 */
+	public void updateTemplate(Template template) {
+		if(this.edus != null && this.edus.size() > 0){
+			this.edus.get(0).template = template;
+		} else if (this.instructor != null){
+			this.instructor.template = template;
+		} else if (this.agent != null){
+			this.agent.template = template;
+		}
+		
+		this.update();
+	}
+
 	// -- 查询
 	public static Model.Finder<Long, User> finder = new Model.Finder(
 			Long.class, User.class);
@@ -282,6 +298,15 @@ public class User extends Model {
 	 */
 	public static User findByUsername(String username) {
 		return finder.where().eq("username", username).findUnique();
+	}
+	
+	/**
+	 * find user by agent
+	 * @param agent
+	 * @return
+	 */
+	public static User findByAgent(Agent agent){
+		return finder.where().eq("agent.id", agent.id).findUnique();
 	}
 
 	/**
@@ -317,13 +342,15 @@ public class User extends Model {
 		}
 		return user;
 	}
-	
+
 	/**
 	 * 本来是通过角色来判断，这里通过是否是教育机构，是否是讲师，是否是代理人来判断
+	 * 
 	 * @return
 	 */
-	public boolean hasTemplate(){
-		return (this.edus != null && this.edus.size() > 0) || this.instructor != null || this.agent != null;
+	public boolean hasTemplate() {
+		return (this.edus != null && this.edus.size() > 0)
+				|| this.instructor != null || this.agent != null;
 	}
 
 	/**
@@ -393,10 +420,12 @@ public class User extends Model {
 	public static User addOrUpdate(User user, FilePart fileLogo) {
 		if (user != null) {
 			if (fileLogo != null) {
-				if(user.id != null){//更新
-					user.logo = FileHelper.saveUserLogo(String.valueOf(user.id), fileLogo);
-				} else {//新增
-					user.logo = FileHelper.saveUserLogo(String.valueOf(finder.nextId()), fileLogo);
+				if (user.id != null) {// 更新
+					user.logo = FileHelper.saveUserLogo(
+							String.valueOf(user.id), fileLogo);
+				} else {// 新增
+					user.logo = FileHelper.saveUserLogo(
+							String.valueOf(finder.nextId()), fileLogo);
 				}
 			} else {
 				if (user.id != null) {// 更新，不更新logo
@@ -406,7 +435,7 @@ public class User extends Model {
 			}
 
 			if (user.id == null) {// 新增，由于没有密码字段，因而需要自动生成，并发送到用户的邮箱
-				if(StringHelper.isValidate(user.password) == false){//密码不合法
+				if (StringHelper.isValidate(user.password) == false) {// 密码不合法
 					user.password = buildRandomPassword();
 				}
 				user.save();
@@ -453,12 +482,13 @@ public class User extends Model {
 		// hash操作
 		return password;
 	}
-	
+
 	/**
 	 * 生成一个随机密码
+	 * 
 	 * @return
 	 */
-	public static String buildRandomPassword(){
+	public static String buildRandomPassword() {
 		return "123456";
 	}
 

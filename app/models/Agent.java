@@ -28,16 +28,16 @@ public class Agent extends Model{
 	@OneToOne
 	public User user;// 代理人对应的用户账户，一个用户只能对应一个代理人，一个代理人对应一个用户
 
-	@OneToMany
+	@OneToMany(cascade=CascadeType.ALL)
 	public List<Domain> domain;// 代理人对应的域名信息，一个代理人对应多个域名，一个域名隶属于一个代理人（也可以没有代理人）
 	
 	@ManyToMany(cascade=CascadeType.ALL)
 	public List<Course> courses;//代理人代理的课程列表，一个代理人可以代理多个课程，一个课程可以被多个代理人代理
 
-	@OneToOne
+	@OneToOne(cascade=CascadeType.ALL)
 	public Template template;//一个代理人有一个专属推广页面
 	
-	@OneToOne
+	@OneToOne(cascade=CascadeType.ALL)
 	public Audit audit;//是否认证
 
 	// -- 基本信息

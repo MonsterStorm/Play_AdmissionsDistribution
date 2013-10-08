@@ -20,27 +20,45 @@ public class TemplateController extends Controller {
 
 	public static final String PAGE_USE_TEMPLATE = "useTemplate";// 使用模板页面
 
+	/**
+	 * 模板跳转
+	 * 
+	 * @param domainStr
+	 * @return
+	 */
 	public static Result index(String domainStr) {
 		Domain domain = Domain.findByDomain(domainStr);
 		if (domain != null && domain.agent != null) {
-			try{
-				//通过反射调用该类的render方法
-				String clazzName = "views.html.template." + FileHelper.buildValidatePath(null, domain.agent.user.id, domain.agent.id) + "index";
+			try {
+				// 通过反射调用该类的render方法
+				String clazzName = "views.html.template."
+						+ FileHelper.buildValidatePath(null,
+								domain.agent.user.id, domain.agent.id)
+						+ "index";
 				clazzName = clazzName.replaceAll("/", ".");
+				
+				play.Logger.debug("redirect: " + clazzName);
 				final Class clazz = Class.forName(clazzName);
-				if(clazz != null){//得到render方法
+				if (clazz != null) {// 得到render方法
 					Method method = clazz.getMethod("render", null);
-					if(method != null){
-						return ok((Html)method.invoke(null));
+					if (method != null) {
+						flash().put("agentId", domain.agent.id.toString());
+						return ok((Html) method.invoke(null));
 					}
 				}
-			} catch (Exception e){
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 		return Application.index();
 	}
 
+	/**
+	 * 页面跳转
+	 * 
+	 * @param page
+	 * @return
+	 */
 	public static Result page(String page) {
 		if (PAGE_USE_TEMPLATE.equalsIgnoreCase(page)) {// 使用模板
 			return pageUseTemplate();
@@ -80,12 +98,32 @@ public class TemplateController extends Controller {
 
 			if (user != null) {
 				if (templateTypeId > 0) {
-
-					Template template = Template.findByUser(user);// 每个用户都有一个默认模板，在创建的时候就产生
 					TemplateType templateType = TemplateType
 							.find(templateTypeId);
-					if (template != null
-							&& template.templateType != templateType) {// 如果用户没有应用该模板，则修改用户模板
+					Template template = Template.findByUser(user);// 每个用户都有一个默认模板，在创建的时候就产生
+
+					if (template == null) {// 用户没有模板，则创建一个模板
+						template = new Template(user, templateType);
+						user.updateTemplate(template);
+
+						if (template.edu != null) {// 应用了系统的默认模板，则copy文件到指定文件夹下
+							FileHelper.copyDefaultTemplateFiles(
+									String.valueOf(user.id),
+									String.valueOf(template.edu.id),
+									String.valueOf(templateType.id));
+						} else if (template.instructor != null) {
+							FileHelper.copyDefaultTemplateFiles(
+									String.valueOf(user.id),
+									String.valueOf(template.instructor.id),
+									String.valueOf(templateType.id));
+						} else if (template.agent != null) {
+							FileHelper.copyDefaultTemplateFiles(
+									String.valueOf(user.id),
+									String.valueOf(template.agent.id),
+									String.valueOf(templateType.id));
+						}
+					} else if (template.templateType != templateType) {// 如果用户没有应用该模板，则修改用户模板
+
 						template.templateType = templateType;
 						template.update();
 
