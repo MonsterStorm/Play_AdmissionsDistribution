@@ -1,18 +1,16 @@
 package models;
 
 import java.lang.reflect.*;
-import java.text.*;
 import java.util.*;
 
 import javax.persistence.*;
 
 import play.data.*;
-import play.data.format.*;
-import play.data.format.Formatters.SimpleFormatter;
 import play.data.validation.Constraints.Required;
 import play.db.ebean.*;
 
 import com.avaje.ebean.*;
+import com.avaje.ebean.Query;
 import common.*;
 
 /**
@@ -58,7 +56,7 @@ public class Course extends Model {
 	public Instructor instructor;// 一个课程只能被一个讲师拥有，一个讲师可以有多个课程
 	
 	@ManyToMany(mappedBy="courses")
-	public List<Agent> agents;//代理该课程的代理人列表，一个代理人可以代理多个课程，一个课程可以被多个代理人代理
+	public List<Agent> agents = new ArrayList<Agent>();//代理该课程的代理人列表，一个代理人可以代理多个课程，一个课程可以被多个代理人代理
 
 	static {
 		FormFormatter.registerCourseType();
@@ -149,5 +147,16 @@ public class Course extends Model {
 	 */
 	public static Page<Course> findPage(DynamicForm form, int page,	Integer pageSize) {
 		return new QueryHelper<Course>().findPage(finder, form, page, pageSize);
+	}
+	
+	/**
+	 * find page by agent
+	 * @param form
+	 * @param page
+	 * @param pageSize
+	 * @return
+	 */
+	public static Page<Course> findPageByAgent(DynamicForm form, int page, Integer pageSize){
+		return new QueryHelper<Course>(finder, form).addEq("agents.id", "agentId", Long.class).findPage(page, pageSize);
 	}
 }
