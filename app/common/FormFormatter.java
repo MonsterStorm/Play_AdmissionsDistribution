@@ -95,4 +95,33 @@ public class FormFormatter {
 
 		});
 	}
+
+	/**
+	 * register for news time
+	 */
+	public static void registerEducationType(){
+		Formatters.register(EducationInstitution.class, new SimpleFormatter<EducationInstitution>() {
+
+			@Override
+			public EducationInstitution parse(String arg, Locale l) throws ParseException {
+				try{
+					Long newsTypeId = Long.parseLong(arg);
+					EducationInstitution newsType = EducationInstitution.find(newsTypeId);
+					return newsType;
+				} catch (Exception e){
+					e.printStackTrace();
+				}
+				return null;
+			}
+
+			@Override
+			public String print(EducationInstitution type, Locale l) {
+				if(type != null){
+					return type.name;
+				}
+				return null;
+			}
+
+		});
+	}
 }

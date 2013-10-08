@@ -36,6 +36,8 @@ public class Enroll extends Model {
 
 	@ManyToOne
 	public EducationInstitution edu;// 所属教育机构，一个教育机构可以有多个报名信息，一个报名信息隶属于一个教育机构。
+	// @ManyToOne
+	// public Instructor instructor;//所属讲师，一个讲师可以有多个报名信息，一个报名信息隶属于一个讲师。
 
 	// -- 报名确认信息
 	@OneToOne
@@ -152,6 +154,17 @@ public class Enroll extends Model {
 	 */
 	public static Page<Enroll> findPageByStudent(Student student, DynamicForm form, int page, Integer pageSize) {
 		return new QueryHelper<Enroll>(finder, form).addEqual("student.id", student.id.toString(), Long.class).addOrderBy("orderby").findPage(page, pageSize);
+	}
+
+	/**
+	 * find page with filter
+	 * 
+	 * @param page
+	 * @param form
+	 * @return
+	 */
+	public static Page<Enroll> findPageByTeacher(Instructor instructor, DynamicForm form, int page, Integer pageSize) {
+		return new QueryHelper<Enroll>(finder, form).addEqual("course.instructor.id", instructor.id.toString(), Long.class).addOrderBy("orderby").findPage(page, pageSize);
 	}
 
 	/**

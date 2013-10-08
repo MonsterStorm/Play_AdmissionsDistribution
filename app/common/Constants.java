@@ -15,7 +15,9 @@ public class Constants {
 	public static final String MSG_USER_ENROLLED = "您已报名该课程";
 	public static final String MSG_COURSE_NOT_EXIST = "该课程不存在";
 	public static final String MSG_EDUCATION_EXIST = "该教育机构已存在";
-	public static final String MSG_STUDENT_NOT_EXIST = "学生不存在，无法查看";
+	public static final String MSG_STUDENT_NOT_EXIST = "学生不存在";
+	public static final String MSG_TEACHER_NOT_EXIST = "讲师不存在";
+	public static final String MSG_EDUCATION_NOT_EXIST = "该教育机构不存在";
 	//文件
 	public static final String MSG_FILE_TOO_LARGE = "文件太大"; // 文件太大
 	public static final String MSG_FILE_TOO_SMALL = "文件太小"; // 文件太小

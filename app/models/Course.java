@@ -62,6 +62,7 @@ public class Course extends Model {
 
 	static {
 		FormFormatter.registerCourseType();
+		FormFormatter.registerEducationType();
 	}
 
 	/**
@@ -107,7 +108,7 @@ public class Course extends Model {
 	}
 
 	/**
-	 * 新增或更新一个用户
+	 * 新增或更新一个课程
 	 * 
 	 * @param form
 	 * @return
@@ -150,4 +151,50 @@ public class Course extends Model {
 	public static Page<Course> findPage(DynamicForm form, int page,	Integer pageSize) {
 		return new QueryHelper<Course>().findPage(finder, form, page, pageSize);
 	}
+
+
+	/**
+	 * find page with filter
+	 * 
+	 * @param page
+	 * @param form
+	 * @return
+	 */
+	public static Page<Course> findPageByTeacher(Instructor teacher, DynamicForm form, int page, Integer pageSize) {
+		return new QueryHelper<Course>(finder, form).addEqual("instructor.id", teacher.id.toString(), Long.class).addOrderBy("orderby").findPage(finder, form, page, pageSize);
+	}
+
+	/**
+	 * find page with filter
+	 * 
+	 * @param page
+	 * @param form
+	 * @return
+	 */
+	public static Page<Course> findPageByEducation(EducationInstitution edu, DynamicForm form, int page, Integer pageSize) {
+		return new QueryHelper<Course>(finder, form).addEqual("edu.id", edu.id.toString(), Long.class).addOrderBy("orderby").findPage(finder, form, page, pageSize);
+	}
+
+	/**
+	 * find page with filter
+	 * 
+	 * @param page
+	 * @param form
+	 * @return
+	 */
+	public static Page<Course> findPageByEducationUser(User  user, DynamicForm form, int page, Integer pageSize) {
+		return new QueryHelper<Course>(finder, form).addEqual("edu.creator.id", user.id.toString(), Long.class).addOrderBy("orderby").findPage(finder, form, page, pageSize);
+	}
+
+
+	// /**
+	//  * find page with filter
+	//  * 
+	//  * @param page
+	//  * @param form
+	//  * @return
+	//  */
+	// public static Page<Course> findPageByAgent(Agent agent, DynamicForm form, int page, Integer pageSize) {
+	// 	return new QueryHelper<Course>(finder, form).addEqual(".id", agent.id.toString(), Long.class).addOrderBy("orderby").findPage(finder, form, page, pageSize);
+	// }
 }
