@@ -187,14 +187,14 @@ public class Course extends Model {
 	}
 
 
-	// /**
-	//  * find page with filter
-	//  * 
-	//  * @param page
-	//  * @param form
-	//  * @return
-	//  */
-	// public static Page<Course> findPageByAgent(Agent agent, DynamicForm form, int page, Integer pageSize) {
-	// 	return new QueryHelper<Course>(finder, form).addEqual(".id", agent.id.toString(), Long.class).addOrderBy("orderby").findPage(finder, form, page, pageSize);
-	// }
+	/**
+	 * find page with filter
+	 * 
+	 * @param page
+	 * @param form
+	 * @return
+	 */
+	public static Page<Course> findPageByAgent(Agent agent, DynamicForm form, int page, Integer pageSize) {
+		return new QueryHelper<Course>(finder, form).addEqual("agents.id", agent.id.toString(), Long.class).addOrderBy("orderby").findPage(finder, form, page, pageSize);
+	}
 }

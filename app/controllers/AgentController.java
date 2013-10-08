@@ -2,13 +2,22 @@ package controllers;
 
 import static play.data.Form.form;
 import models.*;
-import play.data.*;
 import play.mvc.*;
 
+import com.avaje.ebean.*;
 import common.*;
 
 import controllers.LoginController.Login;
 import controllers.secure.*;
+
+import java.util.*;
+import java.text.*;
+
+import play.data.*;
+import play.mvc.Http.MultipartFormData;
+import play.mvc.Http.MultipartFormData.FilePart;
+
+import common.FileHelper.ErrorType;
 /**
  * contoller for agent
  * 
@@ -23,6 +32,8 @@ public class AgentController extends BaseController {
 	private static final String PAGE_LOGIN = "login";// 登录
 	private static final String PAGE_AGENT_INFO = "agentInfo";// 代理人信息
 	private static final String PAGE_TEMPLATE_AGENT_COURSES = "templateAgentCourses";// 代理人的课程信息模板页面
+	private static final String PAGE_AGENT_COURSES = "agentCourses";
+	private static final String PAGE_AGENT_COURSES_DETAIL ="courseDetail";
 
 	/**
 	 * agent pages
@@ -44,6 +55,10 @@ public class AgentController extends BaseController {
 			return ok(views.html.module.agent.agentInfo.render(agent, user));
 		} else if (PAGE_TEMPLATE_AGENT_COURSES.equalsIgnoreCase(page)) {
 			return getTemplateAgentCourses();
+		} else if (PAGE_AGENT_COURSES.equalsIgnoreCase(page)) {// 
+			return pageAgentCourses();
+		} else if (PAGE_AGENT_COURSES_DETAIL.equalsIgnoreCase(page)) {// 
+			return pageCourseDetail(null);
 		} else {
 			return badRequest("页面不存在");
 		}
@@ -72,6 +87,54 @@ public class AgentController extends BaseController {
 		} else {
 			return badRequest(Constants.MSG_PAGE_NOT_FOUND);
 		}
+	}
+
+
+	/**
+	 * 教育机构课程
+	 * 
+	 * @return
+	 */
+	public static Result pageAgentCourses() {
+		play.Logger.error(form().bindFromRequest().get("page"));
+
+		User user =  LoginController.getSessionUser();
+		if(user == null){
+			return badRequest(Constants.MSG_NOT_LOGIN);
+		}
+		if(user.agent == null){
+			return badRequest(Constants.MSG_AGENT_NOT_EXIST);
+		}
+		// get page
+		int page = FormHelper.getPage(form().bindFromRequest());
+		
+		Page<Course> courses  = Course.findPageByAgent(user.agent,form().bindFromRequest(),page,null);
+		return ok(views.html.module.agent.agentCourses.render(courses));
+	}
+
+	/**
+	 * 教育机构课程详情
+	 * 
+	 * @return
+	 */
+	public static Result pageCourseDetail(Course course) {
+		boolean isAddNew = FormHelper.isAddNew(form().bindFromRequest());
+		User user =  LoginController.getSessionUser();
+		if(user == null){
+			return badRequest(Constants.MSG_NOT_LOGIN);
+		}
+		List<CourseType> types = CourseType.findAll();
+		if (isAddNew) {
+			return ok(views.html.module.agent.courseDetail.render(null, types, user.edus));
+		}
+
+		if (course == null) {
+			Long id = FormHelper.getLong(form().bindFromRequest(), "id");
+			if (id != null) {
+				course = Course.find(id);
+			}
+		}
+		return ok(views.html.module.agent.courseDetail.render(course, types,user.edus));
 	}
 
 	/**
