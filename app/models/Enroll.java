@@ -6,11 +6,10 @@ import javax.persistence.*;
 
 import play.data.*;
 import play.db.ebean.*;
+import views.html.helper.*;
 
 import com.avaje.ebean.*;
 import common.*;
-
-import controllers.*;
 
 /**
  * 报名信息
@@ -153,7 +152,11 @@ public class Enroll extends Model {
 	 * @return
 	 */
 	public static Page<Enroll> findPageByStudent(Student student, DynamicForm form, int page, Integer pageSize) {
-		return new QueryHelper<Enroll>(finder, form).addEqual("student.id", student.id.toString(), Long.class).addOrderBy("orderby").findPage(page, pageSize);
+		Map<String, String> datas = form.data();
+		datas.put("stuId", student.id.toString());
+		form = form.bind(datas);
+		return new QueryHelper<Enroll>(finder, form).addEq("course.id", "stuId", Long.class).addOrderBy("orderby").findPage(page, pageSize);
+//		return new QueryHelper<Enroll>(finder, form).addEqual("student.id", student.id.toString(), Long.class).addOrderBy("orderby").findPage(page, pageSize);
 	}
 
 	/**
@@ -164,7 +167,11 @@ public class Enroll extends Model {
 	 * @return
 	 */
 	public static Page<Enroll> findPageByTeacher(Instructor instructor, DynamicForm form, int page, Integer pageSize) {
-		return new QueryHelper<Enroll>(finder, form).addEqual("course.instructor.id", instructor.id.toString(), Long.class).addOrderBy("orderby").findPage(page, pageSize);
+		Map<String, String> datas = form.data();
+		datas.put("instructorId", instructor.id.toString());
+		form = form.bind(datas);
+		return new QueryHelper<Enroll>(finder, form).addEq("course.instructor.id", "instructorId", Long.class).addOrderBy("orderby").findPage(page, pageSize);
+//		return new QueryHelper<Enroll>(finder, form).addEqual("course.instructor.id", instructor.id.toString(), Long.class).addOrderBy("orderby").findPage(page, pageSize);
 	}
 
 	/**

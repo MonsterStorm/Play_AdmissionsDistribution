@@ -96,7 +96,11 @@ public class EducationInstitution extends Model {
 	 * @return
 	 */
 	public static Page<EducationInstitution> findPageByUser(User  user, DynamicForm form, int page, Integer pageSize) {
-		return new QueryHelper<EducationInstitution>(finder, form).addEqual("creator.id", user.id.toString(), Long.class).addOrderBy("orderby").findPage(finder, form, page, pageSize);
+		Map<String, String> datas = form.data();
+		datas.put("creatorId", user.id.toString());
+		form = form.bind(datas);
+		return new QueryHelper<EducationInstitution>(finder, form).addEq("creator.id", "creatorId", Long.class).addOrderBy("orderby").findPage(page, pageSize);
+//		return new QueryHelper<EducationInstitution>(finder, form).addEqual("creator.id", user.id.toString(), Long.class).addOrderBy("orderby").findPage(finder, form, page, pageSize);
 	}
 	
 	/**

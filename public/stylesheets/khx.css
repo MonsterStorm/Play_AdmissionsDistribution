@@ -65,6 +65,11 @@
 
 /************************************************************/
 
+/*设置content模块的最小高度*/
+.maincontent{
+	min-height:800px;
+}
+
 /*中间栏外部div样式*/
 .middle-module{
 	width:66%;
@@ -169,15 +174,33 @@
 .teacher-desc{
 	width: 100px;
 }
-footerfont{
-    font-size: 100%;
-    line-height: 1.5;
-    margin: 0px 0px 1.5em;
-}
+
 #qqbox {
     width: 100px;
     height: 200px;
     position: fixed;
     top: 300px;
     right: 0px;
+}
+
+/*中间栏子模块3*/
+.middle-sub-module3{
+	width:100%;
+	margin-bottom:15px;
+}
+
+.middle-sub-module3 div{
+	float:left;
+}
+
+/*中间栏子模块3,左边的标志*/
+.module3-left{
+	float:left;
+	width:20%;
+}
+
+/*中间栏子模块3,右边的描述*/
+.module3-right{
+	float:left;
+	width:78%;
 }
