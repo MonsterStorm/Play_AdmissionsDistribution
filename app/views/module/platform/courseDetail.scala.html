@@ -52,24 +52,24 @@ function pageUserEnroll(li, url, data){
 <div>
 	<h2>@model.name</h2>
 	<p></p>
-	<h5>课程类别：</h5>@if(model.courseType!=null && model.courseType.name!=null){@model.courseType.name}
+	<b>课程类别：</b><br>@if(model.courseType!=null && model.courseType.name!=null){@model.courseType.name}
 	<p></p>
-	<h5>教育机构：</h5>@if(model != null && model.edu != null && model.edu.name != null){@model.edu.name}
+	<b>教育机构：</b><br>@if(model != null && model.edu != null && model.edu.name != null){@model.edu.name}
 	<p></p>
-	<h5>讲师：</h5>@if(model.instructor != null && model.instructor.user != null && model.instructor.user.username != null){@model.instructor.user.username}
+	<b>讲师：</b><br>@if(model.instructor != null && model.instructor.user != null && model.instructor.user.username != null){@model.instructor.user.username}
 	<p></p>
-	<h5>开课时间：</h5><span  id="localtimec@model.id"></span>
+	<b>开课时间：</b><br><span  id="localtimec@model.id"></span>
 			<script type="text/javascript">
 			tick2(@model.startTime,@model.id);
 			</script>
 	<p></p>
-	<h5>课程费用：</h5>@model.money
+	<b>课程费用：</b><br>@model.money
 	<p></p>
-	<h5>联系方式：</h5>@model.contact
+	<b>联系方式：</b><br>@model.contact
 	<p></p>
-	<h5>课程简介：</h5>@model.info
+	<b>课程简介：</b><br>@model.info
 	<p></p>
-	<h5>详细信息：</h5>@model.detail
+	<b>详细信息：</b><br>@model.detail
 	<p></p>
 	<button type="submit" class="ym-button ym-success ym-large" onClick = "pageUserEnroll(this, 'pageUserEnroll', 'courseId=@model.id')">我要报名</button>
 
