@@ -57,7 +57,7 @@ function tick(time,id)
 	<div class="ym-wbox">
 		<div class="ym-grid linearize-level-1">
 			<div class="ym-g66 ym-gl">
-				<div class="ym-gbox-left" id="content">
+				<div class="ym-gbox-left">
 					<h2>行业新闻</h2>
 					@for(model <- models.getList()){
 						<p>[@model.newsType.name]<a href="#" onclick="getPlatformPage(this, 'newsDetail', 'id=@model.id');">@model.title</a>

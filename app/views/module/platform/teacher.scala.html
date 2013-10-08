@@ -17,7 +17,7 @@ function getPlatformPage(li, url, data){
 	<div class="ym-wbox">
 		<div class="ym-grid linearize-level-1">
 			<div class="ym-g66 ym-gl">
-				<div class="ym-gbox-left" id="content">
+				<div class="ym-gbox-left">
 					<h2>讲师列表</h2>
 					@for(model <- models.getList()){
 						<a href="#" onclick="getPlatformPage(this, 'teacherDetail', 'id=@model.id');">@model.user.basicInfo.realname</a>
