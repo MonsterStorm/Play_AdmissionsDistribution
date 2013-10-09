@@ -10,6 +10,7 @@ import play.mvc.*;
 
 import com.avaje.ebean.*;
 import common.*;
+import controllers.secure.*;
 
 /**
  * 模板管理类
@@ -72,6 +73,7 @@ public class TemplateController extends Controller {
 	 * 
 	 * @return
 	 */
+	
 	public static Result pageUseTemplate() {
 		// get page
 		int page = FormHelper.getPage(form().bindFromRequest());
@@ -90,6 +92,7 @@ public class TemplateController extends Controller {
 	 * 
 	 * @return
 	 */
+	@Security.Authenticated(SecuredUseOfTemplate.class)
 	public static Result useTemplate() {
 		Long templateTypeId = FormHelper
 				.getLong(form().bindFromRequest(), "id");

@@ -37,8 +37,6 @@ public class Secured extends Security.Authenticator {
 			hasRights = user.hasRole(Role.ROLE_INSTRUCTOR);
 		} else if (path.startsWith("/education")) {
 			hasRights = user.hasRole(Role.ROLE_EDU);
-		} else if (path.startsWith("/common")){//common
-			
 		}
 		
 		if(hasRights){//如果有权限，则返回true，否则
@@ -65,17 +63,5 @@ public class Secured extends Security.Authenticator {
 		} else {
 			return redirect(controllers.routes.Application.index());
 		}
-	}
-
-	// Access rights
-
-	/**
-	 * is user has right to execute a function
-	 * 
-	 * @param function
-	 * @return
-	 */
-	public static boolean hasRights(Long function) {
-		return false;
 	}
 }
