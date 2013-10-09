@@ -41,6 +41,7 @@ public class PlatformController extends BaseController {
 	private static final String PAGE_PLATFORM_ADV2= "platformAdv2";//侧栏连接广告
 	private static final String PAGE_USER_ENROLL = "pageUserEnroll";//用户报名课程
 	private static final String PAGE_EDUCATION2= "platformEducation2";//教育机构广告
+//	private static final String PAGE_CONTACT_US= "contact_us";//教育机构广告
 	/**
 	 * get a page
 	 * @param page
@@ -77,19 +78,20 @@ public class PlatformController extends BaseController {
 		} else if (PAGE_REGISTER_AND_LOGIN.equalsIgnoreCase(page)){
 			return ok(views.html.module.platform.register_and_login.render());
 		} else if(PAGE_CONTACT_US.equalsIgnoreCase(page)){
-			return ok(views.html.module.platform.contact_us.render());
+			//return ok(views.html.module.platform.contact_us.render());
+			return pageContactUs();
 		}else if(PAGE_REGISTER.equalsIgnoreCase(page)){
 			//普通注册
 			return ok(views.html.module.platform.register.render(form(Register.class)));
 		} else if(PAGE_REGISTER_STUDENT.equalsIgnoreCase(page)){
 			//学生注册
-			return ok(views.html.module.platform.contact_us.render());
+			return ok(views.html.module.platform.contact_us.render(null));
 		}else if(PAGE_REGISTER_AGENT.equalsIgnoreCase(page)){
 			//代理人注册
-			return ok(views.html.module.platform.contact_us.render());
+			return ok(views.html.module.platform.contact_us.render(null));
 		}else if(PAGE_REGISTER_EDUCATION.equalsIgnoreCase(page)){
 			//教育机构注册
-			return ok(views.html.module.platform.contact_us.render());
+			return ok(views.html.module.platform.contact_us.render(null));
 		}else if(PAGE_LOGIN.equalsIgnoreCase(page)){
 			//教育机构注册
 			return ok(views.html.module.platform.login.render(form(Login.class)));
@@ -401,6 +403,23 @@ public class PlatformController extends BaseController {
 		return ok(views.html.module.platform.platformUserEnroll.render(null, course , null , user ,null));
 
 	}
+	
+	/**
+	* 联系我们页面
+	* 留言列表
+	**/
+	public static Result pageContactUs(){
+		play.Logger.error(form().bindFromRequest().get("page"));
+		// get page
+		int page = FormHelper.getPage(form().bindFromRequest());
+
+		Page<Message> message = Message.findPage(form().bindFromRequest(), page, 5);
+
+		FormHelper.resetFlash(form().bindFromRequest(), flash());
+
+		return ok(views.html.module.platform.contact_us.render(message));
+	}
+	
 
 
 

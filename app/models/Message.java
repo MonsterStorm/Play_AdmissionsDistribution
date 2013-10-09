@@ -19,6 +19,7 @@ import play.db.ebean.*;
 @Entity
 @Table(name = Message.TABLE_NAME)
 public class Message extends Model {
+	private static final String TAG = Message.class.getSimpleName();
 	public static final String TABLE_NAME = "message";
 	@Id
 	public Long id;
@@ -86,5 +87,25 @@ public class Message extends Model {
 	 */
 	public static Page<Message> findPage(DynamicForm form, int page, Integer pageSize) {
 		return new QueryHelper<Message>().findPage(finder, form, page, pageSize);
+	}
+	
+	/**
+	 * 新增或更新一个留言
+	 * 
+	 * @param form
+	 * @return
+	 */
+	public static Message addOrUpdate(Message message) {
+		play.Logger.debug(TAG + ".addOrUpdate: id=" + message.id + ", name=" + message.name );
+		if (message != null) {
+			if (message.id == null) {// 新增
+				message.id = finder.nextId();
+				message.save();
+			} else {// 更新
+				message.update();
+			}
+			return message;
+		}
+		return null;
 	}
 }

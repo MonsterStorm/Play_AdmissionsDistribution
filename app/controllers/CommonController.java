@@ -13,6 +13,8 @@ import play.mvc.Http.MultipartFormData.FilePart;
 import common.*;
 import common.FileHelper.ErrorType;
 
+import com.avaje.ebean.*;
+
 /**
  * 通用controller，存放公用页面
  * 
@@ -114,7 +116,9 @@ public class CommonController extends Controller {
 			return addOrUpdateCourseType();
 		}else if (StudentWords.TABLE_NAME.equalsIgnoreCase(table)) {// 添加或删除学员感言
 			return addOrUpdateStudentWords();
-		} else {
+		}else if (Message.TABLE_NAME.equalsIgnoreCase(table)) {// 添加或删除留言
+			return addOrUpdateMessage();
+		}else {
 			return badRequest(Constants.MSG_PAGE_NOT_FOUND);
 		}
 	}
@@ -504,6 +508,28 @@ public class CommonController extends Controller {
 			StudentWords studentWords = StudentWords.addOrUpdate(form.get());
 			if (studentWords != null) {
 				return pageStudentWordsDetail(studentWords);
+			}
+		} else if (form.hasErrors()) {
+			String error = FormHelper.getFirstError(form.errors());
+			play.Logger.debug("error:" + error);
+			if (error != null) {
+				return badRequest(error);
+			}
+		}
+		return internalServerError(Constants.MSG_INTERNAL_ERROR);
+	}
+	
+	/**
+	* add or update message
+	*
+	* @return
+	*/
+	public static Result addOrUpdateMessage(){
+		Form<Message> form = form(Message.class).bindFromRequest();
+		if (form != null && form.hasErrors() == false) {
+			Message message = Message.addOrUpdate(form.get());
+			if (message != null) {
+				return pageContactUs(message);
 			}
 		} else if (form.hasErrors()) {
 			String error = FormHelper.getFirstError(form.errors());
@@ -1001,6 +1027,30 @@ public class CommonController extends Controller {
 		}
 		return ok(views.html.module.common.studentWordsDetail.render(studentWords));
 	}
+	
+	/**
+	 * 留言页面
+	 * 
+	 * @return
+	 */
+	public static Result pageContactUs(Message message) {
+		boolean isAddNew = FormHelper.isAddNew(form().bindFromRequest());
+
+		if (isAddNew) {
+			Page<Message> msg = Message.findPage(form().bindFromRequest(), 1, 5);
+			return ok(views.html.module.platform.contact_us.render(msg));
+		}
+
+		if (message == null) {
+			Long id = FormHelper.getLong(form().bindFromRequest(), "id");
+			if (id != null) {
+				message = Message.find(id);
+			}
+		}
+		Page<Message> msg = Message.findPage(form().bindFromRequest(), 1, 5);
+		return ok(views.html.module.platform.contact_us.render(msg));
+	}
+	
 	/**
 	 * 打开修改密码页面
 	 * @return
