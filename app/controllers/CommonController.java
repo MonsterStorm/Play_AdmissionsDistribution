@@ -12,6 +12,7 @@ import play.mvc.Http.MultipartFormData.FilePart;
 
 import common.*;
 import common.FileHelper.ErrorType;
+import controllers.secure.*;
 
 import com.avaje.ebean.*;
 
@@ -21,6 +22,7 @@ import com.avaje.ebean.*;
  * @author MonsterStorm
  * 
  */
+@Security.Authenticated(Secured.class)
 public class CommonController extends Controller {
 	private static final String PAGE_COURSE_DETAIL = "courseDetail";// 课程详情
 	private static final String PAGE_EDU_DETAIL = "eduDetail";// 教育机构详情

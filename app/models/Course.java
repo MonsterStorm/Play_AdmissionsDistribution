@@ -58,6 +58,10 @@ public class Course extends Model {
 	@ManyToMany(mappedBy="courses")
 	public List<Agent> agents = new ArrayList<Agent>();//代理该课程的代理人列表，一个代理人可以代理多个课程，一个课程可以被多个代理人代理
 
+	@OneToMany(mappedBy="course")
+	public List<Audit> agentRegAudit = new ArrayList<Audit>();//申请代理该课程的审核列表，一个课程对于多个审核 一个审核对应一个课程
+
+
 	static {
 		FormFormatter.registerCourseType();
 		FormFormatter.registerEducationType();
@@ -208,14 +212,17 @@ public class Course extends Model {
 	}
 
 
-	// /**
-	//  * find page with filter
-	//  * 
-	//  * @param page
-	//  * @param form
-	//  * @return
-	//  */
-	// public static Page<Course> findPageByAgent(Agent agent, DynamicForm form, int page, Integer pageSize) {
-	// 	return new QueryHelper<Course>(finder, form).addEqual(".id", agent.id.toString(), Long.class).addOrderBy("orderby").findPage(finder, form, page, pageSize);
-	// }
+	/**
+	 * find page with filter
+	 * 
+	 * @param page
+	 * @param form
+	 * @return
+	 */
+	public static Page<Course> findPageByAgent(Agent agent, DynamicForm form, int page, Integer pageSize) {
+		Map<String, String> datas = form.data();
+		datas.put("agentId", agent.id.toString());
+		form = form.bind(datas);
+		return new QueryHelper<Course>(finder, form).addEq("agents.id", "agentId", Long.class).findPage(page, pageSize);
+	}
 }

@@ -41,7 +41,7 @@
 			@if(user!=null && user.basicInfo!=null){
 				@inputText("代理人名称", "realname", user.basicInfo.realname, false)
 			} else{
-				@inputText("代理人名称", "realname", null, false)
+				@inputText("真实姓名", "realname", null, false)
 			}}
   		
 			@if(model != null && model.user != null && model.user.basicInfo != null){

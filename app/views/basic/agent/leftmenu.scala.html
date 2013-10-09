@@ -6,8 +6,16 @@
 		 $("#navList li.active").removeClass("active");
 		 $(li).addClass("active");
   }
-	
-	function getAgentPage(li, url, data){
+	function getAdminPage(li, url, data){
+		 data = data || "";
+     ajaxBasic("/admin/" + url, data, "GET", "#content");
+     if(li){//如果给定了li才改变选中状态，否则不改变
+		 	$("#navList li.active").removeClass("active");
+		 	$(li).addClass("active");
+		 }
+		 $('#' + url).addClass("active");
+	}
+function getAgentPage(li, url, data){
 		 data = data || "";
      ajaxBasic("/agent/" + url, data, "GET", "#content");
 		 $("#navList li.active").removeClass("active");
@@ -17,6 +25,15 @@
   function getCommonPage(li, url, data){
      data = data || "";
      ajaxBasic("/common/" + url, data, "GET", "#content");
+  }
+  function getTemplatePage(li, url, data){
+     data = data || "";
+     ajaxBasic("/template/" + url, data, "GET", "#content");
+     if(li){//如果给定了li才改变选中状态，否则不改变
+		 	$("#navList li.active").removeClass("active");
+		 	$(li).addClass("active");
+		 }
+		 $('#' + url).addClass("active");
   }
   
   function changeValue(item, value){
@@ -111,7 +128,9 @@
 	<li class="nav-header">代理人</li>
 	<li><a href="#">主页</a></li>
 	<li><a href="#" onclick="getAgentPage(this, 'agentInfo')">个人基本信息</a></li>
-	<li><a href="#">个性化页面</a></li>
+	<li id="useTemplate" onclick="getTemplatePage(this, 'useTemplate')"><a href="#">使用模板</a></li>
+	<li><a href="#" onclick="getAgentPage(this, 'agentCourses')">查看代理课程</a></li>
+	<li><a href="#"  onclick="getAgentPage(this, 'allCourse')">申请代理课程</a></li>
 	<li><a href="#">选择辅助功能</a></li>
 	<li><a href="#">管理模板</a></li>
 	<li><a href="#">查看返点奖励</a></li>

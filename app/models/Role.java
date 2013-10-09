@@ -15,11 +15,12 @@ import play.db.ebean.*;
 @Entity
 @Table(name = "role")
 public class Role extends Model {
-	public static final int ROLE_ADMIN = 1;//管理员
-	public static final int ROLE_EDU = 2;//教育机构
-	public static final int ROLE_INSTRUCTOR = 3;//讲师
-	public static final int ROLE_AGENT = 4;//代理机构
-	public static final int ROLE_REGISTED_USER = 5;//注册用户
+	public static final long ROLE_EDU = 1;//教育机构
+	public static final long ROLE_INSTRUCTOR = 2;//讲师
+	public static final long ROLE_AGENT = 3;//代理机构
+	public static final long ROLE_STUDENT = 4;//学员
+	public static final long ROLE_REGISTED_USER = 5;//注册用户
+	public static final long ROLE_ADMIN = 6;//管理员
 	
 	@Id
 	public Long id;
@@ -55,6 +56,16 @@ public class Role extends Model {
 	 */
 	public static Role find(Long id) {
 		return finder.where().eq("id", id).findUnique();
+	}
+	
+	/**
+	 * find a user with given userId and roleId
+	 * @param roleId
+	 * @param userId
+	 * @return
+	 */
+	public static Role findByUserId(Long roleId, Long userId){
+		return finder.where().eq("id", roleId).eq("users.id", userId).findUnique();
 	}
 
 	/**
