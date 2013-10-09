@@ -6,6 +6,12 @@ function getPlatformPage(li, url, data){
   	data = data||"";
   	ajaxBasic("/platform/" +url,data,"GET","#content");
   }
+  function getEducationPage(li, url, data){
+		 data = data || "";
+     ajaxBasic("/education/" + url, data, "GET", "#content");
+		 $("#navList li.active").removeClass("active");
+		 $(li).addClass("active");
+	}
 </script>
 
   <script type="text/javascript">
@@ -147,7 +153,7 @@ function getPlatformPage(li, url, data){
 					<div class="module3-left">
 						<h4 style="font-weight:bold; font-size:25px;">教育机构<h4>
 						<p>
-							<a class="readmore" href="@routes.EducationController.page("index")" >
+							<a class="readmore" href="#"  onclick="getEducationPage(this, 'regEducation');"  >
 								加入我们 <span>→</span></a>
 						</p>
 					</div>

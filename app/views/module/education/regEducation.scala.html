@@ -1,0 +1,53 @@
+@(model: Contract)
+@import basic.education._
+@import basic.common._
+@import basic.common.basicform._
+
+
+
+
+<div class="row">
+	<div class="span2">
+		<h4>协议</h4>
+	</div>
+</div>
+
+<div class="table-responsive">
+	<div style="overflow: auto">
+	<div class="form-horizontal">
+		
+		@form_validate_info()
+
+  		@if(model != null){
+			@inputText("协议名称", "name", model.name, true)
+		} else {
+			@inputText("协议名称", "name", null, false)
+		}
+					
+  		@if(model != null){
+			@textarea("协议详情", "detail", model.detail, true, 20)
+		} else {
+			@textarea("协议详情", "detail", null, false, 20)
+		}
+		
+		<input class="input-large" type="hidden" name="table" value="@Contract.TABLE_NAME">
+		@if(model != null){
+			<input class="input-large" type="hidden" name="id" value="@model.id">
+		} else {
+			<input class="input-large" type="hidden" name="id">
+		}
+		<hr>
+		<div class="control-group row">
+	    		<div class="controls">
+				@if(model != null){
+					<a class="btn btn-large btn-success btn-block span2"  href="@routes.EducationController.page("index")">同意协议</a>
+				} else {
+					<button class="btn btn-large btn-success btn-block span2 disabled " >同意协议</button>
+				}
+	    		</div>
+  		</div>
+		
+	</form>
+	</div>
+</div>
+

@@ -12,6 +12,7 @@ import controllers.secure.*;
 
 import java.util.*;
 import java.text.*;
+import java.lang.*;
 
 import play.data.*;
 import play.mvc.Http.MultipartFormData;
@@ -35,6 +36,8 @@ public class EducationController extends BaseController {
 	private static final String PAGE_EDUCATION_COURSES = "educationCourses";
 	private static final String PAGE_EDUCATION_COURSES_DETAIL ="courseDetail";
 	private static final String PAGE_EDUCATION_INSTITUTION ="educationInstitution";
+	private static final String PAGE_REG_EDUCATION  = "regEducation";
+
 	/**
 	 * education pages
 	 * 
@@ -56,6 +59,8 @@ public class EducationController extends BaseController {
 			return pageCourseDetail(null);
 		} else if (PAGE_EDUCATION_INSTITUTION.equalsIgnoreCase(page)) {// 
 			return pageEducations();
+		} else if (PAGE_REG_EDUCATION.equalsIgnoreCase(page)) {// 
+			return pageRegEducations();
 		} else {
 			return badRequest("页面不存在");
 		}
@@ -272,6 +277,22 @@ public class EducationController extends BaseController {
 		
 		Page<EducationInstitution> edus  = EducationInstitution.findPageByUser(user,form().bindFromRequest(),page,null);
 		return ok(views.html.module.education.educationInstitution.render(edus));
+		
+	}
+	/**
+	 * 教育机构
+	 * 
+	 * @return
+	 */
+	public static Result pageRegEducations() {
+		play.Logger.error(form().bindFromRequest().get("page"));
+		User user =  LoginController.getSessionUser();
+		if(user == null){
+			return badRequest(Constants.MSG_NOT_LOGIN);
+		}
+		long id  = (long)1;
+		Contract contract = Contract.find(id);//1表示 教育机构协议
+		return ok(views.html.module.education.regEducation.render(contract));
 		
 	}
 	/**
