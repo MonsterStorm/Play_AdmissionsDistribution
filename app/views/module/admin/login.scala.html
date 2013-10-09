@@ -1,6 +1,7 @@
 @(form: Form[LoginController.Login]) 
 
 @import basic.admin._
+@import basic.common._
 
 @basic.admin.main_basic("培训项目招生平台"){@meta()}{@styles()
 <style type="text/css">
@@ -60,10 +61,7 @@ body {
 		@if(form.hasGlobalErrors){
 			<div class="alert alert-danger">@form.globalError.message</div>
 		} 
-		
-		@if(flash.contains("success")) {
-			<p class="success">@flash.get("success")</p>
-		}
+		@form_validate_info()
 		
 		<input type="text" name="account" class="input-block-level" placeholder="用户名" value="@form("account").value"> 
 		<input type="password" name="password" class="input-block-level" placeholder="密码"> 

@@ -137,19 +137,12 @@ public class User extends Model {
 	}
 
 	/**
-	 * has role
-	 * 
-	 * @param roldId
+	 * is user has an role
+	 * @param roleId
 	 * @return
 	 */
-	public boolean hasRole(Long roleId) {
-		if (this.roles != null) {
-			for (Role role : roles) {
-				if (role.id == roleId)
-					return true;
-			}
-		}
-		return false;
+	public boolean hasRole(long roleId){
+		return Role.findByUserId(roleId, this.id) != null;
 	}
 
 	/**
