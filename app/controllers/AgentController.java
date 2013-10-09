@@ -36,6 +36,7 @@ public class AgentController extends BaseController {
 	private static final String PAGE_AGENT_COURSES_DETAIL ="courseDetail";
 	private static final String PAGE_ALL_COURSES ="allCourse";
 	private static final String REG_COURSE_AGENT = "regCourseAgent";
+	private static final String PAGE_REG_AGENT  = "regAgent";
 	/**
 	 * agent pages
 	 * 
@@ -50,10 +51,7 @@ public class AgentController extends BaseController {
 		} else if (PAGE_LOGIN.equalsIgnoreCase(page)) {// 只做登录页面跳转
 			return ok(views.html.module.agent.login.render(form(Login.class)));
 		} else if (PAGE_AGENT_INFO.equalsIgnoreCase(page)) {// 只做登录页面跳转
-			User user = LoginController.getSessionUser();
-			Agent agent = user.agent;
-
-			return ok(views.html.module.agent.agentInfo.render(agent, user));
+			return agentInfo();
 		} else if (PAGE_TEMPLATE_AGENT_COURSES.equalsIgnoreCase(page)) {
 			return getTemplateAgentCourses();
 		} else if (PAGE_AGENT_COURSES.equalsIgnoreCase(page)) {// 
@@ -64,6 +62,8 @@ public class AgentController extends BaseController {
 			return pageCourseDetail(null);
 		} else if (REG_COURSE_AGENT.equalsIgnoreCase(page)) {// 
 			return regCourseAgent();
+		}else if (PAGE_REG_AGENT.equalsIgnoreCase(page)) {// 
+			return pageRegAgent();
 		} else {
 			return badRequest("页面不存在");
 		}
@@ -300,5 +300,33 @@ public class AgentController extends BaseController {
 			}
 		}
 		return internalServerError(Constants.MSG_INTERNAL_ERROR);
+	}
+
+	/**
+	 * 代理人
+	 * 
+	 * @return
+	 */
+	public static Result pageRegAgent() {
+		play.Logger.error(form().bindFromRequest().get("page"));
+		User user =  LoginController.getSessionUser();
+		if(user == null){
+			return badRequest(Constants.MSG_NOT_LOGIN);
+		}
+		long id  = (long)2;
+		Contract contract = Contract.find(id);//2表示 代理人协议
+		return ok(views.html.module.agent.regAgent.render(contract));
+		
+	}
+
+	/**
+	 * 代理人
+	 * 
+	 * @return
+	 */
+	public static Result agentInfo() {
+		User user = LoginController.getSessionUser();
+		Agent agent = user.agent;
+		return ok(views.html.module.agent.agentInfo.render(agent, user));
 	}
 }
