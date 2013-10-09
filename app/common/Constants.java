@@ -22,6 +22,7 @@ public class Constants {
 	public static final String MSG_COURSE_NOT_SELECT = "未选择课程";
 	public static final String MSG_COURSE_AGENTED = "已代理该课程";
 	public static final String MSG_COURSE_REGED = "已有一个申请";
+	
 	//文件
 	public static final String MSG_FILE_TOO_LARGE = "文件太大"; // 文件太大
 	public static final String MSG_FILE_TOO_SMALL = "文件太小"; // 文件太小
