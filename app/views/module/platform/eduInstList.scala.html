@@ -1,0 +1,71 @@
+@(eduInst: com.avaje.ebean.Page[EducationInstitution])
+@import basic.platform._
+@import basic.common._
+
+<!--用于分页-->
+@baseUrl=@{
+	var url = "eduInstList";
+	url
+}
+
+
+<script type="text/javascript">
+function getPlatformPage(li, url, data){
+    data = data||"";
+    ajaxBasic("/platform/" +url,data,"GET","#content");
+  }
+    $(document).ready( function() {
+			$('#myform').submit(function() {
+		    $(this).ajaxSubmit(ajaxSubmitOptions);
+		    return false;
+			});
+		});
+
+</script>
+<!-- content -->
+<div class="ym-wrapper">
+	<div class="ym-wbox">
+		<div class="ym-grid linearize-level-1">
+			<div class="ym-g66 ym-gl">
+				<div class="ym-gbox-left">
+				
+					<h3>教育机构列表</h3>
+					<div>
+						<ul>
+							@for(item <- eduInst.getList()){
+								<li><span style="margin-right:200px;">@item.name</span>
+								<a href="#" onclick="getPlatformPage(this, 'eduInstIntroduction', 'id=@item.id');">详细信息</a></li>
+							}
+						</ul>
+							@paging(eduInst, {baseUrl}, "platform")
+					</div>
+					
+				</div>
+			</div>
+			<div class="ym-g33 ym-gr">
+				<div class="ym-gbox-right">
+					<div id ="platformEducation2"></div>
+                                <div id="platformAdv2"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+function getAdvPage2(li, url, data){
+     data = data || "";
+     ajaxBasic("/platform/" + url, data, "GET", "#platformAdv2");
+     $("#navList li.active").removeClass("active");
+     $(li).addClass("active");
+  }
+
+  getAdvPage2(this, "platformAdv2");
+function getEduPage2(li, url, data){
+     data = data || "";
+     ajaxBasic("/platform/" + url, data, "GET", "#platformEducation2");
+     $("#navList li.active").removeClass("active");
+     $(li).addClass("active");
+  }
+
+  getEduPage2(this, "platformEducation2");
+</script>

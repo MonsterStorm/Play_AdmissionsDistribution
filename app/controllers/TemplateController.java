@@ -20,6 +20,8 @@ import controllers.secure.*;
 public class TemplateController extends Controller {
 
 	public static final String PAGE_USE_TEMPLATE = "useTemplate";// 使用模板页面
+	private static final String PAGE_TEMPLATE_AGENT_COURSES = "templateAgentCourses";// 代理人的课程信息模板页面
+
 
 	/**
 	 * 模板跳转
@@ -63,6 +65,8 @@ public class TemplateController extends Controller {
 	public static Result page(String page) {
 		if (PAGE_USE_TEMPLATE.equalsIgnoreCase(page)) {// 使用模板
 			return pageUseTemplate();
+		} else if (PAGE_TEMPLATE_AGENT_COURSES.equalsIgnoreCase(page)) {
+			return getTemplateAgentCourses();
 		} else {
 			return badRequest(Constants.MSG_BAD_REQUEST);
 		}
@@ -177,4 +181,20 @@ public class TemplateController extends Controller {
 		return badRequest(Constants.MSG_BAD_REQUEST);
 	}
 
+	
+	/**
+	 * get template agent courses
+	 * @return
+	 */
+	public static Result getTemplateAgentCourses() {
+		Long agentId = FormHelper.getLong(form().bindFromRequest(), "id");
+		if(agentId != null){
+			Agent agent = Agent.find(agentId);
+			play.Logger.debug("agent:" + agent);
+			if(agent != null){
+				return ok(views.html.basic.template.agentCourses.render(agent.courses));
+			}
+		}
+		return internalServerError(Constants.MSG_INTERNAL_ERROR);
+	}
 }

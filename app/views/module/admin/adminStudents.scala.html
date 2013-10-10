@@ -64,7 +64,7 @@ $('#toolbar').tooltip(options);
 			<thead>
 				<tr>
 					<th>ID</th>
-					<th>姓名</th>
+					<th>学员名称</th>
 					<th>职位</th>
 					<th>公司</th>
 					<th>最新报名课程</th>
@@ -77,7 +77,7 @@ $('#toolbar').tooltip(options);
 				<tr>
 					<td>@model.id</td>
 					@if(model.user != null){
-						<td><a href="#" onclick="getCommonPage(this, 'studentDetail', 'id=@model.id');">@model.user.username</a></td>
+						<td><a href="#" onclick="getCommonPage(this, 'studentDetail', 'id=@model.id');">@model.user.nickname</a></td>
 					} else {
 						<td>-未设置-</td>
 					}

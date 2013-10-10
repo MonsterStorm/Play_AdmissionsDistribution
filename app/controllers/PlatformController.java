@@ -41,8 +41,6 @@ public class PlatformController extends BaseController {
 	private static final String PAGE_PLATFORM_ADV2= "platformAdv2";//侧栏连接广告
 	private static final String PAGE_USER_ENROLL = "pageUserEnroll";//用户报名课程
 	private static final String PAGE_EDUCATION2= "platformEducation2";//教育机构广告
-	private static final String PAGE_REG_AGENT  = "regAgent";//申请成为代理人
-	private static final String PAGE_REG_EDUCATION  = "regEducation";
 //	private static final String PAGE_CONTACT_US= "contact_us";//教育机构广告
 	/**
 	 * get a page
@@ -113,10 +111,6 @@ public class PlatformController extends BaseController {
 			return pageEducation2();
 		}else if(PAGE_USER_ENROLL.equalsIgnoreCase(page)){
 			return pageUserEnroll();
-		}else if (PAGE_REG_AGENT.equalsIgnoreCase(page)) {// 
-			return pageRegAgent();
-		}else if (PAGE_REG_EDUCATION.equalsIgnoreCase(page)) {// 
-			return pageRegEducations();
 		}
 		else {
 			return ok(views.html.module.platform.index.render());
@@ -535,38 +529,6 @@ public class PlatformController extends BaseController {
 			}
 		}
 		return internalServerError(Constants.MSG_INTERNAL_ERROR);
-	}
-
-	/**
-	 * 代理人
-	 * 
-	 * @return
-	 */
-	public static Result pageRegAgent() {
-		play.Logger.error(form().bindFromRequest().get("page"));
-		User user =  LoginController.getSessionUser();
-		if(user == null){
-			return badRequest(Constants.MSG_NOT_LOGIN);
-		}
-		long id  = (long)2;
-		Contract contract = Contract.find(id);//2表示 代理人协议
-		return ok(views.html.module.platform.regAgent.render(contract));
-	}
-	/**
-	 * 教育机构
-	 * 
-	 * @return
-	 */
-	public static Result pageRegEducations() {
-		play.Logger.error(form().bindFromRequest().get("page"));
-		User user =  LoginController.getSessionUser();
-		if(user == null){
-			return badRequest(Constants.MSG_NOT_LOGIN);
-		}
-		long id  = (long)1;
-		Contract contract = Contract.find(id);//1表示 教育机构协议
-		return ok(views.html.module.platform.regEducation.render(contract));
-		
 	}
 
 }

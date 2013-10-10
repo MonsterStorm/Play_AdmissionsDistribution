@@ -3,6 +3,7 @@ package models;
 import javax.persistence.*;
 
 import com.ning.http.client.*;
+import common.*;
 
 import play.data.*;
 import play.db.ebean.*;
@@ -26,7 +27,7 @@ public class UserInfo extends Model {
 	public User user;// 用户信息所属的用户，一个用户只有一个用户信息，一个用户信息隶属与一个用户
 
 	// -------------用于普通用户--------------
-	public String realname; //真实姓名
+	public String realname; // 真实姓名
 
 	public String idcard;// 身份证
 
@@ -52,10 +53,25 @@ public class UserInfo extends Model {
 	public Long lastLoginTime;// 最后登录时间
 
 	public String lastLoginIp;// 最后登录ip
-	
-	public UserInfo (){}
-	
-	public UserInfo (DynamicForm form){
+
+	public UserInfo() {
+	}
+
+	public void updateForUser(User user) {
+		if (user != null) {
+			this.user = user;
+
+			if (StringHelper.isValidate(realname) == false) {
+				this.realname = user.nickname;
+			}
+
+			if (this.registerTime == null) {
+				this.registerTime = System.currentTimeMillis();
+			}
+		}
+	}
+
+	public UserInfo(DynamicForm form) {
 		final String realname = form.get("realname");
 		final String address = form.get("address");
 		final String idcard = form.get("idcard");
@@ -67,7 +83,7 @@ public class UserInfo extends Model {
 		this.realname = realname;
 		this.address = address;
 		this.idcard = idcard;
-		if(birthday != null)
+		if (birthday != null)
 			this.birthday = Long.parseLong(birthday);
 		this.sex = sex;
 		this.phone = phone;
@@ -75,8 +91,8 @@ public class UserInfo extends Model {
 		this.info = info;
 		this.registerTime = System.currentTimeMillis();
 	}
-	
-	public static void update(UserInfo userInfo, DynamicForm form){
+
+	public static void update(UserInfo userInfo, DynamicForm form) {
 		final String address = form.get("address");
 		final String idcard = form.get("idcard");
 		final String birthday = form.get("birthday");
@@ -84,10 +100,10 @@ public class UserInfo extends Model {
 		final String phone = form.get("phone");
 		final String qq = form.get("qq");
 		final String info = form.get("info");
-		
+
 		userInfo.address = address;
 		userInfo.idcard = idcard;
-		if(birthday != null)
+		if (birthday != null)
 			userInfo.birthday = Long.parseLong(birthday);
 		userInfo.sex = sex;
 		userInfo.phone = phone;

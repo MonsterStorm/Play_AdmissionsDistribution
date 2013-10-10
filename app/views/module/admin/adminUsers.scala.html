@@ -89,16 +89,19 @@ $('#toolbar').tooltip(options);
 					}
 					
 					@if(model != null && model.audit != null){
-						if(model.audit.status == Audit.STATUS_WAIT){
-							<td>未认证</td>
-						} else if (model.audit.status == Audit.STATUS_SUCCESS){
-							<td>已认证</td>
-						} else if (model.audit.status == Audit.STATUS_FAILED){
-							<td>认证失败</td>
-						} else if (model.audit.status == Audit.STATUS_DISABLED){
-							<td>禁用</td>
-						} else {
-							<td>-未设置-</td>
+						@model.audit.status match {
+				  		case Audit.STATUS_WAIT => {
+				  			<td>未认证</td>
+				  		}	
+							case Audit.STATUS_SUCCESS =>{
+								<td>已认证</td>
+							}
+							case Audit.STATUS_FAILED =>{
+								<td>认证失败</td>
+							}
+							case Audit.STATUS_DISABLED =>{
+								<td>禁用</td>
+							}
 						}
 					} else {
 						<td>-未设置-</td>

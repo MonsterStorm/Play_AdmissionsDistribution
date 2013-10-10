@@ -204,3 +204,8 @@
 	float:left;
 	width:78%;
 }
+
+/*教育机构课程介绍*/
+.eduInstCourseTbl td{
+	border: solid 1px #000;
+}

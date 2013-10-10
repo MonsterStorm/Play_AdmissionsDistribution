@@ -80,13 +80,23 @@
 				@inputText("邮箱地址", "email", null, false)
 			}
   		
-  		
-  		
-  		
   		@if(model != null && model.audit != null){
-				@inputText("帐号状态", "status", String.valueOf(model.audit.status), true, true)
+  				@model.audit.status match {
+				  	case Audit.STATUS_WAIT => {
+				  		@inputText("帐号状态", null, "未认证", true, true)
+				  	}
+						case Audit.STATUS_SUCCESS =>{
+							@inputText("帐号状态", null, "已认证", true, true)
+						}
+						case Audit.STATUS_FAILED =>{
+							@inputText("帐号状态", null, "认证失败", true, true)
+						}
+						case Audit.STATUS_DISABLED =>{
+							@inputText("帐号状态", null, "禁用", true, true)
+						}
+					}
 			} else {
-				@inputText("帐号状态", "status", null, true, true)
+				@inputText("帐号状态", null, "-未设置-", true, true)
 			}
 			
 			<input class="input-large" type="hidden" name="table" value="@User.TABLE_NAME">

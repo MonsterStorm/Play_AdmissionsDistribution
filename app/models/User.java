@@ -1,6 +1,5 @@
 package models;
 
-import java.io.*;
 import java.lang.reflect.*;
 import java.util.*;
 
@@ -49,7 +48,7 @@ public class User extends Model {
 	public UserInfo basicInfo;// 用户基本信息，一个用户对应一个基本信息，一个基本信息对应一个用户
 
 	@ManyToMany(cascade = CascadeType.ALL)
-	public List<Role> roles;// 角色，一个用户可以同时是多个角色，比如同时是教育机构和代理人，一个用户拥有多个角色，一个角色可以被多个用户拥有
+	public List<Role> roles = new ArrayList<Role>();// 角色，一个用户可以同时是多个角色，比如同时是教育机构和代理人，一个用户拥有多个角色，一个角色可以被多个用户拥有
 
 	@OneToMany(mappedBy = "creator", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	public List<EducationInstitution> edus;// 用户对应的教育机构，一个用户可以对应多个教育机构，一个教育机构只能隶属于一个用户（创建者，但是可以有多个子帐号）
@@ -115,6 +114,62 @@ public class User extends Model {
 		UserInfo.update(user.basicInfo, form);
 
 		user.update();
+	}
+	
+	/**
+	 * create a random user with given role
+	 * @param user
+	 * @param roleId
+	 * @return
+	 */
+	public static void updateRandomUserForStudent(Student student, long roleId, int auditStatus){
+		if(student == null) return;
+		
+		User user = student.user;
+		
+		if(user == null){
+			user = new User();
+		}
+		
+		//生产随机帐号密码
+		randomAccount(user);
+		
+		//学员信息
+		user.student = student;
+		
+		//角色
+		Role role = Role.find(roleId);
+		if(role != null){
+			user.roles.add(role);
+		}
+		
+		//基本信息
+		if(user.basicInfo != null){
+			user.basicInfo.updateForUser(user);
+		}
+		
+		//审核信息
+		Audit audit = new Audit(user, auditStatus);
+		AuditType auditType = AuditType.find(AuditType.TYPE_AUDITTYPE_STUDENT);//学员审核 
+		audit.type = auditType;
+		user.audit = audit;
+		
+	}
+	
+	/**
+	 * create random account and password for this user 
+	 * @param user
+	 */
+	public synchronized static void randomAccount(User user){
+		if(user != null){
+			//随机生成用户名跟密码
+			if(StringHelper.isValidate(user.username) == false){
+				user.username = "User" + System.currentTimeMillis();
+			}
+			if(StringHelper.isValidate(user.password) == false){
+				user.password = buildRandomPassword();
+			}
+		}
 	}
 
 	/**
@@ -291,6 +346,24 @@ public class User extends Model {
 	 */
 	public static User findByUsername(String username) {
 		return finder.where().eq("username", username).findUnique();
+	}
+	
+	/**
+	 * find user by email
+	 * @param email
+	 * @return
+	 */
+	public static boolean hasUserByEmail(String email){
+		return finder.where().eq("email", email).findRowCount() > 0;
+	}
+	
+	/**
+	 * find user by mobile
+	 * @param mobile
+	 * @return
+	 */
+	public static boolean hasUserByMobile(String mobile){
+		return finder.where().eq("mobile", mobile).findRowCount() > 0;
 	}
 	
 	/**
@@ -477,12 +550,21 @@ public class User extends Model {
 	}
 
 	/**
-	 * 生成一个随机密码
+	 * 生成一个随机密码,6位随机大小写字母
 	 * 
 	 * @return
 	 */
 	public static String buildRandomPassword() {
-		return "123456";
+		Random random = new Random(System.currentTimeMillis());
+		StringBuilder sb = new StringBuilder();
+		for(int i = 0; i < 6; i++){//在26个字母中随机生成六位数
+			if(random.nextBoolean()){
+				sb.append((char)('a' + random.nextInt(27) % 26));
+			} else {
+				sb.append((char)('A' + random.nextInt(27) % 26));
+			}
+		}
+		return sb.toString();
 	}
 
 }
