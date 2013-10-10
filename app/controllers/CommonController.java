@@ -152,6 +152,8 @@ public class CommonController extends Controller {
 			return deleteAdvertisment();
 		} else if (StudentWords.TABLE_NAME.equalsIgnoreCase(table)) {// 学员感言删除
 			return deleteStudentWords();
+		} else if (Domain.TABLE_NAME.equalsIgnoreCase(table)) {// 学员感言删除
+			return deleteDomain();
 		} else {
 			return badRequest(Constants.MSG_PAGE_NOT_FOUND);
 		}
@@ -775,6 +777,20 @@ public class CommonController extends Controller {
 		Long id = FormHelper.getLong(form().bindFromRequest(), "id");
 		if (id != null) {
 			StudentWords studentWords = StudentWords.delete(id);
+			return ok(Constants.MSG_SUCCESS);
+		} else {
+			return internalServerError(Constants.MSG_INTERNAL_ERROR);
+		}
+	}
+	/**
+	 * delete 学员感言
+	 * 
+	 * @return
+	 */
+	public static Result deleteDomain() {
+		Long id = FormHelper.getLong(form().bindFromRequest(), "id");
+		if (id != null) {
+			Domain domain = Domain.delete(id);
 			return ok(Constants.MSG_SUCCESS);
 		} else {
 			return internalServerError(Constants.MSG_INTERNAL_ERROR);

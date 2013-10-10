@@ -36,6 +36,8 @@ public class AgentController extends BaseController {
 	private static final String PAGE_ALL_COURSES ="allCourse";
 	private static final String REG_COURSE_AGENT = "regCourseAgent";
 	private static final String PAGE_REG_AGENT  = "regAgent";
+	private static final String PAGE_AGENT_DOMAIN  = "agentDomain";
+	private static final String PAGE_DOMAIN_DETAIL  = "domainDetail";
 	/**
 	 * agent pages
 	 * 
@@ -61,6 +63,10 @@ public class AgentController extends BaseController {
 			return regCourseAgent();
 		}else if (PAGE_REG_AGENT.equalsIgnoreCase(page)) {// 
 			return pageRegAgent();
+		}else if (PAGE_AGENT_DOMAIN.equalsIgnoreCase(page)) {// 
+			return pageAgentDomain();
+		} else if (PAGE_DOMAIN_DETAIL.equalsIgnoreCase(page)) {// 
+			return pageDomainDetail(null);
 		} else {
 			return badRequest("页面不存在");
 		}
@@ -86,6 +92,8 @@ public class AgentController extends BaseController {
 		String table = form().bindFromRequest().get("table");
 		if (Agent.TABLE_NAME.equalsIgnoreCase(table)) {// 代理人更新或添加
 			return addOrUpdateAgent();
+		}if (Domain.TABLE_NAME.equalsIgnoreCase(table)) {// 代理人更新或添加
+			return addOrUpdateDomain();
 		} else {
 			return badRequest(Constants.MSG_PAGE_NOT_FOUND);
 		}
@@ -279,6 +287,80 @@ public class AgentController extends BaseController {
 			}
 		}
 		return internalServerError(Constants.MSG_INTERNAL_ERROR);
+	}
+
+
+	/**
+	 * add or update instructor
+	 * 
+	 * @return
+	 */
+	public static Result addOrUpdateDomain() {
+		User user = LoginController.getSessionUser();
+		if (user == null) {
+			return badRequest(Constants.MSG_NOT_LOGIN);
+		}
+		if(user.agent == null){
+			return badRequest(Constants.MSG_AGENT_NOT_EXIST);
+		}
+
+		Form<Domain> form = form(Domain.class).bindFromRequest();
+		if (form != null && form.hasErrors() == false) {
+			String str = FormHelper.getString(form().bindFromRequest(),"domain");
+
+			Domain domain = Domain.findByDomain(str);
+			if(domain != null  ){
+				return badRequest(Constants.MSG_DOMAIN_EXIST); 
+			}
+			Domain newDomain = new Domain();
+			newDomain.id = FormHelper.getLong(form().bindFromRequest(),"id");
+			newDomain.domain = FormHelper.getString(form().bindFromRequest(),"domain");
+			newDomain.agent = user.agent;
+			Domain dom = Domain.addOrUpdate(newDomain);
+			if(dom!=null){
+				return ok(views.html.module.agent.domainDetail.render(dom));
+			}
+
+		} else if (form.hasErrors()) {
+			String error = FormHelper.getFirstError(form.errors());
+			play.Logger.debug("error:" + error);
+			if (error != null) {
+				return badRequest(error);
+			}
+		}
+		return internalServerError(Constants.MSG_INTERNAL_ERROR);
+	}
+
+	/**
+	 * 域名
+	 * 
+	 * @return
+	 */
+	public static Result pageAgentDomain() {
+		play.Logger.error(form().bindFromRequest().get("page"));
+		int page = FormHelper.getPage(form().bindFromRequest());
+		User user =  LoginController.getSessionUser();
+		if(user == null){
+			return badRequest(Constants.MSG_NOT_LOGIN);
+		}
+		Page<Domain> domain  = Domain.findPageByAgent(user.agent,form().bindFromRequest(),page,null);
+		return ok(views.html.module.agent.agentDomain.render(domain));
+		
+	}
+
+	/**
+	 * 域名详情
+	 * 
+	 * @return
+	 */
+	public static Result pageDomainDetail(Domain domain) {
+		if (domain == null) {
+			Long id = FormHelper.getLong(form().bindFromRequest(), "id");
+			if (id != null) {
+				domain = Domain.find(id);
+			}
+		}
+		return ok(views.html.module.agent.domainDetail.render(domain));
 	}
 
 	/**
