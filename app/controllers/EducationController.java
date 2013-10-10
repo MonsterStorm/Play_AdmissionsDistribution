@@ -14,7 +14,10 @@ import java.util.*;
 import java.text.*;
 import java.lang.*;
 
+import javax.validation.*;
+
 import play.data.*;
+import play.data.validation.Constraints.ValidateWith;
 import play.mvc.Http.MultipartFormData;
 import play.mvc.Http.MultipartFormData.FilePart;
 

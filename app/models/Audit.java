@@ -49,7 +49,17 @@ public class Audit extends Model {
 	public User auditor;// 审核人，一个审核对应一个审核人，一个审核人对应多个审核
 
 	public Long auditTime;// 审核时间
+	
+	
+	public Audit(){
+	}
 
+	public Audit(User creator, int status){
+		this.status = status;
+		this.creator = creator;
+		this.createTime = System.currentTimeMillis();
+	}
+	
 	// -- 查询
 	public static Model.Finder<Long, Audit> finder = new Model.Finder(
 			Long.class, Audit.class);

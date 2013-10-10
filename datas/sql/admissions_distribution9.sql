@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50530
 File Encoding         : 65001
 
-Date: 2013-10-08 21:25:56
+Date: 2013-10-10 22:44:57
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -119,7 +119,7 @@ CREATE TABLE `agent` (
 -- Records of agent
 -- ----------------------------
 INSERT INTO `agent` VALUES ('1', '5', '2', null, '金城代理', '金城代理公司，全程为您推荐可靠的课程信息', '联系人：方长老 18768594685');
-INSERT INTO `agent` VALUES ('2', '32', null, null, '伟业代理', '伟业代理公司，竭诚为您服务', null);
+INSERT INTO `agent` VALUES ('2', '32', '3', null, '伟业代理', '伟业代理公司，竭诚为您服务', null);
 
 -- ----------------------------
 -- Table structure for `agent_course`
@@ -154,13 +154,15 @@ CREATE TABLE `audit` (
   `type_id` bigint(20) DEFAULT NULL,
   `status` int(11) DEFAULT NULL,
   `creator_id` bigint(20) DEFAULT NULL,
+  `course_id` bigint(20) DEFAULT NULL,
   `create_time` bigint(20) DEFAULT NULL,
   `auditor_id` bigint(20) DEFAULT NULL,
   `audit_time` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `ix_audit_type_7` (`type_id`),
   KEY `ix_audit_creator_8` (`creator_id`),
-  KEY `ix_audit_auditor_9` (`auditor_id`)
+  KEY `ix_audit_course_9` (`course_id`),
+  KEY `ix_audit_auditor_10` (`auditor_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- ----------------------------
@@ -176,17 +178,18 @@ CREATE TABLE `audit_type` (
   `name` varchar(255) DEFAULT NULL,
   `info` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=3123124 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of audit_type
 -- ----------------------------
-INSERT INTO `audit_type` VALUES ('1', '学员审核', '审核学员资格');
+INSERT INTO `audit_type` VALUES ('5', '学员审核', '审核学员资格');
 INSERT INTO `audit_type` VALUES ('2', '教育机构审核', '审核教育机构资格');
-INSERT INTO `audit_type` VALUES ('3', '代理人审核', '审核代理人资格');
-INSERT INTO `audit_type` VALUES ('4', '教育课程审核', '审核课程信息');
-INSERT INTO `audit_type` VALUES ('5', '讲师审核', '审核讲师资格');
-INSERT INTO `audit_type` VALUES ('6', '域名审核', '审核域名');
+INSERT INTO `audit_type` VALUES ('4', '代理人审核', '审核代理人资格');
+INSERT INTO `audit_type` VALUES ('6', '教育课程审核', '审核课程信息');
+INSERT INTO `audit_type` VALUES ('3', '讲师审核', '审核讲师资格');
+INSERT INTO `audit_type` VALUES ('7', '域名审核', '审核域名');
+INSERT INTO `audit_type` VALUES ('1', '用户审核', '审核用户');
 
 -- ----------------------------
 -- Table structure for `confirm_receipt`
@@ -334,6 +337,7 @@ CREATE TABLE `domain` (
 INSERT INTO `domain` VALUES ('3', 'www.myweb.com', '1');
 INSERT INTO `domain` VALUES ('2', 'www.adfal.com', '1');
 INSERT INTO `domain` VALUES ('1', 'a', '1');
+INSERT INTO `domain` VALUES ('4', 'b', '2');
 
 -- ----------------------------
 -- Table structure for `education_institution`
@@ -795,13 +799,14 @@ CREATE TABLE `student` (
   `info` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `ix_student_user_45` (`user_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of student
 -- ----------------------------
 INSERT INTO `student` VALUES ('1', '3', '百度', '项目经理', '百度资深项目经理，负责百度搜索，百度词典项目。');
-INSERT INTO `student` VALUES ('2', '23', '网易', '程序员', '网易邮件事业部资深程序员');
+INSERT INTO `student` VALUES ('2', '8', '网易', '程序员', '网易邮件事业部资深程序员');
+INSERT INTO `student` VALUES ('3', '34', '北京永定', '总经理', '阿斯顿发生大幅');
 
 -- ----------------------------
 -- Table structure for `studentwords`
@@ -849,12 +854,13 @@ CREATE TABLE `template` (
   KEY `ix_template_instructor_48` (`instructor_id`),
   KEY `ix_template_agent_49` (`agent_id`),
   KEY `ix_template_templateType_50` (`template_type_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of template
 -- ----------------------------
 INSERT INTO `template` VALUES ('2', '5', null, null, '1', null, '3');
+INSERT INTO `template` VALUES ('3', '32', null, null, '2', null, '1');
 
 -- ----------------------------
 -- Table structure for `template_type`
@@ -903,12 +909,12 @@ CREATE TABLE `user` (
   KEY `ix_user_instructor_54` (`instructor_id`),
   KEY `ix_user_agent_55` (`agent_id`),
   KEY `ix_user_student_56` (`student_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=34 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=35 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES ('1', 'edu', 'admin', '我是管理员', '18768161627', 'zhangsan@gmail.com', '', null, '1', null, null, null, '2');
+INSERT INTO `user` VALUES ('1', 'admin', 'admin', '我是管理员', '18768161627', 'zhangsan@gmail.com', '', null, '1', null, null, null, null);
 INSERT INTO `user` VALUES ('2', 'test2', 'test2', '这只是个昵称2', '13545678908', 'lisi@gmail.com', '', null, '2', null, null, null, null);
 INSERT INTO `user` VALUES ('5', 'agent', 'agent', '我是代理人', '15912315569', 'agen@126.com', null, null, '5', null, null, '1', null);
 INSERT INTO `user` VALUES ('3', 'stu', 'stu', '我是学员', '13245669756', 'xueyuan@gmail.com', null, null, '3', null, null, null, '1');
@@ -940,6 +946,7 @@ INSERT INTO `user` VALUES ('29', 'teacher11', 'teacher11', '讲师11', '1231231'
 INSERT INTO `user` VALUES ('30', 'teacher12', 'teacher12', '讲师12', '23123123', 'teacher12@126.com', null, null, '30', null, null, null, null);
 INSERT INTO `user` VALUES ('31', 'teacher13', 'teacher13', '讲师13', '1231541', 'teacher13@1213.com', null, null, '31', null, null, null, null);
 INSERT INTO `user` VALUES ('32', 'agent2', 'agent2', '代理人2', '123123123', 'agent2@123.com', null, null, '32', null, null, '2', null);
+INSERT INTO `user` VALUES ('34', 'Usernull', 'okFHoS', '张三丰', '1231231231111', '1231232@123123.com', null, null, '33', null, null, null, '3');
 
 -- ----------------------------
 -- Table structure for `user_info`
@@ -962,7 +969,7 @@ CREATE TABLE `user_info` (
   `last_login_ip` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `ix_user_info_user_57` (`user_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=33 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=34 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of user_info
@@ -999,6 +1006,7 @@ INSERT INTO `user_info` VALUES ('29', '29', '易中天', '723123451261', '138113
 INSERT INTO `user_info` VALUES ('30', '30', '王晓毅', '12341712341761', '1381136024622', '1', '34672345', '34352345', '四川江夏', '讲师11', '1381136024622', '10.101.10.1', '1381136024622', '10.101.10.1');
 INSERT INTO `user_info` VALUES ('31', '31', '张国刚 ', '234123412412', '1381136024622', '1', '34522723', '23452', '甘肃济源', '讲师12', '1381136024622', '10.101.10.1', '1381136024622', '10.101.10.1');
 INSERT INTO `user_info` VALUES ('32', '32', '南国公', '123123124123', '1381136024622', '1', '123123123', '123123123', '北京台州', '代理人2', '1381136024622', '10.101.10.1', '1381136024622', '10.101.10.1');
+INSERT INTO `user_info` VALUES ('33', null, null, '123123123123', null, '1', '123123', '123123123', '所发生的法定', null, null, null, null, null);
 
 -- ----------------------------
 -- Table structure for `user_role`
@@ -1015,3 +1023,34 @@ CREATE TABLE `user_role` (
 -- Records of user_role
 -- ----------------------------
 INSERT INTO `user_role` VALUES ('1', '6');
+INSERT INTO `user_role` VALUES ('2', '5');
+INSERT INTO `user_role` VALUES ('3', '4');
+INSERT INTO `user_role` VALUES ('4', '1');
+INSERT INTO `user_role` VALUES ('5', '3');
+INSERT INTO `user_role` VALUES ('6', '2');
+INSERT INTO `user_role` VALUES ('7', '1');
+INSERT INTO `user_role` VALUES ('8', '4');
+INSERT INTO `user_role` VALUES ('9', '1');
+INSERT INTO `user_role` VALUES ('10', '1');
+INSERT INTO `user_role` VALUES ('11', '1');
+INSERT INTO `user_role` VALUES ('12', '1');
+INSERT INTO `user_role` VALUES ('13', '1');
+INSERT INTO `user_role` VALUES ('14', '1');
+INSERT INTO `user_role` VALUES ('15', '1');
+INSERT INTO `user_role` VALUES ('16', '1');
+INSERT INTO `user_role` VALUES ('17', '1');
+INSERT INTO `user_role` VALUES ('18', '1');
+INSERT INTO `user_role` VALUES ('19', '1');
+INSERT INTO `user_role` VALUES ('20', '2');
+INSERT INTO `user_role` VALUES ('21', '2');
+INSERT INTO `user_role` VALUES ('23', '2');
+INSERT INTO `user_role` VALUES ('24', '2');
+INSERT INTO `user_role` VALUES ('25', '2');
+INSERT INTO `user_role` VALUES ('26', '2');
+INSERT INTO `user_role` VALUES ('27', '2');
+INSERT INTO `user_role` VALUES ('28', '2');
+INSERT INTO `user_role` VALUES ('29', '2');
+INSERT INTO `user_role` VALUES ('30', '2');
+INSERT INTO `user_role` VALUES ('31', '2');
+INSERT INTO `user_role` VALUES ('32', '3');
+INSERT INTO `user_role` VALUES ('34', '4');

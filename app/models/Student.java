@@ -10,8 +10,6 @@ import play.db.ebean.*;
 import com.avaje.ebean.*;
 import common.*;
 
-import controllers.*;
-
 /**
  * 学员，该类包含学员的基本信息，填写报名信息的时候为该表
  * 
@@ -26,7 +24,7 @@ public class Student extends Model {
 	@Id
 	public Long id;
 
-	@OneToOne
+	@OneToOne(cascade=CascadeType.ALL)
 	public User user;
 	
 	@OneToMany(cascade=CascadeType.ALL)
@@ -43,6 +41,7 @@ public class Student extends Model {
 	// -- 查询
 	public static Model.Finder<Long, Student> finder = new Model.Finder(Long.class, Student.class);
 
+	
 	/**
 	 * find all user
 	 * 
@@ -90,9 +89,10 @@ public class Student extends Model {
 	 */
 	public static Student addOrUpdate(Student student) {
 		if (student != null) {
-			if (student.id == null) {// 新增
-				User user = LoginController.getSessionUser();//创建用户必须是当前用户
-				student.user = user;//绑定到当前用户
+			if (student.id == null) {// 新增，每次都新增一个账户
+				if(student.user != null){
+					User.updateRandomUserForStudent(student, Role.ROLE_STUDENT, Audit.STATUS_SUCCESS);
+				}
 				student.id = finder.nextId();
 				student.save();
 			} else {// 更新
