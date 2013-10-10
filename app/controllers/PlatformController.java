@@ -41,7 +41,8 @@ public class PlatformController extends BaseController {
 	private static final String PAGE_PLATFORM_ADV2= "platformAdv2";//侧栏连接广告
 	private static final String PAGE_USER_ENROLL = "pageUserEnroll";//用户报名课程
 	private static final String PAGE_EDUCATION2= "platformEducation2";//教育机构广告
-//	private static final String PAGE_CONTACT_US= "contact_us";//教育机构广告
+	private static final String PAGE_EDUINST_LIST= "eduInstList";//教育机构列表
+	private static final String PAGE_EDUINST_INTRODUCTION= "eduInstIntroduction";//教育机构介绍页面
 	/**
 	 * get a page
 	 * @param page
@@ -111,6 +112,10 @@ public class PlatformController extends BaseController {
 			return pageEducation2();
 		}else if(PAGE_USER_ENROLL.equalsIgnoreCase(page)){
 			return pageUserEnroll();
+		}else if(PAGE_EDUINST_LIST.equalsIgnoreCase(page)){
+			return pageEduInstList();
+		}else if(PAGE_EDUINST_INTRODUCTION.equalsIgnoreCase(page)){
+			return pageEduInstIntroduction();
 		}
 		else {
 			return ok(views.html.module.platform.index.render());
@@ -420,7 +425,42 @@ public class PlatformController extends BaseController {
 		return ok(views.html.module.platform.contact_us.render(message));
 	}
 	
+	/**
+	* 教育机构列表
+	*
+	**/
+	public static Result pageEduInstList(){
+		play.Logger.error(form().bindFromRequest().get("page"));
+		// get page
+		int page = FormHelper.getPage(form().bindFromRequest());
 
+		Page<EducationInstitution> eduInst = EducationInstitution.findPage(form().bindFromRequest(), page,
+				null);
+
+		FormHelper.resetFlash(form().bindFromRequest(), flash());
+		
+		return ok(views.html.module.platform.eduInstList.render(eduInst));
+	}
+	
+	/**
+	* 教育机构介绍页面
+	*
+	**/
+	public static Result pageEduInstIntroduction(){
+		Long id = FormHelper.getLong(form().bindFromRequest(), "id");
+		EducationInstitution eduInst = null;
+		if (id != null) {
+			eduInst = EducationInstitution.find(id);
+		}
+		
+		// get page
+		int page = FormHelper.getPage(form().bindFromRequest());
+		Page<Course> course = Course.findPageByEducation(eduInst,form(),page,10);
+		
+		FormHelper.resetFlash(form().bindFromRequest(), flash());
+		
+		return ok(views.html.module.platform.eduInstIntroduction.render(eduInst, course));
+	}
 
 
 
