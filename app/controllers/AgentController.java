@@ -31,7 +31,6 @@ public class AgentController extends BaseController {
 	private static final String PAGE_HOME = "home";// 主页
 	private static final String PAGE_LOGIN = "login";// 登录
 	private static final String PAGE_AGENT_INFO = "agentInfo";// 代理人信息
-	private static final String PAGE_TEMPLATE_AGENT_COURSES = "templateAgentCourses";// 代理人的课程信息模板页面
 	private static final String PAGE_AGENT_COURSES = "agentCourses";
 	private static final String PAGE_AGENT_COURSES_DETAIL ="courseDetail";
 	private static final String PAGE_ALL_COURSES ="allCourse";
@@ -52,8 +51,6 @@ public class AgentController extends BaseController {
 			return ok(views.html.module.agent.login.render(form(Login.class)));
 		} else if (PAGE_AGENT_INFO.equalsIgnoreCase(page)) {// 只做登录页面跳转
 			return agentInfo();
-		} else if (PAGE_TEMPLATE_AGENT_COURSES.equalsIgnoreCase(page)) {
-			return getTemplateAgentCourses();
 		} else if (PAGE_AGENT_COURSES.equalsIgnoreCase(page)) {// 
 			return pageAgentCourses();
 		} else if (PAGE_ALL_COURSES.equalsIgnoreCase(page)) {// 
@@ -140,8 +137,6 @@ public class AgentController extends BaseController {
 	 * @return
 	 */
 	public static Result pageAgentCourses() {
-		play.Logger.error(form().bindFromRequest().get("page"));
-
 		User user =  LoginController.getSessionUser();
 		if(user == null){
 			return badRequest(Constants.MSG_NOT_LOGIN);
@@ -281,22 +276,6 @@ public class AgentController extends BaseController {
 			play.Logger.debug("error:" + error);
 			if (error != null) {
 				return badRequest(error);
-			}
-		}
-		return internalServerError(Constants.MSG_INTERNAL_ERROR);
-	}
-
-	/**
-	 * get template agent courses
-	 * @return
-	 */
-	public static Result getTemplateAgentCourses() {
-		Long agentId = FormHelper.getLong(form().bindFromRequest(), "id");
-		if(agentId != null){
-			Agent agent = Agent.find(agentId);
-			play.Logger.debug("agent:" + agent);
-			if(agent != null){
-				return ok(views.html.basic.template.agentCourses.render(agent.courses));
 			}
 		}
 		return internalServerError(Constants.MSG_INTERNAL_ERROR);

@@ -41,18 +41,18 @@
 			@form_validate_info()
 
 			@if(model != null && model.user != null){
-				@inputText("学员名称", "name", model.user.username, true)
+				@inputText("学员名称", "user.nickname", model.user.nickname, true)
 			} else {
-				@inputText("学员名称", "name", null, false)
+				@inputText("学员名称", "user.nickname", null, false)
 			}
   		
 			@if(model != null && model.user != null && model.user.basicInfo != null){
-				@inputSelect("性别", "sex", String.valueOf(model.user.basicInfo.sex), true){
+				@inputSelect("性别", "user.basicInfo.sex", String.valueOf(model.user.basicInfo.sex), true){
 					<option value="1" onclick="changeValue('#btnCourseType', '男')">男</option>
 	      	<option value="0" onclick="changeValue('#btnCourseType', '女')">女</option>
 				}
 			} else {
-				@inputSelect("性别", "sex", null, false){
+				@inputSelect("性别", "user.basicInfo.sex", null, false){
 					<option value="1" onclick="changeValue('#btnCourseType', '男')">男</option>
 	      	<option value="0" onclick="changeValue('#btnCourseType', '女')">女</option>
 				}
@@ -71,45 +71,45 @@
 			}
 				
 			@if(model != null && model.user != null && model.user.basicInfo != null){
-				@inputText("身份证号", "idcard", model.user.basicInfo.idcard, true)
+				@inputText("身份证号", "user.basicInfo.idcard", model.user.basicInfo.idcard, true)
 			} else {
-				@inputText("身份证号", "idcard", null, false)
+				@inputText("身份证号", "user.basicInfo.idcard", null, false)
 			}
   		
 			@if(model != null && model.user != null && model.user.basicInfo != null){
-				@datetimePicker("出生日期", "birthday", model.user.basicInfo.birthday)				
+				@datetimePicker("出生日期", "user.basicInfo.birthday", model.user.basicInfo.birthday)				
 			} else {
-				@datetimePicker("出生日期", "birthday")
+				@datetimePicker("出生日期", "user.basicInfo.birthday")
 			}
 			
 			@if(model != null && model.user != null && model.user.basicInfo != null){
-				@inputText("座机号码", "phone", model.user.basicInfo.phone, true)
+				@inputText("座机号码", "user.basicInfo.phone", model.user.basicInfo.phone, true)
 			} else {
-				@inputText("座机号码", "phone", null, false)
+				@inputText("座机号码", "user.basicInfo.phone", null, false)
 			}
 	
 			@if(model != null && model.user != null){
-				@inputText("手机号码", "mobile", model.user.mobile, true)
+				@inputText("手机号码", "user.mobile", model.user.mobile, true)
 			} else {
-				@inputText("手机号码", "mobile", null, false)
+				@inputText("手机号码", "user.mobile", null, false)
 			}
 				
 			@if(model != null && model.user != null && model.user.basicInfo != null){
-				@inputText("QQ号码", "qq", model.user.basicInfo.qq, true)
+				@inputText("QQ号码", "user.basicInfo.qq", model.user.basicInfo.qq, true)
 			} else {
-				@inputText("QQ号码", "qq", null, false)
+				@inputText("QQ号码", "user.basicInfo.qq", null, false)
 			}
   		
   		@if(model != null && model.user != null){
-				@inputText("Email", "email", model.user.email, true)
+				@inputText("Email", "user.email", model.user.email, true)
 			} else {
-				@inputText("Email", "email", null, false)
+				@inputText("Email", "user.email", null, false)
 			}
 			
 			@if(model != null && model.user != null && model.user.basicInfo != null){
-				@textarea("联系地址", "address", model.user.basicInfo.address, true)
+				@textarea("联系地址", "user.basicInfo.address", model.user.basicInfo.address, true)
 			} else {
-				@textarea("联系地址", "address", null, false)
+				@textarea("联系地址", "user.basicInfo.address", null, false)
 			}
 			
 			@if(model != null){

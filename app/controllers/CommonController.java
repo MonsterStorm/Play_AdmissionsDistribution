@@ -10,11 +10,11 @@ import play.mvc.*;
 import play.mvc.Http.MultipartFormData;
 import play.mvc.Http.MultipartFormData.FilePart;
 
+import com.avaje.ebean.*;
 import common.*;
 import common.FileHelper.ErrorType;
-import controllers.secure.*;
 
-import com.avaje.ebean.*;
+import controllers.secure.*;
 
 /**
  * 通用controller，存放公用页面
@@ -38,8 +38,8 @@ public class CommonController extends Controller {
 	private static final String PAGE_REBATE_DETAIL = "rebateDetail";// 返利详情
 	private static final String PAGE_ADVERTISEMENT_DETAIL = "advertismentDetail";// 广告详情
 	private static final String PAGE_COURSE_TYPE_DETAIL = "courseTypeDetail";// 课程类别详情
-	private static final String PAGE_CHANGE_PASSWORD_WITHOUT_AUTH = "changePasswordWithoutAuth";//修改密码
-	private static final String PAGE_STUDENT_WORDS_DEATIL = "studentWordsDetail";//学员感言
+	private static final String PAGE_CHANGE_PASSWORD_WITHOUT_AUTH = "changePasswordWithoutAuth";// 修改密码
+	private static final String PAGE_STUDENT_WORDS_DEATIL = "studentWordsDetail";// 学员感言
 
 	/**
 	 * common pages
@@ -72,13 +72,13 @@ public class CommonController extends Controller {
 			return pageContractDetail(null);
 		} else if (PAGE_REBATE_DETAIL.equalsIgnoreCase(page)) {// 返利详情
 			return pageRebateDetail(null);
-		} else if (PAGE_ADVERTISEMENT_DETAIL.equalsIgnoreCase(page)) {//广告详情
+		} else if (PAGE_ADVERTISEMENT_DETAIL.equalsIgnoreCase(page)) {// 广告详情
 			return pageAdvertismentDetail(null);
-		} else if (PAGE_COURSE_TYPE_DETAIL.equalsIgnoreCase(page)) {//广告详情
+		} else if (PAGE_COURSE_TYPE_DETAIL.equalsIgnoreCase(page)) {// 广告详情
 			return pageCourseTypeDetail(null);
-		} else if (PAGE_CHANGE_PASSWORD_WITHOUT_AUTH.equalsIgnoreCase(page)) {//广告详情
+		} else if (PAGE_CHANGE_PASSWORD_WITHOUT_AUTH.equalsIgnoreCase(page)) {// 广告详情
 			return pageChangePasswordWithoutAuth();
-		}else if (PAGE_STUDENT_WORDS_DEATIL.equalsIgnoreCase(page)) {// 用户详情
+		} else if (PAGE_STUDENT_WORDS_DEATIL.equalsIgnoreCase(page)) {// 用户详情
 			return pageStudentWordsDetail(null);
 		} else {
 			return badRequest(Constants.MSG_PAGE_NOT_FOUND);
@@ -114,13 +114,13 @@ public class CommonController extends Controller {
 			return addOrUpdateTemplateType();
 		} else if (Advertisment.TABLE_NAME.equalsIgnoreCase(table)) {// 添加或删除广告
 			return addOrUpdateAdvertisment();
-		}else if (CourseType.TABLE_NAME.equalsIgnoreCase(table)) {// 添加或删除课程类型
+		} else if (CourseType.TABLE_NAME.equalsIgnoreCase(table)) {// 添加或删除课程类型
 			return addOrUpdateCourseType();
-		}else if (StudentWords.TABLE_NAME.equalsIgnoreCase(table)) {// 添加或删除学员感言
+		} else if (StudentWords.TABLE_NAME.equalsIgnoreCase(table)) {// 添加或删除学员感言
 			return addOrUpdateStudentWords();
-		}else if (Message.TABLE_NAME.equalsIgnoreCase(table)) {// 添加或删除留言
+		} else if (Message.TABLE_NAME.equalsIgnoreCase(table)) {// 添加或删除留言
 			return addOrUpdateMessage();
-		}else {
+		} else {
 			return badRequest(Constants.MSG_PAGE_NOT_FOUND);
 		}
 	}
@@ -156,10 +156,10 @@ public class CommonController extends Controller {
 			return badRequest(Constants.MSG_PAGE_NOT_FOUND);
 		}
 	}
-	
-	public static Result updateEntity(){
+
+	public static Result updateEntity() {
 		String table = form().bindFromRequest().get("table");
-		if(User.TABLE_NAME.equalsIgnoreCase(table)){//用户信息更新
+		if (User.TABLE_NAME.equalsIgnoreCase(table)) {// 用户信息更新
 			return updatePasswordWithoutAuth();
 		}
 		return badRequest(Constants.MSG_PAGE_NOT_FOUND);
@@ -199,7 +199,8 @@ public class CommonController extends Controller {
 					if (user != null) {
 						return pageUserDetail(user);
 					} else {
-						final String username = FormHelper.getString(form().bindFromRequest(), "username");
+						final String username = FormHelper.getString(form()
+								.bindFromRequest(), "username");
 						if (User.findByUsername(username) == null) {
 							return internalServerError(Constants.MSG_INTERNAL_ERROR);
 						} else {
@@ -283,10 +284,35 @@ public class CommonController extends Controller {
 	public static Result addOrUpdateStudent() {
 		Form<Student> form = form(Student.class).bindFromRequest();
 		if (form != null && form.hasErrors() == false) {
-			Student student = Student.addOrUpdate(form.get());
+			Student student = form.get();
+			User user = student.user;
+			if (user == null) {
+				return badRequest("用户信息不全");
+			} else {
+				play.Logger.debug(user.nickname + "," + user.email + "," + user.mobile);
+				if(StringHelper.isValidate(user.nickname) == false){//手机号为空
+					return badRequest("学员名不能为空");
+				}
+				
+				if(StringHelper.isValidate(user.mobile) == false){//手机号为空
+					return badRequest("手机号不能为空");
+				} else if (User.hasUserByMobile(user.mobile)){//手机号被占用
+					return badRequest("手机号已被注册");
+				}
+				
+				if (StringHelper.isValidate(user.email) == false) {//邮箱不合法
+					return badRequest("用户邮箱不能为空");
+				} else if (User.hasUserByEmail(user.email)) {//邮箱被注册
+					return badRequest("邮箱已被注册");
+				}
+			}
+
+			student = Student.addOrUpdate(form.get());
 			if (student != null) {
 				return pageStudentDetail(student);
 			}
+
+			
 		} else if (form.hasErrors()) {
 			String error = FormHelper.getFirstError(form.errors());
 			play.Logger.debug("error:" + error);
@@ -429,7 +455,7 @@ public class CommonController extends Controller {
 		}
 		return internalServerError(Constants.MSG_INTERNAL_ERROR);
 	}
-	
+
 	/**
 	 * add or update instructor
 	 * 
@@ -445,7 +471,8 @@ public class CommonController extends Controller {
 				switch (errorType) {
 				case ERROR_NONE: // 文件正常
 				case ERROR_FILE_EMPTY: // 文件空，执行其他保存
-					Advertisment advertisment = Advertisment.addOrUpdate(form.get(), logo);
+					Advertisment advertisment = Advertisment.addOrUpdate(
+							form.get(), logo);
 					if (advertisment != null) {
 						return pageAdvertismentDetail(advertisment);
 					}
@@ -462,7 +489,8 @@ public class CommonController extends Controller {
 					return internalServerError(Constants.MSG_FILE_INTERNAL);
 				}
 			} else {
-				Advertisment advertisment= Advertisment.addOrUpdate(form.get(), null);
+				Advertisment advertisment = Advertisment.addOrUpdate(
+						form.get(), null);
 				if (advertisment != null) {
 					return pageAdvertismentDetail(advertisment);
 				}
@@ -476,6 +504,7 @@ public class CommonController extends Controller {
 		}
 		return internalServerError(Constants.MSG_INTERNAL_ERROR);
 	}
+
 	/**
 	 * add or update instructor
 	 * 
@@ -498,7 +527,6 @@ public class CommonController extends Controller {
 		return internalServerError(Constants.MSG_INTERNAL_ERROR);
 	}
 
-
 	/**
 	 * add or update studentWords
 	 * 
@@ -520,13 +548,13 @@ public class CommonController extends Controller {
 		}
 		return internalServerError(Constants.MSG_INTERNAL_ERROR);
 	}
-	
+
 	/**
-	* add or update message
-	*
-	* @return
-	*/
-	public static Result addOrUpdateMessage(){
+	 * add or update message
+	 * 
+	 * @return
+	 */
+	public static Result addOrUpdateMessage() {
 		Form<Message> form = form(Message.class).bindFromRequest();
 		if (form != null && form.hasErrors() == false) {
 			Message message = Message.addOrUpdate(form.get());
@@ -662,6 +690,7 @@ public class CommonController extends Controller {
 			return internalServerError(Constants.MSG_INTERNAL_ERROR);
 		}
 	}
+
 	/**
 	 * delete courseType
 	 * 
@@ -676,12 +705,13 @@ public class CommonController extends Controller {
 			return internalServerError(Constants.MSG_INTERNAL_ERROR);
 		}
 	}
-	
+
 	/**
 	 * delete Advertisment
+	 * 
 	 * @return
 	 */
-	public static Result deleteAdvertisment(){
+	public static Result deleteAdvertisment() {
 		Long id = FormHelper.getLong(form().bindFromRequest(), "id");
 		if (id != null) {
 			Advertisment ad = Advertisment.delete(id);
@@ -732,7 +762,8 @@ public class CommonController extends Controller {
 				course = Course.find(id);
 			}
 		}
-		return ok(views.html.module.common.educationCourseDetail.render(course, types));
+		return ok(views.html.module.common.educationCourseDetail.render(course,
+				types));
 	}
 
 	/**
@@ -858,16 +889,16 @@ public class CommonController extends Controller {
 		if (isAddNew) {
 			return ok(views.html.module.common.userDetail.render(null));
 		}
-		
+
 		if (user == null) {
 			Long id = FormHelper.getLong(form().bindFromRequest(), "id");
 			if (id != null) {
 				user = User.find(id);
 			}
 		}
-		
-//		List<Role> roles = Role.findAll();
-		
+
+		// List<Role> roles = Role.findAll();
+
 		return ok(views.html.module.common.userDetail.render(user));
 	}
 
@@ -955,7 +986,7 @@ public class CommonController extends Controller {
 
 		return ok(views.html.module.common.rebateDetail.render(rebate));
 	}
-	
+
 	/**
 	 * 用户详情
 	 * 
@@ -971,7 +1002,8 @@ public class CommonController extends Controller {
 			}
 		}
 
-		return ok(views.html.module.common.advertismentDetail.render(advertisment));
+		return ok(views.html.module.common.advertismentDetail
+				.render(advertisment));
 	}
 
 	/**
@@ -988,6 +1020,7 @@ public class CommonController extends Controller {
 		}
 		return ok(views.html.module.common.agentDetail.render(agent));
 	}
+
 	/**
 	 * 课程类型详情
 	 * 
@@ -1008,7 +1041,7 @@ public class CommonController extends Controller {
 		}
 		return ok(views.html.module.common.courseTypeDetail.render(courseType));
 	}
-	
+
 	/**
 	 * 学员感言详情
 	 * 
@@ -1027,9 +1060,10 @@ public class CommonController extends Controller {
 				studentWords = StudentWords.find(id);
 			}
 		}
-		return ok(views.html.module.common.studentWordsDetail.render(studentWords));
+		return ok(views.html.module.common.studentWordsDetail
+				.render(studentWords));
 	}
-	
+
 	/**
 	 * 留言页面
 	 * 
@@ -1039,7 +1073,8 @@ public class CommonController extends Controller {
 		boolean isAddNew = FormHelper.isAddNew(form().bindFromRequest());
 
 		if (isAddNew) {
-			Page<Message> msg = Message.findPage(form().bindFromRequest(), 1, 5);
+			Page<Message> msg = Message
+					.findPage(form().bindFromRequest(), 1, 5);
 			return ok(views.html.module.platform.contact_us.render(msg));
 		}
 
@@ -1052,40 +1087,46 @@ public class CommonController extends Controller {
 		Page<Message> msg = Message.findPage(form().bindFromRequest(), 1, 5);
 		return ok(views.html.module.platform.contact_us.render(msg));
 	}
-	
+
 	/**
 	 * 打开修改密码页面
+	 * 
 	 * @return
 	 */
-	public static Result pageChangePasswordWithoutAuth(){
+	public static Result pageChangePasswordWithoutAuth() {
 		User user = LoginController.getSessionUser();
-		if(user != null){
-			return ok(views.html.module.common.changePasswordWithoutAuth.render(user));
+		if (user != null) {
+			return ok(views.html.module.common.changePasswordWithoutAuth
+					.render(user));
 		}
 		return badRequest(Constants.MSG_NOT_LOGIN);
 	}
-	
+
 	/**
 	 * 修改用户密码，非认证方式
+	 * 
 	 * @param user
 	 * @return
 	 */
-	public static Result updatePasswordWithoutAuth(){
+	public static Result updatePasswordWithoutAuth() {
 		User user = LoginController.getSessionUser();
-		if(user != null){
+		if (user != null) {
 			DynamicForm form = form().bindFromRequest();
 			String oPassword = FormHelper.getString(form, "opassword");
 			String nPassword = FormHelper.getString(form, "npassword");
 			String rPassword = FormHelper.getString(form, "rpassword");
-			
-			if(StringHelper.isValidate(oPassword) && User.buildPassword(oPassword).equals(user.password)){//老密码正确
-				if(StringHelper.isValidate(nPassword) && StringHelper.isValidate(rPassword) && nPassword.equals(rPassword)){//新密码，重复密码一致
+
+			if (StringHelper.isValidate(oPassword)
+					&& User.buildPassword(oPassword).equals(user.password)) {// 老密码正确
+				if (StringHelper.isValidate(nPassword)
+						&& StringHelper.isValidate(rPassword)
+						&& nPassword.equals(rPassword)) {// 新密码，重复密码一致
 					user.password = User.buildPassword(nPassword);
 					user.save();
 					LoginController.updateSession(user);
-					return ok(Constants.MSG_SUCCESS);//成功
+					return ok(Constants.MSG_SUCCESS);// 成功
 				} else {
-					return badRequest(Constants.MSG_PASSWORD_NOT_SAME);//两次密码不一致
+					return badRequest(Constants.MSG_PASSWORD_NOT_SAME);// 两次密码不一致
 				}
 			} else {
 				return badRequest(Constants.MSG_OLD_PASSWORD_ERROR);
