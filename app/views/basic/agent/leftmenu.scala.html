@@ -113,6 +113,10 @@ function getAgentPage(li, url, data){
   	 var dialog = '#dialogModal_' + id;
      $(dialog).modal();
   }
+  function showConfirm(id){
+		var dialog = '#dialogModal_' + id;
+     $(dialog).modal();
+	}
   
 	function doDeleteEntity(id, data){
      ajaxDelete("/common/delete", data, "POST", "#content");
@@ -131,7 +135,7 @@ function getAgentPage(li, url, data){
 	<li id="useTemplate" onclick="getTemplatePage(this, 'useTemplate')"><a href="#">使用模板</a></li>
 	<li><a href="#" onclick="getAgentPage(this, 'agentCourses')">查看代理课程</a></li>
 	<li><a href="#"  onclick="getAgentPage(this, 'allCourse')">申请代理课程</a></li>
-	<li><a href="#">选择辅助功能</a></li>
+	<li><a href="#"  onclick="getAgentPage(this, 'agentDomain')">域名管理</a></li>
 	<li><a href="#">管理模板</a></li>
 	<li><a href="#">查看返点奖励</a></li>
 	<li><a href="#">管理培训项目</a></li>

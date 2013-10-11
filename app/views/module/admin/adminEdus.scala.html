@@ -45,7 +45,7 @@ $('#toolbar').tooltip(options);
 
 <div class="pull-left" style="width:130px;">
 	<div class="btn-group" id="toolbar">
-		@if(edu.creator.audit != null && edu.creator.audit.status != Audit.STATUS_SUCCESS){
+		@if(edu.creator != null && edu.creator.audit != null && edu.creator.audit.status != Audit.STATUS_SUCCESS){
 			<a class="btn btn-success" data-toggle="审核通过" href="#"><i	class="icon-ok icon-white"></i></a>
 			<a class="btn btn-info"	data-toggle="拒绝通过" href="#"><i class="icon-ban-circle icon-white"></i></a>
 		} else {

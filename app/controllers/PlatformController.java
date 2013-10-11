@@ -41,7 +41,12 @@ public class PlatformController extends BaseController {
 	private static final String PAGE_PLATFORM_ADV2= "platformAdv2";//侧栏连接广告
 	private static final String PAGE_USER_ENROLL = "pageUserEnroll";//用户报名课程
 	private static final String PAGE_EDUCATION2= "platformEducation2";//教育机构广告
-//	private static final String PAGE_CONTACT_US= "contact_us";//教育机构广告
+	private static final String PAGE_REG_AGENT  = "regAgent";//代理人注册
+ 	private static final String PAGE_REG_EDUCATION  = "regEducation";//教育机构注册
+ 	private static final String PAGE_EDUINST_LIST= "eduInstList";//
+ 	private static final String PAGE_EDUINST_INTRODUCTION= "eduInstIntroduction";//
+
+
 	/**
 	 * get a page
 	 * @param page
@@ -111,7 +116,15 @@ public class PlatformController extends BaseController {
 			return pageEducation2();
 		}else if(PAGE_USER_ENROLL.equalsIgnoreCase(page)){
 			return pageUserEnroll();
-		}
+		}else if (PAGE_REG_AGENT.equalsIgnoreCase(page)) {// 
+			return pageRegAgent();
+		}else if (PAGE_REG_EDUCATION.equalsIgnoreCase(page)) {// 
+			return pageRegEducations();
+		}else if(PAGE_EDUINST_LIST.equalsIgnoreCase(page)){
+			return pageEduInstList();
+		}else if(PAGE_EDUINST_INTRODUCTION.equalsIgnoreCase(page)){
+			return pageEduInstIntroduction();
+  		}
 		else {
 			return ok(views.html.module.platform.index.render());
 		}
@@ -529,6 +542,73 @@ public class PlatformController extends BaseController {
 			}
 		}
 		return internalServerError(Constants.MSG_INTERNAL_ERROR);
+	}
+
+	/**
+	* 教育机构列表
+	*
+	**/
+	public static Result pageEduInstList(){
+		play.Logger.error(form().bindFromRequest().get("page"));
+		// get page
+		int page = FormHelper.getPage(form().bindFromRequest());
+
+		Page<EducationInstitution> eduInst = EducationInstitution.findPage(form().bindFromRequest(), page,
+				null);
+ 
+		FormHelper.resetFlash(form().bindFromRequest(), flash());
+		
+		return ok(views.html.module.platform.eduInstList.render(eduInst));
+	}
+	
+	/**
+	* 教育机构介绍
+	*
+	**/
+	public static Result pageEduInstIntroduction(){
+		Long id = FormHelper.getLong(form().bindFromRequest(), "id");
+		EducationInstitution eduInst = null;
+		if (id != null) {
+			eduInst = EducationInstitution.find(id);
+		}
+		
+		// get page
+		int page = FormHelper.getPage(form().bindFromRequest());
+		Page<Course> course = Course.findPageByEducation(eduInst,form(),page,10);
+		
+		FormHelper.resetFlash(form().bindFromRequest(), flash());
+		
+		return ok(views.html.module.platform.eduInstIntroduction.render(eduInst, course));
+	}
+	/**
+	 * 代理人注册
+	 * 
+	 * @return
+	 */
+	public static Result pageRegAgent() {
+		play.Logger.error(form().bindFromRequest().get("page"));
+		User user =  LoginController.getSessionUser();
+		if(user == null){
+			return badRequest(Constants.MSG_NOT_LOGIN);
+		}
+		long id  = (long)2;
+		Contract contract = Contract.find(id);
+		return ok(views.html.module.platform.regAgent.render(contract));
+	}
+	/**
+	 * 教育机构注册
+	 * 
+	 * @return
+	 */
+	public static Result pageRegEducations() {
+		play.Logger.error(form().bindFromRequest().get("page"));
+		User user =  LoginController.getSessionUser();
+		if(user == null){
+			return badRequest(Constants.MSG_NOT_LOGIN);
+		}
+		long id  = (long)1;
+		Contract contract = Contract.find(id);
+		return ok(views.html.module.platform.regEducation.render(contract));		
 	}
 
 }
