@@ -82,7 +82,7 @@ $('#toolbar').tooltip(options);
 				<tr>
 					<td>@model.id</td>
 					@if(model != null){
-						<td>@model.name</td>
+						<td><a href="#" onclick="getCommonPage(this, 'agentDetail', 'id=@model.id');">@model.name</a></td>
 					} else {
 						<td>-未设置-</td>
 					}

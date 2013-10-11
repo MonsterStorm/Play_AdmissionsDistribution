@@ -21,10 +21,8 @@ function getPlatformPage(li, url, data){
 					<h2>讲师列表</h2>
 					@for(model <- models.getList()){
 						<a href="#" onclick="getPlatformPage(this, 'teacherDetail', 'id=@model.id');">@model.user.basicInfo.realname</a>
-						<span>
+						<p style="margin-top:8px;">
 							@model.field
-						</span>
-						
 						</p>
 					}
 					@paging(models, {baseUrl}, "platform")

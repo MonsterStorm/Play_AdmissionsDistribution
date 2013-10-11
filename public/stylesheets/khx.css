@@ -60,6 +60,7 @@
 /*学员感言外层div样式*/
 .speak{
 	margin:10px 0 5px 0;
+	clear:both;
 }
 /*左侧栏子模块样式结束*/
 
@@ -173,6 +174,9 @@
 
 .teacher-desc{
 	width: 100px;
+	height:85px;
+	text-overflow:ellipsis;
+	overflow:hidden;
 }
 
 #qqbox {
