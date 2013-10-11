@@ -12,6 +12,7 @@ File Encoding         : 65001
 
 Date: 2013-10-10 22:44:57
 */
+use  admissions_distribution;
 
 SET FOREIGN_KEY_CHECKS=0;
 

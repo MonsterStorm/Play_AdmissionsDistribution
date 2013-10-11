@@ -30,11 +30,12 @@ function getPlatformPage(li, url, data){
 				<div class="ym-gbox-left">
 				
 					<h2>教育机构列表</h2>
-					<div>
+					<div style="width:95%;">
 						<ul>
 							@for(item <- eduInst.getList()){
-								<li><span style="margin-right:200px;">@item.name</span>
-								<a href="#" onclick="getPlatformPage(this, 'eduInstIntroduction', 'id=@item.id');">详细信息</a></li>
+								<li style="line-height:30px;"><span>@item.name</span>
+								<a href="#" onclick="getPlatformPage(this, 'eduInstIntroduction', 'id=@item.id');" style="float:right;">
+								详细信息</a></li>
 							}
 						</ul>
 							@paging(eduInst, {baseUrl}, "platform")
