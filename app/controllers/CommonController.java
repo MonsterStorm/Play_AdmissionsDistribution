@@ -7,12 +7,14 @@ import java.util.*;
 import models.*;
 import play.data.*;
 import play.mvc.*;
+import play.mvc.Http.Context;
 import play.mvc.Http.MultipartFormData;
 import play.mvc.Http.MultipartFormData.FilePart;
 
 import com.avaje.ebean.*;
 import common.*;
 import common.FileHelper.ErrorType;
+import common.FormValidator.Type;
 
 import controllers.secure.*;
 
@@ -367,8 +369,20 @@ public class CommonController extends Controller {
 	 * add or update instructor
 	 * 
 	 * @return
+	 * @throws SecurityException 
+	 * @throws NoSuchMethodException 
 	 */
+	@FormValidators(values={
+		@FormValidator(name="name", validateType=Type.REQUIRED, msg="代理人名不能为空"),
+		@FormValidator(name="contact", validateType=Type.REQUIRED, msg="联系人信息不能为空")
+	})
 	public static Result addOrUpdateAgent() {
+		String msg = Validator.check(CommonController.class, "addOrUpdateAgent");
+		if(msg != null){
+			return badRequest(msg);
+		}
+		
+		play.Logger.debug("addOrUpdateAgent");
 		Form<Agent> form = form(Agent.class).bindFromRequest();
 		if (form != null && form.hasErrors() == false) {
 			Agent agent = Agent.addOrUpdate(form.get());
