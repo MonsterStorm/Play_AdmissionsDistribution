@@ -34,6 +34,8 @@ public class TeacherController extends BaseController {
 	private static final String PAGE_TEACHER_ENROLL_INFO = "teacherEnrollInfo";//学员报名信息
 	private static final String PAGE_COURSE_DETAIL = "courseDetail";//返回课程信息
 	private static final String PAGE_TEACHER_COURSE_INFO ="teacherCourseInfo";//讲师课程信息
+	private static final String PAGE_TEACHER_DOMAIN  = "teacherDomain";
+	private static final String PAGE_DOMAIN_DETAIL  = "domainDetail";
 	/**
 	 * teacher pages
 	 * 
@@ -57,6 +59,10 @@ public class TeacherController extends BaseController {
 			return pageTeacherCourses();
 		}  else if(PAGE_COURSE_DETAIL.equalsIgnoreCase(page)){
 			return pageCourseDetail(null);
+		}else if (PAGE_TEACHER_DOMAIN.equalsIgnoreCase(page)) {// 
+			return pageTeacherDomain();
+		} else if (PAGE_DOMAIN_DETAIL.equalsIgnoreCase(page)) {// 
+			return pageDomainDetail(null);
 		}else {
 			return badRequest("页面不存在");
 		}
@@ -156,6 +162,8 @@ public class TeacherController extends BaseController {
 			return addOrUpdateTeacher();
 		}if (Course.TABLE_NAME.equalsIgnoreCase(table)) {// 课程信息更新或添加
 			return addOrUpdateCourse();
+		}if (Domain.TABLE_NAME.equalsIgnoreCase(table)) {// 代理人更新或添加
+			return addOrUpdateDomain();
 		}
 		 else {
 			return badRequest(Constants.MSG_PAGE_NOT_FOUND);
@@ -270,5 +278,81 @@ public class TeacherController extends BaseController {
 		}
 		return internalServerError(Constants.MSG_INTERNAL_ERROR);
 	}
+
+	/**
+	 * add or update instructor
+	 * 
+	 * @return
+	 */
+	public static Result addOrUpdateDomain() {
+		User user = LoginController.getSessionUser();
+		if (user == null) {
+			return badRequest(Constants.MSG_NOT_LOGIN);
+		}
+		if(user.instructor == null){
+			return badRequest(Constants.MSG_TEACHER_NOT_EXIST);
+		}
+
+		Form<Domain> form = form(Domain.class).bindFromRequest();
+		if (form != null && form.hasErrors() == false) {
+			String str = FormHelper.getString(form().bindFromRequest(),"domain");
+
+			Domain domain = Domain.findByDomain(str);
+			if(domain != null  ){
+				return badRequest(Constants.MSG_DOMAIN_EXIST); 
+			}
+			Domain newDomain = new Domain();
+			newDomain.id = FormHelper.getLong(form().bindFromRequest(),"id");
+			newDomain.domain = FormHelper.getString(form().bindFromRequest(),"domain");
+			newDomain.instructor = user.instructor;
+			Domain dom = Domain.addOrUpdate(newDomain);
+			if(dom!=null){
+				return ok(views.html.module.teacher.domainDetail.render(dom));
+			}
+
+		} else if (form.hasErrors()) {
+			String error = FormHelper.getFirstError(form.errors());
+			play.Logger.debug("error:" + error);
+			if (error != null) {
+				return badRequest(error);
+			}
+		}
+		return internalServerError(Constants.MSG_INTERNAL_ERROR);
+	}
+
+	/**
+	 * 域名
+	 * 
+	 * @return
+	 */
+	public static Result pageTeacherDomain() {
+		play.Logger.error(form().bindFromRequest().get("page"));
+		int page = FormHelper.getPage(form().bindFromRequest());
+		User user =  LoginController.getSessionUser();
+		if(user == null){
+			return badRequest(Constants.MSG_NOT_LOGIN);
+		}
+		Page<Domain> domain  = Domain.findPageByTeacher(user.instructor,form().bindFromRequest(),page,null);
+		return ok(views.html.module.teacher.teacherDomain.render(domain));
+		
+	}
+
+	/**
+	 * 域名详情
+	 * 
+	 * @return
+	 */
+	public static Result pageDomainDetail(Domain domain) {
+		if (domain == null) {
+			Long id = FormHelper.getLong(form().bindFromRequest(), "id");
+			if (id != null) {
+				domain = Domain.find(id);
+			}
+		}
+		return ok(views.html.module.teacher.domainDetail.render(domain));
+	}
+
+
+
 
 }

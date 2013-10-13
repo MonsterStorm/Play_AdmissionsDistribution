@@ -23,6 +23,7 @@ public class Constants {
 	public static final String MSG_COURSE_AGENTED = "已代理该课程";
 	public static final String MSG_COURSE_REGED = "已有一个申请";
 	public static final String MSG_DOMAIN_EXIST = "域名已存在";
+	public static final String MSG_NOT_USER_EDUCATION = "教育机构与用户不匹配";
 	
 	//文件
 	public static final String MSG_FILE_TOO_LARGE = "文件太大"; // 文件太大
@@ -37,6 +38,9 @@ public class Constants {
 	
 	//分页大小
 	public static final int PAGE_SIZE = 10;
+
+	//模板类型对应角色
+	public static final String TEMPLATE_TYPE_AGENT = "1";
 	
 	
 	//----------------------------------表单错误提示-----------------------------

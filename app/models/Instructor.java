@@ -26,6 +26,9 @@ public class Instructor extends Model {
 	@Id
 	public Long id;
 
+	@OneToMany(cascade=CascadeType.ALL)
+	public List<Domain> domain;//  讲师对应的域名信息，一个讲师对应多个域名，一个域名隶属于一个讲师（也可以没有讲师）
+
 	@OneToOne
 	public User user;// 讲师对应的用户，一个用户只能对应一个讲师，一个讲师只能对应一个用户
 

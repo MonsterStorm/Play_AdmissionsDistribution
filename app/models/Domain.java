@@ -32,6 +32,12 @@ public class Domain extends Model {
 	@ManyToOne
 	public Agent agent;// 代理机构，一个域名拥有一个代理人（也可以没有），一个代理人可以有多个域名
 
+	@ManyToOne
+	public EducationInstitution edu;// 教育机构，一个域名拥有一个教育机构（也可以没有），一个教育机构可以有多个域名
+
+	@ManyToOne
+	public Instructor instructor;// 讲师，一个域名拥有一个讲师（也可以没有），一个讲师可以有多个域名
+
 	// -- 查询
 	public static Model.Finder<Long, Domain> finder = new Model.Finder(
 			Long.class, Domain.class);
@@ -121,5 +127,34 @@ public class Domain extends Model {
 		datas.put("agentId", agent.id.toString());
 		form = form.bind(datas);
 		return new QueryHelper<Domain>(finder, form).addEq("agent.id", "agentId", Long.class).findPage(page, pageSize);
+	}
+
+	/**
+	 * find page with filter
+	 * 
+	 * @param page
+	 * @param form
+	 * @return
+	 */
+	public static Page<Domain> findPageByEducationUser(User  user, DynamicForm form, int page, Integer pageSize) {
+		Map<String, String> datas = form.data();
+		datas.put("creatorId", user.id.toString());
+		form = form.bind(datas);
+		return new QueryHelper<Domain>(finder, form).addEq("edu.creator.id", "creatorId", Long.class).addOrderBy("orderby").findPage(page, pageSize);
+//		return new QueryHelper<Course>(finder, form).addEqual("edu.creator.id", user.id.toString(), Long.class).addOrderBy("orderby").findPage(finder, form, page, pageSize);
+	}
+
+	/**
+	 * find page with filter
+	 * 
+	 * @param page
+	 * @param form
+	 * @return
+	 */
+	public static Page<Domain> findPageByTeacher(Instructor instructor, DynamicForm form, int page, Integer pageSize) {
+		Map<String, String> datas = form.data();
+		datas.put("instructorId", instructor.id.toString());
+		form = form.bind(datas);
+		return new QueryHelper<Domain>(finder, form).addEq("instructor.id", "instructorId", Long.class).findPage(page, pageSize);
 	}
 }
