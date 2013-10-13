@@ -84,26 +84,26 @@ $('#toolbar').tooltip(options);
 					@if(model != null){
 						<td><a href="#" onclick="getCommonPage(this, 'agentDetail', 'id=@model.id');">@model.name</a></td>
 					} else {
-						<td>-未设置-</td>
+						<td>-</td>
 					}
 					
 					@if(model != null){
 						<td>@model.contact</td>
 					} else {
-						<td>-未设置-</td>
+						<td>-</td>
 					}				
 					
 
 					@if(model != null){
 						<td>@model.info</td>	
 					} else {
-						<td>-未设置-</td>
+						<td>-</td>
 					}
 					
 					@if(model != null && model.audit != null){
 						<td>@datetime_formatter(model.audit.createTime, true)</td>
 					} else {
-						<td>-未设置-</td>
+						<td>-</td>
 					}
 					<td>@toolbar(model)</td>
 				</tr>

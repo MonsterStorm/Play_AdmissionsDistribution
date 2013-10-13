@@ -26,7 +26,7 @@ public class Instructor extends Model {
 	@Id
 	public Long id;
 
-	@OneToOne
+	@OneToOne(cascade=CascadeType.ALL)
 	public User user;// 讲师对应的用户，一个用户只能对应一个讲师，一个讲师只能对应一个用户
 
 	@OneToMany(mappedBy = "instructor")
@@ -38,7 +38,7 @@ public class Instructor extends Model {
 	// 其他属性字段
 	public String jobTitle;// 职称
 
-	@OneToOne
+	@OneToOne(cascade=CascadeType.ALL)
 	public Audit audit;// 审核状态
 
 	public Long createTime;// 创建时间
@@ -96,12 +96,13 @@ public class Instructor extends Model {
 	 * @return
 	 */
 	public static Instructor addOrUpdate(Instructor instructor) {
-		play.Logger.debug(TAG + ".addOrUpdate: id=" + instructor.id + ", name="	+ instructor.jobTitle);
 		if (instructor != null) {
 			if (instructor.id == null) {// 新增
-				User user = LoginController.getSessionUser();//创建用户必须是当前用户
-				instructor.user = user;
+				if(instructor.user != null){
+					User.updateRandomUserForInstructor(instructor, Role.ROLE_INSTRUCTOR, Audit.STATUS_SUCCESS);
+				}
 				instructor.id = finder.nextId();
+				instructor.createTime = System.currentTimeMillis();
 				instructor.save();
 			} else {// 更新
 				instructor.update();

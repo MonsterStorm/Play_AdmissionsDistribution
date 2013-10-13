@@ -79,31 +79,31 @@ $('#toolbar').tooltip(options);
 					@if(model.user != null){
 						<td><a href="#" onclick="getCommonPage(this, 'studentDetail', 'id=@model.id');">@model.user.nickname</a></td>
 					} else {
-						<td>-未设置-</td>
+						<td>-</td>
 					}
 					
 					@if(model.position != null){
 						<td>@model.position</td>
 					} else {
-						<td>-未设置-</td>
+						<td>-</td>
 					}
 					
 					@if(model.companyName != null){
 						<td>@model.companyName</td>
 					} else {
-						<td>-未设置-</td>
+						<td>-</td>
 					}
 					
 					@if(model.enrolls != null && model.enrolls.size() > 0 && model.enrolls(0).enrollDomain != null){
 						<td>@model.enrolls(0).enrollDomain</td>
 					} else {
-						<td>-未设置-</td>
+						<td>-</td>
 					}
 					
 					@if(model.enrolls != null && model.enrolls.size() > 0 && model.enrolls(0).enrollTime != null){
 						<td>@datetime_formatter(model.enrolls(0).enrollTime, true)</td>
 					} else {
-						<td>-未设置-</td>
+						<td>-</td>
 					}
 					<td>@toolbar(model)</td>
 				</tr>

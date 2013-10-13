@@ -12,8 +12,8 @@
 	</div>
 	<div class="btn-toolbar pull-right" role="toolbar">
 		<div class="btn-group">
-			<a class="btn btn-success" data-toggle="新增" href="#"><i
-				class="icon-plus icon-white" onclick="getCommonPage(this, 'templateTypeDetail', 'addNew=true');"></i>新增</a>
+			<a class="btn btn-success" data-toggle="新增" href="#" onclick="getCommonPage(this, 'templateTypeDetail', 'addNew=true');"><i
+				class="icon-plus icon-white"></i>新增</a>
 		</div>
 		<div class="btn-group">
 			<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
@@ -33,13 +33,16 @@
 <!-- <script type="text/javascript">
 $('#toolbar').tooltip(options);
 </script> -->
+
+@dialogDelete("删除系统模板", TemplateType.TABLE_NAME, templateType.id){确定删除&nbsp;<b style="font-size:x-large;color:red">@templateType.name</b>&nbsp;？}
+
 <div class="pull-left" style="width:130px;">
 	<div class="btn-group" id="toolbar">
 		<a class="btn btn-info" data-toggle="修改" href="#" onclick="getCommonPage(this, 'templateTypeDetail', 'id=@templateType.id');"><i
 			class="icon-edit icon-white"></i></a>
 	</div>
 	<div class="btn-group">
-		<a class="btn btn-danger" data-toggle="删除，请谨慎操作！" href="#"><i
+		<a class="btn btn-danger" data-toggle="删除，请谨慎操作！" href="#" onclick="doDelete(@templateType.id)"><i
 			class="icon-remove icon-white"></i></a>
 	</div>
 </div>
@@ -67,18 +70,18 @@ $('#toolbar').tooltip(options);
 					@if(model.name != null){
 						<td>@model.name</td>
 					} else {
-						<td>-未设置-</td>
+						<td>-</td>
 					}
 					@if(model.info){
 						<td>@model.info</td>
 					} else {
-						<td>-未设置-</td>
+						<td>-</td>
 					}
 					
 					@if(model.logo){
 						<td><img id="myImgPreview" class="img-rounded" alt="40x40" style="width: 40px; height: 40px;" src="@routes.Assets.at("/datas/default/templates", {model.logo})"></td>
 					} else {
-						<td>-未设置-</td>
+						<td>-</td>
 					}
 					
 					
@@ -86,7 +89,7 @@ $('#toolbar').tooltip(options);
 					@if(model != null && model.lastModified != null){
 						<td>@datetime_formatter(model.lastModified, true)</td>
 					} else {
-						<td>-未设置-</td>
+						<td>-</td>
 					}
 					<td>@toolbar(model)</td>
 				</tr>

@@ -52,7 +52,7 @@ public @interface FormValidator {
 		RANGE// 范围
 	};
 
-	public static final String REGEX_PHONE = "(\\d{4}-|\\d{3}-)?(\\d{8}|\\d{7})";
+	public static final String REGEX_PHONE = "((13[0-9])|(15[0-9])|(18[0-9]))\\d{8}";
 	public static final String REGEX_EMAIL = "\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*";
 	public static final String REGEX_NUMBER = "-?\\d+";
 }

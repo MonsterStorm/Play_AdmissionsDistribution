@@ -86,27 +86,27 @@ $('#toolbar').tooltip(options);
 					@if(model.name != null){
 						<td><a href="#" onclick="getEducationPage(this, 'courseDetail', 'id=@model.id');">@model.name</a></td>
 					} else {
-						<td>-未设置-</td>
+						<td>-</td>
 					}
 					@if(model.courseType != null){
 						<td>@model.courseType.name</td>
 					} else {
-						<td>-未设置-</td>
+						<td>-</td>
 					}
 					@if(model.edu != null){
 						<td><a href="#" onclick="getEducationPage(this, 'educationInfo', 'id=@model.edu.id');">@model.edu.name</a></td>
 					} else {
-						<td>-未设置-</td>
+						<td>-</td>
 					}
 					@if(model.startTime != null){
 						<td>@datetime_formatter(model.startTime, true)</td>
 					} else {
-						<td>-未设置-</td>
+						<td>-</td>
 					}
 					@if(model.info != null){
 						<td>@model.info</td>
 					} else {
-						<td>-未设置-</td>
+						<td>-</td>
 					}
 					<td>@toolbar(model)</td>
 				</tr>

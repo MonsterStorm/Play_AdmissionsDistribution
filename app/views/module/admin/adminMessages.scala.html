@@ -77,22 +77,22 @@ $('#toolbar').tooltip(options);
 					@if(model.name != null){
 						<td>@model.name</td>
 					} else {
-						<td>-未设置-</td>
+						<td>-</td>
 					}
 					@if(model.title != null){
 						<td>@model.title</td>
 					} else {
-						<td>-未设置-</td>
+						<td>-</td>
 					}
 					@if(model.content != null){
 						<td>@model.content</td>
 					} else {
-						<td>-未设置-</td>
+						<td>-</td>
 					}
 					@if(model.time != null){
 						<td>@datetime_formatter(model.time, true)</td>
 					} else {
-						<td>-未设置-</td>
+						<td>-</td>
 					}
 					<td>@toolbar(model)</td>
 				</tr>

@@ -77,7 +77,6 @@ public class TemplateController extends Controller {
 	 * 
 	 * @return
 	 */
-	
 	public static Result pageUseTemplate() {
 		// get page
 		int page = FormHelper.getPage(form().bindFromRequest());

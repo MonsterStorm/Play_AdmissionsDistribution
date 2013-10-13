@@ -57,8 +57,22 @@ public class TemplateType extends Model {
 	public static TemplateType find(Long id) {
 		return finder.where().eq("id", id).findUnique();
 	}
-	
-	
+
+	/**
+	 * delete an edu
+	 * 
+	 * @param form
+	 * @return
+	 */
+	public static TemplateType delete(Long id) {
+		TemplateType templateType = find(id);
+		if (templateType != null) {
+			templateType.delete();
+			return templateType;
+		}
+		return null;
+	}
+
 	/**
 	 * find page with filter
 	 * 
@@ -66,34 +80,40 @@ public class TemplateType extends Model {
 	 * @param form
 	 * @return
 	 */
-	public static Page<TemplateType> findPage(DynamicForm form, int page, Integer pageSize) {
-		return new QueryHelper<TemplateType>().findPage(finder, form, page, pageSize);
+	public static Page<TemplateType> findPage(DynamicForm form, int page,
+			Integer pageSize) {
+		return new QueryHelper<TemplateType>().findPage(finder, form, page,
+				pageSize);
 	}
-	
+
 	/**
 	 * add or update
+	 * 
 	 * @param form
 	 * @param logo
 	 * @return
 	 */
-	public static TemplateType addOrUpdate(TemplateType templateType, FilePart fileLogo){
+	public static TemplateType addOrUpdate(TemplateType templateType,
+			FilePart fileLogo) {
 		if (templateType != null) {
-			
+
 			if (fileLogo != null) {
-				String logo = FileHelper.saveDefaultTemplateTypeLogo(String.valueOf(templateType.id), fileLogo);
+				String logo = FileHelper.saveDefaultTemplateTypeLogo(
+						String.valueOf(templateType.id), fileLogo);
 				templateType.logo = logo;
 			} else {
-				if(templateType.id != null){//更新，不更新logo
+				if (templateType.id != null) {// 更新，不更新logo
 					TemplateType oldType = TemplateType.find(templateType.id);
-					templateType.logo = oldType.logo;//不更新logo
+					templateType.logo = oldType.logo;// 不更新logo
 				}
 			}
-			
+
 			if (templateType.id == null) {// 新增
 				templateType.lastModified = System.currentTimeMillis();
 				templateType.save();
-				templateType.url = FileHelper.PATH_TEMPLATES_DEFAULT + templateType.id + File.separator;
-				templateType.update();//更新一下链接
+				templateType.url = FileHelper.PATH_TEMPLATES_DEFAULT
+						+ templateType.id + File.separator;
+				templateType.update();// 更新一下链接
 			} else {// 更新
 				templateType.lastModified = System.currentTimeMillis();
 				templateType.update();

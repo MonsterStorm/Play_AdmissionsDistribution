@@ -55,38 +55,38 @@
 					@if(model.course != null){
 						<td>@model.course.name</td>
 					} else {
-						<td>-未设置-</td>
+						<td>-</td>
 					}
 					
 					@if(model.course != null){
 						<td>@datetime_formatter(model.course.startTime, true)</td>
 					} else {
-						<td>-未设置-</td>
+						<td>-</td>
 					}
 					
 					@if(model.course !=null){
 						<td>@model.course.money
 						</td>
 					} else {
-						<td>-未设置-</td>
+						<td>-</td>
 					}
 
 					@if(model.enrollTime != null){
 						<td>@datetime_formatter(model.enrollTime, true)</td>
 					} else {
-						<td>-未设置-</td>
+						<td>-</td>
 					}
 
 					@if(model.fromAgent != null){
 						<td>@model.fromAgent.name</td>
 					} else {
-						<td>-未设置-</td>
+						<td>-</td>
 					}
 
 					@if(model.edu != null){
 						<td>@model.edu.name</td>
 					} else {
-						<td>-未设置-</td>
+						<td>-</td>
 					}
 
 					
@@ -100,10 +100,10 @@
 						} else if (model.auditOfAgent.status == Audit.STATUS_DISABLED){
 							<td>禁用</td>
 						} else {
-							<td>-未设置-</td>
+							<td>-</td>
 						}
 					} else {
-						<td>-未设置-</td>
+						<td>-</td>
 					}
 
 					@if(model != null && model.auditOfEdu != null && model.auditOfEdu.status != null){
@@ -116,10 +116,10 @@
 						} else if (model.auditOfEdu.status == Audit.STATUS_DISABLED){
 							<td>禁用</td>
 						} else {
-							<td>-未设置-</td>
+							<td>-</td>
 						}
 					} else {
-						<td>-未设置-</td>
+						<td>-</td>
 					}
 
 					<td>@toolbar(model)</td>

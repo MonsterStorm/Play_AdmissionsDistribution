@@ -3,8 +3,7 @@ package common;
 import static play.data.Form.form;
 
 import java.lang.reflect.*;
-
-import play.mvc.*;
+import java.util.regex.*;
 
 import common.FormValidator.Type;
 
@@ -87,6 +86,7 @@ public class Validator {
 			break;
 		}
 		case PHONE: {
+			
 			if (StringHelper.isValidate(value) == false
 					|| value.matches(FormValidator.REGEX_PHONE) == false) {
 				return configuration.msg();

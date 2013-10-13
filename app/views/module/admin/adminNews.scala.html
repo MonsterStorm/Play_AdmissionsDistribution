@@ -70,17 +70,17 @@ $('#toolbar').tooltip(options);
 					@if(model.title != null){
 						<td><a href="#" onclick="getCommonPage(this, 'newsDetail', 'id=@model.id');">@model.title</a></td>
 					} else {
-						<td>-未设置-</td>
+						<td>-</td>
 					}
 					@if(model.newsType != null){
 						<td>@model.newsType.name</td>
 					} else {
-						<td>-未设置-</td>
+						<td>-</td>
 					}
 					@if(model.time != null){
 						<td>@datetime_formatter(model.time, true)</td>
 					} else {
-						<td>-未设置-</td>
+						<td>-</td>
 					}
 					<td>@toolbar(model)</td>
 				</tr>

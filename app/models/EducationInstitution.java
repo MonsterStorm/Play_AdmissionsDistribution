@@ -26,7 +26,7 @@ public class EducationInstitution extends Model {
 	@Id
 	public Long id;
 
-	@ManyToOne(fetch=FetchType.EAGER)
+	@ManyToOne(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
 	public User creator;// 教育机构的创建者，一个创建者可以创建多个教育机构，一个教育机构只能被一个用户创建
 
 	public Long createTime;// 创建日期
@@ -37,7 +37,7 @@ public class EducationInstitution extends Model {
 	@OneToOne(cascade=CascadeType.ALL)
 	public Audit audit;//教育机构状态，状态在Audit类中
 	
-	@OneToOne
+	@OneToOne(cascade=CascadeType.ALL)
 	public Template template;//一个教育机构有一个专属推广页面
 	
 	// 其他属性字段
@@ -132,7 +132,7 @@ public class EducationInstitution extends Model {
 	 * add or update an education institution
 	 * @return
 	 */
-	public static EducationInstitution addOrUpdate(DynamicForm form){
+	/*public static EducationInstitution addOrUpdate(DynamicForm form){
 		final String id = form.get("id");
 		final String name = form.get("name");
 		final String info = form.get("info");
@@ -154,7 +154,7 @@ public class EducationInstitution extends Model {
 		edu.createTime = System.currentTimeMillis();
 		edu.save();
 		return edu;
-	}
+	}*/
 
 	/**
 	 * add or update an education institution
@@ -163,8 +163,7 @@ public class EducationInstitution extends Model {
 	public static EducationInstitution addOrUpdate(EducationInstitution edu){
 		if (edu != null) {
 			if (edu.id == null) {// 新增
-				User user = LoginController.getSessionUser();//创建用户必须是当前用户
-				edu.creator = user;//绑定到当前用户
+				edu.creator = User.createUserForEdu(edu, Role.ROLE_EDU, Audit.STATUS_SUCCESS);//绑定到当前用户，为每个教育机构新建一个用户号
 				edu.id = finder.nextId();
 				edu.createTime = System.currentTimeMillis();
 				edu.save();

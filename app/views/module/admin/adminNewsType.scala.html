@@ -64,12 +64,12 @@ $('#toolbar').tooltip(options);
 					@if(model.name != null){
 						<td><a href="#" onclick="getCommonPage(this, 'newsTypeDetail', 'id=@model.id');">@model.name</a></td>
 					} else {
-						<td>-未设置-</td>
+						<td>-</td>
 					}
 					@if(model.info != null){
 						<td>@model.info</td>
 					} else {
-						<td>-未设置-</td>
+						<td>-</td>
 					}
 					<td>@toolbar(model)</td>
 				</tr>

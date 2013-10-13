@@ -50,17 +50,17 @@
 					@if(model.user != null){
 						<td><a href="#" onclick="getCommonPage(this, 'userDetail', 'id=@model.user.id');">@model.user.username</a></td>
 					} else {
-						<td>-未设置-</td>
+						<td>-</td>
 					}
 					@if(model.time != null){
 						<td>@datetime_formatter(model.time, true)</td>
 					} else {
-						<td>-未设置-</td>
+						<td>-</td>
 					}
 					@if(model.function != null){
 						<td>@model.function.name</td>
 					} else {
-						<td>-未设置-</td>					
+						<td>-</td>					
 					}
 				</tr>
 				}
