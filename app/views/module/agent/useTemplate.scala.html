@@ -1,0 +1,95 @@
+@(models: com.avaje.ebean.Page[TemplateType])
+@import basic.common._
+
+@baseUrl=@{
+	var url = "useTemplate";
+	url
+}
+@toolbar_header={
+<div class="row">
+	<div class="span2">
+		<h4>使用模板</h4>
+	</div>
+	<div class="btn-toolbar pull-right" role="toolbar">
+		<div class="btn-group">
+			<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+				排序 <span class="caret"></span>
+			</a>
+			<ul class="dropdown-menu">
+				<li class="@checkActive("orderby", "name-asc", true)"><a onclick="@buildAction({baseUrl}, "agent", Array("orderby"), Array("name-asc"))">按名称-升序</a></li>
+				<li class="@checkActive("orderby", "name-desc")"><a onclick="@buildAction({baseUrl}, "agent", Array("orderby"), Array("name-desc"))">按名称-降序</a></li>
+				<li class="@checkActive("orderby", "lastModified-asc")"><a onclick="@buildAction({baseUrl}, "agent", Array("orderby"), Array("lastModified-asc"))">按最近修改时间-升序</a></li>
+				<li class="@checkActive("orderby", "lastModified-desc")"><a onclick="@buildAction({baseUrl}, "agent", Array("orderby"), Array("lastModified-desc"))">按最近修改时间-降序</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+} 
+@toolbar(templateType: TemplateType)={
+<!-- <script type="text/javascript">
+$('#toolbar').tooltip(options);
+</script> -->
+
+@dialogConfirm("确定应用模板", templateType.id, String.valueOf("doUseTemplate(" + templateType.id + ", {id:" + templateType.id + "});")){
+	确定应用&nbsp;
+	<b style="font-size:x-large;color:red">
+	@{
+		if(templateType.name != null){
+			templateType.name
+		}
+	}
+	</b>&nbsp;？
+}
+
+<div class="pull-left" style="width:130px;">
+	<div class="btn-group" id="toolbar">
+		<a class="btn btn-info" data-toggle="使用" href="#" onclick="showConfirm(@templateType.id);"><i
+			class="icon-edit icon-white"></i></a>
+	</div>
+</div>
+} 
+
+@toolbar_header
+
+<div class="table-responsive">
+	<div style="overflow: auto">
+		<table class="table table-hover table-bordered table-striped">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>模板名称</th>
+					<th>模板简介</th>
+					<th>模板图片</th>
+					<th>操作</th> 
+				</tr>
+			</thead>
+			<tbody>
+				@for(model <- models.getList()){
+				<tr>
+					<td>@model.id</td>
+					@if(model.name != null){
+						<td>@model.name</td>
+					} else {
+						<td>-未设置-</td>
+					}
+					@if(model.info){
+						<td>@model.info</td>
+					} else {
+						<td>-未设置-</td>
+					}
+					
+					@if(model.logo){
+						<td><img id="myImgPreview" class="img-rounded" alt="40x40" style="width: 40px; height: 40px;" src="@routes.Assets.at("/datas/default/templates", {model.logo})"></td>
+					} else {
+						<td>-未设置-</td>
+					}
+					
+					<td>@toolbar(model)</td>
+				</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+</div>
+
+@paging(models, {baseUrl}, "admin")

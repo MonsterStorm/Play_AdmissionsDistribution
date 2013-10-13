@@ -26,6 +26,8 @@ public class TemplateType extends Model {
 
 	public String name;// 模板名称
 
+	public int type;// 模板类型  1 代理人 2教育机构 3讲师
+
 	@Lob
 	public String info;// 简介
 
@@ -86,6 +88,21 @@ public class TemplateType extends Model {
 				pageSize);
 	}
 
+	/**
+	 * find page with filter
+	 * 
+	 * @param page
+	 * @param form
+	 * @return
+	 */
+	public static Page<TemplateType> findAgentPage(Agent agent, DynamicForm form, int page, Integer pageSize) {
+		// Map<String, String> datas = form.data();
+		// datas.put("agentId", agent.id.toString());
+		// form = form.bind(datas);
+		return new QueryHelper<TemplateType>(finder, form).addEq("type", "1", Long.class).addOrderBy("orderby").findPage(page, pageSize);
+
+	}
+	
 	/**
 	 * add or update
 	 * 

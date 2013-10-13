@@ -35,6 +35,11 @@ function getAgentPage(li, url, data){
 		 }
 		 $('#' + url).addClass("active");
   }
+  function doUseTemplate(id, data){
+		ajaxBasic("/template/useAgent", data, "POST", "#content");
+		var dialog = '#dialogModal_' + id;
+    $(dialog).modal('hide');
+	}
   
   function changeValue(item, value){
       $(item).html(value);
@@ -132,7 +137,7 @@ function getAgentPage(li, url, data){
 	<li class="nav-header">代理人</li>
 	<li><a href="#">主页</a></li>
 	<li><a href="#" onclick="getAgentPage(this, 'agentInfo')">个人基本信息</a></li>
-	<li id="useTemplate" onclick="getTemplatePage(this, 'useTemplate')"><a href="#">使用模板</a></li>
+	<li id="useTemplate" onclick="getTemplatePage(this, 'useAgentTemplate')"><a href="#">使用模板</a></li>
 	<li><a href="#" onclick="getAgentPage(this, 'agentCourses')">查看代理课程</a></li>
 	<li><a href="#"  onclick="getAgentPage(this, 'allCourse')">申请代理课程</a></li>
 	<li><a href="#"  onclick="getAgentPage(this, 'agentDomain')">域名管理</a></li>

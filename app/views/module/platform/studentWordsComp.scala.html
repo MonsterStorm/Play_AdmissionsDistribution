@@ -12,7 +12,7 @@ function getPlatformPage(li, url, data){
 <div class="left-content">
 	@for(model <-models.getList()){
 	<div class="speak">
-		<b>@model.company @model.name</b><!--标题-学员姓名-->
+		<b style="margin-right:20px;">@model.company</b><b>@model.name</b><!--标题-学员姓名-->
 		<p style="font-size:smaller">@model.words</p>
 	</div>
 	}

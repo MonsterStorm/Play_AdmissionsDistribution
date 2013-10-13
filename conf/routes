@@ -45,6 +45,7 @@ GET		/admin/login				controllers.Application.admin()
 #Template page
 GET		/template/:page				controllers.TemplateController.page(page: String)
 POST	/template/use				controllers.TemplateController.useTemplate()
+POST	/template/useAgent			controllers.TemplateController.useAgentTemplate()
 
 # Common 
 POST    /common/update				controllers.CommonController.updateEntity()
