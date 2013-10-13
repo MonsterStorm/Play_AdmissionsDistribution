@@ -66,15 +66,15 @@ $('#toolbar').tooltip(options);
 					@if(model.name != null){
 						<td><a href="#" onclick="getCommonPage(this, 'studentWordsDetail', 'id=@model.id');">@model.name</a></td>
 					} else {
-						<td>-未设置-</td>
+						<td>-</td>
 					}@if(model.company != null){
 						<td>@model.company</td>
 					} else {
-						<td>-未设置-</td>
+						<td>-</td>
 					}@if(model.words != null){
 						<td>@model.words</td>
 					} else {
-						<td>-未设置-</td>
+						<td>-</td>
 					}
 					<td>@toolbar(model)</td>
 				</tr>

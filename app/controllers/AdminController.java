@@ -6,6 +6,7 @@ import play.mvc.*;
 
 import com.avaje.ebean.*;
 import common.*;
+import common.FormValidator.*;
 
 import controllers.LoginController.Login;
 import controllers.secure.*;

@@ -7,7 +7,6 @@ import java.util.*;
 import models.*;
 import play.data.*;
 import play.mvc.*;
-import play.mvc.Http.Context;
 import play.mvc.Http.MultipartFormData;
 import play.mvc.Http.MultipartFormData.FilePart;
 
@@ -156,6 +155,8 @@ public class CommonController extends Controller {
 			return deleteStudentWords();
 		} else if (Domain.TABLE_NAME.equalsIgnoreCase(table)) {// 学员感言删除
 			return deleteDomain();
+		} else if (TemplateType.TABLE_NAME.equalsIgnoreCase(table)) {// 模板类型删除
+			return deleteTemplateType();
 		} else {
 			return badRequest(Constants.MSG_PAGE_NOT_FOUND);
 		}
@@ -174,14 +175,29 @@ public class CommonController extends Controller {
 	 * 
 	 * @return
 	 */
+	@FormValidators(values = {
+			@FormValidator(name = "name", validateType = Type.REQUIRED, msg = "机构名称不能为空")
+	})
 	public static Result addOrUpdateEdu() {
-		EducationInstitution edu = EducationInstitution.addOrUpdate(form()
-				.bindFromRequest());
-		if (edu != null) {
-			return pageEduDetail(edu);
-		} else {
-			return internalServerError(Constants.MSG_INTERNAL_ERROR);
+		String msg = Validator.check(CommonController.class, "addOrUpdateEdu");
+		if (msg != null) {
+			return badRequest(msg);
 		}
+		
+		Form<EducationInstitution> form = form(EducationInstitution.class).bindFromRequest();
+		if (form != null && form.hasErrors() == false) {
+			EducationInstitution edu = EducationInstitution.addOrUpdate(form.get());
+			if (edu != null) {
+				return pageEduDetail(edu);
+			}
+		} else if (form.hasErrors()) {
+			String error = FormHelper.getFirstError(form.errors());
+			play.Logger.debug("error:" + error);
+			if (error != null) {
+				return badRequest(error);
+			}
+		}
+		return internalServerError(Constants.MSG_INTERNAL_ERROR);
 	}
 
 	/**
@@ -189,9 +205,32 @@ public class CommonController extends Controller {
 	 * 
 	 * @return
 	 */
+	@FormValidators(values = {
+			@FormValidator(name = "username", validateType = Type.REQUIRED, msg = "帐号不能为空"),
+			@FormValidator(name = "mobile", validateType = Type.REQUIRED, msg = "移动电话不能为空"),
+			@FormValidator(name = "mobile", validateType = Type.PHONE, msg = "请填写正确的电话号码"),
+			@FormValidator(name = "email", validateType = Type.REQUIRED, msg = "邮箱地址不能为空"),
+			@FormValidator(name = "email", validateType = Type.EMAIL, msg = "请填写正确的邮箱地址")
+	})
 	public static Result addOrUpdateUser() {
+		String msg = Validator.check(CommonController.class, "addOrUpdateUser");
+		if (msg != null) {
+			return badRequest(msg);
+		}
+		
 		Form<User> form = form(User.class).bindFromRequest();
 		if (form != null && form.hasErrors() == false) {
+			final String username = FormHelper.getString(form().bindFromRequest(), "username");
+			final String mobile = FormHelper.getString(form().bindFromRequest(), "mobile");
+			final String email = FormHelper.getString(form().bindFromRequest(), "email");
+			if (User.isUsernameRegistered(username)) {
+				return badRequest(Constants.MSG_USER_USERNAME_EXIST);
+			} else if (User.isMobileRegistered(mobile)){
+				return badRequest(Constants.MSG_USER_USERNAME_EXIST);
+			} else if (User.isEmailRegistered(email)){
+				return badRequest(Constants.MSG_USER_USERNAME_EXIST);
+			}
+			
 			MultipartFormData body = request().body().asMultipartFormData();
 			if (body != null) {
 				FilePart logo = body.getFile("logo");
@@ -199,17 +238,10 @@ public class CommonController extends Controller {
 				switch (errorType) {
 				case ERROR_NONE: // 文件正常
 				case ERROR_FILE_EMPTY: // 文件空，执行其他保存
+					
 					User user = User.addOrUpdate(form.get(), logo);
 					if (user != null) {
 						return pageUserDetail(user);
-					} else {
-						final String username = FormHelper.getString(form()
-								.bindFromRequest(), "username");
-						if (User.findByUsername(username) == null) {
-							return internalServerError(Constants.MSG_INTERNAL_ERROR);
-						} else {
-							return badRequest(Constants.MSG_USER_USERNAME_EXIST);
-						}
 					}
 				case ERROR_FILE_TOO_LARGE: // 文件太大
 					return internalServerError(Constants.MSG_FILE_TOO_LARGE);
@@ -241,7 +273,21 @@ public class CommonController extends Controller {
 	/**
 	 * add or update course
 	 */
+	@FormValidators(values = {
+			@FormValidator(name = "name", validateType = Type.REQUIRED, msg = "课程名称不能为空"),
+			@FormValidator(name = "courseType", validateType = Type.REQUIRED, msg = "课程类别不能为空"),
+			@FormValidator(name = "money", validateType = Type.REQUIRED, msg = "学费不能为空"),
+			@FormValidator(name = "money", validateType = Type.NUMBER, msg = "学费只能是数字"),
+			@FormValidator(name = "startTime", validateType = Type.REQUIRED, msg = "开课时间不能为空"),
+			@FormValidator(name = "info", validateType = Type.REQUIRED, msg = "课程简介不能为空"),
+			@FormValidator(name = "detail", validateType = Type.REQUIRED, msg = "课程详情不能为空"),
+	})
 	public static Result addOrUpdateCourse() {
+		String msg = Validator.check(CommonController.class, "addOrUpdateCourse");
+		if (msg != null) {
+			return badRequest(msg);
+		}
+		
 		Form<Course> form = form(Course.class).bindFromRequest();
 		if (form != null && form.hasErrors() == false) {
 			Course course = Course.addOrUpdate(form.get());
@@ -263,12 +309,22 @@ public class CommonController extends Controller {
 	 * 
 	 * @return
 	 */
+	@FormValidators(values = {
+			@FormValidator(name = "user.nickname", validateType = Type.REQUIRED, msg = "讲师名称不能为空"),
+			@FormValidator(name = "jobTitle", validateType = Type.REQUIRED, msg = "职称不能为空"),
+			@FormValidator(name = "info", validateType = Type.REQUIRED, msg = "简介不能为空")
+	})
 	public static Result addOrUpdateInstructor() {
+		String msg = Validator.check(CommonController.class, "addOrUpdateInstructor");
+		if (msg != null) {
+			return badRequest(msg);
+		}
+		
 		Form<Instructor> form = form(Instructor.class).bindFromRequest();
 		if (form != null && form.hasErrors() == false) {
-			Instructor course = Instructor.addOrUpdate(form.get());
-			if (course != null) {
-				return pageInstructorDetail(course);
+			Instructor instructor = Instructor.addOrUpdate(form.get());
+			if (instructor != null) {
+				return pageInstructorDetail(instructor);
 			}
 		} else if (form.hasErrors()) {
 			String error = FormHelper.getFirstError(form.errors());
@@ -285,7 +341,17 @@ public class CommonController extends Controller {
 	 * 
 	 * @return
 	 */
+	@FormValidators(values = {
+			@FormValidator(name = "user.nickname", validateType = Type.REQUIRED, msg = "学员名称不能为空"),
+			@FormValidator(name = "user.mobile", validateType = Type.REQUIRED, msg = "手机号码不能为空"),
+			@FormValidator(name = "user.email", validateType = Type.REQUIRED, msg = "用户邮箱不能为空")
+	})
 	public static Result addOrUpdateStudent() {
+		String msg = Validator.check(CommonController.class, "addOrUpdateStudent");
+		if (msg != null) {
+			return badRequest(msg);
+		}
+		
 		Form<Student> form = form(Student.class).bindFromRequest();
 		if (form != null && form.hasErrors() == false) {
 			Student student = form.get();
@@ -293,20 +359,12 @@ public class CommonController extends Controller {
 			if (user == null) {
 				return badRequest("用户信息不全");
 			} else {
-				play.Logger.debug(user.nickname + "," + user.email + "," + user.mobile);
-				if(StringHelper.isValidate(user.nickname) == false){//手机号为空
-					return badRequest("学员名不能为空");
-				}
-				
-				if(StringHelper.isValidate(user.mobile) == false){//手机号为空
-					return badRequest("手机号不能为空");
-				} else if (User.hasUserByMobile(user.mobile)){//手机号被占用
+
+				if (User.hasUserByMobile(user.mobile)) {// 手机号被占用
 					return badRequest("手机号已被注册");
 				}
-				
-				if (StringHelper.isValidate(user.email) == false) {//邮箱不合法
-					return badRequest("用户邮箱不能为空");
-				} else if (User.hasUserByEmail(user.email)) {//邮箱被注册
+
+				if (User.hasUserByEmail(user.email)) {// 邮箱被注册
 					return badRequest("邮箱已被注册");
 				}
 			}
@@ -316,7 +374,6 @@ public class CommonController extends Controller {
 				return pageStudentDetail(student);
 			}
 
-			
 		} else if (form.hasErrors()) {
 			String error = FormHelper.getFirstError(form.errors());
 			play.Logger.debug("error:" + error);
@@ -330,7 +387,16 @@ public class CommonController extends Controller {
 	/**
 	 * add or update news
 	 */
+	@FormValidators(values = {
+			@FormValidator(name = "name", validateType = Type.REQUIRED, msg = "新闻类型不能为空")
+	})
 	public static Result addOrUpdateNewsType() {
+		String msg = Validator
+				.check(CommonController.class, "addOrUpdateNewsType");
+		if (msg != null) {
+			return badRequest(msg);
+		}
+		
 		Form<NewsType> form = form(NewsType.class).bindFromRequest();
 		if (form != null && form.hasErrors() == false) {
 			NewsType newsType = NewsType.addOrUpdate(form.get());
@@ -350,7 +416,17 @@ public class CommonController extends Controller {
 	/**
 	 * add or update news
 	 */
+	@FormValidators(values = {
+			@FormValidator(name = "title", validateType = Type.REQUIRED, msg = "新闻标题不能为空"),
+			@FormValidator(name = "newsType", validateType = Type.REQUIRED, msg = "新闻类型不能为空"), 
+			@FormValidator(name = "detail", validateType = Type.REQUIRED, msg = "新闻详情不能为空")
+	})
 	public static Result addOrUpdateNews() {
+		String msg = Validator.check(CommonController.class, "addOrUpdateNews");
+		if (msg != null) {
+			return badRequest(msg);
+		}
+		
 		Form<News> form = form(News.class).bindFromRequest();
 		if (form != null && form.hasErrors() == false) {
 			News news = News.addOrUpdate(form.get());
@@ -371,20 +447,19 @@ public class CommonController extends Controller {
 	 * add or update instructor
 	 * 
 	 * @return
-	 * @throws SecurityException 
-	 * @throws NoSuchMethodException 
+	 * @throws SecurityException
+	 * @throws NoSuchMethodException
 	 */
-	@FormValidators(values={
-		@FormValidator(name="name", validateType=Type.REQUIRED, msg="代理人名不能为空"),
-		@FormValidator(name="contact", validateType=Type.REQUIRED, msg="联系人信息不能为空")
-	})
+	@FormValidators(values = {
+			@FormValidator(name = "name", validateType = Type.REQUIRED, msg = "代理人名不能为空"),
+			@FormValidator(name = "contact", validateType = Type.REQUIRED, msg = "联系方式不能为空") })
 	public static Result addOrUpdateAgent() {
-		String msg = Validator.check(CommonController.class, "addOrUpdateAgent");
-		if(msg != null){
+		String msg = Validator
+				.check(CommonController.class, "addOrUpdateAgent");
+		if (msg != null) {
 			return badRequest(msg);
 		}
-		
-		play.Logger.debug("addOrUpdateAgent");
+
 		Form<Agent> form = form(Agent.class).bindFromRequest();
 		if (form != null && form.hasErrors() == false) {
 			Agent agent = Agent.addOrUpdate(form.get());
@@ -406,7 +481,17 @@ public class CommonController extends Controller {
 	 * 
 	 * @return
 	 */
+	@FormValidators(values = {
+			@FormValidator(name = "name", validateType = Type.REQUIRED, msg = "协议名称不能为空"),
+			@FormValidator(name = "contractType", validateType = Type.REQUIRED, msg = "协议类型不能为空"),
+			@FormValidator(name = "detail", validateType = Type.REQUIRED, msg = "协议详情不能为空") 
+	})
 	public static Result addOrUpdateContract() {
+		String msg = Validator.check(CommonController.class, "addOrUpdateContract");
+		if (msg != null) {
+			return badRequest(msg);
+		}
+		
 		Form<Contract> form = form(Contract.class).bindFromRequest();
 		if (form != null && form.hasErrors() == false) {
 			Contract contract = Contract.addOrUpdate(form.get());
@@ -428,7 +513,16 @@ public class CommonController extends Controller {
 	 * 
 	 * @return
 	 */
+	@FormValidators(values = {
+			@FormValidator(name = "name", validateType = Type.REQUIRED, msg = "模板名称不能为空"),
+			@FormValidator(name = "info", validateType = Type.REQUIRED, msg = "模板简介不能为空")
+	})
 	public static Result addOrUpdateTemplateType() {
+		String msg = Validator.check(CommonController.class, "addOrUpdateTemplateType");
+		if (msg != null) {
+			return badRequest(msg);
+		}
+		
 		Form<TemplateType> form = form(TemplateType.class).bindFromRequest();
 		if (form != null && form.hasErrors() == false) {
 			MultipartFormData body = request().body().asMultipartFormData();
@@ -477,7 +571,16 @@ public class CommonController extends Controller {
 	 * 
 	 * @return
 	 */
+	@FormValidators(values = {
+			@FormValidator(name = "title", validateType = Type.REQUIRED, msg = "广告标题不能为空"),
+			@FormValidator(name = "url", validateType = Type.REQUIRED, msg = "链接地址不能为空"),
+	})
 	public static Result addOrUpdateAdvertisment() {
+		String msg = Validator.check(CommonController.class, "addOrUpdateAdvertisment");
+		if (msg != null) {
+			return badRequest(msg);
+		}
+		
 		Form<Advertisment> form = form(Advertisment.class).bindFromRequest();
 		if (form != null && form.hasErrors() == false) {
 			MultipartFormData body = request().body().asMultipartFormData();
@@ -526,7 +629,15 @@ public class CommonController extends Controller {
 	 * 
 	 * @return
 	 */
+	@FormValidators(values = {
+			@FormValidator(name = "name", validateType = Type.REQUIRED, msg = "课程类型名不能为空")
+	})
 	public static Result addOrUpdateCourseType() {
+		String msg = Validator.check(CommonController.class, "addOrUpdateCourseType");
+		if (msg != null) {
+			return badRequest(msg);
+		}
+		
 		Form<CourseType> form = form(CourseType.class).bindFromRequest();
 		if (form != null && form.hasErrors() == false) {
 			CourseType courseType = CourseType.addOrUpdate(form.get());
@@ -548,7 +659,17 @@ public class CommonController extends Controller {
 	 * 
 	 * @return
 	 */
+	@FormValidators(values = {
+			@FormValidator(name = "name", validateType = Type.REQUIRED, msg = "学员姓名不能为空"),
+			@FormValidator(name = "company", validateType = Type.REQUIRED, msg = "公司名称不能为空"), 
+			@FormValidator(name = "words", validateType = Type.REQUIRED, msg = "学员感言不能为空")
+	})
 	public static Result addOrUpdateStudentWords() {
+		String msg = Validator.check(CommonController.class, "addOrUpdateStudentWords");
+		if (msg != null) {
+			return badRequest(msg);
+		}
+		
 		Form<StudentWords> form = form(StudentWords.class).bindFromRequest();
 		if (form != null && form.hasErrors() == false) {
 			StudentWords studentWords = StudentWords.addOrUpdate(form.get());
@@ -796,6 +917,7 @@ public class CommonController extends Controller {
 			return internalServerError(Constants.MSG_INTERNAL_ERROR);
 		}
 	}
+
 	/**
 	 * delete 学员感言
 	 * 
@@ -805,6 +927,21 @@ public class CommonController extends Controller {
 		Long id = FormHelper.getLong(form().bindFromRequest(), "id");
 		if (id != null) {
 			Domain domain = Domain.delete(id);
+			return ok(Constants.MSG_SUCCESS);
+		} else {
+			return internalServerError(Constants.MSG_INTERNAL_ERROR);
+		}
+	}
+	
+	/**
+	 * delete 模板类型
+	 * 
+	 * @return
+	 */
+	public static Result deleteTemplateType(){
+		Long id = FormHelper.getLong(form().bindFromRequest(), "id");
+		if (id != null) {
+			TemplateType templateType = TemplateType.delete(id);
 			return ok(Constants.MSG_SUCCESS);
 		} else {
 			return internalServerError(Constants.MSG_INTERNAL_ERROR);

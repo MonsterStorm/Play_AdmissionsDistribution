@@ -101,12 +101,6 @@ $('#toolbar').tooltip(options);
 			}
 
 			@if(model != null){
-				@textarea("联系方式", "contact", model.contact, true)
-			} else {
-				@textarea("联系方式", "contact", null, false)
-			}
-			
-			@if(model != null){
 				@textarea("课程简介", "info", model.info, true)
 			} else {
 				@textarea("课程简介", "info", null, false)
@@ -115,7 +109,13 @@ $('#toolbar').tooltip(options);
 			@if(model != null){
 				@textarea("课程详细信息", "detail", model.detail, true, 20)
 			} else {
-				@textarea("课程详细信息", "detail", null, false)
+				@textarea("课程详细信息", "detail", null, false, 20)
+			}
+
+			@if(model != null){
+				@textarea("联系方式", "contact", model.contact, true)
+			} else {
+				@textarea("联系方式", "contact", null, false)
 			}
 
 			@if(model != null && model.edu != null){

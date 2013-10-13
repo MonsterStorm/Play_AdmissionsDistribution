@@ -86,28 +86,28 @@ $('#toolbar').tooltip(options);
 					@if(model.title != null){
 						<td><a href="#" onclick="getCommonPage(this, 'advertismentDetail', 'id=@model.id');">@model.title</a></td>
 					} else {
-						<td>-未设置-</td>
+						<td>-</td>
 					}
 					@if(model.url != null){
 						<td>@model.url</td>
 					} else {
-						<td>-未设置-</td>
+						<td>-</td>
 					}
 					@if(model.logo != null && model.logo.equals("") == false){
 						<td><img id="myImgPreview" class="img-rounded" alt="40x40" style="width: 40px; height: 40px;" src="@routes.Assets.at("/datas/advertisments", {model.logo})"></td>
 					} else {
-						<td>-未设置-</td>
+						<td>-</td>
 					}
 					@if(model.advertismentStatistics != null){
 						<td>@model.advertismentStatistics.totalVisit</td>
 					} else {
-						<td>-未设置-</td>
+						<td>-</td>
 					}
 					
 					@if(model.lastModified != null){
 						<td>@datetime_formatter(model.lastModified, true)</td>
 					} else {
-						<td>-未设置-</td>
+						<td>-</td>
 					}
 					<td>@toolbar(model)</td>
 				</tr>

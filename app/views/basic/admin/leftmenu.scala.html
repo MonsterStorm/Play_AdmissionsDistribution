@@ -45,7 +45,8 @@
 	function toggleActive(item, div){
 		var items = div + ".active";
 		$(items).removeClass("active");
-		$(item).addClass("active");
+		//$(item).addClass("active");
+		$(item).toggleClass("active");
 	}
 
 	function toggleEdit(parent){
@@ -74,7 +75,6 @@
 			$(parent + " button[type=submit]").addClass("disabled");
 			$(parent + " button[type=submit]").prop("disabled", true);
 		}
-		
 		toggleActive(item);
 	}
 	

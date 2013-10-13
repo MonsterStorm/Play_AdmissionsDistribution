@@ -83,22 +83,22 @@ $('#toolbar').tooltip(options);
 					@if(model.courses != null && model.courses.size() > 0){
 						<td><a href="#" onclick="getCommonPage(this, 'courseDetail', 'id=@model.courses.get(0).id');">@model.courses.get(0).name</a></td>
 					} else {
-						<td>-尚未创建课程-</td>
+						<td>-</td>
 					}
 					@if(model.info != null){
 						<td>@model.info</td>
 					} else {
-						<td>-未设置-</td>
+						<td>-</td>
 					}
 					@if(model.createTime != null){
 						<td>@datetime_formatter(model.createTime, true)</td>
 					} else {
-						<td>-未设置-</td>
+						<td>-</td>
 					}
 					@if(model.creator != null){
 						<td><a href="#" onclick="getCommonPage(this, 'userDetail', 'id=@model.creator.id');">@model.creator.username</a></td>
 					} else {
-						<td>-未设置-</td>
+						<td>-</td>
 					}
 					<td>@toolbar(model)</td>
 				</tr>

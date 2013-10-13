@@ -12,6 +12,8 @@ public class Constants {
 	public static final String MSG_FORBIDDEN = "无权访问";
 	public static final String MSG_SUCCESS = "成功";
 	public static final String MSG_USER_USERNAME_EXIST = "该用户名已经被占用";
+	public static final String MSG_USER_MOBILE_EXIST = "该移动电话号码已经被占用";
+	public static final String MSG_USER_EMAIL_EXIST = "该邮箱地址已经被占用";
 	public static final String MSG_USER_ENROLLED = "您已报名该课程";
 	public static final String MSG_COURSE_NOT_EXIST = "该课程不存在";
 	public static final String MSG_EDUCATION_EXIST = "该教育机构已存在";

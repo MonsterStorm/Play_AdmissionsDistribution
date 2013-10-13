@@ -98,8 +98,7 @@ public class Agent extends Model{
 	public static Agent addOrUpdate(Agent agent) {
 		if (agent != null) {
 			if (agent.id == null) {// 新增
-				User user = LoginController.getSessionUser();//创建用户必须是当前用户
-				agent.user = user;//绑定到当前用户
+				agent.user = User.createUserForAgent(agent, Role.ROLE_AGENT, Audit.STATUS_SUCCESS);//绑定到当前用户，为每个教育机构新建一个用户号
 				agent.id = finder.nextId();
 				agent.save();
 			} else {// 更新

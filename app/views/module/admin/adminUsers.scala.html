@@ -73,19 +73,19 @@ $('#toolbar').tooltip(options);
 					@if(model.username != null){
 						<td>@model.username</td>
 					} else {
-						<td>-未设置-</td>
+						<td>-</td>
 					}
 					
 					@if(model.nickname){
 						<td>@model.nickname</td>
 					} else {
-						<td>-未设置-</td>
+						<td>-</td>
 					}
 					
 					@if(model.logo){
 						<td><img id="myImgPreview" class="img-rounded" alt="40x40" style="width: 40px; height: 40px;" src="@routes.Assets.at("/datas/logos", {model.logo})"></td>
 					} else {
-						<td>-未设置-</td>
+						<td>-</td>
 					}
 					
 					@if(model != null && model.audit != null){
@@ -104,7 +104,7 @@ $('#toolbar').tooltip(options);
 							}
 						}
 					} else {
-						<td>-未设置-</td>
+						<td>-</td>
 					}
 					<td>@toolbar(model)</td>
 				</tr>
