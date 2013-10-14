@@ -99,7 +99,7 @@ public class TemplateType extends Model {
 		// Map<String, String> datas = form.data();
 		// datas.put("agentId", agent.id.toString());
 		// form = form.bind(datas);
-		return new QueryHelper<TemplateType>(finder, form).addEq("type", "1", Long.class).addOrderBy("orderby").findPage(page, pageSize);
+		return new QueryHelper<TemplateType>(finder, form).addEq("type", Constants.TEMPLATE_TYPE_AGENT, Long.class).addOrderBy("orderby").findPage(page, pageSize);
 
 	}
 	
