@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50530
 File Encoding         : 65001
 
-Date: 2013-10-09 21:32:13
+Date: 2013-10-13 21:50:21
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -30,7 +30,7 @@ CREATE TABLE `advertisment` (
   `advertisment_statistics_id` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `ix_advertisment_advertismentStatistics_1` (`advertisment_statistics_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of advertisment
@@ -47,6 +47,7 @@ INSERT INTO `advertisment` VALUES ('9', '声浪传播机构', 'http://www.cnad.c
 INSERT INTO `advertisment` VALUES ('10', '传媒通集团', 'http://www.cnad.com/newImages/comp_logo/201222164846logo.jpg', 'http://hr.cnad.com/area_comp/listcompanyzt.asp?comid=zq82kdcwrv3665', '1381136024622', '1381136024622', '传媒通集团', '10');
 INSERT INTO `advertisment` VALUES ('11', '广州狮百睿', 'http://www.cnad.com/newImages/comp_logo/201222164846logo.jpg', 'http://hr.cnad.com/area_comp/listcompanyzt.asp?comid=zq82kdcwrv3665', '1381136024622', '1381136024622', '广州狮百睿', '11');
 INSERT INTO `advertisment` VALUES ('12', '北京中观传媒', 'http://www.cnad.com/newImages/comp_logo/201222164846logo.jpg', 'http://hr.cnad.com/area_comp/listcompanyzt.asp?comid=zq82kdcwrv3665', '1381136024622', '1381136024622', '北京中观传媒', '12');
+INSERT INTO `advertisment` VALUES ('13', '123123', '', '123123', '1381589061076', '1381589061076', '', '13');
 
 -- ----------------------------
 -- Table structure for `advertisment_statistics`
@@ -60,7 +61,7 @@ CREATE TABLE `advertisment_statistics` (
   `last_visited` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `ix_advertisment_statistics_advertisment_2` (`advertisment_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of advertisment_statistics
@@ -77,6 +78,7 @@ INSERT INTO `advertisment_statistics` VALUES ('9', '9', '10', '1381136024622', '
 INSERT INTO `advertisment_statistics` VALUES ('10', '10', '0', '1381136024622', '1381136024622');
 INSERT INTO `advertisment_statistics` VALUES ('11', '11', '411', '1381136024622', '1381136024622');
 INSERT INTO `advertisment_statistics` VALUES ('12', '12', '0', '1381136024622', '1381136024622');
+INSERT INTO `advertisment_statistics` VALUES ('13', '13', '0', '1381589061076', null);
 
 -- ----------------------------
 -- Table structure for `advertisment_visit`
@@ -113,13 +115,13 @@ CREATE TABLE `agent` (
   KEY `ix_agent_user_4` (`user_id`),
   KEY `ix_agent_template_5` (`template_id`),
   KEY `ix_agent_audit_6` (`audit_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=23 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of agent
 -- ----------------------------
 INSERT INTO `agent` VALUES ('1', '5', '2', null, '金城代理', '金城代理公司，全程为您推荐可靠的课程信息', '联系人：方长老 18768594685');
-INSERT INTO `agent` VALUES ('2', '32', null, null, '伟业代理', '伟业代理公司，竭诚为您服务', null);
+INSERT INTO `agent` VALUES ('2', '32', '3', null, '伟业代理', '伟业代理公司，竭诚为您服务', '');
 
 -- ----------------------------
 -- Table structure for `agent_course`
@@ -154,18 +156,25 @@ CREATE TABLE `audit` (
   `type_id` bigint(20) DEFAULT NULL,
   `status` int(11) DEFAULT NULL,
   `creator_id` bigint(20) DEFAULT NULL,
+  `course_id` bigint(20) DEFAULT NULL,
   `create_time` bigint(20) DEFAULT NULL,
   `auditor_id` bigint(20) DEFAULT NULL,
   `audit_time` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `ix_audit_type_7` (`type_id`),
   KEY `ix_audit_creator_8` (`creator_id`),
-  KEY `ix_audit_auditor_9` (`auditor_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+  KEY `ix_audit_course_9` (`course_id`),
+  KEY `ix_audit_auditor_10` (`auditor_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of audit
 -- ----------------------------
+INSERT INTO `audit` VALUES ('1', '1', '0', '36', null, '1381592209281', null, null);
+INSERT INTO `audit` VALUES ('2', '3', '1', '37', null, '1381668998011', null, null);
+INSERT INTO `audit` VALUES ('3', '5', '1', '38', null, '1381669158022', null, null);
+INSERT INTO `audit` VALUES ('4', '2', '1', '39', null, '1381670549490', null, null);
+INSERT INTO `audit` VALUES ('5', '2', '1', '40', null, '1381670931360', null, null);
 
 -- ----------------------------
 -- Table structure for `audit_type`
@@ -176,17 +185,18 @@ CREATE TABLE `audit_type` (
   `name` varchar(255) DEFAULT NULL,
   `info` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=3123124 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of audit_type
 -- ----------------------------
-INSERT INTO `audit_type` VALUES ('1', '学员审核', '审核学员资格');
+INSERT INTO `audit_type` VALUES ('5', '学员审核', '审核学员资格');
 INSERT INTO `audit_type` VALUES ('2', '教育机构审核', '审核教育机构资格');
-INSERT INTO `audit_type` VALUES ('3', '代理人审核', '审核代理人资格');
-INSERT INTO `audit_type` VALUES ('4', '教育课程审核', '审核课程信息');
-INSERT INTO `audit_type` VALUES ('5', '讲师审核', '审核讲师资格');
-INSERT INTO `audit_type` VALUES ('6', '域名审核', '审核域名');
+INSERT INTO `audit_type` VALUES ('4', '代理人审核', '审核代理人资格');
+INSERT INTO `audit_type` VALUES ('6', '教育课程审核', '审核课程信息');
+INSERT INTO `audit_type` VALUES ('3', '讲师审核', '审核讲师资格');
+INSERT INTO `audit_type` VALUES ('7', '域名审核', '审核域名');
+INSERT INTO `audit_type` VALUES ('1', '用户审核', '审核用户');
 
 -- ----------------------------
 -- Table structure for `confirm_receipt`
@@ -226,13 +236,14 @@ CREATE TABLE `contract` (
   `last_modified` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `ix_contract_contractType_11` (`contract_type_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of contract
 -- ----------------------------
 INSERT INTO `contract` VALUES ('1', '法人型联营协议书', '订立协议单位：\n　　甲方（单位名称）：\n　　经济性质：＿＿＿＿＿＿＿＿所有制。\n　　乙方（单位名称）：\n　　经济性质：＿＿＿＿＿＿＿＿所有制。\n\n　　双方本着互利互惠、共同发展的原则，经充分协商，决定联合出资建立＿＿＿＿＿公司，特订立本协议。\n　　１．联营宗旨、联营项目与经营范围＿＿＿＿＿＿＿＿＿＿＿。\n　　２．联营企业名称：＿＿市（县）＿＿公司（企业）\n　　地址：＿＿隶属：＿＿经济性质：＿＿（所有制）联营。\n　　核算方式：独立核算。\n　　３．联合出资方式、数额和投资期限：\n　　公司投资总额为人民币＿＿＿＿＿＿＿元。\n　　甲方投资＿＿＿＿元，占投资总额＿＿＿＿％。\n　　甲方以下列作为投资：\n　　现金：＿＿＿＿元；\n　　厂房：＿＿＿＿元；折旧率为每年＿＿＿＿％；\n　　机械设备：＿＿＿＿元。折旧率为每年＿＿＿＿％；\n　　土地征用补偿费：＿＿＿＿元；\n　　专利权：＿＿＿＿元；\n　　商标权：＿＿＿＿元；\n　　技术成果：＿＿＿＿元；\n　　乙方投资：（略……）\n　　投资缴付日期：\n　　４．联营成员的权利和义务：\n　　５．利润分配和风险承担：\n　　公司所得利润－依法纳税－（储备基金＋生产发展基金＋职工福利奖励基金）＝红利（按股份分配）。\n　　甲方：＿＿＿＿％；乙方＿＿＿＿％。\n　　联营成员对公司债务的承担以出资额为限。', '用于教育机构申请时使用', '1', '1381158420840', '1381158420840');
 INSERT INTO `contract` VALUES ('2', '代理人代理合同样本', '甲方（出租方）：_______________________\n\n乙方（承租方）：_______________________\n\n甲方和乙方根据《中华人民共和国合同法》、《中华人民共和国城市房地产管理法》及其他有关法律、法规之规定，甲、乙双方在平等、自愿、诚实、信用原则的基础上，同意就乙方向甲方租用其房屋事项达成如下协议： \n1、 房屋的座落、面积及装修、设施 \n1—1、 甲方将其合法拥有的座落在郑州市__________________________________出租给乙方使用。 \n1—2、 甲方出租给乙方使用的该房屋建筑面积共____________平方米。 \n2、 租赁用途 \n2—1、乙方向甲方承诺，租赁该房屋仅作为办公使用。 \n2—2、在租赁期限内，未事前征得甲方的书面同意，乙方不得擅自改变该房屋使用用途。 \n3、 租赁期限 \n3—1、该房屋租赁期共_____个月，自____年____月____日起至____年____月____日止。 \n3—2、租赁期满，甲方有权收回全部出租房屋，乙方应如期交还。乙方如要求续租，则必须在租赁期满前的1个月向甲方提出书面意向，重新签定租赁合同。 \n4、 租金及支付方式 \n4—1、该房屋月租金为人民币_________元。（大写：___________________）。 \n4—2、该房屋租金支付方式：□年 □半年 □季度 □月度；先付后用；第1期租金签定合同当日支付，以后每期租金提前_________日支付。 \n5、 其他费用 \n5—1、乙方在租赁期限内，使用的  □水  □电费  □电话  □网络使用费  □物业管理费  □租金税费  □_________,由乙方按有关规定自行承担。 \n5—2、根据甲方要求乙方应支付甲方房屋押金人民币_________元（大写________元整），待租赁期满结清费用后，甲方应于结清当日将押金全额退还乙方。乙方如未按规定结清有关费用，甲方有权拒还押金。如乙方结清，甲方得全额退还押金。 \n6、 房屋修缮责任 \n6—1、在租赁期限内，甲方应保证出租房屋的使用安全。乙方应爱护并合理使用其所承租的房屋及其附属设施。如乙方因使用不当造成房屋或设施损坏的，乙方应立即负责修复或予以经济赔偿。 \n6—2、如因不可抗力原因，导致房屋损坏或造成乙方损失的，双方互不承担责任。 \n6—3、室内现有设施： \n电器如下：____________________________________________________________ \n家具如下：____________________________________________________________', '代理人必须同意合同条款，方能申请成为代理人', '2', '1381158506511', '1381158506511');
+INSERT INTO `contract` VALUES ('3', '教育机构合作协议', '这里是一个协议，所有教育机构必须注意', '', '1', '1381583298985', '1381583298985');
 
 -- ----------------------------
 -- Table structure for `contract_type`
@@ -272,7 +283,7 @@ CREATE TABLE `course` (
   KEY `ix_course_courseType_13` (`course_type_id`),
   KEY `ix_course_edu_14` (`edu_id`),
   KEY `ix_course_instructor_15` (`instructor_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of course
@@ -291,6 +302,7 @@ INSERT INTO `course` VALUES ('11', '高级工商管理总裁研修班（总第10
 INSERT INTO `course` VALUES ('12', '中国卓越企业工商管理总裁研修班', '15000', '1381096172000', '咨询热线：010-6276 6642  程老师', null, '4', '【课程前言】\r\n　　21世纪是追求卓越发展的时代，企业家的综合素养、思维模式和决策水平决定了企业发展最终能达到的高度。企业领导者渴望通过通过持续的学习和广泛的交流，以提升自身素质、构建高端人脉资源、塑造精英管理团队。\r\n　　一路风雨走来，也许你已深觉管理知识的匮乏和管理工作中的力不从心。为帮助中国企业高层人员实现领导力的突破和企业核心竞争力的提升，塑造一批具备国际化视野和现代经营理念的复合型卓越领导，清华大学继续教育学院结合当前经济形势，充分调动本校经济、管理、人文等领域雄厚的教学力量，同时有机整合其它院校及社会各行业的实战派管理专家，融合国内外先进管理理念，推出“中国卓越企业现代工商管理总裁研修班”，专门为当今经济形势下的企业家量身定制打造卓越企业的学习课程，帮助企业家开拓视野、更新观念，助力企业在激烈的市场竞争中立于不败之地。', '【课程前言】\r\n　　21世纪是追求卓越发展的时代，企业家的综合素养、思维模式和决策水平决定了企业发展最终能达到的高度。企业领导者渴望通过通过持续的学习和广泛的交流，以提升自身素质、构建高端人脉资源、塑造精英管理团队。\r\n【课程前言】\r\n　　21世纪是追求卓越发展的时代，企业家的综合素养、思维模式和决策水平决定了企业发展最终能达到的高度。企业领导者渴望通过通过持续的学习和广泛的交流，以提升自身素质、构建高端人脉资源、塑造精英管理团队。\r\n　　一路风雨走来，也许你已深觉管理知识的匮乏和管理工作中的力不从心。为帮助中国企业高层人员实现领导力的突破和企业核心竞争力的提升，塑造一批具备国际化视野和现代经营理念的复合型卓越领导，清华大学继续教育学院结合当前经济形势，充分调动本校经济、管理、人文等领域雄厚的教学力量，同时有机整合其它院校及社会各行业的实战派管理专家，融合国内外先进管理理念，推出“中国卓越企业现代工商管理总裁研修班”，专门为当今经济形势下的企业家量身定制打造卓越企业的学习课程，帮助企业家开拓视野、更新观念，助力企业在激烈的市场竞争中立于不败之地。\r\n【招生对象】\r\n　　规模企业董事长、副董事长、总裁、总经理、副总经理等高层决策者。\r\n【课程学制】\r\n　　◆学制：每两个月集中面授一次，每次4天，共192学时，上课地点在清华大学，学习期限1年。\r\n　　◆开课时间：2013-10-25\r\n   ◆上课地点：清华大学。\r\n　　◆学业证书：全部培训课程结束，经考核通过，获得由清华大学继续教育学院颁发的“中国卓越企业现代工商管理总裁研修班”结业证书。证书统一编号，加盖清华大学教育培训证书专用章，编号可登陆清华大学教育培训与认证网站查询；成为清华大学继续教育同学会会员，享受丰富校友资源。\r\n【课程学费】\r\n　　培训费41800元/人,（教学管理、教材资料费、通讯录、结业照。食宿交通费用自理）\r\n【学习收益】\r\n　　全面提升企业总裁个人素养和领导力。双重修炼，成就方方面面都优秀的卓越企业家。拓展交际网络，建立高层人脉，加入清华大学总裁俱乐部，一次交费终身学习。\r\n【课程设置】\r\n \r\n \r\n企业管理实务\r\n模\r\n块\r\n篇一：企业战略新思维与资本运营\r\n中国企业战略管理新思维\r\n中国宏观经济形势分析\r\n国家宏观调控政策解读\r\n企业战略规划与联盟\r\n全球化战略与中国企业的战略机遇\r\n资本运营与企业投融资\r\n企业资本运作与并购重组\r\n企业战略投资分析\r\n企业投资风险防范与控制\r\n资本运营经典案例分析\r\n篇二：财务管理与企业内控\r\n企业财务管理与税务筹划\r\n非财务人员的财务管理\r\n中国税制与税务风险防范\r\n企业纳税筹划实务\r\n报表解读涉及的管理问题\r\n企业内部控制与风险管理\r\n企业运营中的风险 \r\n识别企业经营重要风险领域\r\n控制风险的技巧                  \r\n建立企业内部控制机制\r\n篇三：人力资源开发与绩效管理\r\n战略性人力资源开发\r\n企业组织结构设计原则\r\n常见的组织结构设计/分析方法\r\n职位分析与职位评估\r\n人力资源开发项目的设计与评估\r\n企业绩效管理与薪酬政策\r\n企业绩效管理与绩效考核\r\n绩效评估的实操技巧\r\nKPI绩效指标法的思路与关键\r\n企业薪酬福利的策略\r\n篇四：营销管理与创新实战\r\n品牌战略与营销革命\r\n市场定位的技巧和方法\r\n分销通路设计和管理方法\r\n价格策略的战术运用\r\n成功品牌的核心运作\r\n实战营销创新模式\r\n有效客户关系CRM管理\r\n整合营销传播（IMC）\r\n大客户拓展策略\r\n打造高绩效的营销团队\r\n篇五：企业文化与高效团队建设\r\n企业文化与学习型组织建设\r\n企业文化的创新与发展模式\r\n企业家精神与企业文化\r\n学习型组织建设与基业长青\r\n以企业文化打造企业核心竞争力\r\n高效团队建设与组织运行\r\n高效能管理者的基本技能\r\n企业执行力打造与提升\r\n建立高效团队结构和激励机制\r\n团队构建与组织行为分析\r\n \r\n \r\n \r\n综合素养与领导力\r\n模\r\n块\r\n篇六：国学商道与领导智慧\r\n国学精粹与领导智慧\r\n易经-周易之道与人生智慧\r\n儒家-理政之道与企业经营\r\n道家-修身之道与人格锤炼\r\n佛家-取舍之道与悟性智慧\r\n传统文化与现代管理\r\n孙子兵法与市场竞争谋略\r\n儒墨道法与现代企业管理\r\n周易精神与管理决策\r\n古今商道与企业理财\r\n篇七：人文精神与领导素养\r\n卓越领导者自我管理\r\n压力管理与心理健康\r\n阳光心态与总裁心理学\r\n企业领导者心理变革\r\n时间管理与要事优先\r\n语言艺术与谈判技巧\r\n领导者公众演讲技巧\r\n语言艺术与个人魅力\r\n礼仪沟通与形象塑造\r\n企业家商务谈判技巧\r\n篇八：领导艺术与领导韬略\r\n总裁领导力提升\r\n情商与影响力\r\n领导智慧与领导艺术\r\n总裁领导力与管理能力\r\n领导魅力与领导特质\r\n创新思维与科学决策\r\n创新思维与创新管理\r\n博弈思维与竞争策略\r\n创新战略与创新经营\r\n管理创新与领导艺术\r\n【汇款帐户】\r\n　　户  名：清华大学\r\n　　开户行：工行北京分行海淀西区支行\r\n　　帐  号：0200004509089131550\r\n　　用  途：“清华大学中国卓越企业工商管理总裁研修班”学费\r\n　　特别说明：汇款后请将汇款凭证复印件传至招生办公室程老师收,学校确认收到款项后在开课前统一开据清华大学发票。　　\r\n【报名流程】\r\n    1、咨询：电话咨询010-62766642,并索取《清华大学报名申请表》\r\n    2、填表：学员详细填写《报名申请表》并传真至招生办公室（010-62766646）。\r\n    3、审核：学校收到报名后对学员进行审核，审核通过后,向学员发出开课通知书。\r\n    4、汇款：学员收到《开课通知书》后将学费汇至清华大学指定账号，并把汇款底单传真至招生办.\r\n    5、报到：学员应按《报到通知书》时间准时报到，学员报到时应持本人身份证原件、学历学位证书复印件，个人、单位简介各1份，近期免冠彩色照片六张（一、二寸各三张等）。\r\n【报名咨询】\r\n   \r\n联  系  人：程老师\r\n联系电话：010-62766642\r\n传真电话：010-62766646\r\n电子邮箱：thuemba@qq.com\r\n网    址：www.thuemba.com', '1', null);
 INSERT INTO `course` VALUES ('13', '天下行——时尚女性高级研修班', '13000', '1381036172000', '咨询热线：010-6276 6642  程老师', null, '6', '【课程背景】\r\n　　当代女性热爱艺术、追求时尚，尊重生命、享受生活，注重自我提升。清华大学美术学院利用自身的文化优势和艺术资源，着力塑造当代中国时尚女性生活典范，帮助时尚女性在文化和艺术氛围中寻求自我表达、自我提升之路。课程设置从女性视角出发，以知名的师资配置、生动有趣的教学内容、轻松活泼的教学形式、国际化的教学理念，鼓励学员长久地保持学习热情；帮助学员从女性的“身份自知”层次进入“文化自觉”状态；强调女性头脑、心灵和身体的内外兼修，知识成果的博采众长；构建成熟女性间社会交往的有效平台；敦促学术界对中国当代女性亚文化发展的新思考。', '【课程背景】\r\n　　当代女性热爱艺术、追求时尚，尊重生命、享受生活，注重自我提升。清华大学美术学院利用自身的文化优势和艺术资源，着力塑造当代中国时尚女性生活典范，帮助时尚女性在文化和艺术氛围中寻求自我表达、自我提升之路。课程设置从女性视角出发，以知名的师资配置、生动有趣的教学内容、轻松活泼的教学形式、国际化的教学理念，鼓励学员长久地保持学习热情；帮助学员从女性的“身份自知”层次进入“文化自觉”状态；强调女性头脑、心灵和身体的内外兼修，知识成果的博采众长；构建成熟女性间社会交往的有效平台；敦促学术界对中国当代女性亚文化发展的新思考。\r\n　　\r\n【课程特色】\r\n　  独特的女性视角：课程结构、内容安排中强调女性视角；了解女性的自我认知与社会认知间的相容与背离；理解抽象的女性形象与女性亚文化群体的关联；从形体、外貌到心灵、头脑，鼓励学员完善具有个人风格的生活方式。\r\n　　\r\n　　沉静的学术气质：授课内容汇集多方学术成果；任课教师的聘请强调学术背景和理念出新；摒弃浮华不实的宣传噱头；以沉静的学术气质培育女性的恬适与矜持；以清华大学美术学院朴拙的艺术气息荡涤女性心头的浮躁与忧愁。\r\n　　\r\n　　体验与互动中教学：强调现场操作和体验，捕捉艺术家的创作瞬间；与成功人士零距离交流，体会光环背后的艰辛与琐碎；亲身打理自己的时尚造型，发现一个不一样的自己。\r\n　　\r\n　　建造女性友谊之舟：珍视女性间的友谊，帮助学员建立交友社区；组织班级内部的各种联谊活动，促进学员间的学术交流和情感建设；帮助本届学员建立与往届学员的工作联系；鼓励学员与任课教师的学术交流。\r\n　　\r\n　　倡导“天下行”学习模式：在选修课中，带领学员进入不一样的“时空”，通过现场参观、博物馆考察、阅读书籍、专家访谈等，体会另一种女性人生；以成熟的女性智慧理解纷杂的当代社会和精彩的现实生活。\r\n　　\r\n【招生对象】\r\n \r\n课程模块\r\n \r\n课堂讲授\r\n实践课程\r\n \r\n 幸福人生\r\nn  中国当代社会中的女性生存状态\r\nn  女性的自我管理与沟通技巧\r\nn  婚姻法与女性维权\r\nn  职场女性理财之道\r\nn  亲子教育投资优化\r\n \r\n \r\n \r\nn  实践课程1：与成功女性零距离接触\r\n \r\n \r\n书香女人\r\nn  中国传统文化与女性修养\r\nn  中国古典名著选读\r\nn  女性主义艺术\r\nn  西方小说中的女性形象\r\n \r\nn  实践课程2：女艺术家谈创作\r\n \r\n \r\n乐舞生活\r\nn  走进音乐世界\r\nn  戏曲人生\r\nn  中国电影的历史与现状\r\nn  古典芭蕾与浪漫主义芭蕾\r\nn  学唱歌发声练习\r\n \r\nn  实践课程3：跟名家学唱\r\n \r\n \r\n \r\n艺术鉴赏\r\nn  当代水墨艺术\r\nn  油画赏析\r\nn  陶瓷艺术\r\nn  摄影美学\r\nn  女性与美玉\r\nn  珠宝鉴赏\r\nn  家居艺术\r\nn  红酒鉴赏\r\n \r\n \r\n \r\n \r\n \r\nn  实践课程4：绘画创作基础\r\n \r\nn  实践课程5：艺术品制作\r\n \r\n \r\n时尚伊人\r\nn  女性时尚礼仪\r\nn  名人与时尚\r\nn  穿出优雅——女性的职业形象塑造\r\nn  着装色彩与服饰搭配\r\nn  流行妆容\r\nn  时尚聚会策划和形象设计\r\nn  现代奢侈品文化\r\nn  时尚品牌的塑造与营销\r\n \r\n \r\n \r\n \r\n \r\nn  实践课程6：各具特色的个人时尚设计\r\n \r\n选修课程\r\n \r\n \r\nn  欧洲古典时期贵族女性的生活\r\nn  中外女性艺术和女艺术家\r\nn  欧洲艺术之旅\r\nn  其他\r\n \r\n【证书颁发】\r\n    由清华大学教育培训管理处统一颁发清华大学美术学院主办的“天下行——时尚女性高级研修班”项目结业证书，加盖“清华大学教育培训证书专用章”钢印和清华大学美术学院公章，证书号可登录清华大学教育培训与认证网站查询。\r\n \r\n【学制学费】\r\n　　1.采取非脱产分期集中面授的教学方式，每两个月集中上课4天。\r\n　　2.学制1年，共240学时。\r\n　　3.每班报名限50人。\r\n　　4.授课地点在清华大学内或根据课程要求安排艺术场馆或博物馆。\r\n　　5.学费为：68000元/人（含课程学习、资料、学籍注册、颁发证书、校徽、地图、学员证、同学会通讯录等费用）。\r\n　　6.交通、食宿由学校统一安排，费用自理。\r\n　　7.开学时间：2013-9-21\r\n【聘请师资】\r\n　　万宝宝  京港两地社交名媛，珠宝设计师迄今为止第一位也是唯一一位有幸参加“巴黎社交名媛成年高级时装舞会”的中国人\r\n　　\r\n　　张抗抗 一级作家、黑龙江省作家协会副主席。中国作家协会第六届主席团委员、第十届全国政协委员。全国作协第七届副主席\r\n　　\r\n　　宋立民 清华大学美术学院教授博士清华大学美术学院培训中心主任，硕士生导师。\r\n　　\r\n　　中国美术家协会环境设计艺术委员会委员\r\n　　\r\n　　郑曙旸 清华大学美术学院教授清华大学美术学院常务副院长，博士生、硕士生导师。\r\n　　\r\n　　国务院学位委员会艺术学科评议组成员；中国建筑装饰协会资深室内建筑师；中国室内装饰协会资深室内设计师、副会长\r\n　　\r\n　　赵萌 清华大学美术学院教授副院长首都规划建设委员会咨询专家；中国工艺美术协会副理事长；中国工艺美术学会雕塑专业委员会副会长；首都文明基金会副秘书长\r\n　　\r\n　　王悦 清华大学美术学院副教授中国服装设计师协会会员与国内外多家知名皮草品牌合作，进行皮草产品设计实践并提供设计与技术支持。\r\n　　\r\n　　杨静 清华大学美术学院副教授清华美院教务办副主任北京高校艺术教育研究会理事北京高等教育自学考试服装材料学、服装CAD专家委员\r\n　　\r\n　　董关鹏 清华大学新闻传播学院英国谢菲尔德大学新闻系政治传播专业文科硕士、剑桥大学发展经济学专业哲学硕士和杜伦大学东亚国际关系专业哲学博士\r\n　　\r\n　　孙玉敏 清华大学美术学院教授，硕士研究生导师中国美术家协会理事，中国工笔画学会理事，中国美术家协会重彩画研究会理事，北京女美艺术家联谊会会长\r\n　　\r\n　　李睦 清华大学美术学院教授硕士生导师从事艺术与设计学科的基础教学与绘画创作\r\n　　\r\n　　于历战 清华大学美术学院副教授中国建筑师学会室内设计分会会员中国室内装饰协会会员中国工艺美术学会明式家具协会会员\r\n　　\r\n　　唐绪祥 清华大学美术学院教授博士生导师清华大学美术学院首饰工作室主任\r\n　　\r\n　　中国工艺美术大师评审委员中国传统工艺研究协会副秘书长\r\n　　\r\n　　鲁闽 清华大学美术学院副教授硕士生导师文化部形象设计专家委员北京市城市形象设计专家委员北京市服装协会理事\r\n　　\r\n　　古方 玉器专家中国文物学会玉器委员会副秘书长中国文物学会培训部讲授专家北京市文保文物鉴定中心鉴定专家\r\n　　\r\n　　戴婉辛 清华大学继续教育学院主讲教师、新加坡管理学院特聘教授\r\n　　\r\n　　张逸娟 中国戏曲学院教授教育部艺术职业教育教学指导委员会委员、文化部全国中等艺术职称评审委员会委员、北京市戏剧家协会理事、中国中等艺术教育学会常会理事等。\r\n　　\r\n　　欧鹿 北京舞蹈学院特聘专家，教授兼芭蕾舞系副主任曾任新西兰皇家芭蕾舞团首席艺术家兼芭蕾舞大师，皇家芭蕾舞团艺术总监兼副团长。\r\n　　\r\n　　张国刚 清华大学历史系教授博士生导师中国唐史学会会长中国中外关系学会副会长。\r\n　　\r\n　　邓伟 清华大学美术学院教授同济大学兼职教授南京大学特聘研究员\r\n　　\r\n　　中国美术馆专家委员会委员清华大学国家文化产业研究中心研究员\r\n　　\r\n　　苏民安 清华大学美术学院副教授硕士研究生导师\r\n　　\r\n　　中国摄影家协会理事、中国摄影函授学院副院长、俄罗斯摄影家协会会员等。\r\n　　\r\n　　李莉婷 清华大学美术学院教授染织服装艺术设计系副主任、硕士研究生导师\r\n　　\r\n　　中国流行色协会色彩教育专业委员会副总干事\r\n　　\r\n　　郑宁 清华大学美术学院教授博士生导师ISCAEE国际陶艺教育交流学会副会长中国美术家协会会员\r\n　　\r\n　　张敢 清华大学美术学院教授文学博士艺术史论系副主任《清华美术》主编\r\n　　\r\n　　陈辉 清华大学美术学院教授博士导师北京市高等艺术教育协会理事北京市美术家协会中国画艺委会委员\r\n　　\r\n　　李明英 北京科技大学经济管理学院经济与贸易系教授，研究生导师，清华大学国际工程项目管理研究院特聘教授、清华大学继续教育学院主讲教师，北京大学特聘教授。\r\n　　\r\n　　夏晓虹 北京大学中文系教授、博士生导师，曾到德国、捷克、韩国、英国以色列以及台湾、香港等国家与地区从事研究与参加学术会议，并曾在日本东京大学、德国海德堡大学讲学。\r\n　　\r\n　　张益福 知名摄影教育家，北京电影学院教授。曾任北京电影学院院务委员会委员、学术委员会委员、教材编审委员会委员。北京电影学院摄影学院主要创始人之一\r\n　　\r\n　　李荣胜 中国现代文学馆常务副馆长，中国作协第六、七届全委会委员著有短篇小说集《向阳松》，长篇革命故事《韶山风云》(合作)、《千年祝福》（合作），电视连续剧剧本《徐悲鸿》(八集)、《相识后的二十六天》(上、下集)\r\n　　\r\n　　周海宏 中央音乐学院音乐学系教授、博士生导师现任中央音乐学院副院长中央音乐学院音乐学研究所所长，专职研究员\r\n　　\r\n　　李建群 现为中央美术学院教授、硕士生导师\r\n　　\r\n　　陈山 北京电影学院电影文学系教授、博士生导师兼院学科指导委员会委员，中国电影家协会会员、中国港台电影研究会会员、，中国现代文学研究会会员。\r\n【汇款帐户】\r\n户    名：清华大学\r\n开 户 行：工行北京分行海淀西区支行\r\n帐    号：0200004509089131550\r\n用    途：“天下行——时尚女性高级研修班（学员姓名）”学费\r\n特别说明：汇款后请将汇款凭证复印件传至招生办公室程老师收,学校确认收到款项后在开课前统一开据清华大学发票。\r\n【报名流程】\r\n    1、咨询：电话咨询010-62766642,并索取《清华大学报名申请表》\r\n    2、填表：学员详细填写《报名申请表》并传真至招生办公室（010-62766646）。\r\n    3、审核：学校收到报名后对学员进行审核，审核通过后,向学员发出开课通知书。\r\n    4、汇款：学员收到《开课通知书》后将学费汇至清华大学指定账号，并把汇款底单传真至招生办.\r\n    5、报到：学员应按《报到通知书》时间准时报到，学员报到时应持本人身份证原件、学历学位证书复印件，个人、单位简介各1份，近期免冠彩色照片六张（一、二寸各三张等）。\r\n【报名咨询】\r\n联  系  人：程老师\r\n联系电话：010-62766642    18911486968\r\n传真电话：010-62766646\r\n电子邮箱：thuemba@qq.com\r\n网    址：www.thuemba.com', '2', null);
 INSERT INTO `course` VALUES ('14', '卓越女性领导力高级研修班', '20000', '1381036172000', '咨询热线：010-6276 6642  程老师', null, '6', '【项目背景】　　\r\n　　当代女性追求卓越，尊重生命、热爱艺术、享受生活，注重自我提升。清华大学利用自身的文化优势和艺术资源，充分发挥女性在社会中的优势和角色转换价值，着力塑造提升当代成功女性的内涵和素养，帮助成功女性从管理能力、文化素养和艺术氛围中寻求自我表达、自我提升之路。课程设置从女性视角出发，以知名的专家、优秀的师资配置、生动有趣的教学内容、轻松活泼的教学形式、国际化的教学理念，鼓励学员长久地保持学习热情；坚持卓越与魅力相结合、气质与修养相结合，内涵与品味相结合，文化与艺术相结合的教学理念，帮助学员从女性的“身份自知”层次进入“文化自觉”状态；构建起卓越女性社会交往的有效平台。', '【项目背景】　　\r\n　　当代女性追求卓越，尊重生命、热爱艺术、享受生活，注重自我提升。清华大学利用自身的文化优势和艺术资源，充分发挥女性在社会中的优势和角色转换价值，着力塑造提升当代成功女性的内涵和素养，帮助成功女性从管理能力、文化素养和艺术氛围中寻求自我表达、自我提升之路。课程设置从女性视角出发，以知名的专家、优秀的师资配置、生动有趣的教学内容、轻松活泼的教学形式、国际化的教学理念，鼓励学员长久地保持学习热情；坚持卓越与魅力相结合、气质与修养相结合，内涵与品味相结合，文化与艺术相结合的教学理念，帮助学员从女性的“身份自知”层次进入“文化自觉”状态；构建起卓越女性社会交往的有效平台。\r\n　　\r\n【课程特色】\r\n　　\r\n　　独特的女性视角：课程结构从女性独特的视角出发、深度剖析当代女性的社会心理状态，了解女性的自我认知与社会认知间的相容与背离；课程内容安排既兼顾理论又注重实用；帮助成功女性从自我管理、文化素养和艺术氛围中寻求自我表达、自我提升之路。\r\n　　\r\n　　沉静的学术气质：授课内容汇集多方学术成果；任课教师的聘请强调学术背景和理念出新；摒弃浮华不实的宣传噱头；以沉静的学术气质培育女性的恬适与矜持；以清华大学美术学院朴拙的艺术气息荡涤女性心头的浮躁与忧愁。\r\n　　\r\n　　体验与互动中教学：与成功女性零距离交流，体会光环背后的艰辛与琐碎；强调现场操作和体验，捕捉艺术家的创作瞬间；亲身打理自己不同社交场合的时尚造型，发现不一样的自己；亲临美术展馆、音乐会现场、文艺与读书沙龙，专家访谈等，体会另一种女性人生。\r\n　　\r\n　　建造女性友谊之舟：珍视女性同学间的友谊，加入女性同学会；定期组织班级内部的各种联谊活动，促进同学间的学术交流和情感建设；帮助本届学员与往届学员建立起沟通联系的桥梁；鼓励学员与任课教师的课间交流。\r\n　　\r\n　　倡导“天下行”学习模式：在选修课中，游学天下将带领学员进入不一样的“时空”，并优先推荐获得国外知名艺术学院进修学习机会，体验欧洲文化精髓与艺术魅力，求学台湾新竹清华大学艺术品鉴课程，在艺术氛围中提升成熟智慧女性的艺术品位与价值。\r\n　　\r\n【招生对象】\r\n　　\r\n　　该课程专门为追求卓越、成就、梦想、价值的优秀女性量身制定\r\n　　\r\n【课程体系】\r\n　　\r\n　　模块一：领导力与情商管理篇\r\n　　\r\n　　情商的价值是无量的，情商伴随着社会人的一生，是后天培养与修炼都能达到的。女性管理的特点是韧性，细腻周到，可信任性强，柔性情感特性突出；卓越女性领导力课程助您更好地结合管理和女性特质，形成独特实用的风格，善用女性的领导力与情商管理赢得成功！\r\n　　\r\n　　卓越女性领导艺术\r\n　　\r\n　　卓越女性的情商管理\r\n　　\r\n　　女性管理者的自我管理\r\n　　\r\n　　女性双赢的沟通艺术\r\n　　\r\n　　女性阳光心态塑造\r\n　　\r\n　　模块二：个性魅力塑造篇\r\n　　\r\n　　赏心悦目，是一种简单的原则，是一种长期才能够养成的气质，美丽的形象令己更加自信，卓越女性课程助助您身心共同健康，拥有激情与梦想，懂得感恩与欣赏，内外兼修，为世界增添一抹光彩！\r\n　　\r\n　　女性魅力的发现与养成\r\n　　\r\n　　仪态-女性优雅气质塑造\r\n　　\r\n　　仪表-着装色彩与服饰搭配\r\n　　\r\n　　仪礼-当代女性的社交礼仪\r\n　　\r\n　　仪容-形象塑造与流行妆容\r\n　　\r\n　　模块三：文化素养提升篇\r\n　　\r\n　　美丽由心而发，卓越女性课程助您内心更加成熟与丰富，从寻求外部帮助转为依赖自己的生命力量来改变命运，进入一个更注重精神内涵的新境界，成为散发着精致、美好、内涵深邃的智慧女性。！\r\n　　\r\n　　中国传统文化与女性修养\r\n　　\r\n　　卓越女性与读书选择\r\n　　\r\n　　国学智慧与东方女性思维\r\n　　\r\n　　职业女性综合素质修炼\r\n　　\r\n　　当代东、西方女性文化差异\r\n　　\r\n　　模块四：艺术鉴赏审美篇\r\n　　\r\n　　艺术鉴赏能满足审美需要，提高鉴赏者的审美能力；能培养人们的品德，提高思想，陶冶情操；通过卓越女性课程开发女性的智力，增加智慧，拓宽认识；能娱情怡神，促进人们的身心健康，接触艺术作品过程中产生的审美评价和审美享受。\r\n　　\r\n　　美的欣赏和创造\r\n　　\r\n　　艺术审美与鉴赏\r\n　　\r\n　　音乐鉴赏与舞蹈艺术\r\n　　\r\n　　摄影艺术与图片赏析\r\n　　\r\n　　书画鉴赏与陶瓷艺术\r\n　　\r\n　　模块五：家庭幸福经营篇\r\n　　\r\n　　女人内心的平和，是身心和谐、生活稳定的基础，爱、善良与自信，积极的心态是幸福生活的开始，婚姻家庭是幸福感中起决定性的因素之一，是幸福的起点全部生活的基础。卓越女性课程，助您感知生活，感悟幸福，平衡家庭与事业，经营好家庭，赢得生命的最高质量！\r\n　　\r\n　　女人是一种态度\r\n　　\r\n　　幸福比成功更重要\r\n　　\r\n　　家商-经营家庭的智慧\r\n　　\r\n　　家庭与事业双优平衡\r\n　　\r\n　　家庭理财实用技巧\r\n　　\r\n　　模块六：品质生活分享篇\r\n　　\r\n　　精致生活是一种态度，一种品位，一种理念，在生活中女性就应该注重生活的每一个细节。卓越女性课程助您拥有激情与梦想，懂得价值与欣赏，永远做自己的掌控者，追求快乐人生，享受品质生活的每个细节！\r\n　　\r\n　　时尚生活品味\r\n　　\r\n　　红酒鉴赏与收藏\r\n　　\r\n　　当代家居装饰艺术\r\n　　\r\n　　奢侈品文化与品牌鉴赏\r\n　　\r\n　　珠宝、腕表设计风格欣赏\r\n　　\r\n　　模块七：选修课程\r\n　　\r\n　　助您开阔眼界，开拓领域、开展思路，更大地发挥潜力、提升价值！\r\n　　\r\n　　参加高端女性论坛、亲子夏令营\r\n　　\r\n　　可优先推荐选择国外艺术院校进修\r\n　　\r\n　　亲身体验--工房首饰设计制作、画室学绘画、参加摄影展等\r\n　　\r\n　　参加艺术展览、时尚活动与搜狐高尔夫频道联手举办高尔夫沙龙等活动\r\n　　\r\n【证书颁发】\r\n　　\r\n　　由清华大学教育培训管理处统一颁发清华大学结业证书，加盖“清华大学教育培训证书专用章”钢印，证书号可登录清华大学教育培训与认证网站查询。\r\n　　\r\n【学制学费】\r\n　　\r\n　　1.采取非脱产分期集中面授的教学方式，每两个月集中上课4天。\r\n　　\r\n　　2.学制1.5年，共240学时。最新开课时间:2103年9月27日。\r\n　　\r\n　　3.授课地点在清华大学内或根据课程要求安排艺术场馆或博物馆。\r\n　　\r\n　　4.学费为：48000元/人（含课程学习、资料、注册、颁发证书、校徽、地图、学员证、同学会通讯录等费用）。\r\n　　\r\n　　5.交通、食宿由学校统一安排，费用自理。\r\n　　\r\n【汇款信息】\r\n　　　\r\n　　账户名称：清华大学（单位代码）\r\n　　\r\n　　帐号：0200004509089131550\r\n　　\r\n　　开户行名称：工行北京分行海淀西区支行\r\n　　\r\n　　用途一栏请注明：天下行——卓越女性领导力高级研修班（学员姓名）\r\n　　\r\n　　6.学员报到：学员应按入学通知规定时间准时报到，报到时请持本人身份证原件与复印件、学历学位证书原件与复印件，近期免冠蓝色背景彩色小二寸照片4张。\r\n【报名流程】\r\n    1、咨询：电话咨询010-62766642,并索取《清华大学报名申请表》\r\n    2、填表：学员详细填写《报名申请表》并传真至招生办公室（010-62766646）。\r\n    3、审核：学校收到报名后对学员进行审核，审核通过后,向学员发出开课通知书。\r\n    4、汇款：学员收到《开课通知书》后将学费汇至清华大学指定账号，并把汇款底单传真至招生办.\r\n    5、报到：学员应按《报到通知书》时间准时报到，学员报到时应持本人身份证原件、学历学位证书复印件，个人、单位简介各1份，近期免冠彩色照片六张（一、二寸各三张等）。\r\n【报名咨询】\r\n联  系  人：程老师\r\n联系电话：010-62766642   18911486968\r\n传真电话：010-62766646\r\n电子邮箱：thuemba@qq.com\r\n网    址：www.thuemba.com', '2', null);
+INSERT INTO `course` VALUES ('15', '123123', '13100', '1381839218000', '', null, '1', '就阿斯顿飞就啊看', '阿斯顿撒旦发生大幅', null, null);
 
 -- ----------------------------
 -- Table structure for `course_type`
@@ -300,7 +312,7 @@ CREATE TABLE `course_type` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of course_type
@@ -315,6 +327,7 @@ INSERT INTO `course_type` VALUES ('7', '国学艺术');
 INSERT INTO `course_type` VALUES ('8', '人力资源');
 INSERT INTO `course_type` VALUES ('9', '行业管理');
 INSERT INTO `course_type` VALUES ('10', '其他培训');
+INSERT INTO `course_type` VALUES ('11', '123');
 
 -- ----------------------------
 -- Table structure for `domain`
@@ -334,6 +347,7 @@ CREATE TABLE `domain` (
 INSERT INTO `domain` VALUES ('3', 'www.myweb.com', '1');
 INSERT INTO `domain` VALUES ('2', 'www.adfal.com', '1');
 INSERT INTO `domain` VALUES ('1', 'a', '1');
+INSERT INTO `domain` VALUES ('4', 'b', '2');
 
 -- ----------------------------
 -- Table structure for `education_institution`
@@ -351,7 +365,7 @@ CREATE TABLE `education_institution` (
   KEY `ix_education_institution_creator_17` (`creator_id`),
   KEY `ix_education_institution_audit_18` (`audit_id`),
   KEY `ix_education_institution_template_19` (`template_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of education_institution
@@ -369,6 +383,7 @@ INSERT INTO `education_institution` VALUES ('10', '16', '1381136024622', null, n
 INSERT INTO `education_institution` VALUES ('11', '17', '1381136024622', null, null, '苏州简一管理咨询有限公司\r\n苏州简一管理咨询有限公司', '苏州简一管理咨询有限公司成立于2008年，是国内唯一一家专注于服装企业高端人才培训，招聘的咨询公司，是中国最专业的行业性咨询机构之一，为服装企业提供全方位的人才招聘,培训解决方案。服务包括总经理、执行总经理等高管团队招聘、中层人才招聘、培训等。');
 INSERT INTO `education_institution` VALUES ('12', '18', '1381136024622', null, null, '中科院计算所培训中心.\r\n中科院计算所培训中心', '中国科学院计算技术研究所是国家专门的计算技术研究机构，同时也是中国信息化建设的重要支撑单位。中科院计算所培训中心致力于高端IT类人才培养，凭借科学院强大师资力量，在总结多年大型软件开发和组织经验的基础上，自主研发出一整套符合现代企业要求的课程体系，其目的是希望能切实帮助中国软件企业培养高级软件技术人才，提升企业整体研发与创新能力。迄今为止已先后为国家培养了数万名计算机专业人员，并先后为数千家大型国内外企业进行过专门的定制培训与咨询服务。从1987年成立之初至今，培训中心一如既往的秉承“科学、高效、权威、品质”的教学宗旨，以“追求卓越服务，与企业共发展”为努力目标，课程体系紧紧围绕“关注软件过程，把握软件质量”的中心思想，在关注企业员工发展的基础上，聚焦于企业体系建设、过程改进，致力于为企事业单位培养更多高端管理、创新人才。携手广大企事业单位，共同为我国软件事业的发展而努力！');
 INSERT INTO `education_institution` VALUES ('13', '19', '1381136024622', null, null, '翰联管理咨询有限公司\r\n翰联管理咨询有限公司', '河南翰联管理咨询有限公司是由多年从事管理咨询的专家、顾问及有丰富实践经验的企业家共同创办的，公司成立以来凭借其十年未企业提供管理咨询、培训所积累的知识和经验，依托成熟的专业咨询团队和先进的服务方式、准确的市场定位，赢得了客户的信任。翰联公司已成为中原地区拥有强大实力和相当规模的专业管理咨询、培训机构，现在已在北京、深圳、河北、杭州等地设立事业部。并与国内多家知名管理咨询公司形成战略联盟，使得翰联的服务范围遍及全国各地。尤其是在企业高端培训及人力资源管理咨询领域在国内处于领先地位，先后为数百家企业提供内训及管理咨询服务，得到客户的广泛认可。服务项目涉及企业战略、人力资源、市场营销、财务管理、组织结构、企业文化、领导力、通用管理等方面，致力于成为中国最值得信赖的管理咨询公司。\r\n服务客户：中国移动通信、中国联通、河南省电力公司、中国邮政、中国银行、中原信托、中国平安、中国人寿保险股份有限公司、中国中铁七局集团有限公司、郑州市土地储备中心、中国核电工程集团郑州公司、郑州燃气、河南高速、中国外运河南公司、郑州煤矿机械集团等。');
+INSERT INTO `education_institution` VALUES ('16', '40', '1381670931361', null, null, '123', '12312');
 
 -- ----------------------------
 -- Table structure for `enroll`
@@ -443,7 +458,7 @@ CREATE TABLE `instructor` (
   KEY `ix_instructor_user_29` (`user_id`),
   KEY `ix_instructor_template_30` (`template_id`),
   KEY `ix_instructor_audit_31` (`audit_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of instructor
@@ -606,7 +621,7 @@ CREATE TABLE `news_type` (
   `name` varchar(255) DEFAULT NULL,
   `info` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of news_type
@@ -795,13 +810,14 @@ CREATE TABLE `student` (
   `info` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `ix_student_user_45` (`user_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of student
 -- ----------------------------
 INSERT INTO `student` VALUES ('1', '3', '百度', '项目经理', '百度资深项目经理，负责百度搜索，百度词典项目。');
 INSERT INTO `student` VALUES ('2', '8', '网易', '程序员', '网易邮件事业部资深程序员');
+INSERT INTO `student` VALUES ('4', '38', '123', '123', '123');
 
 -- ----------------------------
 -- Table structure for `studentwords`
@@ -849,12 +865,13 @@ CREATE TABLE `template` (
   KEY `ix_template_instructor_48` (`instructor_id`),
   KEY `ix_template_agent_49` (`agent_id`),
   KEY `ix_template_templateType_50` (`template_type_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of template
 -- ----------------------------
 INSERT INTO `template` VALUES ('2', '5', null, null, '1', null, '3');
+INSERT INTO `template` VALUES ('3', '32', null, null, '2', null, '1');
 
 -- ----------------------------
 -- Table structure for `template_type`
@@ -868,7 +885,7 @@ CREATE TABLE `template_type` (
   `url` varchar(255) DEFAULT NULL,
   `logo` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of template_type
@@ -877,6 +894,7 @@ INSERT INTO `template_type` VALUES ('1', '默认模板', '系统默认模板', '
 INSERT INTO `template_type` VALUES ('2', '清新', '清新淡雅模板模板', '1381136024622', null, null);
 INSERT INTO `template_type` VALUES ('3', '黑色', '黑色浓重模板', '1381136024622', null, null);
 INSERT INTO `template_type` VALUES ('4', '绿野仙踪', '绿色自然主题', '1381136024622', null, null);
+INSERT INTO `template_type` VALUES ('6', '13123', '斯蒂芬斯蒂芬斯蒂芬', '1381586890354', 'datas/default/templates/6\\', 'null/multipartBody3699239113397413713asTemporaryFile20131012100810.jpg');
 
 -- ----------------------------
 -- Table structure for `user`
@@ -903,12 +921,12 @@ CREATE TABLE `user` (
   KEY `ix_user_instructor_54` (`instructor_id`),
   KEY `ix_user_agent_55` (`agent_id`),
   KEY `ix_user_student_56` (`student_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=34 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=41 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES ('1', 'admin', 'admin', '我是管理员', '18768161627', 'zhangsan@gmail.com', '', null, '1', null, null, null, '2');
+INSERT INTO `user` VALUES ('1', 'admin', 'admin', '我是管理员', '18768161627', 'zhangsan@gmail.com', '', null, '1', null, null, null, null);
 INSERT INTO `user` VALUES ('2', 'test2', 'test2', '这只是个昵称2', '13545678908', 'lisi@gmail.com', '', null, '2', null, null, null, null);
 INSERT INTO `user` VALUES ('5', 'agent', 'agent', '我是代理人', '15912315569', 'agen@126.com', null, null, '5', null, null, '1', null);
 INSERT INTO `user` VALUES ('3', 'stu', 'stu', '我是学员', '13245669756', 'xueyuan@gmail.com', null, null, '3', null, null, null, '1');
@@ -940,6 +958,8 @@ INSERT INTO `user` VALUES ('29', 'teacher11', 'teacher11', '讲师11', '1231231'
 INSERT INTO `user` VALUES ('30', 'teacher12', 'teacher12', '讲师12', '23123123', 'teacher12@126.com', null, null, '30', null, null, null, null);
 INSERT INTO `user` VALUES ('31', 'teacher13', 'teacher13', '讲师13', '1231541', 'teacher13@1213.com', null, null, '31', null, null, null, null);
 INSERT INTO `user` VALUES ('32', 'agent2', 'agent2', '代理人2', '123123123', 'agent2@123.com', null, null, '32', null, null, '2', null);
+INSERT INTO `user` VALUES ('38', 'User1381669158021', 'HmYiKI', '13123', '123', '123', null, '3', '34', null, null, null, '4');
+INSERT INTO `user` VALUES ('40', 'User1381670931359', 'nbpdOv', null, null, null, null, '5', null, null, null, null, null);
 
 -- ----------------------------
 -- Table structure for `user_info`
@@ -962,7 +982,7 @@ CREATE TABLE `user_info` (
   `last_login_ip` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `ix_user_info_user_57` (`user_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=33 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=35 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of user_info
@@ -999,6 +1019,7 @@ INSERT INTO `user_info` VALUES ('29', '29', '易中天', '723123451261', '138113
 INSERT INTO `user_info` VALUES ('30', '30', '王晓毅', '12341712341761', '1381136024622', '1', '34672345', '34352345', '四川江夏', '讲师11', '1381136024622', '10.101.10.1', '1381136024622', '10.101.10.1');
 INSERT INTO `user_info` VALUES ('31', '31', '张国刚 ', '234123412412', '1381136024622', '1', '34522723', '23452', '甘肃济源', '讲师12', '1381136024622', '10.101.10.1', '1381136024622', '10.101.10.1');
 INSERT INTO `user_info` VALUES ('32', '32', '南国公', '123123124123', '1381136024622', '1', '123123123', '123123123', '北京台州', '代理人2', '1381136024622', '10.101.10.1', '1381136024622', '10.101.10.1');
+INSERT INTO `user_info` VALUES ('34', '38', '13123', '123', null, '1', '123', '123', '123', null, '1381669158022', null, null, null);
 
 -- ----------------------------
 -- Table structure for `user_role`
@@ -1015,3 +1036,35 @@ CREATE TABLE `user_role` (
 -- Records of user_role
 -- ----------------------------
 INSERT INTO `user_role` VALUES ('1', '6');
+INSERT INTO `user_role` VALUES ('2', '5');
+INSERT INTO `user_role` VALUES ('3', '4');
+INSERT INTO `user_role` VALUES ('4', '1');
+INSERT INTO `user_role` VALUES ('5', '3');
+INSERT INTO `user_role` VALUES ('6', '2');
+INSERT INTO `user_role` VALUES ('7', '1');
+INSERT INTO `user_role` VALUES ('8', '4');
+INSERT INTO `user_role` VALUES ('9', '1');
+INSERT INTO `user_role` VALUES ('10', '1');
+INSERT INTO `user_role` VALUES ('11', '1');
+INSERT INTO `user_role` VALUES ('12', '1');
+INSERT INTO `user_role` VALUES ('13', '1');
+INSERT INTO `user_role` VALUES ('14', '1');
+INSERT INTO `user_role` VALUES ('15', '1');
+INSERT INTO `user_role` VALUES ('16', '1');
+INSERT INTO `user_role` VALUES ('17', '1');
+INSERT INTO `user_role` VALUES ('18', '1');
+INSERT INTO `user_role` VALUES ('19', '1');
+INSERT INTO `user_role` VALUES ('20', '2');
+INSERT INTO `user_role` VALUES ('21', '2');
+INSERT INTO `user_role` VALUES ('23', '2');
+INSERT INTO `user_role` VALUES ('24', '2');
+INSERT INTO `user_role` VALUES ('25', '2');
+INSERT INTO `user_role` VALUES ('26', '2');
+INSERT INTO `user_role` VALUES ('27', '2');
+INSERT INTO `user_role` VALUES ('28', '2');
+INSERT INTO `user_role` VALUES ('29', '2');
+INSERT INTO `user_role` VALUES ('30', '2');
+INSERT INTO `user_role` VALUES ('31', '2');
+INSERT INTO `user_role` VALUES ('32', '3');
+INSERT INTO `user_role` VALUES ('38', '4');
+INSERT INTO `user_role` VALUES ('40', '1');
