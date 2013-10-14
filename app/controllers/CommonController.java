@@ -280,7 +280,7 @@ public class CommonController extends Controller {
 			@FormValidator(name = "money", validateType = Type.NUMBER, msg = "学费只能是数字"),
 			@FormValidator(name = "startTime", validateType = Type.REQUIRED, msg = "开课时间不能为空"),
 			@FormValidator(name = "info", validateType = Type.REQUIRED, msg = "课程简介不能为空"),
-			@FormValidator(name = "detail", validateType = Type.REQUIRED, msg = "课程详情不能为空"),
+			@FormValidator(name = "detail", validateType = Type.REQUIRED, msg = "课程详情不能为空")
 	})
 	public static Result addOrUpdateCourse() {
 		String msg = Validator.check(CommonController.class, "addOrUpdateCourse");
@@ -573,7 +573,7 @@ public class CommonController extends Controller {
 	 */
 	@FormValidators(values = {
 			@FormValidator(name = "title", validateType = Type.REQUIRED, msg = "广告标题不能为空"),
-			@FormValidator(name = "url", validateType = Type.REQUIRED, msg = "链接地址不能为空"),
+			@FormValidator(name = "url", validateType = Type.REQUIRED, msg = "链接地址不能为空")
 	})
 	public static Result addOrUpdateAdvertisment() {
 		String msg = Validator.check(CommonController.class, "addOrUpdateAdvertisment");
