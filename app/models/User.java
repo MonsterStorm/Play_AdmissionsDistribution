@@ -229,7 +229,7 @@ public class User extends Model {
 		}
 
 		// 审核信息
-		Audit audit = new Audit(user, auditStatus);
+		Audit audit = new Audit(user, auditStatus, AuditType.TYPE_AUDITTYPE_USER);
 		AuditType auditType = AuditType.find(type);// 学员审核
 		audit.type = auditType;
 		user.audit = audit;

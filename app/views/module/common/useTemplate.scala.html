@@ -30,7 +30,7 @@
 $('#toolbar').tooltip(options);
 </script> -->
 
-@dialogConfirm("确定应用模板", templateType.id, String.valueOf("doUseTemplate(" + templateType.id + ", {id:" + templateType.id + "});")){
+@dialogConfirm("确定应用模板", String.valueOf(templateType.id), String.valueOf("doUseTemplate(" + templateType.id + ", {id:" + templateType.id + "});")){
 	确定应用&nbsp;
 	<b style="font-size:x-large;color:red">
 	@{

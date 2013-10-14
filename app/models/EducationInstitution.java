@@ -40,7 +40,7 @@ public class EducationInstitution extends Model {
 	@OneToOne(cascade=CascadeType.ALL)
 	public Audit audit;//教育机构状态，状态在Audit类中
 	
-	@OneToOne
+	@OneToOne(cascade=CascadeType.ALL)
 	public Template template;//一个教育机构有一个专属推广页面
 	
 	// 其他属性字段
@@ -135,7 +135,7 @@ public class EducationInstitution extends Model {
 	 * add or update an education institution
 	 * @return
 	 */
-	public static EducationInstitution addOrUpdate(DynamicForm form){
+	/*public static EducationInstitution addOrUpdate(DynamicForm form){
 		final String id = form.get("id");
 		final String name = form.get("name");
 		final String info = form.get("info");
@@ -157,8 +157,28 @@ public class EducationInstitution extends Model {
 		edu.createTime = System.currentTimeMillis();
 		edu.save();
 		return edu;
-	}
+	}*/
 
+	/**
+	 * course
+	 * @param courseId
+	 * @param auditStatus
+	 * @return
+	 */
+	public static EducationInstitution updateAudit(Long eduId, Integer auditStatus){
+		EducationInstitution edu = EducationInstitution.find(eduId);
+		if(edu != null ){
+			if(edu.audit != null){
+				edu.audit.status = auditStatus;
+				edu.audit.auditor = LoginController.getSessionUser();
+				edu.audit.auditTime = System.currentTimeMillis();
+				edu.update();
+				return edu;
+			}
+		}
+		return null;
+	}
+	
 	/**
 	 * add or update an education institution
 	 * @return
@@ -170,6 +190,12 @@ public class EducationInstitution extends Model {
 				edu.creator = user;//绑定到当前用户
 				edu.id = finder.nextId();
 				edu.createTime = System.currentTimeMillis();
+				
+				Template template = new Template(edu, TemplateType.TYPE_DEFAULT);
+				edu.template = template;
+				
+				edu.audit = new Audit(edu.creator, Audit.STATUS_WAIT, AuditType.TYPE_AUDITTYPE_EDU);
+				
 				edu.save();
 			} else {// 更新
 				edu.update();

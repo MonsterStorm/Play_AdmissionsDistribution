@@ -10,8 +10,9 @@ import play.data.validation.Constraints.Required;
 import play.db.ebean.*;
 
 import com.avaje.ebean.*;
-import com.avaje.ebean.Query;
 import common.*;
+
+import controllers.*;
 
 /**
  * 课程类，由讲师创建
@@ -37,7 +38,7 @@ public class Course extends Model {
 
 	public String contact;// 联系方式，包括联系人，电话等
 
-	@OneToOne
+	@OneToOne(cascade=CascadeType.ALL)
 	public Audit audit;// 审核状态，课程需要被审核，当前审核状态
 
 	@ManyToOne
@@ -120,11 +121,49 @@ public class Course extends Model {
 		if (course != null) {
 			if (course.id == null) {// 新增
 				course.id = finder.nextId();
+				
+				User user = LoginController.getSessionUser();
+				
+				//教育机构
+				String eduId = LoginController.getFromSession(LoginController.KEY_EDU_ID);
+				if(StringHelper.isValidate(eduId)){
+					course.edu = EducationInstitution.find(Long.valueOf(eduId));
+				} else {
+					if(user != null && user.instructor != null){//讲师
+						course.instructor = user.instructor;
+					}
+				}
+				
+				//创建Audit
+				Audit audit = new Audit(user, Audit.STATUS_WAIT, AuditType.TYPE_AUDITTYPE_COURSE);
+				course.audit = audit;
+				
 				course.save();
 			} else {// 更新
 				course.update();
 			}
 			return course;
+		}
+		return null;
+	}
+	
+	/**
+	 * course
+	 * @param courseId
+	 * @param auditStatus
+	 * @return
+	 */
+	public static Course updateAudit(Long courseId, Integer auditStatus){
+		Course course = Course.find(courseId);
+		if(course != null ){
+			if(course.audit != null){
+				play.Logger.debug("!!!");
+				course.audit.status = auditStatus;
+				course.audit.auditor = LoginController.getSessionUser();
+				course.audit.auditTime = System.currentTimeMillis();
+				course.update();
+				return course;
+			}
 		}
 		return null;
 	}

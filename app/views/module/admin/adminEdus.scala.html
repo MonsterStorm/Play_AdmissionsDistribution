@@ -43,14 +43,42 @@ $('#toolbar').tooltip(options);
 </script> -->
 @dialogDelete("删除教育机构", EducationInstitution.TABLE_NAME, edu.id){确定删除&nbsp;<b style="font-size:x-large;color:red">@edu.name</b>&nbsp;？}
 
+
+@dialogConfirm("确定审核通过", String.valueOf("y" + edu.id), "doAdminAudit('n" + edu.id + "', {id:" + edu.id + ",status:" + Audit.STATUS_SUCCESS + ",table:'" + EducationInstitution.TABLE_NAME + "'})"){
+	确定审核通过&nbsp;
+	<b style="font-size:x-large;color:red">
+	@{
+		if(edu.name != null){
+			edu.name
+		}
+	}
+	</b>&nbsp;？
+}
+
+
+@dialogConfirm("确定拒绝通过", String.valueOf("n" + edu.id), "doAdminAudit('n" + edu.id + "', {id:" + edu.id + ",status:" + Audit.STATUS_FAILED + ",table:'" + EducationInstitution.TABLE_NAME + "'})"){
+	确定拒绝通过&nbsp;
+	<b style="font-size:x-large;color:red">
+	@{
+		if(edu.name != null){
+			edu.name
+		}
+	}
+	</b>&nbsp;？
+}
+
 <div class="pull-left" style="width:130px;">
 	<div class="btn-group" id="toolbar">
-		@if(edu.creator != null && edu.creator.audit != null && edu.creator.audit.status != Audit.STATUS_SUCCESS){
-			<a class="btn btn-success" data-toggle="审核通过" href="#"><i	class="icon-ok icon-white"></i></a>
-			<a class="btn btn-info"	data-toggle="拒绝通过" href="#"><i class="icon-ban-circle icon-white"></i></a>
+		@if(edu.audit != null && edu.audit.status != Audit.STATUS_SUCCESS){
+			<a class="btn btn-success" data-toggle="审核通过" href="#" onclick="showConfirm('@String.valueOf("y" + edu.id)')"><i class="icon-ok icon-white"></i></a> 
 		} else {
-			<span class="btn btn-success disabled" data-toggle="审核通过"><i	class="icon-ok icon-white"></i></span>
-			<span class="btn btn-info disabled"	data-toggle="拒绝通过"><i class="icon-ban-circle icon-white"></i></span>
+			<span class="btn btn-success disabled" data-toggle="审核通过" href="#"><i class="icon-ok icon-white"></i></span>
+		}
+		
+		@if(edu.audit != null && edu.audit.status != Audit.STATUS_FAILED){
+			<a class="btn btn-info"	data-toggle="拒绝通过" href="#" onclick="showConfirm('@String.valueOf("n" + edu.id)')"><i class="icon-ban-circle icon-white"></i></a>
+		} else {
+			<span class="btn btn-info disabled"	data-toggle="拒绝通过" href="#"><i class="icon-ban-circle icon-white"></i></span>
 		}
 	</div>
 	<div class="btn-group">

@@ -112,8 +112,8 @@
   }
   
 	function showConfirm(id){
-		var dialog = '#dialogModal_' + id;
-     $(dialog).modal();
+		var dialog = '#dialogConfirm_' + id;
+    $(dialog).modal();
 	}
   
 	function doDeleteEntity(id, data){
@@ -128,9 +128,13 @@
     $(dialog).modal('hide');
 	}
 	
+	function doAdminAudit(id, data){
+		ajaxBasic("/audit/admin", data, "POST", "#content");
+		var dialog = '#dialogConfirm_' + id;
+    $(dialog).modal('hide');
+	}
 	
 </script>
-
 
 <ul class="nav nav-list" id="navList">
 	<li class="nav-header">管理员</li>

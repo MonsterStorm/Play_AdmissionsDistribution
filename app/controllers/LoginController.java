@@ -71,7 +71,17 @@ public class LoginController extends BaseController {
 			session(KEY_USER_ACCOUNT, login.user.nickname);
 		else
 			session(KEY_USER_ACCOUNT, login.account);
+		
 		session(KEY_USER_ID, login.user.id.toString());//存用户id
+		
+		//存eduId，只存第一个id
+		if(login.user.edus != null && login.user.edus.size() > 0){
+			EducationInstitution edu = login.user.edus.get(0);
+			if(edu != null){
+				session(KEY_EDU_ID, edu.id.toString());
+			}
+		}
+		
 		if(StringHelper.isValidate(login.user.getRoles()))
 			session(KEY_USER_ROLES, login.user.getRoles());//存用户角色
 		if(StringHelper.isValidate(login.user.getModles()))

@@ -43,6 +43,20 @@ public class FormHelper {
 		}
 		return null;
 	}
+	
+	/**
+	 * get integer
+	 * @param form
+	 * @param field
+	 * @return
+	 */
+	public static Integer getInt(DynamicForm form, String field){
+		final String value = form.get(field);
+		if(StringHelper.isValidate(value)){
+			return Integer.valueOf(value);
+		}
+		return null;
+	}
 
 	/**
 	 * get boolean

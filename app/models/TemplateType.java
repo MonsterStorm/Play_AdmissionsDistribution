@@ -20,13 +20,15 @@ import common.*;
 @Entity
 @Table(name = TemplateType.TABLE_NAME)
 public class TemplateType extends Model {
+	public static final long TYPE_DEFAULT = 1;//默认模板
+	
 	public static final String TABLE_NAME = "template_type";
 	@Id
 	public Long id;
 
 	public String name;// 模板名称
 
-	public int type;// 模板类型  1 代理人 2教育机构 3讲师
+	//public int tType;// 模板类型  1 代理人 2教育机构 3讲师
 
 	@Lob
 	public String info;// 简介

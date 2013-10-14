@@ -19,28 +19,36 @@ public class Template extends Model {
 	@Id
 	public Long id;
 
-	@OneToOne
+	@OneToOne(cascade=CascadeType.ALL)
 	public User user;// 模板到用户，用于快速找到模板对于的用户
 
-	@OneToOne
+	@OneToOne(cascade=CascadeType.ALL)
 	public EducationInstitution edu;// 一个用户拥有一个模板
 
-	@OneToOne
+	@OneToOne(cascade=CascadeType.ALL)
 	public Instructor instructor;// 讲师有一个模板
 
-	@OneToOne
+	@OneToOne(cascade=CascadeType.ALL)
 	public Agent agent;// 代理人有一个模板
 
 	public String indexPath;// index首页的路径
 
-	@ManyToOne
+	@ManyToOne(cascade=CascadeType.ALL)
 	public TemplateType templateType;// 模板类型，多个模板可以对应于一个类型，对于自定义模板（该字段为null，或者为type中定义的一种）
 
 	// -- 查询
-	public static Model.Finder<Long, Template> finder = new Model.Finder(
-			Long.class, Template.class);
+	public static Model.Finder<Long, Template> finder = new Model.Finder(Long.class, Template.class);
 
 	public Template() {
+	}
+	
+	public Template(EducationInstitution edu, long templateType){
+		if(edu != null){
+			User user = edu.creator;
+			this.user = user;
+			this.edu = edu;
+			this.templateType = TemplateType.find(templateType);
+		}
 	}
 
 	public Template(User user, TemplateType templateType) {

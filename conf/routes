@@ -4,6 +4,9 @@
 #User Templates
 GET		/t/:domain					controllers.TemplateController.index(domain: String)
 
+#Audit
+POST	/audit/admin				controllers.AuditController.auditAdmin()
+
 #Login
 
 POST	/student/login				controllers.LoginController.loginStudent()

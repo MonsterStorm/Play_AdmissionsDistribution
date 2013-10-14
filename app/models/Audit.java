@@ -53,11 +53,13 @@ public class Audit extends Model {
 	
 	public Audit(){
 	}
-
-	public Audit(User creator, int status){
+	
+	public Audit(User creator, int status, long auditType){
 		this.status = status;
 		this.creator = creator;
 		this.createTime = System.currentTimeMillis();
+		
+		this.type = AuditType.find(auditType);
 	}
 	
 	// -- 查询
