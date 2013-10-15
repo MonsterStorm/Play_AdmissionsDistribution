@@ -160,6 +160,7 @@ create table instructor (
   id                        bigint auto_increment not null,
   user_id                   bigint,
   template_id               bigint,
+  name                      varchar(255),
   job_title                 varchar(255),
   audit_id                  bigint,
   create_time               bigint,
@@ -285,6 +286,7 @@ create table scholl_fellow (
 create table student (
   id                        bigint auto_increment not null,
   user_id                   bigint,
+  name                      varchar(255),
   company_name              varchar(255),
   position                  varchar(255),
   info                      varchar(255),

@@ -9,6 +9,7 @@ import play.db.ebean.*;
 
 import com.avaje.ebean.*;
 import common.*;
+import controllers.*;
 
 /**
  * 学员，该类包含学员的基本信息，填写报名信息的时候为该表
@@ -31,7 +32,8 @@ public class Student extends Model {
 	public List<Enroll> enrolls;//学员报名信息
 
 	// --其他属性，只在报名第一次用到，其他时候公用该信息--
-
+	public String name;//学员名称
+	
 	public String companyName;// 公司名称
 
 	public String position; // 职务
@@ -102,6 +104,27 @@ public class Student extends Model {
 		}
 		return null;
 	}
+	
+	/**
+	 * course
+	 * @param courseId
+	 * @param auditStatus
+	 * @return
+	 */
+	/*public static Student updateAudit(Long stuId, Integer auditStatus){
+		Student stu = Student.find(stuId);
+		if(stu != null ){
+			if(stu.audit != null){
+				stu.audit.status = auditStatus;
+				stu.audit.auditor = LoginController.getSessionUser();
+				stu.audit.auditTime = System.currentTimeMillis();
+				stu.update();
+				return instructor;
+			}
+		}
+		return null;
+	}*/
+	
 	
 	/**
 	 * delete an edu

@@ -310,7 +310,7 @@ public class CommonController extends Controller {
 	 * @return
 	 */
 	@FormValidators(values = {
-			@FormValidator(name = "user.nickname", validateType = Type.REQUIRED, msg = "讲师名称不能为空"),
+			@FormValidator(name = "name", validateType = Type.REQUIRED, msg = "讲师名称不能为空"),
 			@FormValidator(name = "jobTitle", validateType = Type.REQUIRED, msg = "职称不能为空"),
 			@FormValidator(name = "info", validateType = Type.REQUIRED, msg = "简介不能为空")
 	})
@@ -342,7 +342,7 @@ public class CommonController extends Controller {
 	 * @return
 	 */
 	@FormValidators(values = {
-			@FormValidator(name = "user.nickname", validateType = Type.REQUIRED, msg = "学员名称不能为空"),
+			@FormValidator(name = "name", validateType = Type.REQUIRED, msg = "学员名称不能为空"),
 			@FormValidator(name = "user.mobile", validateType = Type.REQUIRED, msg = "手机号码不能为空"),
 			@FormValidator(name = "user.email", validateType = Type.REQUIRED, msg = "用户邮箱不能为空")
 	})

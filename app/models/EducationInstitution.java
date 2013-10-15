@@ -26,8 +26,8 @@ public class EducationInstitution extends Model {
 	@Id
 	public Long id;
 
-	@OneToMany(cascade=CascadeType.ALL)
-	public List<Domain> domain;//  教育机构对应的域名信息，一个 教育机构对应多个域名，一个域名隶属于一个教育机构（也可以没有讲师）
+	@OneToMany(mappedBy="edu", cascade=CascadeType.ALL)
+	public List<Domain> domain = new ArrayList<Domain>();//  教育机构对应的域名信息，一个 教育机构对应多个域名，一个域名隶属于一个教育机构（也可以没有讲师）
 
 	@ManyToOne(fetch=FetchType.EAGER)
 	public User creator;// 教育机构的创建者，一个创建者可以创建多个教育机构，一个教育机构只能被一个用户创建
@@ -191,10 +191,14 @@ public class EducationInstitution extends Model {
 				edu.id = finder.nextId();
 				edu.createTime = System.currentTimeMillis();
 				
-				Template template = new Template(edu, TemplateType.TYPE_DEFAULT);
-				edu.template = template;
+				//创建默认模板
+				edu.template = new Template(edu, TemplateType.TYPE_DEFAULT);
 				
+				//认证
 				edu.audit = new Audit(edu.creator, Audit.STATUS_WAIT, AuditType.TYPE_AUDITTYPE_EDU);
+				
+				//创建默认域名
+				edu.domain.add(new Domain(edu));
 				
 				edu.save();
 			} else {// 更新

@@ -26,8 +26,8 @@ public class Instructor extends Model {
 	@Id
 	public Long id;
 
-	@OneToMany(cascade=CascadeType.ALL)
-	public List<Domain> domain;//  讲师对应的域名信息，一个讲师对应多个域名，一个域名隶属于一个讲师（也可以没有讲师）
+	@OneToMany(mappedBy="instructor", cascade=CascadeType.ALL)
+	public List<Domain> domain = new ArrayList<Domain>();//  讲师对应的域名信息，一个讲师对应多个域名，一个域名隶属于一个讲师（也可以没有讲师）
 
 	@OneToOne(cascade=CascadeType.ALL)
 	public User user;// 讲师对应的用户，一个用户只能对应一个讲师，一个讲师只能对应一个用户
@@ -39,9 +39,11 @@ public class Instructor extends Model {
 	public Template template;//一个讲师有一个专属推广页面
 	
 	// 其他属性字段
+	public String name;//讲师名称
+	
 	public String jobTitle;// 职称
 
-	@OneToOne
+	@OneToOne(cascade=CascadeType.ALL)
 	public Audit audit;// 审核状态
 
 	public Long createTime;// 创建时间
@@ -99,17 +101,47 @@ public class Instructor extends Model {
 	 * @return
 	 */
 	public static Instructor addOrUpdate(Instructor instructor) {
-		play.Logger.debug(TAG + ".addOrUpdate: id=" + instructor.id + ", name="	+ instructor.jobTitle);
 		if (instructor != null) {
 			if (instructor.id == null) {// 新增
 				User user = LoginController.getSessionUser();//创建用户必须是当前用户
 				instructor.user = user;
 				instructor.id = finder.nextId();
+				instructor.createTime = System.currentTimeMillis();
+				
+				//创建Audit
+				instructor.audit = new Audit(instructor.user, Audit.STATUS_WAIT, AuditType.TYPE_AUDITTYPE_INSTRUCTOR);
+				
+				//创建模板
+				instructor.template = new Template(instructor, TemplateType.TYPE_DEFAULT);
+				
+				//创建默认域名
+				instructor.domain.add(new Domain(instructor));
+				
 				instructor.save();
 			} else {// 更新
 				instructor.update();
 			}
 			return instructor;
+		}
+		return null;
+	}
+	
+	/**
+	 * course
+	 * @param courseId
+	 * @param auditStatus
+	 * @return
+	 */
+	public static Instructor updateAudit(Long instructorId, Integer auditStatus){
+		Instructor instructor = Instructor.find(instructorId);
+		if(instructor != null ){
+			if(instructor.audit != null){
+				instructor.audit.status = auditStatus;
+				instructor.audit.auditor = LoginController.getSessionUser();
+				instructor.audit.auditTime = System.currentTimeMillis();
+				instructor.update();
+				return instructor;
+			}
 		}
 		return null;
 	}

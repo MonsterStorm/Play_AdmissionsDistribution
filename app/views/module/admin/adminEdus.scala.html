@@ -18,9 +18,9 @@
 				class="icon-plus icon-white"></i>新增</a>
 		</div>
 		<div class="btn-group" id="btnGroup">
-				<button type="button" class="btn btn-default @checkActive("auditStatus", "-1")" onclick="@buildAction({baseUrl}, "admin", Array("auditStatus"), Array("-1"))">所有</button>
-				<button type="button" class="btn btn-default @checkActive("auditStatus", {String.valueOf(Audit.STATUS_WAIT)})" onclick="@buildAction({baseUrl}, "admin", Array("auditStatus"), Array({String.valueOf(Audit.STATUS_WAIT)}))">所有待审核</button>
-				<button type="button" class="btn btn-default @checkActive("auditStatus", {String.valueOf(Audit.STATUS_SUCCESS)})" onclick="@buildAction({baseUrl}, "admin", Array("auditStatus"), Array({String.valueOf(Audit.STATUS_SUCCESS)}))">所有已审核</button>
+				<button type="button" class="btn btn-default @checkActive("auditStatus", "-1")" onclick="@buildAction({baseUrl}, "admin", Array("auditStatus"), Array("-1"), true)">所有</button>
+				<button type="button" class="btn btn-default @checkActive("auditStatus", {String.valueOf(Audit.STATUS_WAIT)})" onclick="@buildAction({baseUrl}, "admin", Array("auditStatus"), Array({String.valueOf(Audit.STATUS_WAIT)}), true)">所有待审核</button>
+				<button type="button" class="btn btn-default @checkActive("auditStatus", {String.valueOf(Audit.STATUS_SUCCESS)})" onclick="@buildAction({baseUrl}, "admin", Array("auditStatus"), Array({String.valueOf(Audit.STATUS_SUCCESS)}), true)">所有已审核</button>
 		</div>
 		<div class="btn-group">
 			<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">

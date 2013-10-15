@@ -58,7 +58,6 @@ public class Audit extends Model {
 		this.status = status;
 		this.creator = creator;
 		this.createTime = System.currentTimeMillis();
-		
 		this.type = AuditType.find(auditType);
 	}
 	

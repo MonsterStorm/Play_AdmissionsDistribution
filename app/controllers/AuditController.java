@@ -28,13 +28,17 @@ public class AuditController extends Controller {
 			return auditAdminCourse();
 		} else if (EducationInstitution.TABLE_NAME.equalsIgnoreCase(table)) {
 			return auditAdminEdu();
+		} else if (Instructor.TABLE_NAME.equalsIgnoreCase(table)) {
+			return auditAdminInstructor();
+		} else if (Agent.TABLE_NAME.equalsIgnoreCase(table)) {
+			return auditAdminAgent();
 		} else {
 			return badRequest(Constants.MSG_PAGE_NOT_FOUND);
 		}
 	}
 
 	/**
-	 * 管理员审核课程
+	 * 课程审核
 	 * 
 	 * @return
 	 */
@@ -51,17 +55,55 @@ public class AuditController extends Controller {
 		}
 		return internalServerError(Constants.MSG_INTERNAL_ERROR);
 	}
-	
+
 	/**
 	 * 教育机构审核
+	 * 
 	 * @return
 	 */
-	public static Result auditAdminEdu(){
+	public static Result auditAdminEdu() {
 		Long id = FormHelper.getLong(form().bindFromRequest(), "id");
 		Integer status = FormHelper.getInt(form().bindFromRequest(), "status");
 		if (id != null && status != null) {
-			EducationInstitution edu = EducationInstitution.updateAudit(id, status);
+			EducationInstitution edu = EducationInstitution.updateAudit(id,
+					status);
 			if (edu != null) {
+				return ok(Constants.MSG_SUCCESS);
+			} else {
+				return internalServerError(Constants.MSG_EDUCATION_NOT_EXIST);
+			}
+		}
+		return internalServerError(Constants.MSG_INTERNAL_ERROR);
+	}
+	
+	/**
+	 * 讲师审核
+	 * @return
+	 */
+	public static Result auditAdminInstructor(){
+		Long id = FormHelper.getLong(form().bindFromRequest(), "id");
+		Integer status = FormHelper.getInt(form().bindFromRequest(), "status");
+		if (id != null && status != null) {
+			Instructor instructor = Instructor.updateAudit(id, status);
+			if (instructor != null) {
+				return ok(Constants.MSG_SUCCESS);
+			} else {
+				return internalServerError(Constants.MSG_EDUCATION_NOT_EXIST);
+			}
+		}
+		return internalServerError(Constants.MSG_INTERNAL_ERROR);
+	}
+	
+	/**
+	 * 代理人审核
+	 * @return
+	 */
+	public static Result auditAdminAgent(){
+		Long id = FormHelper.getLong(form().bindFromRequest(), "id");
+		Integer status = FormHelper.getInt(form().bindFromRequest(), "status");
+		if (id != null && status != null) {
+			Agent agent = Agent.updateAudit(id, status);
+			if (agent != null) {
 				return ok(Constants.MSG_SUCCESS);
 			} else {
 				return internalServerError(Constants.MSG_EDUCATION_NOT_EXIST);

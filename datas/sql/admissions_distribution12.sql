@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50530
 File Encoding         : 65001
 
-Date: 2013-10-13 21:50:21
+Date: 2013-10-15 23:34:21
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -115,13 +115,14 @@ CREATE TABLE `agent` (
   KEY `ix_agent_user_4` (`user_id`),
   KEY `ix_agent_template_5` (`template_id`),
   KEY `ix_agent_audit_6` (`audit_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=23 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=24 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of agent
 -- ----------------------------
 INSERT INTO `agent` VALUES ('1', '5', '2', null, '金城代理', '金城代理公司，全程为您推荐可靠的课程信息', '联系人：方长老 18768594685');
 INSERT INTO `agent` VALUES ('2', '32', '3', null, '伟业代理', '伟业代理公司，竭诚为您服务', '');
+INSERT INTO `agent` VALUES ('23', '41', '4', '7', '滚石代理', '滚石竭诚为您代开发票。', '管事：10086');
 
 -- ----------------------------
 -- Table structure for `agent_course`
@@ -165,7 +166,7 @@ CREATE TABLE `audit` (
   KEY `ix_audit_creator_8` (`creator_id`),
   KEY `ix_audit_course_9` (`course_id`),
   KEY `ix_audit_auditor_10` (`auditor_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of audit
@@ -175,6 +176,8 @@ INSERT INTO `audit` VALUES ('2', '3', '1', '37', null, '1381668998011', null, nu
 INSERT INTO `audit` VALUES ('3', '5', '1', '38', null, '1381669158022', null, null);
 INSERT INTO `audit` VALUES ('4', '2', '1', '39', null, '1381670549490', null, null);
 INSERT INTO `audit` VALUES ('5', '2', '1', '40', null, '1381670931360', null, null);
+INSERT INTO `audit` VALUES ('6', '4', '1', '41', null, '1381850973599', null, null);
+INSERT INTO `audit` VALUES ('7', '4', '1', '41', null, '1381850973601', '1', '1381850982029');
 
 -- ----------------------------
 -- Table structure for `audit_type`
@@ -337,17 +340,18 @@ CREATE TABLE `domain` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `domain` varchar(255) DEFAULT NULL,
   `agent_id` bigint(20) DEFAULT NULL,
+  `edu_id` bigint(20) DEFAULT NULL,
+  `instructor_id` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `ix_domain_agent_16` (`agent_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+  KEY `ix_domain_agent_17` (`agent_id`),
+  KEY `ix_domain_edu_18` (`edu_id`),
+  KEY `ix_domain_instructor_19` (`instructor_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of domain
 -- ----------------------------
-INSERT INTO `domain` VALUES ('3', 'www.myweb.com', '1');
-INSERT INTO `domain` VALUES ('2', 'www.adfal.com', '1');
-INSERT INTO `domain` VALUES ('1', 'a', '1');
-INSERT INTO `domain` VALUES ('4', 'b', '2');
+INSERT INTO `domain` VALUES ('2', 'i1824880311', '23', null, null);
 
 -- ----------------------------
 -- Table structure for `education_institution`
@@ -448,6 +452,7 @@ DROP TABLE IF EXISTS `instructor`;
 CREATE TABLE `instructor` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `user_id` bigint(20) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
   `template_id` bigint(20) DEFAULT NULL,
   `job_title` varchar(255) DEFAULT NULL,
   `audit_id` bigint(20) DEFAULT NULL,
@@ -463,18 +468,18 @@ CREATE TABLE `instructor` (
 -- ----------------------------
 -- Records of instructor
 -- ----------------------------
-INSERT INTO `instructor` VALUES ('1', '6', null, '教授，博士生导师', null, '1381136024622', '建设部住宅产业化促进中心副总工程师', '建筑工程');
-INSERT INTO `instructor` VALUES ('2', '20', null, '教授，博士生导师', null, '1381136024622', '华高莱斯国际地产顾问有限公司董事', '房地产');
-INSERT INTO `instructor` VALUES ('3', '21', null, '教授职位', null, '1381136024622', '中国人民大学经济学博士，工业经济专业', '企业管理中的战略、管理和营销思维及其创新、领导艺术、公共演讲中的能力与魅力');
-INSERT INTO `instructor` VALUES ('4', '22', null, '教授职位', null, '1381136024622', '北京大学 心理学系 讲师、副教授', '管理心理学 领导技能开发 社会心理学 人格结构');
-INSERT INTO `instructor` VALUES ('5', '23', null, '教授职位', null, '1381136024622', '北京大学经济学教授、博士生导师，北京市场经济研究所所长，《经济界》杂志社社长兼总编。', '经济管理');
-INSERT INTO `instructor` VALUES ('6', '24', null, '教授职位', null, '1381136024622', '教授，博士生导师', '经济学');
-INSERT INTO `instructor` VALUES ('7', '25', null, '教授职位', null, '1381136024622', '战略咨询专家和投资银行专家，现任和君咨询集团董事长', '资本运作');
-INSERT INTO `instructor` VALUES ('8', '26', null, '教授职位', null, '1381136024622', '北京中医药大学管理学院院长', '国学，养生，书法');
-INSERT INTO `instructor` VALUES ('9', '27', null, '教授职位', null, '1381136024622', '中国人民大学哲学系教授、宗教研究所所长、博士生导师、中国宗教学会副会长、中国哲学史学会副会长', '哲学');
-INSERT INTO `instructor` VALUES ('10', '28', null, '教授职位', null, '1381136024622', '中国人民大学哲学博士，中国人民大学哲学院副教授', '中国哲学史，道家哲学，魏晋玄学。');
-INSERT INTO `instructor` VALUES ('11', '29', null, '教授职位', null, '1381136024622', '厦门大学人文学院教授、博士生导师', '从事文学、美学、历史学等多学科和跨学科研究');
-INSERT INTO `instructor` VALUES ('12', '30', null, '教授职位', null, '1381136024622', '清华大学历史系教授、博士生导师。 ', '中国古代思史，特别是魏晋时期的思想史研究');
+INSERT INTO `instructor` VALUES ('1', '6', '张三', null, '教授，博士生导师', null, '1381136024622', '建设部住宅产业化促进中心副总工程师', '建筑工程');
+INSERT INTO `instructor` VALUES ('2', '20', '李四', null, '教授，博士生导师', null, '1381136024622', '华高莱斯国际地产顾问有限公司董事', '房地产');
+INSERT INTO `instructor` VALUES ('3', '21', '王五', null, '教授职位', null, '1381136024622', '中国人民大学经济学博士，工业经济专业', '企业管理中的战略、管理和营销思维及其创新、领导艺术、公共演讲中的能力与魅力');
+INSERT INTO `instructor` VALUES ('4', '22', '赵六', null, '教授职位', null, '1381136024622', '北京大学 心理学系 讲师、副教授', '管理心理学 领导技能开发 社会心理学 人格结构');
+INSERT INTO `instructor` VALUES ('5', '23', '孙七', null, '教授职位', null, '1381136024622', '北京大学经济学教授、博士生导师，北京市场经济研究所所长，《经济界》杂志社社长兼总编。', '经济管理');
+INSERT INTO `instructor` VALUES ('6', '24', '刘八', null, '教授职位', null, '1381136024622', '教授，博士生导师', '经济学');
+INSERT INTO `instructor` VALUES ('7', '25', '孔九', null, '教授职位', null, '1381136024622', '战略咨询专家和投资银行专家，现任和君咨询集团董事长', '资本运作');
+INSERT INTO `instructor` VALUES ('8', '26', '文十', null, '教授职位', null, '1381136024622', '北京中医药大学管理学院院长', '国学，养生，书法');
+INSERT INTO `instructor` VALUES ('9', '27', '邹二', null, '教授职位', null, '1381136024622', '中国人民大学哲学系教授、宗教研究所所长、博士生导师、中国宗教学会副会长、中国哲学史学会副会长', '哲学');
+INSERT INTO `instructor` VALUES ('10', '28', '周一', null, '教授职位', null, '1381136024622', '中国人民大学哲学博士，中国人民大学哲学院副教授', '中国哲学史，道家哲学，魏晋玄学。');
+INSERT INTO `instructor` VALUES ('11', '29', '曹二九', null, '教授职位', null, '1381136024622', '厦门大学人文学院教授、博士生导师', '从事文学、美学、历史学等多学科和跨学科研究');
+INSERT INTO `instructor` VALUES ('12', '30', '朱重八', null, '教授职位', null, '1381136024622', '清华大学历史系教授、博士生导师。 ', '中国古代思史，特别是魏晋时期的思想史研究');
 
 -- ----------------------------
 -- Table structure for `log_login`
@@ -805,6 +810,7 @@ DROP TABLE IF EXISTS `student`;
 CREATE TABLE `student` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `user_id` bigint(20) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
   `company_name` varchar(255) DEFAULT NULL,
   `position` varchar(255) DEFAULT NULL,
   `info` varchar(255) DEFAULT NULL,
@@ -815,9 +821,9 @@ CREATE TABLE `student` (
 -- ----------------------------
 -- Records of student
 -- ----------------------------
-INSERT INTO `student` VALUES ('1', '3', '百度', '项目经理', '百度资深项目经理，负责百度搜索，百度词典项目。');
-INSERT INTO `student` VALUES ('2', '8', '网易', '程序员', '网易邮件事业部资深程序员');
-INSERT INTO `student` VALUES ('4', '38', '123', '123', '123');
+INSERT INTO `student` VALUES ('1', '3', '张二八', '百度', '项目经理', '百度资深项目经理，负责百度搜索，百度词典项目。');
+INSERT INTO `student` VALUES ('2', '8', '孙三四', '网易', '程序员', '网易邮件事业部资深程序员');
+INSERT INTO `student` VALUES ('4', '38', '李五六', '123', '123', '123');
 
 -- ----------------------------
 -- Table structure for `studentwords`
@@ -865,13 +871,14 @@ CREATE TABLE `template` (
   KEY `ix_template_instructor_48` (`instructor_id`),
   KEY `ix_template_agent_49` (`agent_id`),
   KEY `ix_template_templateType_50` (`template_type_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of template
 -- ----------------------------
 INSERT INTO `template` VALUES ('2', '5', null, null, '1', null, '3');
 INSERT INTO `template` VALUES ('3', '32', null, null, '2', null, '1');
+INSERT INTO `template` VALUES ('4', '41', null, null, '23', null, '1');
 
 -- ----------------------------
 -- Table structure for `template_type`
@@ -880,6 +887,7 @@ DROP TABLE IF EXISTS `template_type`;
 CREATE TABLE `template_type` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL,
+  `t_type` int(11) DEFAULT NULL,
   `info` longtext,
   `last_modified` bigint(20) DEFAULT NULL,
   `url` varchar(255) DEFAULT NULL,
@@ -890,11 +898,11 @@ CREATE TABLE `template_type` (
 -- ----------------------------
 -- Records of template_type
 -- ----------------------------
-INSERT INTO `template_type` VALUES ('1', '默认模板', '系统默认模板', '1381136024622', null, null);
-INSERT INTO `template_type` VALUES ('2', '清新', '清新淡雅模板模板', '1381136024622', null, null);
-INSERT INTO `template_type` VALUES ('3', '黑色', '黑色浓重模板', '1381136024622', null, null);
-INSERT INTO `template_type` VALUES ('4', '绿野仙踪', '绿色自然主题', '1381136024622', null, null);
-INSERT INTO `template_type` VALUES ('6', '13123', '斯蒂芬斯蒂芬斯蒂芬', '1381586890354', 'datas/default/templates/6\\', 'null/multipartBody3699239113397413713asTemporaryFile20131012100810.jpg');
+INSERT INTO `template_type` VALUES ('1', '默认模板', null, '系统默认模板', '1381136024622', null, null);
+INSERT INTO `template_type` VALUES ('2', '清新', null, '清新淡雅模板模板', '1381136024622', null, null);
+INSERT INTO `template_type` VALUES ('3', '黑色', null, '黑色浓重模板', '1381136024622', null, null);
+INSERT INTO `template_type` VALUES ('4', '绿野仙踪', null, '绿色自然主题', '1381136024622', null, null);
+INSERT INTO `template_type` VALUES ('6', '13123', null, '斯蒂芬斯蒂芬斯蒂芬', '1381586890354', 'datas/default/templates/6\\', 'null/multipartBody3699239113397413713asTemporaryFile20131012100810.jpg');
 
 -- ----------------------------
 -- Table structure for `user`
@@ -921,7 +929,7 @@ CREATE TABLE `user` (
   KEY `ix_user_instructor_54` (`instructor_id`),
   KEY `ix_user_agent_55` (`agent_id`),
   KEY `ix_user_student_56` (`student_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=41 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=42 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of user
@@ -960,6 +968,7 @@ INSERT INTO `user` VALUES ('31', 'teacher13', 'teacher13', '讲师13', '1231541'
 INSERT INTO `user` VALUES ('32', 'agent2', 'agent2', '代理人2', '123123123', 'agent2@123.com', null, null, '32', null, null, '2', null);
 INSERT INTO `user` VALUES ('38', 'User1381669158021', 'HmYiKI', '13123', '123', '123', null, '3', '34', null, null, null, '4');
 INSERT INTO `user` VALUES ('40', 'User1381670931359', 'nbpdOv', null, null, null, null, '5', null, null, null, null, null);
+INSERT INTO `user` VALUES ('41', 'User1381850973597', 'DmmZri', null, null, null, null, '6', null, null, null, '23', null);
 
 -- ----------------------------
 -- Table structure for `user_info`
@@ -1068,3 +1077,4 @@ INSERT INTO `user_role` VALUES ('31', '2');
 INSERT INTO `user_role` VALUES ('32', '3');
 INSERT INTO `user_role` VALUES ('38', '4');
 INSERT INTO `user_role` VALUES ('40', '1');
+INSERT INTO `user_role` VALUES ('41', '3');

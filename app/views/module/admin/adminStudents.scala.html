@@ -17,18 +17,18 @@
 			<a class="btn btn-success" data-toggle="新增" href="#" onclick="getCommonPage(this, 'studentDetail', 'addNew=true');"><i
 				class="icon-plus icon-white"></i>新增</a>
 		</div>
-		<div class="btn-group" id="btnGroup">
+		<!--<div class="btn-group" id="btnGroup">
 			<button type="button" class="btn btn-default @checkActive("auditStatus", "-1")" onclick="@buildAction({baseUrl}, "admin", Array("auditStatus"), Array("-1"))">所有</button>
-				<button type="button" class="btn btn-default @checkActive("auditStatus", {String.valueOf(Audit.STATUS_WAIT)})" onclick="@buildAction({baseUrl}, "admin", Array("auditStatus"), Array({String.valueOf(Audit.STATUS_WAIT)}))">所有待审核</button>
-				<button type="button" class="btn btn-default @checkActive("auditStatus", {String.valueOf(Audit.STATUS_SUCCESS)})" onclick="@buildAction({baseUrl}, "admin", Array("auditStatus"), Array({String.valueOf(Audit.STATUS_SUCCESS)}))">所有已审核</button>
-		</div>
+			<button type="button" class="btn btn-default @checkActive("auditStatus", {String.valueOf(Audit.STATUS_WAIT)})" onclick="@buildAction({baseUrl}, "admin", Array("auditStatus"), Array({String.valueOf(Audit.STATUS_WAIT)}))">所有待审核</button>
+			<button type="button" class="btn btn-default @checkActive("auditStatus", {String.valueOf(Audit.STATUS_SUCCESS)})" onclick="@buildAction({baseUrl}, "admin", Array("auditStatus"), Array({String.valueOf(Audit.STATUS_SUCCESS)}))">所有已审核</button>
+		</div>-->
 		<div class="btn-group">
 			<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
 				排序 <span class="caret"></span>
 			</a>
 			<ul class="dropdown-menu">
-				<li><a href="#">按时间</a></li>
-				<li><a href="#">按名称</a></li>
+				<li class="@checkActive("orderby", "name-asc", true)"><a onclick="@buildAction({baseUrl}, "admin", Array("orderby"), Array("name-asc"))">按名称-升序</a></li>
+				<li class="@checkActive("orderby", "name-desc")"><a onclick="@buildAction({baseUrl}, "admin", Array("orderby"), Array("name-desc"))">按名称-降序</a></li>
 			</ul>
 		</div>
 	</div>
@@ -43,12 +43,12 @@ $('#toolbar').tooltip(options);
 @dialogDelete("删除学员信息", Student.TABLE_NAME, student.id){确定删除&nbsp;<b style="font-size:x-large;color:red">@if(student.user != null){@student.user.username}</b>&nbsp;？}
 
 <div class="pull-left" style="width:130px;">
-	<div class="btn-group" id="toolbar">
+	<!--<div class="btn-group" id="toolbar">
 		<a class="btn btn-success" data-toggle="审核通过" href="#">
 			<i class="icon-ok icon-white"></i>
 		</a> 
 		<a class="btn btn-info"	data-toggle="拒绝通过" href="#"><i class="icon-ban-circle icon-white"></i></a>
-	</div>
+	</div>-->
 	<div class="btn-group">
 		<a class="btn btn-danger" data-toggle="删除，请谨慎操作！" href="#" onclick="doDelete(@student.id)"><i
 			class="icon-remove icon-white"></i></a>
@@ -76,11 +76,7 @@ $('#toolbar').tooltip(options);
 				@for(model <- models.getList()){
 				<tr>
 					<td>@model.id</td>
-					@if(model.user != null){
-						<td><a href="#" onclick="getCommonPage(this, 'studentDetail', 'id=@model.id');">@model.user.nickname</a></td>
-					} else {
-						<td>-</td>
-					}
+					<td><a href="#" onclick="getCommonPage(this, 'studentDetail', 'id=@model.id');">@model.name</a></td>
 					
 					@if(model.position != null){
 						<td>@model.position</td>

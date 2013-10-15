@@ -42,6 +42,11 @@ public class Template extends Model {
 	public Template() {
 	}
 	
+	/**
+	 * 教育机构
+	 * @param edu
+	 * @param templateType
+	 */
 	public Template(EducationInstitution edu, long templateType){
 		if(edu != null){
 			User user = edu.creator;
@@ -51,6 +56,39 @@ public class Template extends Model {
 		}
 	}
 
+	/**
+	 * 讲师
+	 * @param instructor
+	 * @param templateType
+	 */
+	public Template(Instructor instructor, long templateType){
+		if(instructor != null){
+			User user = instructor.user;
+			this.user = user;
+			this.instructor = instructor;
+			this.templateType = TemplateType.find(templateType);
+		}
+	}
+	
+	/**
+	 * 讲师
+	 * @param agent
+	 * @param templateType
+	 */
+	public Template(Agent agent, long templateType){
+		if(agent != null){
+			User user = agent.user;
+			this.user = user;
+			this.agent = agent;
+			this.templateType = TemplateType.find(templateType);
+		}
+	}
+
+	/**
+	 * 用户
+	 * @param user
+	 * @param templateType
+	 */
 	public Template(User user, TemplateType templateType) {
 		this.user = user;
 		this.templateType = templateType;

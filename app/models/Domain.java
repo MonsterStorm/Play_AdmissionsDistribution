@@ -23,25 +23,47 @@ import common.*;
 @Table(name = "domain")
 public class Domain extends Model {
 	private static final String TAG = Domain.class.getSimpleName();
+	
 	public static final String TABLE_NAME = "domain";
+	
 	@Id
 	public Long id;
 
 	public String domain;// 域名
 
-	@ManyToOne
+	@ManyToOne(targetEntity=Agent.class)
 	public Agent agent;// 代理机构，一个域名拥有一个代理人（也可以没有），一个代理人可以有多个域名
 
-	@ManyToOne
+	@ManyToOne(targetEntity=EducationInstitution.class)
 	public EducationInstitution edu;// 教育机构，一个域名拥有一个教育机构（也可以没有），一个教育机构可以有多个域名
 
-	@ManyToOne
+	@ManyToOne(targetEntity=Instructor.class)
 	public Instructor instructor;// 讲师，一个域名拥有一个讲师（也可以没有），一个讲师可以有多个域名
 
 	// -- 查询
-	public static Model.Finder<Long, Domain> finder = new Model.Finder(
-			Long.class, Domain.class);
+	public static Model.Finder<Long, Domain> finder = new Model.Finder(Long.class, Domain.class);
 
+	public Domain(){}
+	
+	public Domain(EducationInstitution edu){
+		this.edu = edu;
+		this.domain = buildRandomDomain("e", String.valueOf(edu.hashCode()));
+	}
+	
+	public Domain(Instructor instructor){
+		this.instructor = instructor;
+		this.domain = buildRandomDomain("i", String.valueOf(instructor.hashCode()));
+	}
+	
+	public Domain(Agent agent){
+		this.agent = agent;
+		this.domain = buildRandomDomain("i", String.valueOf(agent.hashCode()));
+	}
+	
+	public String buildRandomDomain(String prefix, String id){
+		return prefix + id;
+	}
+	
 	/**
 	 * find all user
 	 * 

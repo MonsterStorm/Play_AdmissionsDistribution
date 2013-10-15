@@ -1,4 +1,4 @@
-@(url: String, urlType: String, key: Array[String] = null, value: Array[String] = null)
+@(url: String, urlType: String, key: Array[String] = null, value: Array[String] = null, firstPage: Boolean = false)
 @params=@{
 	var paramsMap = new HashMap[String,String]();
 	var array = flash().keySet().toArray();
@@ -12,6 +12,10 @@
 		for(i <- 0 to key.length - 1){
 			paramsMap.put(key(i), value(i));
 		}	
+	}
+	
+	if(firstPage){
+		paramsMap.put("page", "0");
 	}
 	
 	var params = "";
