@@ -23,8 +23,10 @@ public class Rebate extends Model {
 	@Id
 	public Long id;
 
-	@OneToOne
-	public Course course;// 一个课程有一个返点，一个返点对应一个课程
+	//@OneToOne
+	//public Course course;// 一个课程有一个返点，一个返点对应一个课程
+	@OneToOne(cascade=CascadeType.ALL)
+	public CourseDistribution distribution;//一个返利对应一个课程代理，一个课程代理对应一个返利
 
 	public int numOfStudents;// 学员人数
 
@@ -35,7 +37,7 @@ public class Rebate extends Model {
 	
 	public double moneyEduAdmit;//教育机构确认收款数
 
-	@OneToOne
+	@OneToOne(cascade=CascadeType.ALL)
 	public ConfirmReceipt lastReceiptOfEdu;//教育机构最后确认收款信息
 	
 	@OneToOne(cascade = CascadeType.ALL)// 级联删除返点类型
@@ -48,7 +50,7 @@ public class Rebate extends Model {
 	
 	public double moneyPlatformAdmit;//平台确认收款数
 	
-	@OneToOne
+	@OneToOne(cascade=CascadeType.ALL)
 	public ConfirmReceipt lastReceiptOfPlatform;//教育机构最后确认收款信息
 
 	@OneToOne(cascade = CascadeType.ALL)// 级联删除返点类型
@@ -61,8 +63,19 @@ public class Rebate extends Model {
 	
 	public double moneyAgentAdmit;//代理人确认收款数
 	
-	@OneToOne
+	@OneToOne(cascade=CascadeType.ALL)
 	public ConfirmReceipt lastReceiptOfAgent;//代理人最后确认收款信息
+	
+	/**
+	 * create a rebate
+	 * @param distribution
+	 * @return
+	 */
+	public static Rebate createRebate(CourseDistribution distribution){
+		Rebate rebate = new Rebate();
+		rebate.distribution = distribution;
+		return rebate;
+	}
 
 	// -- 查询
 	public static Model.Finder<Long, Rebate> finder = new Model.Finder(Long.class, Rebate.class);

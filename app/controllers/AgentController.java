@@ -128,7 +128,10 @@ public class AgentController extends BaseController {
 			return  badRequest(Constants.MSG_COURSE_REGED);
 		}
 		Audit a = new Audit();
-		a.course = course;
+//		a.course = course;
+		
+		CourseDistribution.createDistributon(course, user.agent, audit);
+		
 		a.status = Audit.STATUS_WAIT;
 		a.creator = user;
 		a.createTime = System.currentTimeMillis();

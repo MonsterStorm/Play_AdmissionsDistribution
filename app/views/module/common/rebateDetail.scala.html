@@ -38,10 +38,10 @@
 	
 			@form_validate_info()
 	
-			@if(model != null && model.course != null){
-				@inputText("课程名称", "course.name", model.course.name, true, true)
+			@if(model != null && model.distribution != null && model.distribution.course != null){
+				@inputText("课程名称", "distribution.course.name", model.distribution.course.name, true, true)
 			} else {
-				@inputText("课程名称", "course.name", null, false, true)
+				@inputText("课程名称", "distribution.course.name", null, false, true)
 			}
 			
 			@if(model != null && model.numOfStudents != null){

@@ -33,6 +33,9 @@ public class Agent extends Model{
 	
 	@ManyToMany(cascade=CascadeType.ALL)
 	public List<Course> courses;//代理人代理的课程列表，一个代理人可以代理多个课程，一个课程可以被多个代理人代理
+	
+	@OneToMany(mappedBy="agent")
+	public List<CourseDistribution> distributons;//一个代理人对应的代理记录，一个代理人可以代理很多课程，相应的对应很多记录。
 
 	@OneToOne(cascade=CascadeType.ALL)
 	public Template template;//一个代理人有一个专属推广页面

@@ -71,8 +71,8 @@ $('#toolbar').tooltip(options);
 				@for(model <- models.getList()){
 				<tr>
 					<td>@model.id</td>
-					@if(model.course != null){
-						<td><a href="#" onclick="getCommonPage(this, 'courseDetail', 'id=@model.course.id');">@model.course.name</a></td>
+					@if(model.distribution != null && model.distribution.course != null){
+						<td><a href="#" onclick="getCommonPage(this, 'courseDetail', 'id=@model.distribution.course.id');">@model.distribution.course.name</a></td>
 					} else {
 						<td>-</td>
 					}

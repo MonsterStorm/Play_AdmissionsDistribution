@@ -40,8 +40,12 @@ public class Audit extends Model {
 	@ManyToOne
 	public User creator;// 发起人，审核发起人，一个发起人对应多个审核，一个审核对应一个发起人
 
-	@ManyToOne
-	public Course course;// 审核对应的课程，审核发起人，一个课程对应多个审核，一个审核对应一个
+	//@ManyToOne
+	//public Course course;// 审核对应的课程，审核发起人，一个课程对应多个审核，一个审核对应一个
+	
+	@OneToOne
+	public CourseDistribution distributon;//审核对应的代理信息。一个代理信息对应一个审核。
+	
 
 	public Long createTime;// 发起时间
 

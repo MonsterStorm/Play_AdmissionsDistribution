@@ -59,10 +59,12 @@ public class Course extends Model {
 	@ManyToMany(mappedBy="courses")
 	public List<Agent> agents = new ArrayList<Agent>();//代理该课程的代理人列表，一个代理人可以代理多个课程，一个课程可以被多个代理人代理
 
+	//@OneToMany(mappedBy="course")
+	//public List<Audit> agentRegAudit = new ArrayList<Audit>();//申请代理该课程的审核列表，一个课程对应多个审核 一个审核对应一个课程
+
 	@OneToMany(mappedBy="course")
-	public List<Audit> agentRegAudit = new ArrayList<Audit>();//申请代理该课程的审核列表，一个课程对于多个审核 一个审核对应一个课程
-
-
+	public List<CourseDistribution> distributions = new ArrayList<CourseDistribution>();//课程的代理信息，一个课程可以被很多代理人代理。一个代理行为对应一个记录。
+	
 	static {
 		FormFormatter.registerCourseType();
 		FormFormatter.registerEducationType();
@@ -137,6 +139,8 @@ public class Course extends Model {
 				//创建Audit
 				Audit audit = new Audit(user, Audit.STATUS_WAIT, AuditType.TYPE_AUDITTYPE_COURSE);
 				course.audit = audit;
+				
+				//创建返利信息
 				
 				course.save();
 			} else {// 更新

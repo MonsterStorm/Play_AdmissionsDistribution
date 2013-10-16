@@ -230,11 +230,15 @@ confirmReceipts:
        time: 1123123123
        money: 10000.00
        info: 1个学生的学费
+#CourseDistributions
+courseDistributions:
+    - &distribution1 !!models.CourseDistribution
+        course: *course1
 
 #Rebate
 rebates:
     - !!models.Rebate
-        course: *course1
+        distribution: *distribution1
         numOfStudents: 10
         totalMoney: 100000.00
         numEduAdmit: 1
