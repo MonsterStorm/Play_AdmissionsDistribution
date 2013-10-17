@@ -104,6 +104,20 @@ public class AgentController extends BaseController {
 	 * 
 	 * @return
 	 */
+	public static Result doApply() {
+		String table = form().bindFromRequest().get("table");
+		if (table.equalsIgnoreCase("applyCourse")) {// 申请代理课程
+			return applyCourse();
+		}else {
+			return badRequest(Constants.MSG_PAGE_NOT_FOUND);
+		}
+	}
+
+	/**
+	 * add or update entity
+	 * 
+	 * @return
+	 */
 	public static Result regCourseAgent() {
 		if(form().bindFromRequest().get("id")==null){
 			return badRequest(Constants.MSG_COURSE_NOT_SELECT);
@@ -392,5 +406,34 @@ public class AgentController extends BaseController {
 		User user = LoginController.getSessionUser();
 		Agent agent = user.agent;
 		return ok(views.html.module.agent.agentInfo.render(agent, user));
+	}
+
+	/**
+	 * 代理人
+	 * 
+	 * @return
+	 */
+	public static Result applyCourse() {
+		User user = LoginController.getSessionUser();
+		Agent agent = user.agent;
+		if(agent ==null){
+			return badRequest(Constants.MSG_AGENT_NOT_EXIST);
+		}
+		Long courseId = FormHelper.getLong(form().bindFromRequest(), "courseId");
+		CourseDistribution temp = CourseDistribution.findByAgentAndCourse(agent.id, courseId);
+		if(temp != null){
+			return badRequest(Constants.MSG_AGENT_APPLYED_COURSE);
+		}
+		else{
+			Course course = Course.find(courseId);
+
+			Audit au = new Audit(user, Audit.STATUS_WAIT, AuditType.TYPE_AUDITTYPE_COURSE_DISTRIBUTION);
+			
+			CourseDistribution cd = CourseDistribution.saveDistributon(course, agent, au);
+			if(cd != null)
+			return  ok(Constants.MSG_SUCCESS);
+			
+		}
+		return internalServerError(Constants.MSG_INTERNAL_ERROR);
 	}
 }

@@ -75,4 +75,53 @@ public class CourseDistribution extends Model {
 	public static CourseDistribution find(Long id) {
 		return finder.where().eq("id", id).findUnique();
 	}
+
+
+	/**
+	 * find user by agent
+	 * 
+	 * @param agent course
+	 * @return
+	 */
+	public static CourseDistribution findByAgentAndCourse(Agent agent, Course course) {
+		return finder.where().eq("agent.id", agent.id).eq("course.id", course.id).findUnique();
+	}
+	/**
+	 * find user by agent
+	 * 
+	 * @param agent course
+	 * @return
+	 */
+	public static CourseDistribution findByAgentAndCourse(Long agentId, Long courseId) {
+		return finder.where().eq("agent.id", agentId).eq("course.id", courseId).findUnique();
+	}
+
+
+	public static CourseDistribution saveDistributon(Course course, Agent agent, Audit audit) {
+		CourseDistribution cd = new CourseDistribution();
+		if (course != null) {
+			course.distributions.add(cd);
+			cd.course = course;
+		}
+
+		if (agent != null) {
+			agent.distributons.add(cd);
+			cd.agent = agent;
+		}
+
+		if (audit != null) {
+			audit.distributon = cd;
+			audit.save();
+			cd.audit = audit;
+		}
+
+		Rebate rebate = Rebate.createRebate(cd);
+		rebate.save();
+		cd.rebate = rebate;
+
+		course.update();
+		agent.update();
+		cd.save();
+		return cd;
+	}
 }

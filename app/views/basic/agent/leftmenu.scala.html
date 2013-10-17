@@ -118,9 +118,9 @@ function getAgentPage(li, url, data){
   	 var dialog = '#dialogModal_' + id;
      $(dialog).modal();
   }
-  function showConfirm(id){
-		var dialog = '#dialogModal_' + id;
-     $(dialog).modal();
+function showConfirm(id){
+		var dialog = '#dialogConfirm_' + id;
+    $(dialog).modal();
 	}
   
 	function doDeleteEntity(id, data){
@@ -128,6 +128,19 @@ function getAgentPage(li, url, data){
      var dialog = '#dialogModal_' + id;
      $(dialog).modal('hide');
 	}
+	function doAgentAudit(id, data){
+		ajaxBasic("/audit/agent", data, "POST", "#content");
+		var dialog = '#dialogConfirm_' + id;
+    $(dialog).modal('hide');
+	}
+
+	function doApply(id, data){
+
+		ajaxBasic("/agent/apply", data, "POST", "#content");
+		var dialog = '#dialogConfirm_' + id;
+   		$(dialog).modal('hide');
+	}
+
 	
 	
 </script>

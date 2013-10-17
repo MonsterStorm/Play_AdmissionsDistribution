@@ -7,6 +7,7 @@
 	url
 }
 
+
 @toolbar_header={
 <div class="row">
 	<div class="span2">
@@ -37,10 +38,22 @@
 
 @toolbar(course: Course)={
 
+@dialogConfirm("确定申请代理课程", String.valueOf("y" + course.id), "doApply('y" + course.id + "', {courseId:" + course.id + ",table:'" + "applyCourse" + "'})"){
+	确定申请代理课程&nbsp;
+	<b style="font-size:x-large;color:red">
+	@{
+		if(course.name != null){
+			course.name
+		}
+	}
+	</b>&nbsp;？
+}
+
+
 
 <div class="pull-left" style="width:130px;">
 	<div class="btn-group" id="toolbar">
-		<a class="btn btn-success" data-toggle="审核通过" href="#"><i
+		<a class="btn btn-success" data-toggle="审核通过" href="#" onclick="showConfirm('@String.valueOf("y" + course.id)')"><i
 			class="icon-ok icon-white"></i></a> <a class="btn btn-info"
 			data-toggle="拒绝通过" href="#"><i class="icon-ban-circle icon-white"></i></a>
 	</div>

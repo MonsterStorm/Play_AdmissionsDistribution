@@ -38,6 +38,50 @@ public class AuditController extends Controller {
 	}
 
 	/**
+	 * 代理人审核
+	 * 
+	 * @return
+	 */
+	@Security.Authenticated(SecuredAgent.class)
+	public static Result auditAgent() {
+		// String table = form().bindFromRequest().get("table");
+		// if (Course.TABLE_NAME.equalsIgnoreCase(table)) {// 课程，认证
+		// 	return auditAdminCourse();
+		// } else if (EducationInstitution.TABLE_NAME.equalsIgnoreCase(table)) {
+		// 	return auditAdminEdu();
+		// } else if (Instructor.TABLE_NAME.equalsIgnoreCase(table)) {
+		// 	return auditAdminInstructor();
+		// } else if (Agent.TABLE_NAME.equalsIgnoreCase(table)) {
+		// 	return auditAdminAgent();
+		// } else {
+		// 	return badRequest(Constants.MSG_PAGE_NOT_FOUND);
+		// }
+		return badRequest(Constants.MSG_PAGE_NOT_FOUND);
+	}
+
+	/**
+	 * 教育机构审核
+	 * 
+	 * @return
+	 */
+	@Security.Authenticated(SecuredEdu.class)
+	public static Result auditEdu() {
+		// String table = form().bindFromRequest().get("table");
+		// if (Course.TABLE_NAME.equalsIgnoreCase(table)) {// 课程，认证
+		// 	return auditAdminCourse();
+		// } else if (EducationInstitution.TABLE_NAME.equalsIgnoreCase(table)) {
+		// 	return auditAdminEdu();
+		// } else if (Instructor.TABLE_NAME.equalsIgnoreCase(table)) {
+		// 	return auditAdminInstructor();
+		// } else if (Agent.TABLE_NAME.equalsIgnoreCase(table)) {
+		// 	return auditAdminAgent();
+		// } else {
+		// 	return badRequest(Constants.MSG_PAGE_NOT_FOUND);
+		// }
+		return badRequest(Constants.MSG_PAGE_NOT_FOUND);
+	}
+
+	/**
 	 * 课程审核
 	 * 
 	 * @return
