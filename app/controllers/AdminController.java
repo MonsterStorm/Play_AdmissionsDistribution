@@ -248,9 +248,8 @@ public class AdminController extends BaseController {
 		// get page
 		int page = FormHelper.getPage(form().bindFromRequest());
 
-		Page<Rebate> rebates = Rebate.findPage(form().bindFromRequest(), page,
-				null);
-
+		Page<Rebate> rebates = Rebate.findPage(form().bindFromRequest(), page, null);
+		
 		// reset flash
 		FormHelper.resetFlash(form().bindFromRequest(), flash());
 

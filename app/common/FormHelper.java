@@ -45,6 +45,20 @@ public class FormHelper {
 	}
 	
 	/**
+	 * get long
+	 * @param form
+	 * @param field
+	 * @return
+	 */
+	public static Double getDouble(DynamicForm form, String field){
+		final String value = form.get(field);
+		if(StringHelper.isValidate(value)){
+			return Double.valueOf(value);
+		}
+		return null;
+	}
+	
+	/**
 	 * get integer
 	 * @param form
 	 * @param field

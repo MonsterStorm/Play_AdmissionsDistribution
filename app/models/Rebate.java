@@ -6,6 +6,7 @@ import javax.persistence.*;
 
 import com.avaje.ebean.*;
 import common.*;
+import controllers.*;
 
 import play.data.*;
 import play.db.ebean.*;
@@ -25,7 +26,7 @@ public class Rebate extends Model {
 
 	//@OneToOne
 	//public Course course;// 一个课程有一个返点，一个返点对应一个课程
-	@OneToOne(cascade=CascadeType.ALL)
+	@OneToOne(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
 	public CourseDistribution distribution;//一个返利对应一个课程代理，一个课程代理对应一个返利
 
 	public int numOfStudents;// 学员人数
@@ -121,6 +122,80 @@ public class Rebate extends Model {
 	 * @return
 	 */
 	public static Page<Rebate> findPage(DynamicForm form, int page, Integer pageSize) {
-		return new QueryHelper<Rebate>().findPage(finder, form, page, pageSize);
+		Integer status;
+		if(form == null){
+			status = -1;
+		} else {
+			status = FormHelper.getInt(form, "status"); 
+		}
+		User user = LoginController.getSessionUser();
+		
+		play.Logger.debug("status: " + status + ",role:" + user.hasRole(Role.ROLE_EDU) + "," + user.hasRole(Role.ROLE_ADMIN) + "," + user.hasRole(Role.ROLE_AGENT));
+		
+		if (status != null && status == 1){//未收款
+			if(user.hasRole(Role.ROLE_EDU)){//教育机构
+				return new QueryHelper<Rebate>(finder, form).addEq("lastReceiptOfEdu", null, null).findPage(page, pageSize);
+			} else if (user.hasRole(Role.ROLE_ADMIN)){//平台
+				return new QueryHelper<Rebate>(finder, form).addEq("lastReceiptOfPlatform", null, null).findPage(page, pageSize);
+			} else if (user.hasRole(Role.ROLE_AGENT)){//代理人
+				return new QueryHelper<Rebate>(finder, form).addEq("lastReceiptOfAgent", null, null).findPage(page, pageSize);
+			}
+		} else if (status != null && status == 2){//已经收款
+			if(user.hasRole(Role.ROLE_EDU)){//教育机构
+				return new QueryHelper<Rebate>(finder, form).addNe("lastReceiptOfEdu", null, null).findPage(page, pageSize);
+			} else if (user.hasRole(Role.ROLE_ADMIN)){//平台
+				return new QueryHelper<Rebate>(finder, form).addNe("lastReceiptOfPlatform", null, null).findPage(page, pageSize);
+			} else if (user.hasRole(Role.ROLE_AGENT)){//代理人
+				return new QueryHelper<Rebate>(finder, form).addNe("lastReceiptOfAgent", null, null).findPage(page, pageSize);
+			}
+		} else {//all
+			return new QueryHelper<Rebate>().findPage(finder, form, page, pageSize);
+		}
+		return null;
+	}
+	
+	/**
+	 * confirm receipt
+	 * @param user
+	 * @return
+	 */
+	public static Rebate updateConfirmReceipt(DynamicForm form, User user){
+		Long rebateId = FormHelper.getLong(form, "id");
+		Double money = FormHelper.getDouble(form, "money");
+		String info = FormHelper.getString(form, "info");
+		
+		Rebate rebate = Rebate.find(rebateId);
+		if(rebate != null && user != null){
+			
+			if(user.hasRole(Role.ROLE_EDU)){//教育机构
+				if(rebate.lastReceiptOfEdu == null){
+					rebate.lastReceiptOfEdu = new ConfirmReceipt(user, money, info);
+				} else {
+					rebate.lastReceiptOfEdu.time = System.currentTimeMillis();
+					rebate.lastReceiptOfEdu.money = money;
+					rebate.lastReceiptOfEdu.info = info;
+				}
+				rebate.update();
+			} else if (user.hasRole(Role.ROLE_ADMIN)){//管理员 
+				if(rebate.lastReceiptOfPlatform == null){
+					rebate.lastReceiptOfPlatform = new ConfirmReceipt(user, money, info);
+				} else {
+					rebate.lastReceiptOfPlatform.time = System.currentTimeMillis();
+					rebate.lastReceiptOfEdu.money = money;
+					rebate.lastReceiptOfEdu.info = info;
+				}
+				rebate.update();
+			} else if (user.hasRole(Role.ROLE_AGENT)){//代理人
+				if(rebate.lastReceiptOfAgent == null){
+					rebate.lastReceiptOfAgent = new ConfirmReceipt(user, money, info);
+				} else {
+					rebate.lastReceiptOfAgent.time = System.currentTimeMillis();
+					rebate.lastReceiptOfEdu.money = money;
+					rebate.lastReceiptOfEdu.info = info;
+				}
+				rebate.update();
+			}
+		}
+		return rebate;
 	}
 }

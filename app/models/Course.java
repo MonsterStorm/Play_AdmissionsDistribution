@@ -62,7 +62,7 @@ public class Course extends Model {
 	//@OneToMany(mappedBy="course")
 	//public List<Audit> agentRegAudit = new ArrayList<Audit>();//申请代理该课程的审核列表，一个课程对应多个审核 一个审核对应一个课程
 
-	@OneToMany(mappedBy="course")
+	@OneToMany(mappedBy="course", cascade=CascadeType.ALL, fetch=FetchType.EAGER, targetEntity=CourseDistribution.class)
 	public List<CourseDistribution> distributions = new ArrayList<CourseDistribution>();//课程的代理信息，一个课程可以被很多代理人代理。一个代理行为对应一个记录。
 	
 	static {

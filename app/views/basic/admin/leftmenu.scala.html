@@ -134,6 +134,11 @@
     $(dialog).modal('hide');
 	}
 	
+	function doConfirmReceipt(id, data){
+		ajaxBasic("/common/confirmReceipt", data, "POST", "#content");
+		var dialog = '#dialogConfirm_' + id;
+    $(dialog).modal('hide');
+	}
 </script>
 
 <ul class="nav nav-list" id="navList">

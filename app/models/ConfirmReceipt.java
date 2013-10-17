@@ -24,4 +24,11 @@ public class ConfirmReceipt extends Model {
 	public Double money;// 收款金额（元）
 
 	public String info;// 额外信息
+
+	public ConfirmReceipt(User user, Double money, String info) {
+		confirmer = user;
+		this.money = money;
+		this.info = info;
+		this.time = System.currentTimeMillis();
+	}
 }

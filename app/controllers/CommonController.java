@@ -1301,4 +1301,24 @@ public class CommonController extends Controller {
 		}
 		return badRequest(Constants.MSG_NOT_LOGIN);
 	}
+	
+	/**
+	 * 确认收款
+	 * @return
+	 */
+	public static Result confirmReceipt(){
+		User user = LoginController.getSessionUser();
+		if (user != null) {
+			Long rebateId = FormHelper.getLong(form().bindFromRequest(), "id");
+			if(rebateId != null){
+				Rebate rebate = Rebate.updateConfirmReceipt(form().bindFromRequest(), user);
+				if(rebate != null){
+					return ok(Constants.MSG_SUCCESS);// 成功
+				}
+			} else {
+				return badRequest(Constants.MSG_BAD_REQUEST);
+			}
+		}
+		return badRequest(Constants.MSG_NOT_LOGIN);
+	}
 }

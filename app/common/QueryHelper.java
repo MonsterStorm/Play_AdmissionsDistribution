@@ -39,34 +39,91 @@ public class QueryHelper<T> {
 	 */
 	public QueryHelper<T> addEq(String field, String paramStr, Class<?> clazz){
 		if(query == null){
-			final String valueStr = FormHelper.getString(form, paramStr);
-			play.Logger.error(valueStr + "!!!!!!!!!");
-			if(StringHelper.isValidate(valueStr)){
-				if(clazz == Integer.class){
-					query = finder.where().eq(field, Integer.valueOf(valueStr)).query();
-				} else if (clazz == Boolean.class){
-					query = finder.where().eq(field, Boolean.valueOf(valueStr)).query();
-				} else if (clazz == Float.class){
-					query = finder.where().eq(field, Float.valueOf(valueStr)).query();
-				} else if (clazz == Long.class){
-					query = finder.where().eq(field, Long.valueOf(valueStr)).query();
-				} else if (clazz == String.class){
-					query = finder.where().eq(field, valueStr).query();
+			if(paramStr == null || clazz == null){
+				query = finder.where().eq(field, null).query();
+			} else {
+				final String valueStr = FormHelper.getString(form, paramStr);
+				if(StringHelper.isValidate(valueStr)){
+					if(clazz == Integer.class){
+						query = finder.where().eq(field, Integer.valueOf(valueStr)).query();
+					} else if (clazz == Boolean.class){
+						query = finder.where().eq(field, Boolean.valueOf(valueStr)).query();
+					} else if (clazz == Float.class){
+						query = finder.where().eq(field, Float.valueOf(valueStr)).query();
+					} else if (clazz == Long.class){
+						query = finder.where().eq(field, Long.valueOf(valueStr)).query();
+					} else if (clazz == String.class){
+						query = finder.where().eq(field, valueStr).query();
+					}
 				}
 			}
 		} else {
-			final String valueStr = FormHelper.getString(form, paramStr);
-			if(StringHelper.isValidate(valueStr)){
-				if(clazz == Integer.class){
-					query = query.where().eq(field, Integer.valueOf(valueStr)).query();
-				} else if (clazz == Boolean.class){
-					query = query.where().eq(field, Boolean.valueOf(valueStr)).query();
-				} else if (clazz == Float.class){
-					query = query.where().eq(field, Float.valueOf(valueStr)).query();
-				} else if (clazz == Long.class){
-					query = query.where().eq(field, Long.valueOf(valueStr)).query();
-				} else if (clazz == String.class){
-					query = query.where().eq(field, valueStr).query();
+			if(paramStr == null || clazz == null){
+				query = query.where().eq(field, null).query();
+			} else {
+				final String valueStr = FormHelper.getString(form, paramStr);
+				if(StringHelper.isValidate(valueStr)){
+					if(clazz == Integer.class){
+						query = query.where().eq(field, Integer.valueOf(valueStr)).query();
+					} else if (clazz == Boolean.class){
+						query = query.where().eq(field, Boolean.valueOf(valueStr)).query();
+					} else if (clazz == Float.class){
+						query = query.where().eq(field, Float.valueOf(valueStr)).query();
+					} else if (clazz == Long.class){
+						query = query.where().eq(field, Long.valueOf(valueStr)).query();
+					} else if (clazz == String.class){
+						query = query.where().eq(field, valueStr).query();
+					}
+				}
+			}
+		}
+		return this;
+	}
+	
+	/**
+	 * 添加等于字段
+	 * @param field
+	 * @param paramStr
+	 * @param clazz
+	 * @return
+	 */
+	public QueryHelper<T> addNe(String field, String paramStr, Class<?> clazz){
+		if(query == null){
+			if(paramStr == null || clazz == null){
+				query = finder.where().ne(field, null).query();
+			} else {
+				final String valueStr = FormHelper.getString(form, paramStr);
+				if(StringHelper.isValidate(valueStr)){
+					if(clazz == Integer.class){
+						query = finder.where().ne(field, Integer.valueOf(valueStr)).query();
+					} else if (clazz == Boolean.class){
+						query = finder.where().ne(field, Boolean.valueOf(valueStr)).query();
+					} else if (clazz == Float.class){
+						query = finder.where().ne(field, Float.valueOf(valueStr)).query();
+					} else if (clazz == Long.class){
+						query = finder.where().ne(field, Long.valueOf(valueStr)).query();
+					} else if (clazz == String.class){
+						query = finder.where().ne(field, valueStr).query();
+					}
+				}
+			}
+		} else {
+			if(paramStr == null || clazz == null){
+				query = query.where().ne(field, null).query();
+			} else {
+				final String valueStr = FormHelper.getString(form, paramStr);
+				if(StringHelper.isValidate(valueStr)){
+					if(clazz == Integer.class){
+						query = query.where().ne(field, Integer.valueOf(valueStr)).query();
+					} else if (clazz == Boolean.class){
+						query = query.where().ne(field, Boolean.valueOf(valueStr)).query();
+					} else if (clazz == Float.class){
+						query = query.where().ne(field, Float.valueOf(valueStr)).query();
+					} else if (clazz == Long.class){
+						query = query.where().ne(field, Long.valueOf(valueStr)).query();
+					} else if (clazz == String.class){
+						query = query.where().ne(field, valueStr).query();
+					}
 				}
 			}
 		}

@@ -14,9 +14,9 @@
 	</div>
 	<div class="btn-toolbar pull-right" role="toolbar">
 		<div class="btn-group" id="btnGroup">
-			<button type="button" class="btn btn-default active" onclick="toggleActive(this, '#btnGroup :button')">所有</button>
-			<button type="button" class="btn btn-default" onclick="toggleActive(this, '#btnGroup :button')">所有待收款</button>
-			<button type="button" class="btn btn-default" onclick="toggleActive(this, '#btnGroup :button')">所有已收款</button>
+			<button type="button" class="btn btn-default  @checkActive("status", "-1")" onclick="@buildAction({baseUrl}, "admin", Array("status"), Array("-1"))">所有</button>
+			<button type="button" class="btn btn-default  @checkActive("status", "1")" onclick="@buildAction({baseUrl}, "admin", Array("status"), Array("1"))">所有待收款</button>
+			<button type="button" class="btn btn-default  @checkActive("status", "2")" onclick="@buildAction({baseUrl}, "admin", Array("status"), Array("2"))">所有已收款</button>
 		</div>
 		<div class="btn-group">
 			<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
@@ -35,14 +35,32 @@
 <!-- <script type="text/javascript">
 $('#toolbar').tooltip(options);
 </script> -->
+@dialogConfirm("确认收款", String.valueOf(rebate.id), String.valueOf("doConfirmReceipt('" + rebate.id + "', {id:" + rebate.id + "});")){
+	确认收款&nbsp;
+	<b style="font-size:x-large;color:red">
+	@{
+		if(rebate != null && rebate.distribution != null && rebate.distribution.course != null){
+			rebate.distribution.course.name
+		}
+	}
+	</b>&nbsp;？
+}
+
 <div class="pull-left" style="width:130px;">
 	<div class="btn-group" id="toolbar">
 		<a class="btn btn-info" data-toggle="查看详细" href="#" onclick="getCommonPage(this, 'rebateDetail', 'id=@rebate.id');"><i
 			class="icon-eye-open icon-white"></i></a> 
 	</div>
 	<div class="btn-group" id="toolbar">
-		<a class="btn btn-success" data-toggle="确认收款" href="#"><i class="icon-ok icon-white"></i></a> 
-    <a class="btn btn-info"	data-toggle="拒绝通过" href="#"><i class="icon-ban-circle icon-white"></i></a>
+		<!--EDU, Admin, Agent-->
+		@if((session.get(LoginController.KEY_USER_ROLES).indexOf(String.valueOf(Role.ROLE_EDU)) != -1 && rebate.lastReceiptOfEdu == null)
+				|| (session.get(LoginController.KEY_USER_ROLES).indexOf(String.valueOf(Role.ROLE_ADMIN)) != -1 && rebate.lastReceiptOfPlatform == null)
+				|| (session.get(LoginController.KEY_USER_ROLES).indexOf(String.valueOf(Role.ROLE_AGENT)) != -1 && rebate.lastReceiptOfAgent == null)){
+			<a class="btn btn-success" data-toggle="确认收款" href="#" onclick="showConfirm('@String.valueOf(rebate.id)')"><i class="icon-ok icon-white"></i></a>
+		} else {
+			<span class="btn btn-success disabled" data-toggle="确认收款" href="#"><i class="icon-ok icon-white"></i></span>
+		}
+		
 	</div>
 </div>
 } 

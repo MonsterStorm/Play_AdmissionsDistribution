@@ -1,17 +1,10 @@
 package models;
 
-import java.lang.reflect.*;
 import java.util.*;
 
 import javax.persistence.*;
 
-import play.data.*;
-import play.data.validation.Constraints.Required;
 import play.db.ebean.*;
-
-import com.avaje.ebean.*;
-import com.avaje.ebean.Query;
-import common.*;
 
 /**
  * 审核，包括账户审核，申请资格审核，发布，修改，删除等审核

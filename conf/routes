@@ -54,6 +54,7 @@ POST	/template/useAgent			controllers.TemplateController.useAgentTemplate()
 POST    /common/update				controllers.CommonController.updateEntity()
 POST	/common/addOrUpdate			controllers.CommonController.addOrUpdateEntity()
 POST	/common/delete				controllers.CommonController.deleteEntity()
+POST	/common/confirmReceipt		controllers.CommonController.confirmReceipt()
 GET     /common/:page               controllers.CommonController.page(page: String)
 #Student
 POST	/student/addOrUpdate			controllers.StudentController.addOrUpdateEntity()
