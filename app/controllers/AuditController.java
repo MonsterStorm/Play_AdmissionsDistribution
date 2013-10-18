@@ -65,8 +65,12 @@ public class AuditController extends Controller {
 	 * @return
 	 */
 	@Security.Authenticated(SecuredEdu.class)
-	public static Result auditEdu() {
-		// String table = form().bindFromRequest().get("table");
+	public static Result auditEducation() {
+		String table = form().bindFromRequest().get("table");
+		if("auditCourseAgent".equalsIgnoreCase(table)){
+			return auditCourseAgent();
+		}
+
 		// if (Course.TABLE_NAME.equalsIgnoreCase(table)) {// 课程，认证
 		// 	return auditAdminCourse();
 		// } else if (EducationInstitution.TABLE_NAME.equalsIgnoreCase(table)) {
@@ -153,6 +157,34 @@ public class AuditController extends Controller {
 				return internalServerError(Constants.MSG_EDUCATION_NOT_EXIST);
 			}
 		}
+		return internalServerError(Constants.MSG_INTERNAL_ERROR);
+	}
+
+	/**
+	 * 教育机构审核代理人的代理课程申请
+	 * @return
+	 */
+	public static Result auditCourseAgent(){
+		Long id = FormHelper.getLong(form().bindFromRequest(), "id");
+
+		CourseDistribution cd = CourseDistribution.find(id);
+		if(cd.audit == null || cd.audit.status != Audit.STATUS_WAIT ){
+			return internalServerError(Constants.MSG_NOT_IN_WAIT_AUDIT);
+		}
+		if(CourseDistribution.auditAgentDistributon(cd) !=null){
+			return ok(Constants.MSG_SUCCESS);
+		}
+
+
+		// Integer status = FormHelper.getInt(form().bindFromRequest(), "status");
+		// if (id != null && status != null) {
+		// 	Agent agent = Agent.updateAudit(id, status);
+		// 	if (agent != null) {
+		// 		return ok(Constants.MSG_SUCCESS);
+		// 	} else {
+		// 		return internalServerError(Constants.MSG_EDUCATION_NOT_EXIST);
+		// 	}
+		// }
 		return internalServerError(Constants.MSG_INTERNAL_ERROR);
 	}
 }

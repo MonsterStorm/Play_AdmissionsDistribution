@@ -26,6 +26,7 @@ public class Constants {
 	public static final String MSG_COURSE_REGED = "已有一个申请";
 	public static final String MSG_DOMAIN_EXIST = "域名已存在";
 	public static final String MSG_NOT_USER_EDUCATION = "教育机构与用户不匹配";
+	public static final String MSG_NOT_IN_WAIT_AUDIT = "不在等待审核状态";
 
 	//申请
 	public static final String MSG_AGENT_APPLYED_COURSE = "已有一个申请";
