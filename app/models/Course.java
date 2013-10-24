@@ -53,6 +53,12 @@ public class Course extends Model {
 	@ManyToOne
 	public EducationInstitution edu;// 一个课程只能被一个教育机构拥有，一个教育机构可以有多个课程
 
+	@OneToOne(cascade=CascadeType.ALL)
+	public RebateType eduRebateType;//教育机构分成
+
+	@OneToOne(cascade=CascadeType.ALL)
+	public RebateType agentRebateType;//代理人分成
+
 	@ManyToOne
 	public Instructor instructor;// 一个课程只能被一个讲师拥有，一个讲师可以有多个课程
 	

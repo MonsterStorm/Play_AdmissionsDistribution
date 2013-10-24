@@ -14,14 +14,14 @@ import java.util.*;
 import java.text.*;
 import java.lang.*;
 
-import javax.validation.*;
-
 import play.data.*;
 import play.data.validation.Constraints.ValidateWith;
 import play.mvc.Http.MultipartFormData;
 import play.mvc.Http.MultipartFormData.FilePart;
 
 import common.FileHelper.ErrorType;
+import common.FormValidator.Type;
+
 
 /**
  * contoller for education
@@ -127,7 +127,26 @@ public class EducationController extends BaseController {
 	 * 
 	 * @return
 	 */
+	@FormValidators(values = {
+			@FormValidator(name = "realname", validateType = Type.REQUIRED, msg = "真实姓名不能为空"),
+			@FormValidator(name = "sex", validateType = Type.REQUIRED, msg = "性别不能为空"),
+			@FormValidator(name = "idcard", validateType = Type.REQUIRED, msg = "身份证号不能为空"),
+			@FormValidator(name = "idcard", validateType = Type.NUMBER, msg = "身份证号只能为数字"),
+			@FormValidator(name = "birthday", validateType = Type.REQUIRED, msg = "出生日期不能为空"),
+			@FormValidator(name = "phone", validateType = Type.PHONE, msg = "请填写正确的座机号码"),
+			@FormValidator(name = "mobile", validateType = Type.PHONE, msg = "请填写正确的手机号码"),
+			@FormValidator(name = "qq", validateType = Type.PHONE, msg = "qq号码不能为空"),
+			@FormValidator(name = "qq", validateType = Type.NUMBER, msg = "qq号码只能为数字"),
+			@FormValidator(name = "email", validateType = Type.EMAIL, msg = "请填写正确的邮箱"),
+			@FormValidator(name = "address", validateType = Type.REQUIRED, msg = "联系地址不能为空"),
+			@FormValidator(name = "info", validateType = Type.REQUIRED, msg = "机构简介不能为空"),
+			@FormValidator(name = "name", validateType = Type.REQUIRED, msg = "教育机构名称不能为空")
+	})
 	public static Result addOrUpdateEducation() {
+		String msg = Validator.check(EducationController.class, "addOrUpdateEducation");
+		if (msg != null) {
+			return badRequest(msg);
+		}
 		User user =  LoginController.getSessionUser();
 		if(user == null){
 			return badRequest(Constants.MSG_NOT_LOGIN);
@@ -244,7 +263,22 @@ public class EducationController extends BaseController {
 	/**
 	 * add or update course
 	 */
+	@FormValidators(values = {
+			@FormValidator(name = "name", validateType = Type.REQUIRED, msg = "课程名称不能为空"),
+			@FormValidator(name = "courseType", validateType = Type.REQUIRED, msg = "课程类别不能为空"),
+			@FormValidator(name = "edu", validateType = Type.REQUIRED, msg = "所属教育机构不能为空"),
+			@FormValidator(name = "money", validateType = Type.REQUIRED, msg = "学费不能为空"),
+			@FormValidator(name = "money", validateType = Type.NUMBER, msg = "学费只能是数字"),
+			@FormValidator(name = "startTime", validateType = Type.REQUIRED, msg = "开课时间不能为空"),
+			@FormValidator(name = "contact", validateType = Type.REQUIRED, msg = "联系方式不能为空"),
+			@FormValidator(name = "info", validateType = Type.REQUIRED, msg = "课程简介不能为空"),
+			@FormValidator(name = "detail", validateType = Type.REQUIRED, msg = "课程详情不能为空")
+	})
 	public static Result addOrUpdateCourse() {
+		String msg = Validator.check(EducationController.class, "addOrUpdateCourse");
+		if (msg != null) {
+			return badRequest(msg);
+		}
 		Form<Course> form = form(Course.class).bindFromRequest();
 		if (form != null && form.hasErrors() == false) {
 			Course course = Course.addOrUpdate(form.get());
@@ -447,7 +481,15 @@ public class EducationController extends BaseController {
 	 * 
 	 * @return
 	 */
+	 @FormValidators(values = {
+			@FormValidator(name = "domain", validateType = Type.REQUIRED, msg = "域名不能为空"),
+			@FormValidator(name = "edu", validateType = Type.REQUIRED, msg = "所属教育机构不能为空")
+	})
 	public static Result addOrUpdateDomain() {
+		String msg = Validator.check(CommonController.class, "addOrUpdateDomain");
+		if (msg != null) {
+			return badRequest(msg);
+		}
 		User user = LoginController.getSessionUser();
 		if (user == null) {
 			return badRequest(Constants.MSG_NOT_LOGIN);
