@@ -4,7 +4,7 @@
 # --- !Ups
 
 create table advertisment (
-  id                        bigint auto_increment not null,
+  id                        bigint not null,
   title                     varchar(255),
   logo                      varchar(255),
   url                       varchar(255),
@@ -16,7 +16,7 @@ create table advertisment (
 ;
 
 create table advertisment_statistics (
-  id                        bigint auto_increment not null,
+  id                        bigint not null,
   advertisment_id           bigint,
   total_visit               bigint,
   start_time                bigint,
@@ -25,7 +25,7 @@ create table advertisment_statistics (
 ;
 
 create table advertisment_visit (
-  id                        bigint auto_increment not null,
+  id                        bigint not null,
   ip                        varchar(255),
   domain                    varchar(255),
   browser                   varchar(255),
@@ -35,7 +35,7 @@ create table advertisment_visit (
 ;
 
 create table agent (
-  id                        bigint auto_increment not null,
+  id                        bigint not null,
   user_id                   bigint,
   template_id               bigint,
   audit_id                  bigint,
@@ -46,7 +46,7 @@ create table agent (
 ;
 
 create table audit (
-  id                        bigint auto_increment not null,
+  id                        bigint not null,
   type_id                   bigint,
   status                    integer,
   creator_id                bigint,
@@ -58,14 +58,14 @@ create table audit (
 ;
 
 create table audit_type (
-  id                        bigint auto_increment not null,
+  id                        bigint not null,
   name                      varchar(255),
   info                      varchar(255),
   constraint pk_audit_type primary key (id))
 ;
 
 create table confirm_receipt (
-  id                        bigint auto_increment not null,
+  id                        bigint not null,
   confirmer_id              bigint,
   time                      bigint,
   money                     double,
@@ -74,7 +74,7 @@ create table confirm_receipt (
 ;
 
 create table contract (
-  id                        bigint auto_increment not null,
+  id                        bigint not null,
   name                      varchar(255),
   detail                    longtext,
   info                      longtext,
@@ -85,14 +85,14 @@ create table contract (
 ;
 
 create table contract_type (
-  id                        bigint auto_increment not null,
+  id                        bigint not null,
   name                      varchar(255),
   info                      varchar(255),
   constraint pk_contract_type primary key (id))
 ;
 
 create table course (
-  id                        bigint auto_increment not null,
+  id                        bigint not null,
   name                      varchar(255),
   money                     double,
   start_time                bigint,
@@ -102,12 +102,14 @@ create table course (
   info                      longtext,
   detail                    longtext,
   edu_id                    bigint,
+  edu_rebate_type_id        bigint,
+  agent_rebate_type_id      bigint,
   instructor_id             bigint,
   constraint pk_course primary key (id))
 ;
 
 create table course_distribution (
-  id                        bigint auto_increment not null,
+  id                        bigint not null,
   course_id                 bigint,
   agent_id                  bigint,
   audit_id                  bigint,
@@ -116,13 +118,13 @@ create table course_distribution (
 ;
 
 create table course_type (
-  id                        bigint auto_increment not null,
+  id                        bigint not null,
   name                      varchar(255),
   constraint pk_course_type primary key (id))
 ;
 
 create table domain (
-  id                        bigint auto_increment not null,
+  id                        bigint not null,
   domain                    varchar(255),
   agent_id                  bigint,
   edu_id                    bigint,
@@ -131,7 +133,7 @@ create table domain (
 ;
 
 create table education_institution (
-  id                        bigint auto_increment not null,
+  id                        bigint not null,
   creator_id                bigint,
   create_time               bigint,
   audit_id                  bigint,
@@ -142,7 +144,7 @@ create table education_institution (
 ;
 
 create table enroll (
-  id                        bigint auto_increment not null,
+  id                        bigint not null,
   student_id                bigint,
   course_id                 bigint,
   from_agent_id             bigint,
@@ -159,14 +161,14 @@ create table enroll (
 ;
 
 create table function (
-  id                        bigint auto_increment not null,
+  id                        bigint not null,
   name                      varchar(255),
   info                      varchar(255),
   constraint pk_function primary key (id))
 ;
 
 create table instructor (
-  id                        bigint auto_increment not null,
+  id                        bigint not null,
   user_id                   bigint,
   template_id               bigint,
   name                      varchar(255),
@@ -179,7 +181,7 @@ create table instructor (
 ;
 
 create table log_login (
-  id                        bigint auto_increment not null,
+  id                        bigint not null,
   user_id                   bigint,
   time                      bigint,
   log_type                  integer,
@@ -187,7 +189,7 @@ create table log_login (
 ;
 
 create table log_operation (
-  id                        bigint auto_increment not null,
+  id                        bigint not null,
   user_id                   bigint,
   time                      bigint,
   function_id               bigint,
@@ -195,7 +197,7 @@ create table log_operation (
 ;
 
 create table message (
-  id                        bigint auto_increment not null,
+  id                        bigint not null,
   name                      varchar(255),
   phone                     varchar(255),
   qq                        varchar(255),
@@ -208,14 +210,14 @@ create table message (
 ;
 
 create table module (
-  id                        bigint auto_increment not null,
+  id                        bigint not null,
   name                      varchar(255),
   info                      longtext,
   constraint pk_module primary key (id))
 ;
 
 create table news (
-  id                        bigint auto_increment not null,
+  id                        bigint not null,
   title                     varchar(255),
   detail                    longtext,
   news_type_id              bigint,
@@ -224,14 +226,14 @@ create table news (
 ;
 
 create table news_type (
-  id                        bigint auto_increment not null,
+  id                        bigint not null,
   name                      varchar(255),
   info                      varchar(255),
   constraint pk_news_type primary key (id))
 ;
 
 create table project (
-  id                        bigint auto_increment not null,
+  id                        bigint not null,
   name                      varchar(255),
   info                      varchar(255),
   status                    integer,
@@ -239,7 +241,7 @@ create table project (
 ;
 
 create table rebate (
-  id                        bigint auto_increment not null,
+  id                        bigint not null,
   distribution_id           bigint,
   num_of_students           integer,
   total_money               double,
@@ -260,7 +262,7 @@ create table rebate (
 ;
 
 create table rebate_type (
-  id                        bigint auto_increment not null,
+  id                        bigint not null,
   ratio_of_total            double,
   ratio_of_per_student      double,
   rebate_id                 bigint,
@@ -268,7 +270,7 @@ create table rebate_type (
 ;
 
 create table reply (
-  id                        bigint auto_increment not null,
+  id                        bigint not null,
   user_id                   bigint,
   title                     varchar(255),
   content                   longtext,
@@ -278,14 +280,14 @@ create table reply (
 ;
 
 create table role (
-  id                        bigint auto_increment not null,
+  id                        bigint not null,
   name                      varchar(255),
   info                      varchar(255),
   constraint pk_role primary key (id))
 ;
 
 create table scholl_fellow (
-  id                        bigint auto_increment not null,
+  id                        bigint not null,
   name                      varchar(255),
   company                   varchar(255),
   position                  varchar(255),
@@ -293,7 +295,7 @@ create table scholl_fellow (
 ;
 
 create table student (
-  id                        bigint auto_increment not null,
+  id                        bigint not null,
   user_id                   bigint,
   name                      varchar(255),
   company_name              varchar(255),
@@ -303,7 +305,7 @@ create table student (
 ;
 
 create table studentwords (
-  id                        bigint auto_increment not null,
+  id                        bigint not null,
   name                      varchar(255),
   company                   varchar(255),
   words                     varchar(255),
@@ -311,7 +313,7 @@ create table studentwords (
 ;
 
 create table template (
-  id                        bigint auto_increment not null,
+  id                        bigint not null,
   user_id                   bigint,
   edu_id                    bigint,
   instructor_id             bigint,
@@ -322,7 +324,7 @@ create table template (
 ;
 
 create table template_type (
-  id                        bigint auto_increment not null,
+  id                        bigint not null,
   name                      varchar(255),
   info                      longtext,
   last_modified             bigint,
@@ -332,7 +334,7 @@ create table template_type (
 ;
 
 create table user (
-  id                        bigint auto_increment not null,
+  id                        bigint not null,
   username                  varchar(255),
   password                  varchar(255),
   nickname                  varchar(255),
@@ -349,7 +351,7 @@ create table user (
 ;
 
 create table user_info (
-  id                        bigint auto_increment not null,
+  id                        bigint not null,
   user_id                   bigint,
   realname                  varchar(255),
   idcard                    varchar(255),
@@ -390,12 +392,13 @@ create table user_role (
   role_id                        bigint not null,
   constraint pk_user_role primary key (user_id, role_id))
 ;
-alter table advertisment add constraint fk_advertisment_advertismentStatistics_1 foreign key (advertisment_statistics_id) references advertisment_statistics (id) on delete restrict on update restrict;
-create index ix_advertisment_advertismentStatistics_1 on advertisment (advertisment_statistics_id);
-alter table advertisment_statistics add constraint fk_advertisment_statistics_advertisment_2 foreign key (advertisment_id) references advertisment (id) on delete restrict on update restrict;
-create index ix_advertisment_statistics_advertisment_2 on advertisment_statistics (advertisment_id);
-alter table advertisment_visit add constraint fk_advertisment_visit_advertisment_3 foreign key (advertisment_id) references advertisment (id) on delete restrict on update restrict;
-create index ix_advertisment_visit_advertisment_3 on advertisment_visit (advertisment_id);
+
+alter table advertisment add constraint fk_advertisment_advertismentSt_1 foreign key (advertisment_statistics_id) references advertisment_statistics (id) on delete restrict on update restrict;
+create index ix_advertisment_advertismentSt_1 on advertisment (advertisment_statistics_id);
+alter table advertisment_statistics add constraint fk_advertisment_statistics_adv_2 foreign key (advertisment_id) references advertisment (id) on delete restrict on update restrict;
+create index ix_advertisment_statistics_adv_2 on advertisment_statistics (advertisment_id);
+alter table advertisment_visit add constraint fk_advertisment_visit_advertis_3 foreign key (advertisment_id) references advertisment (id) on delete restrict on update restrict;
+create index ix_advertisment_visit_advertis_3 on advertisment_visit (advertisment_id);
 alter table agent add constraint fk_agent_user_4 foreign key (user_id) references user (id) on delete restrict on update restrict;
 create index ix_agent_user_4 on agent (user_id);
 alter table agent add constraint fk_agent_template_5 foreign key (template_id) references template (id) on delete restrict on update restrict;
@@ -420,104 +423,108 @@ alter table course add constraint fk_course_courseType_14 foreign key (course_ty
 create index ix_course_courseType_14 on course (course_type_id);
 alter table course add constraint fk_course_edu_15 foreign key (edu_id) references education_institution (id) on delete restrict on update restrict;
 create index ix_course_edu_15 on course (edu_id);
-alter table course add constraint fk_course_instructor_16 foreign key (instructor_id) references instructor (id) on delete restrict on update restrict;
-create index ix_course_instructor_16 on course (instructor_id);
-alter table course_distribution add constraint fk_course_distribution_course_17 foreign key (course_id) references course (id) on delete restrict on update restrict;
-create index ix_course_distribution_course_17 on course_distribution (course_id);
-alter table course_distribution add constraint fk_course_distribution_agent_18 foreign key (agent_id) references agent (id) on delete restrict on update restrict;
-create index ix_course_distribution_agent_18 on course_distribution (agent_id);
-alter table course_distribution add constraint fk_course_distribution_audit_19 foreign key (audit_id) references audit (id) on delete restrict on update restrict;
-create index ix_course_distribution_audit_19 on course_distribution (audit_id);
-alter table course_distribution add constraint fk_course_distribution_rebate_20 foreign key (rebate_id) references rebate (id) on delete restrict on update restrict;
-create index ix_course_distribution_rebate_20 on course_distribution (rebate_id);
-alter table domain add constraint fk_domain_agent_21 foreign key (agent_id) references agent (id) on delete restrict on update restrict;
-create index ix_domain_agent_21 on domain (agent_id);
-alter table domain add constraint fk_domain_edu_22 foreign key (edu_id) references education_institution (id) on delete restrict on update restrict;
-create index ix_domain_edu_22 on domain (edu_id);
-alter table domain add constraint fk_domain_instructor_23 foreign key (instructor_id) references instructor (id) on delete restrict on update restrict;
-create index ix_domain_instructor_23 on domain (instructor_id);
-alter table education_institution add constraint fk_education_institution_creator_24 foreign key (creator_id) references user (id) on delete restrict on update restrict;
-create index ix_education_institution_creator_24 on education_institution (creator_id);
-alter table education_institution add constraint fk_education_institution_audit_25 foreign key (audit_id) references audit (id) on delete restrict on update restrict;
-create index ix_education_institution_audit_25 on education_institution (audit_id);
-alter table education_institution add constraint fk_education_institution_template_26 foreign key (template_id) references template (id) on delete restrict on update restrict;
-create index ix_education_institution_template_26 on education_institution (template_id);
-alter table enroll add constraint fk_enroll_student_27 foreign key (student_id) references student (id) on delete restrict on update restrict;
-create index ix_enroll_student_27 on enroll (student_id);
-alter table enroll add constraint fk_enroll_course_28 foreign key (course_id) references course (id) on delete restrict on update restrict;
-create index ix_enroll_course_28 on enroll (course_id);
-alter table enroll add constraint fk_enroll_fromAgent_29 foreign key (from_agent_id) references agent (id) on delete restrict on update restrict;
-create index ix_enroll_fromAgent_29 on enroll (from_agent_id);
-alter table enroll add constraint fk_enroll_edu_30 foreign key (edu_id) references education_institution (id) on delete restrict on update restrict;
-create index ix_enroll_edu_30 on enroll (edu_id);
-alter table enroll add constraint fk_enroll_auditOfAgent_31 foreign key (audit_of_agent_id) references audit (id) on delete restrict on update restrict;
-create index ix_enroll_auditOfAgent_31 on enroll (audit_of_agent_id);
-alter table enroll add constraint fk_enroll_auditOfEdu_32 foreign key (audit_of_edu_id) references audit (id) on delete restrict on update restrict;
-create index ix_enroll_auditOfEdu_32 on enroll (audit_of_edu_id);
-alter table enroll add constraint fk_enroll_confirmOfEdu_33 foreign key (confirm_of_edu_id) references confirm_receipt (id) on delete restrict on update restrict;
-create index ix_enroll_confirmOfEdu_33 on enroll (confirm_of_edu_id);
-alter table enroll add constraint fk_enroll_confirmOfPlatform_34 foreign key (confirm_of_platform_id) references confirm_receipt (id) on delete restrict on update restrict;
-create index ix_enroll_confirmOfPlatform_34 on enroll (confirm_of_platform_id);
-alter table enroll add constraint fk_enroll_confirmOfAgent_35 foreign key (confirm_of_agent_id) references confirm_receipt (id) on delete restrict on update restrict;
-create index ix_enroll_confirmOfAgent_35 on enroll (confirm_of_agent_id);
-alter table instructor add constraint fk_instructor_user_36 foreign key (user_id) references user (id) on delete restrict on update restrict;
-create index ix_instructor_user_36 on instructor (user_id);
-alter table instructor add constraint fk_instructor_template_37 foreign key (template_id) references template (id) on delete restrict on update restrict;
-create index ix_instructor_template_37 on instructor (template_id);
-alter table instructor add constraint fk_instructor_audit_38 foreign key (audit_id) references audit (id) on delete restrict on update restrict;
-create index ix_instructor_audit_38 on instructor (audit_id);
-alter table log_login add constraint fk_log_login_user_39 foreign key (user_id) references user (id) on delete restrict on update restrict;
-create index ix_log_login_user_39 on log_login (user_id);
-alter table log_operation add constraint fk_log_operation_user_40 foreign key (user_id) references user (id) on delete restrict on update restrict;
-create index ix_log_operation_user_40 on log_operation (user_id);
-alter table log_operation add constraint fk_log_operation_function_41 foreign key (function_id) references function (id) on delete restrict on update restrict;
-create index ix_log_operation_function_41 on log_operation (function_id);
-alter table news add constraint fk_news_newsType_42 foreign key (news_type_id) references news_type (id) on delete restrict on update restrict;
-create index ix_news_newsType_42 on news (news_type_id);
-alter table rebate add constraint fk_rebate_distribution_43 foreign key (distribution_id) references course_distribution (id) on delete restrict on update restrict;
-create index ix_rebate_distribution_43 on rebate (distribution_id);
-alter table rebate add constraint fk_rebate_lastReceiptOfEdu_44 foreign key (last_receipt_of_edu_id) references confirm_receipt (id) on delete restrict on update restrict;
-create index ix_rebate_lastReceiptOfEdu_44 on rebate (last_receipt_of_edu_id);
-alter table rebate add constraint fk_rebate_typeToPlatform_45 foreign key (type_to_platform_id) references rebate_type (id) on delete restrict on update restrict;
-create index ix_rebate_typeToPlatform_45 on rebate (type_to_platform_id);
-alter table rebate add constraint fk_rebate_lastReceiptOfPlatform_46 foreign key (last_receipt_of_platform_id) references confirm_receipt (id) on delete restrict on update restrict;
-create index ix_rebate_lastReceiptOfPlatform_46 on rebate (last_receipt_of_platform_id);
-alter table rebate add constraint fk_rebate_typeToAgent_47 foreign key (type_to_agent_id) references rebate_type (id) on delete restrict on update restrict;
-create index ix_rebate_typeToAgent_47 on rebate (type_to_agent_id);
-alter table rebate add constraint fk_rebate_lastReceiptOfAgent_48 foreign key (last_receipt_of_agent_id) references confirm_receipt (id) on delete restrict on update restrict;
-create index ix_rebate_lastReceiptOfAgent_48 on rebate (last_receipt_of_agent_id);
-alter table rebate_type add constraint fk_rebate_type_rebate_49 foreign key (rebate_id) references rebate (id) on delete restrict on update restrict;
-create index ix_rebate_type_rebate_49 on rebate_type (rebate_id);
-alter table reply add constraint fk_reply_user_50 foreign key (user_id) references user (id) on delete restrict on update restrict;
-create index ix_reply_user_50 on reply (user_id);
-alter table reply add constraint fk_reply_message_51 foreign key (message_id) references message (id) on delete restrict on update restrict;
-create index ix_reply_message_51 on reply (message_id);
-alter table student add constraint fk_student_user_52 foreign key (user_id) references user (id) on delete restrict on update restrict;
-create index ix_student_user_52 on student (user_id);
-alter table template add constraint fk_template_user_53 foreign key (user_id) references user (id) on delete restrict on update restrict;
-create index ix_template_user_53 on template (user_id);
-alter table template add constraint fk_template_edu_54 foreign key (edu_id) references education_institution (id) on delete restrict on update restrict;
-create index ix_template_edu_54 on template (edu_id);
-alter table template add constraint fk_template_instructor_55 foreign key (instructor_id) references instructor (id) on delete restrict on update restrict;
-create index ix_template_instructor_55 on template (instructor_id);
-alter table template add constraint fk_template_agent_56 foreign key (agent_id) references agent (id) on delete restrict on update restrict;
-create index ix_template_agent_56 on template (agent_id);
-alter table template add constraint fk_template_templateType_57 foreign key (template_type_id) references template_type (id) on delete restrict on update restrict;
-create index ix_template_templateType_57 on template (template_type_id);
-alter table user add constraint fk_user_audit_58 foreign key (audit_id) references audit (id) on delete restrict on update restrict;
-create index ix_user_audit_58 on user (audit_id);
-alter table user add constraint fk_user_basicInfo_59 foreign key (basic_info_id) references user_info (id) on delete restrict on update restrict;
-create index ix_user_basicInfo_59 on user (basic_info_id);
-alter table user add constraint fk_user_parentAccount_60 foreign key (parent_account_id) references user (id) on delete restrict on update restrict;
-create index ix_user_parentAccount_60 on user (parent_account_id);
-alter table user add constraint fk_user_instructor_61 foreign key (instructor_id) references instructor (id) on delete restrict on update restrict;
-create index ix_user_instructor_61 on user (instructor_id);
-alter table user add constraint fk_user_agent_62 foreign key (agent_id) references agent (id) on delete restrict on update restrict;
-create index ix_user_agent_62 on user (agent_id);
-alter table user add constraint fk_user_student_63 foreign key (student_id) references student (id) on delete restrict on update restrict;
-create index ix_user_student_63 on user (student_id);
-alter table user_info add constraint fk_user_info_user_64 foreign key (user_id) references user (id) on delete restrict on update restrict;
-create index ix_user_info_user_64 on user_info (user_id);
+alter table course add constraint fk_course_eduRebateType_16 foreign key (edu_rebate_type_id) references rebate_type (id) on delete restrict on update restrict;
+create index ix_course_eduRebateType_16 on course (edu_rebate_type_id);
+alter table course add constraint fk_course_agentRebateType_17 foreign key (agent_rebate_type_id) references rebate_type (id) on delete restrict on update restrict;
+create index ix_course_agentRebateType_17 on course (agent_rebate_type_id);
+alter table course add constraint fk_course_instructor_18 foreign key (instructor_id) references instructor (id) on delete restrict on update restrict;
+create index ix_course_instructor_18 on course (instructor_id);
+alter table course_distribution add constraint fk_course_distribution_course_19 foreign key (course_id) references course (id) on delete restrict on update restrict;
+create index ix_course_distribution_course_19 on course_distribution (course_id);
+alter table course_distribution add constraint fk_course_distribution_agent_20 foreign key (agent_id) references agent (id) on delete restrict on update restrict;
+create index ix_course_distribution_agent_20 on course_distribution (agent_id);
+alter table course_distribution add constraint fk_course_distribution_audit_21 foreign key (audit_id) references audit (id) on delete restrict on update restrict;
+create index ix_course_distribution_audit_21 on course_distribution (audit_id);
+alter table course_distribution add constraint fk_course_distribution_rebate_22 foreign key (rebate_id) references rebate (id) on delete restrict on update restrict;
+create index ix_course_distribution_rebate_22 on course_distribution (rebate_id);
+alter table domain add constraint fk_domain_agent_23 foreign key (agent_id) references agent (id) on delete restrict on update restrict;
+create index ix_domain_agent_23 on domain (agent_id);
+alter table domain add constraint fk_domain_edu_24 foreign key (edu_id) references education_institution (id) on delete restrict on update restrict;
+create index ix_domain_edu_24 on domain (edu_id);
+alter table domain add constraint fk_domain_instructor_25 foreign key (instructor_id) references instructor (id) on delete restrict on update restrict;
+create index ix_domain_instructor_25 on domain (instructor_id);
+alter table education_institution add constraint fk_education_institution_crea_26 foreign key (creator_id) references user (id) on delete restrict on update restrict;
+create index ix_education_institution_crea_26 on education_institution (creator_id);
+alter table education_institution add constraint fk_education_institution_audi_27 foreign key (audit_id) references audit (id) on delete restrict on update restrict;
+create index ix_education_institution_audi_27 on education_institution (audit_id);
+alter table education_institution add constraint fk_education_institution_temp_28 foreign key (template_id) references template (id) on delete restrict on update restrict;
+create index ix_education_institution_temp_28 on education_institution (template_id);
+alter table enroll add constraint fk_enroll_student_29 foreign key (student_id) references student (id) on delete restrict on update restrict;
+create index ix_enroll_student_29 on enroll (student_id);
+alter table enroll add constraint fk_enroll_course_30 foreign key (course_id) references course (id) on delete restrict on update restrict;
+create index ix_enroll_course_30 on enroll (course_id);
+alter table enroll add constraint fk_enroll_fromAgent_31 foreign key (from_agent_id) references agent (id) on delete restrict on update restrict;
+create index ix_enroll_fromAgent_31 on enroll (from_agent_id);
+alter table enroll add constraint fk_enroll_edu_32 foreign key (edu_id) references education_institution (id) on delete restrict on update restrict;
+create index ix_enroll_edu_32 on enroll (edu_id);
+alter table enroll add constraint fk_enroll_auditOfAgent_33 foreign key (audit_of_agent_id) references audit (id) on delete restrict on update restrict;
+create index ix_enroll_auditOfAgent_33 on enroll (audit_of_agent_id);
+alter table enroll add constraint fk_enroll_auditOfEdu_34 foreign key (audit_of_edu_id) references audit (id) on delete restrict on update restrict;
+create index ix_enroll_auditOfEdu_34 on enroll (audit_of_edu_id);
+alter table enroll add constraint fk_enroll_confirmOfEdu_35 foreign key (confirm_of_edu_id) references confirm_receipt (id) on delete restrict on update restrict;
+create index ix_enroll_confirmOfEdu_35 on enroll (confirm_of_edu_id);
+alter table enroll add constraint fk_enroll_confirmOfPlatform_36 foreign key (confirm_of_platform_id) references confirm_receipt (id) on delete restrict on update restrict;
+create index ix_enroll_confirmOfPlatform_36 on enroll (confirm_of_platform_id);
+alter table enroll add constraint fk_enroll_confirmOfAgent_37 foreign key (confirm_of_agent_id) references confirm_receipt (id) on delete restrict on update restrict;
+create index ix_enroll_confirmOfAgent_37 on enroll (confirm_of_agent_id);
+alter table instructor add constraint fk_instructor_user_38 foreign key (user_id) references user (id) on delete restrict on update restrict;
+create index ix_instructor_user_38 on instructor (user_id);
+alter table instructor add constraint fk_instructor_template_39 foreign key (template_id) references template (id) on delete restrict on update restrict;
+create index ix_instructor_template_39 on instructor (template_id);
+alter table instructor add constraint fk_instructor_audit_40 foreign key (audit_id) references audit (id) on delete restrict on update restrict;
+create index ix_instructor_audit_40 on instructor (audit_id);
+alter table log_login add constraint fk_log_login_user_41 foreign key (user_id) references user (id) on delete restrict on update restrict;
+create index ix_log_login_user_41 on log_login (user_id);
+alter table log_operation add constraint fk_log_operation_user_42 foreign key (user_id) references user (id) on delete restrict on update restrict;
+create index ix_log_operation_user_42 on log_operation (user_id);
+alter table log_operation add constraint fk_log_operation_function_43 foreign key (function_id) references function (id) on delete restrict on update restrict;
+create index ix_log_operation_function_43 on log_operation (function_id);
+alter table news add constraint fk_news_newsType_44 foreign key (news_type_id) references news_type (id) on delete restrict on update restrict;
+create index ix_news_newsType_44 on news (news_type_id);
+alter table rebate add constraint fk_rebate_distribution_45 foreign key (distribution_id) references course_distribution (id) on delete restrict on update restrict;
+create index ix_rebate_distribution_45 on rebate (distribution_id);
+alter table rebate add constraint fk_rebate_lastReceiptOfEdu_46 foreign key (last_receipt_of_edu_id) references confirm_receipt (id) on delete restrict on update restrict;
+create index ix_rebate_lastReceiptOfEdu_46 on rebate (last_receipt_of_edu_id);
+alter table rebate add constraint fk_rebate_typeToPlatform_47 foreign key (type_to_platform_id) references rebate_type (id) on delete restrict on update restrict;
+create index ix_rebate_typeToPlatform_47 on rebate (type_to_platform_id);
+alter table rebate add constraint fk_rebate_lastReceiptOfPlatfo_48 foreign key (last_receipt_of_platform_id) references confirm_receipt (id) on delete restrict on update restrict;
+create index ix_rebate_lastReceiptOfPlatfo_48 on rebate (last_receipt_of_platform_id);
+alter table rebate add constraint fk_rebate_typeToAgent_49 foreign key (type_to_agent_id) references rebate_type (id) on delete restrict on update restrict;
+create index ix_rebate_typeToAgent_49 on rebate (type_to_agent_id);
+alter table rebate add constraint fk_rebate_lastReceiptOfAgent_50 foreign key (last_receipt_of_agent_id) references confirm_receipt (id) on delete restrict on update restrict;
+create index ix_rebate_lastReceiptOfAgent_50 on rebate (last_receipt_of_agent_id);
+alter table rebate_type add constraint fk_rebate_type_rebate_51 foreign key (rebate_id) references rebate (id) on delete restrict on update restrict;
+create index ix_rebate_type_rebate_51 on rebate_type (rebate_id);
+alter table reply add constraint fk_reply_user_52 foreign key (user_id) references user (id) on delete restrict on update restrict;
+create index ix_reply_user_52 on reply (user_id);
+alter table reply add constraint fk_reply_message_53 foreign key (message_id) references message (id) on delete restrict on update restrict;
+create index ix_reply_message_53 on reply (message_id);
+alter table student add constraint fk_student_user_54 foreign key (user_id) references user (id) on delete restrict on update restrict;
+create index ix_student_user_54 on student (user_id);
+alter table template add constraint fk_template_user_55 foreign key (user_id) references user (id) on delete restrict on update restrict;
+create index ix_template_user_55 on template (user_id);
+alter table template add constraint fk_template_edu_56 foreign key (edu_id) references education_institution (id) on delete restrict on update restrict;
+create index ix_template_edu_56 on template (edu_id);
+alter table template add constraint fk_template_instructor_57 foreign key (instructor_id) references instructor (id) on delete restrict on update restrict;
+create index ix_template_instructor_57 on template (instructor_id);
+alter table template add constraint fk_template_agent_58 foreign key (agent_id) references agent (id) on delete restrict on update restrict;
+create index ix_template_agent_58 on template (agent_id);
+alter table template add constraint fk_template_templateType_59 foreign key (template_type_id) references template_type (id) on delete restrict on update restrict;
+create index ix_template_templateType_59 on template (template_type_id);
+alter table user add constraint fk_user_audit_60 foreign key (audit_id) references audit (id) on delete restrict on update restrict;
+create index ix_user_audit_60 on user (audit_id);
+alter table user add constraint fk_user_basicInfo_61 foreign key (basic_info_id) references user_info (id) on delete restrict on update restrict;
+create index ix_user_basicInfo_61 on user (basic_info_id);
+alter table user add constraint fk_user_parentAccount_62 foreign key (parent_account_id) references user (id) on delete restrict on update restrict;
+create index ix_user_parentAccount_62 on user (parent_account_id);
+alter table user add constraint fk_user_instructor_63 foreign key (instructor_id) references instructor (id) on delete restrict on update restrict;
+create index ix_user_instructor_63 on user (instructor_id);
+alter table user add constraint fk_user_agent_64 foreign key (agent_id) references agent (id) on delete restrict on update restrict;
+create index ix_user_agent_64 on user (agent_id);
+alter table user add constraint fk_user_student_65 foreign key (student_id) references student (id) on delete restrict on update restrict;
+create index ix_user_student_65 on user (student_id);
+alter table user_info add constraint fk_user_info_user_66 foreign key (user_id) references user (id) on delete restrict on update restrict;
+create index ix_user_info_user_66 on user_info (user_id);
 
 
 
@@ -539,85 +546,5 @@ alter table user_role add constraint fk_user_role_role_02 foreign key (role_id) 
 
 # --- !Downs
 
-SET FOREIGN_KEY_CHECKS=0;
 
-drop table advertisment;
-
-drop table advertisment_statistics;
-
-drop table advertisment_visit;
-
-drop table agent;
-
-drop table agent_course;
-
-drop table audit;
-
-drop table audit_type;
-
-drop table confirm_receipt;
-
-drop table contract;
-
-drop table contract_type;
-
-drop table course;
-
-drop table course_distribution;
-
-drop table course_type;
-
-drop table domain;
-
-drop table education_institution;
-
-drop table enroll;
-
-drop table function;
-
-drop table module_function;
-
-drop table instructor;
-
-drop table log_login;
-
-drop table log_operation;
-
-drop table message;
-
-drop table module;
-
-drop table role_module;
-
-drop table news;
-
-drop table news_type;
-
-drop table project;
-
-drop table rebate;
-
-drop table rebate_type;
-
-drop table reply;
-
-drop table role;
-
-drop table user_role;
-
-drop table scholl_fellow;
-
-drop table student;
-
-drop table studentwords;
-
-drop table template;
-
-drop table template_type;
-
-drop table user;
-
-drop table user_info;
-
-SET FOREIGN_KEY_CHECKS=1;
 
