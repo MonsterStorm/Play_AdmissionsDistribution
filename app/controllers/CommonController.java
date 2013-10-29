@@ -1306,7 +1306,15 @@ public class CommonController extends Controller {
 	 * 确认收款
 	 * @return
 	 */
+	/*@FormValidators(values = {
+			@FormValidator(name = "money", validateType = Type.NUMBER, msg = "收款数必须为数字"),
+	})*/
 	public static Result confirmReceipt(){
+		/*String msg = Validator.check(CommonController.class, "confirmReceipt");
+		if (msg != null) {
+			return badRequest(msg);
+		}*/
+		
 		User user = LoginController.getSessionUser();
 		if (user != null) {
 			Long rebateId = FormHelper.getLong(form().bindFromRequest(), "id");
