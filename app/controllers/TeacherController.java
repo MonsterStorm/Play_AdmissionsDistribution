@@ -18,6 +18,8 @@ import play.mvc.Http.MultipartFormData;
 import play.mvc.Http.MultipartFormData.FilePart;
 
 import common.FileHelper.ErrorType;
+import common.FormValidator.Type;
+
 /**
  * contoller for teacher
  * 
@@ -175,7 +177,28 @@ public class TeacherController extends BaseController {
 	 * 
 	 * @return
 	 */
+	 @FormValidators(values = {
+			@FormValidator(name = "realname", validateType = Type.REQUIRED, msg = "真实姓名不能为空"),
+			@FormValidator(name = "sex", validateType = Type.REQUIRED, msg = "性别不能为空"),
+			@FormValidator(name = "idcard", validateType = Type.REQUIRED, msg = "身份证号不能为空"),
+			@FormValidator(name = "idcard", validateType = Type.NUMBER, msg = "身份证号只能是数字"),
+			@FormValidator(name = "birthday", validateType = Type.REQUIRED, msg = "出生日期不能为空"),
+			@FormValidator(name = "phone", validateType = Type.PHONE, msg = "请填写正确的座机号码"),
+			@FormValidator(name = "qq", validateType = Type.REQUIRED, msg = "QQ号码不能为空"),
+			@FormValidator(name = "qq", validateType = Type.NUMBER, msg = "QQ号码只能是数字"),
+			@FormValidator(name = "address", validateType = Type.REQUIRED, msg = "联系地址不能为空"),
+			@FormValidator(name = "mobile", validateType = Type.PHONE, msg = "请填写正确的手机号码"),
+			@FormValidator(name = "email", validateType = Type.EMAIL, msg = "请填写正确的邮箱地址"),
+			@FormValidator(name = "info", validateType = Type.REQUIRED, msg = "个人简介不能为空"),
+			@FormValidator(name = "jobTitle", validateType = Type.REQUIRED, msg = "职称不能为空"),
+			@FormValidator(name = "field", validateType = Type.REQUIRED, msg = "擅长领域不能为空")
+	})
 	public static Result addOrUpdateTeacher() {
+		String msg = Validator.check(TeacherController.class, "addOrUpdateTeacher");
+		if (msg != null) {
+			return badRequest(msg);
+		}
+
 		User user =  LoginController.getSessionUser();
 		if(user == null){
 			return badRequest(Constants.MSG_NOT_LOGIN);
@@ -232,6 +255,7 @@ public class TeacherController extends BaseController {
 			}else{
 				instructor.info = FormHelper.getString(form().bindFromRequest(),"info");
 				instructor.jobTitle = FormHelper.getString(form().bindFromRequest(),"jobTitle");
+				instructor.field = FormHelper.getString(form().bindFromRequest(),"field");
 
 				Instructor instructor2 = Instructor.addOrUpdate(instructor);
 				if (instructor2 != null) {

@@ -18,6 +18,8 @@ import play.mvc.Http.MultipartFormData;
 import play.mvc.Http.MultipartFormData.FilePart;
 
 import common.FileHelper.ErrorType;
+import common.FormValidator.Type;
+
 /**
  * contoller for agent
  * 
@@ -95,6 +97,20 @@ public class AgentController extends BaseController {
 		}if (Domain.TABLE_NAME.equalsIgnoreCase(table)) {// 代理人更新或添加
 			return addOrUpdateDomain();
 		} else {
+			return badRequest(Constants.MSG_PAGE_NOT_FOUND);
+		}
+	}
+
+	/**
+	 * add or update entity
+	 * 
+	 * @return
+	 */
+	public static Result doApply() {
+		String table = form().bindFromRequest().get("table");
+		if (table.equalsIgnoreCase("applyCourse")) {// 申请代理课程
+			return applyCourse();
+		}else {
 			return badRequest(Constants.MSG_PAGE_NOT_FOUND);
 		}
 	}
@@ -212,7 +228,27 @@ public class AgentController extends BaseController {
 	 * 
 	 * @return
 	 */
+	@FormValidators(values = {
+			@FormValidator(name = "realname", validateType = Type.REQUIRED, msg = "代理人姓名不能为空"),
+			@FormValidator(name = "sex", validateType = Type.REQUIRED, msg = "性别不能为空"),
+			@FormValidator(name = "name", validateType = Type.REQUIRED, msg = "机构名称不能为空"),
+			@FormValidator(name = "idcard", validateType = Type.REQUIRED, msg = "身份证号称不能为空"),
+			@FormValidator(name = "idcard", validateType = Type.NUMBER, msg = "身份证号只能是数字"),
+			@FormValidator(name = "birthday", validateType = Type.REQUIRED, msg = "出生日期不能为空"),
+			@FormValidator(name = "phone", validateType = Type.PHONE, msg = "请填写正确的座机号码"),
+			@FormValidator(name = "mobile", validateType = Type.PHONE, msg = "请填写正确的手机号码"),
+			@FormValidator(name = "qq", validateType = Type.REQUIRED, msg = "QQ号码不能为空"),
+			@FormValidator(name = "qq", validateType = Type.NUMBER, msg = "QQ号码只能是数字"),
+			@FormValidator(name = "email", validateType = Type.EMAIL, msg = "请填写正确的邮箱地址"),
+			@FormValidator(name = "address", validateType = Type.REQUIRED, msg = "联系地址不能为空"),
+			@FormValidator(name = "info", validateType = Type.REQUIRED, msg = "机构简介不能为空"),
+			@FormValidator(name = "contact", validateType = Type.REQUIRED, msg = "联系方式不能为空")
+	})
 	public static Result addOrUpdateAgent() {
+		String msg = Validator.check(AgentController.class, "addOrUpdateAgent");
+		if (msg != null) {
+			return badRequest(msg);
+		}
 		User user = LoginController.getSessionUser();
 		if (user == null) {
 			return badRequest(Constants.MSG_NOT_LOGIN);
@@ -298,7 +334,14 @@ public class AgentController extends BaseController {
 	 * 
 	 * @return
 	 */
+	@FormValidators(values = {
+			@FormValidator(name = "id", validateType = Type.REQUIRED, msg = "id不能为空")
+	})
 	public static Result addOrUpdateDomain() {
+		String msg = Validator.check(AgentController.class, "addOrUpdateDomain");
+		if (msg != null) {
+			return badRequest(msg);
+		}
 		User user = LoginController.getSessionUser();
 		if (user == null) {
 			return badRequest(Constants.MSG_NOT_LOGIN);
@@ -392,5 +435,34 @@ public class AgentController extends BaseController {
 		User user = LoginController.getSessionUser();
 		Agent agent = user.agent;
 		return ok(views.html.module.agent.agentInfo.render(agent, user));
+	}
+
+	/**
+	 * 代理人
+	 * 
+	 * @return
+	 */
+	public static Result applyCourse() {
+		User user = LoginController.getSessionUser();
+		Agent agent = user.agent;
+		if(agent ==null){
+			return badRequest(Constants.MSG_AGENT_NOT_EXIST);
+		}
+		Long courseId = FormHelper.getLong(form().bindFromRequest(), "courseId");
+		CourseDistribution temp = CourseDistribution.findByAgentAndCourse(agent.id, courseId);
+		if(temp != null){
+			return badRequest(Constants.MSG_AGENT_APPLYED_COURSE);
+		}
+		else{
+			Course course = Course.find(courseId);
+
+			Audit au = new Audit(user, Audit.STATUS_WAIT, AuditType.TYPE_AUDITTYPE_COURSE_DISTRIBUTION);
+			
+			CourseDistribution cd = CourseDistribution.saveDistributon(course, agent, au);
+			if(cd != null)
+			return  ok(Constants.MSG_SUCCESS);
+			
+		}
+		return internalServerError(Constants.MSG_INTERNAL_ERROR);
 	}
 }

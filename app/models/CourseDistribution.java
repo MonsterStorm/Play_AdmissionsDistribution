@@ -1,10 +1,18 @@
 package models;
 
+import java.lang.reflect.*;
 import java.util.*;
 
 import javax.persistence.*;
 
+import play.data.*;
+import play.data.validation.Constraints.Required;
 import play.db.ebean.*;
+
+import com.avaje.ebean.*;
+import common.*;
+
+import controllers.*;
 
 /**
  * 课程 经销，一个代理人商代理一个课程就产生一个经销行为
@@ -57,6 +65,7 @@ public class CourseDistribution extends Model {
 		cd.rebate = Rebate.createRebate(cd);
 	}
 
+
 	/**
 	 * find all user
 	 * 
@@ -74,5 +83,103 @@ public class CourseDistribution extends Model {
 	 */
 	public static CourseDistribution find(Long id) {
 		return finder.where().eq("id", id).findUnique();
+	}
+
+
+	/**
+	 * find user by agent
+	 * 
+	 * @param agent course
+	 * @return
+	 */
+	public static CourseDistribution findByAgentAndCourse(Agent agent, Course course) {
+		return finder.where().eq("agent.id", agent.id).eq("course.id", course.id).findUnique();
+	}
+	/**
+	 * find user by agent
+	 * 
+	 * @param agent course
+	 * @return
+	 */
+	public static CourseDistribution findByAgentAndCourse(Long agentId, Long courseId) {
+		return finder.where().eq("agent.id", agentId).eq("course.id", courseId).findUnique();
+	}
+
+
+	public static CourseDistribution saveDistributon(Course course, Agent agent, Audit audit) {
+		CourseDistribution cd = new CourseDistribution();
+		if (course != null) {
+			course.distributions.add(cd);
+			cd.course = course;
+		}
+
+		if (agent != null) {
+			agent.distributons.add(cd);
+			cd.agent = agent;
+		}
+
+		if (audit != null) {
+			audit.distributon = cd;
+			audit.save();
+			cd.audit = audit;
+		}
+
+		Rebate rebate = Rebate.createRebate(cd);
+		rebate.save();
+		cd.rebate = rebate;
+
+		course.update();
+		agent.update();
+		cd.save();
+		return cd;
+	}
+
+	//通过课程代理审核
+
+	public static CourseDistribution auditAgentDistributon( CourseDistribution cd ) {
+		Course course = cd.course;
+		Agent agent = cd.agent;
+		Audit audit = cd.audit;
+		audit.status = Audit.STATUS_SUCCESS;
+		audit.auditor = cd.course.edu.creator;
+		audit.update();
+		
+		course.agents.add(agent);
+		course.update();
+
+		cd.audit = audit;
+		cd.agent = agent;
+		cd.course = course;
+		cd.update();
+		return cd;
+	}
+
+
+	/**
+	 * find page with filter
+	 * 
+	 * @param page
+	 * @param form
+	 * @return
+	 */
+	public static Page<CourseDistribution> findPageByEdu(EducationInstitution edu, DynamicForm form, int page, Integer pageSize) {
+		Map<String, String> datas = form.data();
+		datas.put("eduId", edu.id.toString());
+		form = form.bind(datas);
+		return new QueryHelper<CourseDistribution>(finder, form).addEq("course.edu.id", "eduId", Long.class).findPage(page, pageSize);
+	}
+
+	/**
+	 * find page with filter
+	 * 
+	 * @param page
+	 * @param form
+	 * @return
+	 */
+	public static Page<CourseDistribution> findPageByEduUser(User user, DynamicForm form, int page, Integer pageSize) {
+		Map<String, String> datas = form.data();
+		datas.put("userId", user.id.toString());
+		form = form.bind(datas);
+		return new QueryHelper<CourseDistribution>(finder, form).addEq("course.edu.creator.id", "userId", Long.class).findPage(page, pageSize);
 	}
 }

@@ -3,9 +3,14 @@
 # ~~~~
 #User Templates
 GET		/t/:domain					controllers.TemplateController.index(domain: String)
+#APPLY
+POST	/agent/apply				controllers.AgentController.doApply()
+POST	/education/apply			controllers.EducationController.doApply()
 
 #Audit
 POST	/audit/admin				controllers.AuditController.auditAdmin()
+POST	/audit/agent				controllers.AuditController.auditAgent()
+POST	/audit/education			controllers.AuditController.auditEducation()
 
 #Login
 
