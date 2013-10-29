@@ -134,7 +134,21 @@
     $(dialog).modal('hide');
 	}
 	
-	function doConfirmReceipt(id, data){
+	function doConfirmReceipt(id){
+		var money = $(":input[name=money]").val();
+		var info = $(":input[name=info]").val();
+		var data = "{id:" + id;
+		
+		if(money){
+			data += ",money:" + money;
+		}
+		
+		if(info){
+			data += ",info:" + info;
+		}
+		
+		data += "}";
+		
 		ajaxBasic("/common/confirmReceipt", data, "POST", "#content");
 		var dialog = '#dialogConfirm_' + id;
     $(dialog).modal('hide');

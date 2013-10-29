@@ -1,6 +1,7 @@
 @(models: com.avaje.ebean.Page[Rebate])
 
 @import basic.common._
+@import basic.common.basicform._
 
 @baseUrl=@{
 	var url = "adminRebates";
@@ -35,7 +36,7 @@
 <!-- <script type="text/javascript">
 $('#toolbar').tooltip(options);
 </script> -->
-@dialogConfirm("确认收款", String.valueOf(rebate.id), String.valueOf("doConfirmReceipt('" + rebate.id + "', {id:" + rebate.id + "});")){
+@dialogConfirm("确认收款", String.valueOf(rebate.id), String.valueOf("doConfirmReceipt(" + rebate.id + ");")){
 	确认收款&nbsp;
 	<b style="font-size:x-large;color:red">
 	@{
@@ -44,6 +45,8 @@ $('#toolbar').tooltip(options);
 		}
 	}
 	</b>&nbsp;？
+	@inputText_money("收款数：", "money", "", false)  		
+	@inputText("备注说明：", "info", "", false)
 }
 
 <div class="pull-left" style="width:130px;">

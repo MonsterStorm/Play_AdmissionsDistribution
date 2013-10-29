@@ -4,7 +4,7 @@
 # --- !Ups
 
 create table advertisment (
-  id                        bigint not null,
+  id                        bigint auto_increment not null,
   title                     varchar(255),
   logo                      varchar(255),
   url                       varchar(255),
@@ -16,7 +16,7 @@ create table advertisment (
 ;
 
 create table advertisment_statistics (
-  id                        bigint not null,
+  id                        bigint auto_increment not null,
   advertisment_id           bigint,
   total_visit               bigint,
   start_time                bigint,
@@ -25,7 +25,7 @@ create table advertisment_statistics (
 ;
 
 create table advertisment_visit (
-  id                        bigint not null,
+  id                        bigint auto_increment not null,
   ip                        varchar(255),
   domain                    varchar(255),
   browser                   varchar(255),
@@ -35,7 +35,7 @@ create table advertisment_visit (
 ;
 
 create table agent (
-  id                        bigint not null,
+  id                        bigint auto_increment not null,
   user_id                   bigint,
   template_id               bigint,
   audit_id                  bigint,
@@ -46,7 +46,7 @@ create table agent (
 ;
 
 create table audit (
-  id                        bigint not null,
+  id                        bigint auto_increment not null,
   type_id                   bigint,
   status                    integer,
   creator_id                bigint,
@@ -58,14 +58,14 @@ create table audit (
 ;
 
 create table audit_type (
-  id                        bigint not null,
+  id                        bigint auto_increment not null,
   name                      varchar(255),
   info                      varchar(255),
   constraint pk_audit_type primary key (id))
 ;
 
 create table confirm_receipt (
-  id                        bigint not null,
+  id                        bigint auto_increment not null,
   confirmer_id              bigint,
   time                      bigint,
   money                     double,
@@ -74,7 +74,7 @@ create table confirm_receipt (
 ;
 
 create table contract (
-  id                        bigint not null,
+  id                        bigint auto_increment not null,
   name                      varchar(255),
   detail                    longtext,
   info                      longtext,
@@ -85,14 +85,14 @@ create table contract (
 ;
 
 create table contract_type (
-  id                        bigint not null,
+  id                        bigint auto_increment not null,
   name                      varchar(255),
   info                      varchar(255),
   constraint pk_contract_type primary key (id))
 ;
 
 create table course (
-  id                        bigint not null,
+  id                        bigint auto_increment not null,
   name                      varchar(255),
   money                     double,
   start_time                bigint,
@@ -109,7 +109,7 @@ create table course (
 ;
 
 create table course_distribution (
-  id                        bigint not null,
+  id                        bigint auto_increment not null,
   course_id                 bigint,
   agent_id                  bigint,
   audit_id                  bigint,
@@ -118,13 +118,13 @@ create table course_distribution (
 ;
 
 create table course_type (
-  id                        bigint not null,
+  id                        bigint auto_increment not null,
   name                      varchar(255),
   constraint pk_course_type primary key (id))
 ;
 
 create table domain (
-  id                        bigint not null,
+  id                        bigint auto_increment not null,
   domain                    varchar(255),
   agent_id                  bigint,
   edu_id                    bigint,
@@ -133,7 +133,7 @@ create table domain (
 ;
 
 create table education_institution (
-  id                        bigint not null,
+  id                        bigint auto_increment not null,
   creator_id                bigint,
   create_time               bigint,
   audit_id                  bigint,
@@ -144,7 +144,7 @@ create table education_institution (
 ;
 
 create table enroll (
-  id                        bigint not null,
+  id                        bigint auto_increment not null,
   student_id                bigint,
   course_id                 bigint,
   from_agent_id             bigint,
@@ -161,14 +161,14 @@ create table enroll (
 ;
 
 create table function (
-  id                        bigint not null,
+  id                        bigint auto_increment not null,
   name                      varchar(255),
   info                      varchar(255),
   constraint pk_function primary key (id))
 ;
 
 create table instructor (
-  id                        bigint not null,
+  id                        bigint auto_increment not null,
   user_id                   bigint,
   template_id               bigint,
   name                      varchar(255),
@@ -181,7 +181,7 @@ create table instructor (
 ;
 
 create table log_login (
-  id                        bigint not null,
+  id                        bigint auto_increment not null,
   user_id                   bigint,
   time                      bigint,
   log_type                  integer,
@@ -189,7 +189,7 @@ create table log_login (
 ;
 
 create table log_operation (
-  id                        bigint not null,
+  id                        bigint auto_increment not null,
   user_id                   bigint,
   time                      bigint,
   function_id               bigint,
@@ -197,7 +197,7 @@ create table log_operation (
 ;
 
 create table message (
-  id                        bigint not null,
+  id                        bigint auto_increment not null,
   name                      varchar(255),
   phone                     varchar(255),
   qq                        varchar(255),
@@ -210,14 +210,14 @@ create table message (
 ;
 
 create table module (
-  id                        bigint not null,
+  id                        bigint auto_increment not null,
   name                      varchar(255),
   info                      longtext,
   constraint pk_module primary key (id))
 ;
 
 create table news (
-  id                        bigint not null,
+  id                        bigint auto_increment not null,
   title                     varchar(255),
   detail                    longtext,
   news_type_id              bigint,
@@ -226,14 +226,14 @@ create table news (
 ;
 
 create table news_type (
-  id                        bigint not null,
+  id                        bigint auto_increment not null,
   name                      varchar(255),
   info                      varchar(255),
   constraint pk_news_type primary key (id))
 ;
 
 create table project (
-  id                        bigint not null,
+  id                        bigint auto_increment not null,
   name                      varchar(255),
   info                      varchar(255),
   status                    integer,
@@ -241,7 +241,7 @@ create table project (
 ;
 
 create table rebate (
-  id                        bigint not null,
+  id                        bigint auto_increment not null,
   distribution_id           bigint,
   num_of_students           integer,
   total_money               double,
@@ -262,7 +262,7 @@ create table rebate (
 ;
 
 create table rebate_type (
-  id                        bigint not null,
+  id                        bigint auto_increment not null,
   ratio_of_total            double,
   ratio_of_per_student      double,
   rebate_id                 bigint,
@@ -270,7 +270,7 @@ create table rebate_type (
 ;
 
 create table reply (
-  id                        bigint not null,
+  id                        bigint auto_increment not null,
   user_id                   bigint,
   title                     varchar(255),
   content                   longtext,
@@ -280,14 +280,14 @@ create table reply (
 ;
 
 create table role (
-  id                        bigint not null,
+  id                        bigint auto_increment not null,
   name                      varchar(255),
   info                      varchar(255),
   constraint pk_role primary key (id))
 ;
 
 create table scholl_fellow (
-  id                        bigint not null,
+  id                        bigint auto_increment not null,
   name                      varchar(255),
   company                   varchar(255),
   position                  varchar(255),
@@ -295,7 +295,7 @@ create table scholl_fellow (
 ;
 
 create table student (
-  id                        bigint not null,
+  id                        bigint auto_increment not null,
   user_id                   bigint,
   name                      varchar(255),
   company_name              varchar(255),
@@ -305,7 +305,7 @@ create table student (
 ;
 
 create table studentwords (
-  id                        bigint not null,
+  id                        bigint auto_increment not null,
   name                      varchar(255),
   company                   varchar(255),
   words                     varchar(255),
@@ -313,7 +313,7 @@ create table studentwords (
 ;
 
 create table template (
-  id                        bigint not null,
+  id                        bigint auto_increment not null,
   user_id                   bigint,
   edu_id                    bigint,
   instructor_id             bigint,
@@ -324,7 +324,7 @@ create table template (
 ;
 
 create table template_type (
-  id                        bigint not null,
+  id                        bigint auto_increment not null,
   name                      varchar(255),
   info                      longtext,
   last_modified             bigint,
@@ -334,7 +334,7 @@ create table template_type (
 ;
 
 create table user (
-  id                        bigint not null,
+  id                        bigint auto_increment not null,
   username                  varchar(255),
   password                  varchar(255),
   nickname                  varchar(255),
@@ -351,7 +351,7 @@ create table user (
 ;
 
 create table user_info (
-  id                        bigint not null,
+  id                        bigint auto_increment not null,
   user_id                   bigint,
   realname                  varchar(255),
   idcard                    varchar(255),
@@ -392,13 +392,12 @@ create table user_role (
   role_id                        bigint not null,
   constraint pk_user_role primary key (user_id, role_id))
 ;
-
-alter table advertisment add constraint fk_advertisment_advertismentSt_1 foreign key (advertisment_statistics_id) references advertisment_statistics (id) on delete restrict on update restrict;
-create index ix_advertisment_advertismentSt_1 on advertisment (advertisment_statistics_id);
-alter table advertisment_statistics add constraint fk_advertisment_statistics_adv_2 foreign key (advertisment_id) references advertisment (id) on delete restrict on update restrict;
-create index ix_advertisment_statistics_adv_2 on advertisment_statistics (advertisment_id);
-alter table advertisment_visit add constraint fk_advertisment_visit_advertis_3 foreign key (advertisment_id) references advertisment (id) on delete restrict on update restrict;
-create index ix_advertisment_visit_advertis_3 on advertisment_visit (advertisment_id);
+alter table advertisment add constraint fk_advertisment_advertismentStatistics_1 foreign key (advertisment_statistics_id) references advertisment_statistics (id) on delete restrict on update restrict;
+create index ix_advertisment_advertismentStatistics_1 on advertisment (advertisment_statistics_id);
+alter table advertisment_statistics add constraint fk_advertisment_statistics_advertisment_2 foreign key (advertisment_id) references advertisment (id) on delete restrict on update restrict;
+create index ix_advertisment_statistics_advertisment_2 on advertisment_statistics (advertisment_id);
+alter table advertisment_visit add constraint fk_advertisment_visit_advertisment_3 foreign key (advertisment_id) references advertisment (id) on delete restrict on update restrict;
+create index ix_advertisment_visit_advertisment_3 on advertisment_visit (advertisment_id);
 alter table agent add constraint fk_agent_user_4 foreign key (user_id) references user (id) on delete restrict on update restrict;
 create index ix_agent_user_4 on agent (user_id);
 alter table agent add constraint fk_agent_template_5 foreign key (template_id) references template (id) on delete restrict on update restrict;
@@ -443,12 +442,12 @@ alter table domain add constraint fk_domain_edu_24 foreign key (edu_id) referenc
 create index ix_domain_edu_24 on domain (edu_id);
 alter table domain add constraint fk_domain_instructor_25 foreign key (instructor_id) references instructor (id) on delete restrict on update restrict;
 create index ix_domain_instructor_25 on domain (instructor_id);
-alter table education_institution add constraint fk_education_institution_crea_26 foreign key (creator_id) references user (id) on delete restrict on update restrict;
-create index ix_education_institution_crea_26 on education_institution (creator_id);
-alter table education_institution add constraint fk_education_institution_audi_27 foreign key (audit_id) references audit (id) on delete restrict on update restrict;
-create index ix_education_institution_audi_27 on education_institution (audit_id);
-alter table education_institution add constraint fk_education_institution_temp_28 foreign key (template_id) references template (id) on delete restrict on update restrict;
-create index ix_education_institution_temp_28 on education_institution (template_id);
+alter table education_institution add constraint fk_education_institution_creator_26 foreign key (creator_id) references user (id) on delete restrict on update restrict;
+create index ix_education_institution_creator_26 on education_institution (creator_id);
+alter table education_institution add constraint fk_education_institution_audit_27 foreign key (audit_id) references audit (id) on delete restrict on update restrict;
+create index ix_education_institution_audit_27 on education_institution (audit_id);
+alter table education_institution add constraint fk_education_institution_template_28 foreign key (template_id) references template (id) on delete restrict on update restrict;
+create index ix_education_institution_template_28 on education_institution (template_id);
 alter table enroll add constraint fk_enroll_student_29 foreign key (student_id) references student (id) on delete restrict on update restrict;
 create index ix_enroll_student_29 on enroll (student_id);
 alter table enroll add constraint fk_enroll_course_30 foreign key (course_id) references course (id) on delete restrict on update restrict;
@@ -487,8 +486,8 @@ alter table rebate add constraint fk_rebate_lastReceiptOfEdu_46 foreign key (las
 create index ix_rebate_lastReceiptOfEdu_46 on rebate (last_receipt_of_edu_id);
 alter table rebate add constraint fk_rebate_typeToPlatform_47 foreign key (type_to_platform_id) references rebate_type (id) on delete restrict on update restrict;
 create index ix_rebate_typeToPlatform_47 on rebate (type_to_platform_id);
-alter table rebate add constraint fk_rebate_lastReceiptOfPlatfo_48 foreign key (last_receipt_of_platform_id) references confirm_receipt (id) on delete restrict on update restrict;
-create index ix_rebate_lastReceiptOfPlatfo_48 on rebate (last_receipt_of_platform_id);
+alter table rebate add constraint fk_rebate_lastReceiptOfPlatform_48 foreign key (last_receipt_of_platform_id) references confirm_receipt (id) on delete restrict on update restrict;
+create index ix_rebate_lastReceiptOfPlatform_48 on rebate (last_receipt_of_platform_id);
 alter table rebate add constraint fk_rebate_typeToAgent_49 foreign key (type_to_agent_id) references rebate_type (id) on delete restrict on update restrict;
 create index ix_rebate_typeToAgent_49 on rebate (type_to_agent_id);
 alter table rebate add constraint fk_rebate_lastReceiptOfAgent_50 foreign key (last_receipt_of_agent_id) references confirm_receipt (id) on delete restrict on update restrict;
@@ -546,5 +545,85 @@ alter table user_role add constraint fk_user_role_role_02 foreign key (role_id) 
 
 # --- !Downs
 
+SET FOREIGN_KEY_CHECKS=0;
 
+drop table advertisment;
+
+drop table advertisment_statistics;
+
+drop table advertisment_visit;
+
+drop table agent;
+
+drop table agent_course;
+
+drop table audit;
+
+drop table audit_type;
+
+drop table confirm_receipt;
+
+drop table contract;
+
+drop table contract_type;
+
+drop table course;
+
+drop table course_distribution;
+
+drop table course_type;
+
+drop table domain;
+
+drop table education_institution;
+
+drop table enroll;
+
+drop table function;
+
+drop table module_function;
+
+drop table instructor;
+
+drop table log_login;
+
+drop table log_operation;
+
+drop table message;
+
+drop table module;
+
+drop table role_module;
+
+drop table news;
+
+drop table news_type;
+
+drop table project;
+
+drop table rebate;
+
+drop table rebate_type;
+
+drop table reply;
+
+drop table role;
+
+drop table user_role;
+
+drop table scholl_fellow;
+
+drop table student;
+
+drop table studentwords;
+
+drop table template;
+
+drop table template_type;
+
+drop table user;
+
+drop table user_info;
+
+SET FOREIGN_KEY_CHECKS=1;
 
