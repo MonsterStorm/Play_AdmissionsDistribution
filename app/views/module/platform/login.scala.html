@@ -1,7 +1,7 @@
 @(form: Form[LoginController.Login]) 
 @import basic.platform._
 @import basic.common._
-@basic.platform.main("登录"){@meta()}{@styles()}{@scripts()}{@nav()}{@header()}{
+@basic.platform.main("登录"){@meta()}{@styles2()}{@scripts()}{@nav()}{@header()}{
 <style type="text/css">
 .form-signin {
 	max-width: 350px;
@@ -19,22 +19,30 @@
 </style>
 
 <!-- content -->
-<div class="container" id="content">
+<div class="container" style="border:none;">
 	<div class="row">
-		<div class="span12">
 				<form class="form-signin" id="myform" method="post" action="@routes.LoginController.loginPlatform()">
 					@if(form.hasGlobalErrors){
 						<div class="alert alert-danger">@form.globalError.message</div>
 					}
 					@form_validate_info()
-					<h5>用户名</h5>
-					<input type="text" name="account" class="input-block-level"  value="@form("account").value"> 
-					<h5>密码</h5>
-					<input type="password" name="password" class="input-block-level" placeholder="密码"  value="@form("password").value"> 	
-					<button class="btn btn-large btn-primary btn-block" type="submit">登录</button>
 					
+					<div class="control-group">
+   					<label class="control-label" for="account"><b>用户名</b></label>
+   					<div class="controls">
+							<input class="input-block-level" type="text" name="account" value="@form("account").value">
+  					</div>
+					</div>
+
+					<div class="control-group">
+   					<label class="control-label" for="password"><b>密码</b></label>
+   					<div class="controls">
+							<input class="input-block-level" type="password" name="password" value="@form("password").value">
+  					</div>
+					</div>
+					
+					<button class="btn btn-large btn-primary btn-block" type="submit">登录</button>
 				</form>
-		</div>
 	</div>
 </div>
 }{@footer()}

@@ -1,29 +1,30 @@
 <!--header模块-->  
-<div id="header" role="banner"> 	    
   <div class="ym-wrapper"> 		    
     <div class="ym-wbox">		        
-      <div id="topnav"><a href="@routes.PlatformController.page("register")">注册</a>
-        @if(session.contains("account")) {
-        <a href="#">欢迎&nbsp;<span class="label label-info">@session.get("account")</span></a>
-        <a href="@routes.PlatformController.logout()">注销</a>
+			<img src="@routes.Assets.at("/public", "images/logo.png")"  alt="橡果教育分销平台" width="500px" height="120px"/>
+			
+			<div style="float:right;padding:10px">
+			 @if(session.contains("account")) {
+	        <a href="#"><span class="label label-info">@session.get("account")</span></a>
+  	      <a href="@routes.PlatformController.logout()">注销</a>
+        } else {
+        	<a href="@routes.PlatformController.page("register")">注册</a>
         }
         @if(!session.contains("account")) {
-        <a href="@routes.PlatformController.page("login")">登录</a>
-        }</div>		        
-      <h1>High Resolution</h1>	
-	  <!--搜索框开始-->
-	  <div id="search-wrapper" class="ym-g33 ym-gr"> 			            
+    	    <a href="@routes.PlatformController.page("login")">登录</a>
+        }
+      </div>
+	  	<!--搜索框开始-->
+	 	 	<!--<div id="search-wrapper" class="ym-g33 ym-gr"> 			            
           <div class="ym-gbox-right">				            
-            <h5 class="ym-noprint"><strong>站内搜索</strong></h5>				            
             <form id="search" role="search" method="post" action=""> 				                		                
-              <p>                
                 <input type="text" name="keywords" class="input" size="28" maxlength="100"/>                
                 <input type="submit" class="send" value="搜索"/>              
-              </p>				                			            
             </form> 				            		            
           </div>			        
-        </div>
-		<!--搜索框结束-->
-    </div>	    
+      </div>-->
+
+
+    </div>
   </div> 	
-</div> 
+  
