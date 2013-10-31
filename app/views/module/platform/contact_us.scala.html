@@ -27,21 +27,23 @@ function getPlatformPage(li, url, data){
 		<div class="ym-grid linearize-level-1">
 			<div class="ym-g66 ym-gl">
 				<div class="ym-gbox-left">
-					<h2>平台简单介绍</h2>
-					<p>平台简单介绍平台简单介绍平台简单介绍平台简单介绍平台简单介绍平台简单介绍平台简单介绍平台简单介绍平台简单介绍平台简单介绍平台简单介绍平台简单介绍平台简单介绍平台简单介绍平台简单介绍平台简单介绍平台简单介绍平台简单介绍平台简单介绍平台简单介绍平台简单介绍平台简单介绍平台简单介绍平台简单介绍.</p>
-					<h3>联系方式</h3>
-					<p>联系方式联系方式联系方式联系方式联系方式联系方式联系方式联系方式联系方式联系方式联系方式联系方式联系方式联系方式联系方式联系方式联系方式联系方式联系方式联系方式联系方式联系方式联系方式联系方式联系方式联系方式联系方式联系方式联系方式联系方式联系方式联系方式联系方式.</p>
+					<h2><strong>关于我们</strong></h2>
+					<p style="margin:10px;">我们是一家专注在职教育，社会人员培训的企业。</p>
+					<h3><strong>联系方式</strong></h3>
+					<p style="margin:10px;">杭州市西湖区，浙江大学玉泉校区，玉古路80号。</p>
 					
 					<!--留言列表开始-->
-					<h3>留言列表</h3>
-					@for(item <- messages.getList()){
-						<h5><strong class="middle-title">@item.title</strong></h5>
-						<p>@item.content</p>
+					<h3><strong style="font-size:16px;">最新留言</strong></h3>
+					@for((item, index) <- messages.getList().zipWithIndex){
+						<div style="margin-top:10px;margin-bottom:10px;">
+							<strong>@{index+1}.&nbsp;@item.title</strong>
+							<p>@item.content</p>
+						</div>
 					}
 					@paging(messages, {baseUrl}, "platform")
 					<!--留言列表结束-->
 				
-					<h3>在线留言</h3>                                                                                                                                
+					<h3><b>联系我们</b></h3>                                                                                                                                
                     <form id="myform" class="ym-form ym-full" method="post" action="@routes.CommonController.addOrUpdateEntity()">  
                     	<input class="input-large" type="hidden" name="table" value="@Message.TABLE_NAME">
                       <h6 class="ym-fbox-heading">联系我们</h6>  

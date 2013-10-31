@@ -7,27 +7,29 @@
 	
 		@for(model <- models.getList()){
 			@if(model.id == 1){
-			<li data-target="#myCarousel" data-slide-to="@(model.id - 1)"  class="active" ></li>}
-			@if(model.id != 1){
-			<li data-target="#myCarousel" data-slide-to="@(model.id - 1)"  ></li>}
+				<li data-target="#myCarousel" data-slide-to="@(model.id - 1)"  class="active" ></li>
+			} else {
+				<li data-target="#myCarousel" data-slide-to="@(model.id - 1)"  ></li>
+			}
 		}
 	
     </ol>
     <div class="carousel-inner">
-		@for(model <- models.getList()){
-			@if(model.id==1){
-			<div class="item active">}
-			@if(model.id != 1){
-			<div class="item">}
+			@for(model <- models.getList()){
+				@if(model.id==1){
+					<div class="item active">
+			} else {
+					<div class="item">
+			}
 				<a href="@model.url">
-				<img src="@routes.Assets.at("/datas/advertisments", {model.logo})" alt="" >
+					<img src="@routes.Assets.at("/datas/advertisments", {model.logo})" style="width:90%;height:200px;margin:auto;" />
 				</a>
 				<div class="carousel-caption">
-				 	<h4>@model.title</h4>
-				 	<p>@model.info</p>
+						<p><b>@model.title</b>
+						<div style="float:right">@model.info</div></p>
 				</div>
 			</div>
-		}
+			}
     </div>
   </div>
 <script type="text/javascript"> 

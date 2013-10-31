@@ -17,14 +17,24 @@ function getPlatformPage(li, url, data){
 	<div class="ym-wbox">
 		<div class="ym-grid linearize-level-1">
 			<div class="ym-g66 ym-gl">
-				<div class="ym-gbox-left">
-					<h2>讲师列表</h2>
+				<div class="ym-gbox">
+					<h2><strong>名师风采</strong></h2>
+				</div>
 					@for(model <- models.getList()){
-						<a href="#" onclick="getPlatformPage(this, 'teacherDetail', 'id=@model.id');">@model.user.basicInfo.realname</a>
-						<p style="margin-top:8px;">
-							@model.field
-						</p>
+						<div class="ym-grid" style="margin:10px;">
+      				<div class="ym-gl">
+        				<img src="@routes.Assets.at("/datas/logos",{model.user.logo})" width="70px" height="70px" onclick="getPlatformPage(this, 'teacherDetail', 'id=@model.id');">
+      				</div>
+      				<div class="ym-gl" style="margin-left:8px;">
+        				<a href="#" onclick="getPlatformPage(this, 'teacherDetail', 'id=@model.id');">@model.user.basicInfo.realname</a>
+								<p style="margin-top:8px;">
+									@model.field
+								</p>
+      				</div>
+    				</div>
 					}
+					
+				<div class="ym-gbox">
 					@paging(models, {baseUrl}, "platform")
 				</div>
 			</div>

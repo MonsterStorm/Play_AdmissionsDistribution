@@ -14,7 +14,7 @@
 			 }
 			<div class="news-sub-container">
 				@if(t!=null && t.user !=null){
-					<div class="teacher-img"><img src=@routes.Assets.at("/datas/logos",{t.user.logo}) ></div>
+					<div class="teacher-img"><img src="@routes.Assets.at("/datas/logos",{t.user.logo})" width="100px" height="100px"></div>
 				}
 				@if(null != t && null != t.user && null != t.user.basicInfo && null != t.user.basicInfo.realname ){
 					<div class="teacher-desc">

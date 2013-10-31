@@ -57,21 +57,22 @@ function tick(time,id)
 	<div class="ym-wbox">
 		<div class="ym-grid linearize-level-1">
 			<div class="ym-g66 ym-gl">
-				<div class="ym-gbox-left">
-					<h2>行业新闻</h2>
+					<div class="ym-gbox"><strong>行业资讯</strong></div>
 					@for(model <- models.getList()){
-						<p><span style="float:left;">[@model.newsType.name]</span>
-						<a style="width:55%; float:left; margin-left:15px; white-space:nowrap; overflow:hidden; text-align:left; text-overflow:ellipsis;" href="#" onclick="getPlatformPage(this, 'newsDetail', 'id=@model.id');" >
-						@model.title</a>
-						<span id="localtime@model.id" style="float:right;"></span>
-						
-						</p>
-						<script type="text/javascript">
-						tick(@model.time,@model.id);
-						</script>
+						<div class="ym-gbox" style="height:50px;">
+							<p>
+								<span style="float:left;">[@model.newsType.name]</span>
+								<a style="width:55%; float:left; margin-left:15px; white-space:nowrap; overflow:hidden; text-align:left; text-overflow:ellipsis;" href="#" onclick="getPlatformPage(this, 'newsDetail', 'id=@model.id');" >
+									<b>@model.title</b>
+								</a>
+								<span id="localtime@model.id" style="float:right;"></span>
+							</p>
+							<script type="text/javascript">
+								tick(@model.time,@model.id);
+							</script>
+						</div>
 					}
-					@paging(models, {baseUrl}, "platform")
-				</div>
+					<div class="ym-gbox">@paging(models, {baseUrl}, "platform")</div>
 			</div>
 			<div class="ym-g33 ym-gr">
 				<div class="ym-gbox-right">
