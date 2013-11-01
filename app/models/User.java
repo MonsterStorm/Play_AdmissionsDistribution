@@ -80,6 +80,7 @@ public class User extends Model {
 		final String logo = form.get("logo");
 
 		UserInfo userInfo = new UserInfo(form);
+		userInfo.user = this;
 
 		this.username = username;
 		this.password = password;
@@ -598,6 +599,15 @@ public class User extends Model {
 		}
 		if (User.findByUsername(username) == null) {// 插入
 			User user = new User(form);
+			Role role = Role.find(Role.ROLE_REGISTED_USER);
+			if(role != null){
+				user.roles.add(role);
+			}
+			Role role2 = Role.find(Role.ROLE_STUDENT);
+			if(role2 !=null){
+				user.roles.add(role2);
+			}
+
 			user.save();
 			return user;
 		}

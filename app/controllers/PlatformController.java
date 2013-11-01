@@ -13,6 +13,15 @@ import common.*;
 import java.io.*;
 import java.util.*;
 import java.text.*;
+import java.lang.*;
+
+import play.data.*;
+import play.data.validation.Constraints.ValidateWith;
+import play.mvc.Http.MultipartFormData;
+import play.mvc.Http.MultipartFormData.FilePart;
+
+import common.FileHelper.ErrorType;
+import common.FormValidator.Type;
 
 
 public class PlatformController extends BaseController {
@@ -43,8 +52,12 @@ public class PlatformController extends BaseController {
 	private static final String PAGE_EDUCATION2= "platformEducation2";//教育机构广告
 	private static final String PAGE_REG_AGENT  = "regAgent";//代理人注册
  	private static final String PAGE_REG_EDUCATION  = "regEducation";//教育机构注册
+ 	private static final String PAGE_REG_TEACHER  = "regTeacher";//教育机构注册
  	private static final String PAGE_EDUINST_LIST= "eduInstList";//
  	private static final String PAGE_EDUINST_INTRODUCTION= "eduInstIntroduction";//
+ 	private static final String PAGE_ADD_EDUCATION= "addEducation";//
+ 	private static final String PAGE_ADD_AGENT= "addAgent";//
+ 	private static final String PAGE_ADD_TEACHER= "addTeacher";//
 
 
 	/**
@@ -118,12 +131,20 @@ public class PlatformController extends BaseController {
 			return pageUserEnroll();
 		}else if (PAGE_REG_AGENT.equalsIgnoreCase(page)) {// 
 			return pageRegAgent();
+		}else if (PAGE_REG_TEACHER.equalsIgnoreCase(page)) {// 
+			return pageRegTeacher();
 		}else if (PAGE_REG_EDUCATION.equalsIgnoreCase(page)) {// 
 			return pageRegEducations();
 		}else if(PAGE_EDUINST_LIST.equalsIgnoreCase(page)){
 			return pageEduInstList();
 		}else if(PAGE_EDUINST_INTRODUCTION.equalsIgnoreCase(page)){
 			return pageEduInstIntroduction();
+  		}else if(PAGE_ADD_EDUCATION.equalsIgnoreCase(page)){
+			return pageAddEducation();
+  		}else if(PAGE_ADD_AGENT.equalsIgnoreCase(page)){
+			return pageAddAgent();
+  		}else if(PAGE_ADD_TEACHER.equalsIgnoreCase(page)){
+			return pageAddTeacher();
   		}
 		else {
 			return ok(views.html.module.platform.index.render());
@@ -150,10 +171,55 @@ public class PlatformController extends BaseController {
 		String table = form().bindFromRequest().get("table");
 		if("student_enroll".equalsIgnoreCase(table)){//学员报名
 			return addOrUpdateStudentEnroll();
+		}if (EducationInstitution.TABLE_NAME.equalsIgnoreCase(table)) {// 教育机构更新或添加
+			return addOrUpdateEducation();
+		}else if (Agent.TABLE_NAME.equalsIgnoreCase(table)) {// 代理人更新或添加
+			return addOrUpdateAgent();
+		}else if (Instructor.TABLE_NAME.equalsIgnoreCase(table)) {// 讲师信息更新或添加
+			return addOrUpdateTeacher();
 		}
 		 else {
 			return badRequest(Constants.MSG_PAGE_NOT_FOUND);
 		}
+	}
+
+	/**
+	 * 返回教育机构信息
+	 * 
+	 * @return
+	 */
+	public static Result pageAddEducation() {
+		User user =  LoginController.getSessionUser();
+		if(user == null){
+			return badRequest(Constants.MSG_NOT_LOGIN);
+		}
+		return ok(views.html.module.platform.addEducation.render(null, user));
+	}
+
+	/**
+	 * 返回代理人信息
+	 * 
+	 * @return
+	 */
+	public static Result pageAddAgent() {
+		User user =  LoginController.getSessionUser();
+		if(user == null){
+			return badRequest(Constants.MSG_NOT_LOGIN);
+		}
+
+		return ok(views.html.module.platform.addAgent.render(null, user));
+	}
+	/**
+	 * 返回讲师信息
+	 * 
+	 * @return
+	 */
+	public static Result pageAddTeacher() {
+		User user =  LoginController.getSessionUser();
+		if(user == null){
+			return badRequest(Constants.MSG_NOT_LOGIN);
+		}
+		return ok(views.html.module.platform.addTeacher.render(null, user));
 	}
 
 
@@ -591,6 +657,12 @@ public class PlatformController extends BaseController {
 		if(user == null){
 			return badRequest(Constants.MSG_NOT_LOGIN);
 		}
+		if(user.agent != null && user.agent.audit != null && user.agent.audit.status == Audit.STATUS_WAIT){
+			return badRequest(Constants.MSG_AGENT_APPLYED_COURSE);
+		}
+		if(user.agent !=null){
+			return ok(views.html.module.teacher.index.render());
+		}
 		long id  = (long)2;
 		Contract contract = Contract.find(id);
 		return ok(views.html.module.platform.regAgent.render(contract));
@@ -609,6 +681,342 @@ public class PlatformController extends BaseController {
 		long id  = (long)1;
 		Contract contract = Contract.find(id);
 		return ok(views.html.module.platform.regEducation.render(contract));		
+	}
+
+	/**
+	 * 讲师注册
+	 * 
+	 * @return
+	 */
+	public static Result pageRegTeacher() {
+		play.Logger.error(form().bindFromRequest().get("page"));
+		User user =  LoginController.getSessionUser();
+		if(user == null){
+			return badRequest(Constants.MSG_NOT_LOGIN);
+		}
+		if(user.instructor != null && user.instructor.audit != null && user.instructor.audit.status == Audit.STATUS_WAIT){
+			return badRequest(Constants.MSG_AGENT_APPLYED_COURSE);
+		}
+		if(user.instructor !=null){
+			return ok(views.html.module.teacher.index.render());
+		}
+		long id  = (long)3;
+		Contract contract = Contract.find(id);
+		return ok(views.html.module.platform.regTeacher.render(contract));
+	}
+	/**
+	 * add or update instructor
+	 * 
+	 * @return
+	 */
+	@FormValidators(values = {
+			@FormValidator(name = "realname", validateType = Type.REQUIRED, msg = "真实姓名不能为空"),
+			@FormValidator(name = "sex", validateType = Type.REQUIRED, msg = "性别不能为空"),
+			@FormValidator(name = "idcard", validateType = Type.REQUIRED, msg = "身份证号不能为空"),
+			@FormValidator(name = "idcard", validateType = Type.NUMBER, msg = "身份证号只能为数字"),
+			@FormValidator(name = "birthday", validateType = Type.REQUIRED, msg = "出生日期不能为空"),
+			@FormValidator(name = "phone", validateType = Type.PHONE, msg = "请填写正确的座机号码"),
+			@FormValidator(name = "mobile", validateType = Type.PHONE, msg = "请填写正确的手机号码"),
+			@FormValidator(name = "qq", validateType = Type.REQUIRED, msg = "qq号码不能为空"),
+			@FormValidator(name = "qq", validateType = Type.NUMBER, msg = "qq号码只能为数字"),
+			@FormValidator(name = "email", validateType = Type.EMAIL, msg = "请填写正确的邮箱"),
+			@FormValidator(name = "address", validateType = Type.REQUIRED, msg = "联系地址不能为空"),
+			@FormValidator(name = "info", validateType = Type.REQUIRED, msg = "机构简介不能为空"),
+			@FormValidator(name = "name", validateType = Type.REQUIRED, msg = "教育机构名称不能为空")
+	})
+	public static Result addOrUpdateEducation() {
+		String msg = Validator.check(PlatformController.class, "addOrUpdateEducation");
+		if (msg != null) {
+			return badRequest(msg);
+		}
+		User user =  LoginController.getSessionUser();
+		if(user == null){
+			return badRequest(Constants.MSG_NOT_LOGIN);
+		}
+		UserInfo basicInfo = user.basicInfo;
+		if(basicInfo == null){
+			basicInfo = new UserInfo();
+
+			basicInfo.realname = form().bindFromRequest().get("realname");
+			basicInfo.sex = form().bindFromRequest().get("sex");
+			basicInfo.idcard = form().bindFromRequest().get("idcard");
+			basicInfo.birthday = Long.parseLong(form().bindFromRequest().get("birthday"));
+			
+
+			basicInfo.phone = form().bindFromRequest().get("phone");
+			
+			basicInfo.qq = form().bindFromRequest().get("qq");
+			basicInfo.address = form().bindFromRequest().get("address");
+			basicInfo.user = user;
+			basicInfo.save();
+			user.basicInfo = basicInfo;
+			user.mobile = form().bindFromRequest().get("mobile");
+			user.email = form().bindFromRequest().get("email");
+			
+		}
+		else{
+			basicInfo.realname = form().bindFromRequest().get("realname");
+			basicInfo.sex = form().bindFromRequest().get("sex");
+			basicInfo.idcard = form().bindFromRequest().get("idcard");
+			basicInfo.birthday = Long.parseLong(form().bindFromRequest().get("birthday"));
+
+
+			basicInfo.phone = form().bindFromRequest().get("phone");
+			basicInfo.qq = form().bindFromRequest().get("qq");
+			basicInfo.address = form().bindFromRequest().get("address");
+			basicInfo.user = user;
+			basicInfo.update();
+			user.basicInfo = basicInfo;
+			user.mobile = form().bindFromRequest().get("mobile");
+			user.email = form().bindFromRequest().get("email");
+			
+
+		}
+		Form<EducationInstitution> form = form(EducationInstitution.class).bindFromRequest();
+		if (form != null && form.hasErrors() == false) {
+			List<EducationInstitution>  edus = user.edus;
+			if(edus == null){
+				EducationInstitution education2 = EducationInstitution.addOrUpdate(form.get());
+				if (education2 != null) {
+					List<EducationInstitution> list = new ArrayList<EducationInstitution>();
+					list.add(education2);
+					user.edus = list;
+					user.update();
+					return ok(views.html.module.platform.addEducation.render(education2, user));
+				}
+			}else{
+				for(EducationInstitution edu : edus){
+					if(edu.name!=null && edu.name.equalsIgnoreCase(FormHelper.getString(form().bindFromRequest(),"name"))){
+						return badRequest(Constants.MSG_EDUCATION_EXIST);
+
+					}
+				}
+				EducationInstitution education2 = EducationInstitution.addOrUpdate(form.get());
+				if (education2 != null) {
+					edus.add(education2);
+					user.edus = edus;
+					user.update();
+					return ok(views.html.module.platform.addEducation.render(education2, user));
+				}
+
+			}
+		} else if (form.hasErrors()) {
+			String error = FormHelper.getFirstError(form.errors());
+			play.Logger.debug("error:" + error);
+			if (error != null) {
+				return badRequest(error);
+			}
+		}
+		return internalServerError(Constants.MSG_INTERNAL_ERROR);
+	}
+
+	/**
+	 * add or update instructor
+	 * 
+	 * @return
+	 */
+	@FormValidators(values = {
+			@FormValidator(name = "realname", validateType = Type.REQUIRED, msg = "代理人姓名不能为空"),
+			@FormValidator(name = "sex", validateType = Type.REQUIRED, msg = "性别不能为空"),
+			@FormValidator(name = "name", validateType = Type.REQUIRED, msg = "机构名称不能为空"),
+			@FormValidator(name = "idcard", validateType = Type.REQUIRED, msg = "身份证号称不能为空"),
+			@FormValidator(name = "idcard", validateType = Type.NUMBER, msg = "身份证号只能是数字"),
+			@FormValidator(name = "birthday", validateType = Type.REQUIRED, msg = "出生日期不能为空"),
+			@FormValidator(name = "phone", validateType = Type.PHONE, msg = "请填写正确的座机号码"),
+			@FormValidator(name = "mobile", validateType = Type.PHONE, msg = "请填写正确的手机号码"),
+			@FormValidator(name = "qq", validateType = Type.REQUIRED, msg = "QQ号码不能为空"),
+			@FormValidator(name = "qq", validateType = Type.NUMBER, msg = "QQ号码只能是数字"),
+			@FormValidator(name = "email", validateType = Type.EMAIL, msg = "请填写正确的邮箱地址"),
+			@FormValidator(name = "address", validateType = Type.REQUIRED, msg = "联系地址不能为空"),
+			@FormValidator(name = "info", validateType = Type.REQUIRED, msg = "机构简介不能为空"),
+			@FormValidator(name = "contact", validateType = Type.REQUIRED, msg = "联系方式不能为空")
+	})
+	public static Result addOrUpdateAgent() {
+		String msg = Validator.check(AgentController.class, "addOrUpdateAgent");
+		if (msg != null) {
+			return badRequest(msg);
+		}
+		User user = LoginController.getSessionUser();
+		if (user == null) {
+			return badRequest(Constants.MSG_NOT_LOGIN);
+		}
+		UserInfo basicInfo = user.basicInfo;
+		if (basicInfo == null) {
+			basicInfo = new UserInfo();
+
+			basicInfo.realname = form().bindFromRequest().get("realname");
+			basicInfo.sex = form().bindFromRequest().get("sex");
+			basicInfo.idcard = form().bindFromRequest().get("idcard");
+			basicInfo.birthday = Long.parseLong(form().bindFromRequest().get(
+					"birthday"));
+
+			basicInfo.phone = form().bindFromRequest().get("phone");
+
+			basicInfo.qq = form().bindFromRequest().get("qq");
+			basicInfo.address = form().bindFromRequest().get("address");
+			basicInfo.user = user;
+			basicInfo.save();
+			user.basicInfo = basicInfo;
+			user.mobile = form().bindFromRequest().get("mobile");
+			user.email = form().bindFromRequest().get("email");
+
+		} else {
+			basicInfo.realname = form().bindFromRequest().get("realname");
+			basicInfo.sex = form().bindFromRequest().get("sex");
+			basicInfo.idcard = form().bindFromRequest().get("idcard");
+			basicInfo.birthday = Long.parseLong(form().bindFromRequest().get(
+					"birthday"));
+
+			basicInfo.phone = form().bindFromRequest().get("phone");
+			basicInfo.qq = form().bindFromRequest().get("qq");
+			basicInfo.address = form().bindFromRequest().get("address");
+			basicInfo.user = user;
+			basicInfo.update();
+			user.basicInfo = basicInfo;
+			user.mobile = form().bindFromRequest().get("mobile");
+			user.email = form().bindFromRequest().get("email");
+
+		}
+		Form<Agent> form = form(Agent.class).bindFromRequest();
+		if (form != null && form.hasErrors() == false) {
+			Agent agent = user.agent;
+			if (agent == null) {
+				Agent agent2 = Agent.addOrUpdate(form.get());
+				if (agent2 != null) {
+					user.agent = agent2;
+					user.update();
+					return ok(views.html.module.platform.addAgent.render(agent2,
+							user));
+				}
+			} else {
+				agent.info = FormHelper.getString(form().bindFromRequest(),
+						"info");
+				agent.name = FormHelper.getString(form().bindFromRequest(),
+						"name");
+				agent.contact = FormHelper.getString(form().bindFromRequest(),
+						"contact");
+
+				Agent agent2 = Agent.addOrUpdate(agent);
+				if (agent2 != null) {
+					user.agent = agent2;
+					user.update();
+					return ok(views.html.module.platform.addAgent.render(agent2,
+							user));
+				}
+
+			}
+		} else if (form.hasErrors()) {
+			String error = FormHelper.getFirstError(form.errors());
+			play.Logger.debug("error:" + error);
+			if (error != null) {
+				return badRequest(error);
+			}
+		}
+		return internalServerError(Constants.MSG_INTERNAL_ERROR);
+	}
+
+
+	/**
+	 * add or update instructor
+	 * 
+	 * @return
+	 */
+	 @FormValidators(values = {
+			@FormValidator(name = "realname", validateType = Type.REQUIRED, msg = "真实姓名不能为空"),
+			@FormValidator(name = "sex", validateType = Type.REQUIRED, msg = "性别不能为空"),
+			@FormValidator(name = "idcard", validateType = Type.REQUIRED, msg = "身份证号不能为空"),
+			@FormValidator(name = "idcard", validateType = Type.NUMBER, msg = "身份证号只能是数字"),
+			@FormValidator(name = "birthday", validateType = Type.REQUIRED, msg = "出生日期不能为空"),
+			@FormValidator(name = "phone", validateType = Type.PHONE, msg = "请填写正确的座机号码"),
+			@FormValidator(name = "qq", validateType = Type.REQUIRED, msg = "QQ号码不能为空"),
+			@FormValidator(name = "qq", validateType = Type.NUMBER, msg = "QQ号码只能是数字"),
+			@FormValidator(name = "address", validateType = Type.REQUIRED, msg = "联系地址不能为空"),
+			@FormValidator(name = "mobile", validateType = Type.PHONE, msg = "请填写正确的手机号码"),
+			@FormValidator(name = "email", validateType = Type.EMAIL, msg = "请填写正确的邮箱地址"),
+			@FormValidator(name = "info", validateType = Type.REQUIRED, msg = "个人简介不能为空"),
+			@FormValidator(name = "jobTitle", validateType = Type.REQUIRED, msg = "职称不能为空"),
+			@FormValidator(name = "field", validateType = Type.REQUIRED, msg = "擅长领域不能为空")
+	})
+	public static Result addOrUpdateTeacher() {
+		String msg = Validator.check(TeacherController.class, "addOrUpdateTeacher");
+		if (msg != null) {
+			return badRequest(msg);
+		}
+
+		User user =  LoginController.getSessionUser();
+		if(user == null){
+			return badRequest(Constants.MSG_NOT_LOGIN);
+		}
+		UserInfo basicInfo = user.basicInfo;
+		if(basicInfo == null){
+			basicInfo = new UserInfo();
+
+			basicInfo.realname = form().bindFromRequest().get("realname");
+			basicInfo.sex = form().bindFromRequest().get("sex");
+			basicInfo.idcard = form().bindFromRequest().get("idcard");
+			basicInfo.birthday = Long.parseLong(form().bindFromRequest().get("birthday"));
+			
+
+			basicInfo.phone = form().bindFromRequest().get("phone");
+			
+			basicInfo.qq = form().bindFromRequest().get("qq");
+			basicInfo.address = form().bindFromRequest().get("address");
+			basicInfo.user = user;
+			basicInfo.save();
+			user.basicInfo = basicInfo;
+			user.mobile = form().bindFromRequest().get("mobile");
+			user.email = form().bindFromRequest().get("email");
+			
+		}
+		else{
+			basicInfo.realname = form().bindFromRequest().get("realname");
+			basicInfo.sex = form().bindFromRequest().get("sex");
+			basicInfo.idcard = form().bindFromRequest().get("idcard");
+			basicInfo.birthday = Long.parseLong(form().bindFromRequest().get("birthday"));
+
+
+			basicInfo.phone = form().bindFromRequest().get("phone");
+			basicInfo.qq = form().bindFromRequest().get("qq");
+			basicInfo.address = form().bindFromRequest().get("address");
+			basicInfo.user = user;
+			basicInfo.update();
+			user.basicInfo = basicInfo;
+			user.mobile = form().bindFromRequest().get("mobile");
+			user.email = form().bindFromRequest().get("email");
+			
+
+		}
+		Form<Instructor> form = form(Instructor.class).bindFromRequest();
+		if (form != null && form.hasErrors() == false) {
+			Instructor instructor = user.instructor;
+			if(instructor == null){
+				Instructor instructor2 = Instructor.addOrUpdate(form.get());
+				if (instructor2 != null) {
+					user.instructor = instructor2;
+					user.update();
+					return ok(views.html.module.platform.addTeacher.render(instructor2, user));
+				}
+			}else{
+				instructor.info = FormHelper.getString(form().bindFromRequest(),"info");
+				instructor.jobTitle = FormHelper.getString(form().bindFromRequest(),"jobTitle");
+				instructor.field = FormHelper.getString(form().bindFromRequest(),"field");
+
+				Instructor instructor2 = Instructor.addOrUpdate(instructor);
+				if (instructor2 != null) {
+					user.instructor = instructor2;
+					user.update();
+					return ok(views.html.module.platform.addTeacher.render(instructor2, user));
+				}
+
+			}
+		} else if (form.hasErrors()) {
+			String error = FormHelper.getFirstError(form.errors());
+			play.Logger.debug("error:" + error);
+			if (error != null) {
+				return badRequest(error);
+			}
+		}
+		return internalServerError(Constants.MSG_INTERNAL_ERROR);
 	}
 
 }
