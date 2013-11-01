@@ -3,31 +3,14 @@
 @import basic.common._
 @import basic.common.basicform._
 
-
-
-
-<div class="row">
-	<div class="span2">
-		<h4>协议</h4>
-	</div>
-</div>
-
 <div class="table-responsive">
 	<div style="overflow: auto">
-	<div class="form-horizontal">
-		
-  		@if(model != null){
-			@inputText("协议名称", "name", model.name, true)
-		} else {
-			@inputText("协议名称", "name", null, false)
-		}
-					
-  		@if(model != null){
-			@textarea("协议详情", "detail", model.detail, true, 20)
-		} else {
-			@textarea("协议详情", "detail", null, false, 20)
-		}
-		
+		<form class="form-horizontal">
+		<div style="font-size:30px;font-weight:200;margin:20px;"><center><b>@model.name</b></center></div>
+		<div style="max-width:900px;border:1px solid grey;padding:10px;margin:auto;">
+			@Html(model.detail)
+		</div>		
+
 		<input class="input-large" type="hidden" name="table" value="@Contract.TABLE_NAME">
 		@if(model != null){
 			<input class="input-large" type="hidden" name="id" value="@model.id">
@@ -36,16 +19,13 @@
 		}
 		<hr>
 		<div class="control-group row">
-	    		<div class="controls">
-				@if(model != null){
-					<a class="btn btn-large btn-success btn-block span2"  href="@routes.EducationController.page("index")">同意协议</a>
-				} else {
-					<button class="btn btn-large btn-success btn-block span2 disabled " >同意协议</button>
-				}
-	    		</div>
-  		</div>
-		
-	</form>
+    	<div class="controls">
+					
+				<button class="btn btn-large btn-success btn-block span7" href="@routes.EducationController.page("index")">同意协议</button>
+					
+    	</div>
+  	</div>
+		</form>
 	</div>
 </div>
 

@@ -4,7 +4,8 @@
 @import basic.common.basicform._
 
 <div>
-	<h2>@model.title</h2>
-	<p></p>@model.newsType.name<p></p>
-	@model.detail;
+	<div style="font-size:30px;"><center><b>@model.title</b></center></div>
+	<br/><p><b><center>[@model.newsType.name]</center></b></p><br/>
+	
+	<div>@Html(model.detail)</div>
 </div>
