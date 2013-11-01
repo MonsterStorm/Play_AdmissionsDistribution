@@ -17,20 +17,20 @@ function getPlatformPage(li, url, data){
 	<div class="ym-wbox">
 		<div class="ym-grid linearize-level-1">
 			<div class="ym-g66 ym-gl">
-				<div class="ym-gbox-left">
-					<h2>学员感言</h2>
+					<div class="ym-gbox"><h1><strong>学员感言</strong></h1></div>
 					@for(model <- models.getList()){
-						<h5>@model.name</h5>
-						<span>
-							@model.company
-						</span>
-						</p>
-						<h6>@model.words</h6>
-						
-						</p>
+						<div class="ym-gbox" style="margin-top:5px;margin-bottom:5px;">
+							<span style="font-size:16px;font-wight:200">
+								<b>
+								@model.company
+								&nbsp;&nbsp;&nbsp;
+								@model.name
+								</b>
+							</span>
+							<h6 style="margin:10px;margin-bottom:20px;">@model.words</h6>
+						</div>
 					}
-					@paging(models, {baseUrl}, "platform")
-				</div>
+					<div class="ym-gbox">@paging(models, {baseUrl}, "platform")</div>
 			</div>
 			<div class="ym-g33 ym-gr">
 				<div class="ym-gbox-right">
