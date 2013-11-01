@@ -2,13 +2,47 @@
 
 @import basic.common._
 @import basic.common.basicform._
-<div>
-	<h2>@model.user.basicInfo.realname</h2>
-	<p></p>
-	擅长领域：@if(model.field!=null){@model.field}
-	<p></p>
-	职称：@if(model != null && model.jobTitle != null ){@model.jobTitle}
-	<p></p>
-	简介：@model.info
-	<p></p>
+
+<!-- content -->
+<div class="ym-wrapper">
+	<div class="ym-wbox">
+		<div class="ym-grid linearize-level-1">
+			<div class="ym-g66 ym-gl">
+				<div>
+					<img src="@routes.Assets.at("/datas/logos",{model.user.logo})" width="150px" height="150px">
+					<h2 style="font-size:40px;margin-top:10px;margin-bottom:10px;">@model.user.basicInfo.realname</h2>
+	
+					<p><b>擅长领域：</b>@if(model.field!=null){@model.field}</p>
+	
+					<p><b>职称：</b>@if(model != null && model.jobTitle != null ){@model.jobTitle}</p>
+	
+					<p><b>简介：</b>@model.info</p>
+				</div>					
+			</div>
+			<div class="ym-g33 ym-gr">
+				<div class="ym-gbox-right">
+					<div id ="platformEducation2"></div>
+					<div id="platformAdv2"></div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
+<script type="text/javascript">
+function getAdvPage2(li, url, data){
+		 data = data || "";
+     ajaxBasic("/platform/" + url, data, "GET", "#platformAdv2");
+		 $("#navList li.active").removeClass("active");
+		 $(li).addClass("active");
+	}
+
+	getAdvPage2(this, "platformAdv2");
+function getEduPage2(li, url, data){
+		 data = data || "";
+     ajaxBasic("/platform/" + url, data, "GET", "#platformEducation2");
+		 $("#navList li.active").removeClass("active");
+		 $(li).addClass("active");
+	}
+
+	getEduPage2(this, "platformEducation2");
+</script>

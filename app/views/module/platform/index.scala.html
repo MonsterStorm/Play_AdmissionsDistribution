@@ -80,18 +80,19 @@ function getPlatformPage(li, url, data){
 		 $(li).addClass("active");
 	}
 
-	getAdvPage(this, "platformAdv");
-
 	function getNewsCompPage(li, url, data){
 		 data = data || "";
      ajaxBasic("/platform/" + url, data, "GET", "#newsComp");
 		 $("#navList li.active").removeClass("active");
 		 $(li).addClass("active");
 	}
-
-	getNewsCompPage(this, "newsComp");
-
-	getAdvPage(this, "platformAdv");
+	
+	function getCourseCompPage(li, url, data){
+		 data = data || "";
+     ajaxBasic("/platform/" + url, data, "GET", "#courseComp");
+		 $("#navList li.active").removeClass("active");
+		 $(li).addClass("active");
+	}
 
 	function getStudentWordsCompPage(li, url, data){
 		 data = data || "";
@@ -100,17 +101,6 @@ function getPlatformPage(li, url, data){
 		 $(li).addClass("active");
 	}
 
-	getStudentWordsCompPage(this, "studentWordsComp");
-
-	function getCourseCompPage(li, url, data){
-		 data = data || "";
-     ajaxBasic("/platform/" + url, data, "GET", "#courseComp");
-		 $("#navList li.active").removeClass("active");
-		 $(li).addClass("active");
-	}
-
-	getCourseCompPage(this, "courseComp");
-
 	function getTeacherCompPage(li, url, data){
 		 data = data || "";
      ajaxBasic2("/platform/" + url, data, "GET", "#news-container");
@@ -118,6 +108,10 @@ function getPlatformPage(li, url, data){
 		 $(li).addClass("active");
 	}
 
+	getAdvPage(this, "platformAdv");
+	getNewsCompPage(this, "newsComp");
+	getCourseCompPage(this, "courseComp");
+	getStudentWordsCompPage(this, "studentWordsComp");
 	getTeacherCompPage(this, "teacherComp");
   </script>
 <!--主模块-->  

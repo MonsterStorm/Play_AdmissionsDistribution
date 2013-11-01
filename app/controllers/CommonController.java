@@ -220,15 +220,22 @@ public class CommonController extends Controller {
 		
 		Form<User> form = form(User.class).bindFromRequest();
 		if (form != null && form.hasErrors() == false) {
-			final String username = FormHelper.getString(form().bindFromRequest(), "username");
-			final String mobile = FormHelper.getString(form().bindFromRequest(), "mobile");
-			final String email = FormHelper.getString(form().bindFromRequest(), "email");
-			if (User.isUsernameRegistered(username)) {
-				return badRequest(Constants.MSG_USER_USERNAME_EXIST);
-			} else if (User.isMobileRegistered(mobile)){
-				return badRequest(Constants.MSG_USER_USERNAME_EXIST);
-			} else if (User.isEmailRegistered(email)){
-				return badRequest(Constants.MSG_USER_USERNAME_EXIST);
+			User userTemp = form.get();
+			
+			if(userTemp != null){
+				if(userTemp.id == null){//新增，判断用户是否已经存在
+					final String username = FormHelper.getString(form().bindFromRequest(), "username");
+					final String mobile = FormHelper.getString(form().bindFromRequest(), "mobile");
+					final String email = FormHelper.getString(form().bindFromRequest(), "email");
+					
+					if (User.isUsernameRegistered(username)) {
+						return badRequest(Constants.MSG_USER_USERNAME_EXIST);
+					} else if (User.isMobileRegistered(mobile)){
+						return badRequest(Constants.MSG_USER_USERNAME_EXIST);
+					} else if (User.isEmailRegistered(email)){
+						return badRequest(Constants.MSG_USER_USERNAME_EXIST);
+					}
+				}
 			}
 			
 			MultipartFormData body = request().body().asMultipartFormData();
