@@ -63,6 +63,7 @@ public class CourseDistribution extends Model {
 		}
 
 		cd.rebate = Rebate.createRebate(cd);
+		cd.save();
 	}
 
 
@@ -182,4 +183,6 @@ public class CourseDistribution extends Model {
 		form = form.bind(datas);
 		return new QueryHelper<CourseDistribution>(finder, form).addEq("course.edu.creator.id", "userId", Long.class).findPage(page, pageSize);
 	}
+
+
 }

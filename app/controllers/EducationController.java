@@ -272,7 +272,9 @@ public class EducationController extends BaseController {
 			@FormValidator(name = "startTime", validateType = Type.REQUIRED, msg = "开课时间不能为空"),
 			@FormValidator(name = "contact", validateType = Type.REQUIRED, msg = "联系方式不能为空"),
 			@FormValidator(name = "info", validateType = Type.REQUIRED, msg = "课程简介不能为空"),
-			@FormValidator(name = "detail", validateType = Type.REQUIRED, msg = "课程详情不能为空")
+			@FormValidator(name = "detail", validateType = Type.REQUIRED, msg = "课程详情不能为空"),
+			@FormValidator(name = "eduRebateType.ratioOfTotal", validateType = Type.NUMBER, msg = "总金额返点比例只能是数字"),
+			@FormValidator(name = "eduRebateType.ratioOfPerStudent", validateType = Type.NUMBER, msg = " 每个学生返点金额只能是数字")
 	})
 	public static Result addOrUpdateCourse() {
 		String msg = Validator.check(EducationController.class, "addOrUpdateCourse");

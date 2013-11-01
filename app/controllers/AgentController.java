@@ -139,21 +139,25 @@ public class AgentController extends BaseController {
 			return  badRequest(Constants.MSG_COURSE_AGENTED);
 
 		}
-		Audit audit = Audit.findByCourseIdAndAgentId(course.id, user.agent.id, Audit.STATUS_WAIT);
-		if(audit !=null){
+		CourseDistribution cd = CourseDistribution.findByAgentAndCourse(user.agent.id, course.id);
+		Audit audit = new Audit();
+		if(cd !=null && cd.audit !=null){
 			return  badRequest(Constants.MSG_COURSE_REGED);
+		}else{
+			audit.status = Audit.STATUS_WAIT;
+			audit.creator = user;
+			audit.createTime = System.currentTimeMillis();
+			audit.save();
 		}
-		Audit a = new Audit();
-//		a.course = course;
 		
 		CourseDistribution.createDistributon(course, user.agent, audit);
-		
-		a.status = Audit.STATUS_WAIT;
-		a.creator = user;
-		a.createTime = System.currentTimeMillis();
-		a.save();
 		List<CourseType> types = CourseType.findAll();
-		return ok(views.html.module.agent.courseDetail.render(course, types,user.edus,false));
+		List<EducationInstitution> edus = null;
+		if( course!=null && course.edu!=null && course.edu.creator !=null){
+			edus = course.edu.creator.edus;
+		}
+
+		return ok(views.html.module.agent.courseDetail.render(course, types,edus,false));
 	
 	}
 
@@ -214,13 +218,17 @@ public class AgentController extends BaseController {
 				course = Course.find(id);
 			}
 		}
+		List<EducationInstitution> edus= null;
+		if(course.edu != null){
+			edus = course.edu.creator.edus;
+		}
 		if(course!=null && course.agents!=null && user.agent !=null){
 			if(course.agents.contains(user.agent)){
-				return ok(views.html.module.agent.courseDetail.render(course, types,user.edus,false));
+				return ok(views.html.module.agent.courseDetail.render(course, types,edus,false));
 			}
-			return ok(views.html.module.agent.courseDetail.render(course, types,user.edus,true));
+			return ok(views.html.module.agent.courseDetail.render(course, types,edus,true));
 		}
-		return ok(views.html.module.agent.courseDetail.render(course, types,user.edus,false));
+		return ok(views.html.module.agent.courseDetail.render(course, types,edus,false));
 	}
 
 	/**
@@ -335,7 +343,7 @@ public class AgentController extends BaseController {
 	 * @return
 	 */
 	@FormValidators(values = {
-			@FormValidator(name = "id", validateType = Type.REQUIRED, msg = "id不能为空")
+			@FormValidator(name = "domain", validateType = Type.REQUIRED, msg = "domain不能为空")
 	})
 	public static Result addOrUpdateDomain() {
 		String msg = Validator.check(AgentController.class, "addOrUpdateDomain");
