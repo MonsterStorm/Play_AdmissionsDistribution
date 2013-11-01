@@ -143,6 +143,18 @@ $('#toolbar').tooltip(options);
 				@textarea("课程详细信息", "detail", null, false)
 			}
 
+			@if(model != null && model.eduRebateType != null){
+				@inputText("总金额返点比例", "eduRebateType.ratioOfTotal", {String.valueOf(model.eduRebateType.ratioOfTotal)}, true)
+			} else {
+				@inputText("总金额返点比例", "eduRebateType.ratioOfTotal", null, false)
+			}
+
+			@if(model != null && model.eduRebateType != null){
+				@inputText("每个学生返点金额", "eduRebateType.ratioOfPerStudent", {String.valueOf(model.eduRebateType.ratioOfPerStudent)}, true)
+			} else {
+				@inputText("每个学生返点金额", "eduRebateType.ratioOfPerStudent", null, false)
+			}
+
 			@if(model != null && model.edu != null){
 				@inputText("教育机构", null, model.edu.name, true)
 			}

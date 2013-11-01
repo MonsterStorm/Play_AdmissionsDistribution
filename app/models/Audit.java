@@ -88,7 +88,16 @@ public class Audit extends Model {
 	 * @return
 	 */
 	public static Audit findByCourseIdAndAgentId(Long courseId,Long agentId,int status) {
-		return finder.where().eq("creator.agent.id", agentId).eq("course.id",courseId).eq("status",status).findUnique();
+		return finder.where().eq("distributon.agent.id", agentId).eq("distributon.course.id",courseId).eq("status",status).findUnique();
+	}
+	/**
+	 * find one by id
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public static Audit findByCourseIdAndAgentId(Long courseId,Long agentId) {
+		return finder.where().eq("distributon.agent.id", agentId).eq("distributon.course.id",courseId).findUnique();
 	}
 
 
