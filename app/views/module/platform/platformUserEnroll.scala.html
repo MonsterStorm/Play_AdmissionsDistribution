@@ -37,7 +37,7 @@ var ajaxSubmitOptionsEnroll = {
 };
     $(document).ready( function() {
 			$('#myform').submit(function() {
-		    $(this).ajaxSubmit(ajaxSubmitOptionsEnroll);
+		   $(this).ajaxSubmit(ajaxSubmitOptions);
 		    return false;
 			});
 		});
@@ -206,6 +206,11 @@ var ajaxSubmitOptionsEnroll = {
 				<input class="input-large" type="hidden" name="courseId" value="@course.id">
 			} else {
 				<input class="input-large" type="hidden" name="courseId">
+			}
+			@if(user != null ){
+				<input class="input-large" type="hidden" name="user" value="@user.id">
+			} else {
+				<input class="input-large" type="hidden" name="user">
 			}
 		
 			<hr>

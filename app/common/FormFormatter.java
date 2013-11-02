@@ -8,7 +8,35 @@ import play.data.format.*;
 import play.data.format.Formatters.*;
 
 public class FormFormatter {
-	
+	/**
+	 * register for user 
+	 */
+	public static void registerUser(){
+		Formatters.register(User.class, new SimpleFormatter<User>() {
+
+			@Override
+			public User parse(String arg, Locale l) throws ParseException {
+				try{
+					Long userId = Long.parseLong(arg);
+					User user = User.find(userId);
+					return user;
+				} catch (Exception e){
+					e.printStackTrace();
+				}
+				return null;
+			}
+
+			@Override
+			public String print(User user, Locale l) {
+				if(user != null){
+					return user.username;
+				}
+				return null;
+			}
+
+		});
+	}
+
 	/**
 	 * register for course type
 	 */

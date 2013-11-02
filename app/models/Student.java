@@ -40,6 +40,10 @@ public class Student extends Model {
 
 	public String info;// 额外信息
 
+	static {
+		FormFormatter.registerUser();
+	}
+
 	// -- 查询
 	public static Model.Finder<Long, Student> finder = new Model.Finder(Long.class, Student.class);
 
