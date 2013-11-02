@@ -661,7 +661,7 @@ public class PlatformController extends BaseController {
 			return badRequest(Constants.MSG_AGENT_APPLYED_COURSE);
 		}
 		if(user.agent !=null){
-			return ok(views.html.module.teacher.index.render());
+			return  badRequest(Constants.MSG_ALREADY_AGENT);
 		}
 		long id  = (long)2;
 		Contract contract = Contract.find(id);
@@ -698,7 +698,7 @@ public class PlatformController extends BaseController {
 			return badRequest(Constants.MSG_AGENT_APPLYED_COURSE);
 		}
 		if(user.instructor !=null){
-			return ok(views.html.module.teacher.index.render());
+			return  badRequest(Constants.MSG_ALREADY_TEACHER);
 		}
 		long id  = (long)3;
 		Contract contract = Contract.find(id);

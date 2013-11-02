@@ -28,6 +28,9 @@ public class Constants {
 	public static final String MSG_NOT_USER_EDUCATION = "教育机构与用户不匹配";
 	public static final String MSG_NOT_IN_WAIT_AUDIT = "不在等待审核状态";
 
+	public static final String MSG_ALREADY_TEACHER = "你已经是讲师，无需申请";
+	public static final String MSG_ALREADY_AGENT = "你已经是代理人，无需申请";
+
 	//申请
 	public static final String MSG_AGENT_APPLYED_COURSE = "已有一个申请";
 
