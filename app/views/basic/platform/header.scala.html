@@ -13,6 +13,23 @@
         @if(!session.contains("account")) {
     	    <a href="@routes.PlatformController.page("login")">登录</a>
         }
+        @if(session.contains("user_roles")) {
+          @if(session.get("user_roles").contains("1")  ){
+          <a href="@routes.EducationController.page("index");">教育机构后台</a>
+          }
+          @if(session.get("user_roles").contains("2")  ){
+          <a href="@routes.TeacherController.logout()">讲师后台</a>
+          }
+         @if(session.get("user_roles").contains("3")  ){
+          <a href="@routes.AgentController.logout()">代理人后台</a>
+          }
+          @if(session.get("user_roles").contains("4")  ){
+          <a href="@routes.StudentController.logout()">学员后台</a>
+          }
+          @if(session.get("user_roles").contains("6")  ){
+          <a href="@routes.AdminController.logout()">管理员后台</a>
+          }
+        }
       </div>
 	  	<!--搜索框开始-->
 	 	 	<!--<div id="search-wrapper" class="ym-g33 ym-gr"> 			            

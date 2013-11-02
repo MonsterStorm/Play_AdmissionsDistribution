@@ -457,13 +457,15 @@ public class PlatformController extends BaseController {
 	**/
 	public static Result pageUserEnroll(){
 		play.Logger.error(form().bindFromRequest().get("courseId"));
-		User user =  LoginController.getSessionUser();
-		if(user == null){
-			return badRequest(Constants.MSG_NOT_LOGIN);
-		}
-		Student student = user.student;
 		Long courseId =FormHelper.getLong( form().bindFromRequest(),"courseId");
 		Course course = Course.find(courseId);
+		User user =  LoginController.getSessionUser();
+		if(user == null){
+			//return badRequest(Constants.MSG_NOT_LOGIN);
+			return ok(views.html.module.platform.platformUserEnroll.render(null, course ,null ,null ,null));
+		}
+		Student student = user.student;
+		
 		if(student!=null){
 			
 			if(course!=null){
@@ -511,10 +513,14 @@ public class PlatformController extends BaseController {
 	public static Result addOrUpdateStudentEnroll() {
 		play.Logger.error(form().bindFromRequest().get("courseId"));
 		User user =  LoginController.getSessionUser();
+		Student student = null;
 		if(user == null){
-			return badRequest(Constants.MSG_NOT_LOGIN);
+			//return badRequest(Constants.MSG_NOT_LOGIN);
+			
+			student = new Student();
+			user = User.getRandomUserForStudent(student, Role.ROLE_STUDENT, Audit.STATUS_SUCCESS );
 		}
-		Student student = user.student;
+		student = user.student;
 		if(student!=null){
 			Long courseId =  FormHelper.getLong(form().bindFromRequest(),"courseId");
 			Course course = Course.find(courseId);
@@ -548,7 +554,13 @@ public class PlatformController extends BaseController {
 			user.basicInfo = basicInfo;
 			user.mobile = form().bindFromRequest().get("mobile");
 			user.email = form().bindFromRequest().get("email");
-			user.update();
+			if(user.id == null){
+				user.save();
+				user.basicInfo.user = user;
+				user.basicInfo.update();
+			}else{
+				user.update();
+			}
 		}
 		else{
 			basicInfo.realname = form().bindFromRequest().get("realname");
@@ -565,8 +577,14 @@ public class PlatformController extends BaseController {
 			user.basicInfo = basicInfo;
 			user.mobile = form().bindFromRequest().get("mobile");
 			user.email = form().bindFromRequest().get("email");
-			user.update();
-
+			if(user.id == null){
+				user.save();
+				user.basicInfo.user = user;
+				user.basicInfo.update();
+			}
+			else{
+				user.update();
+			}
 		}
 		Form<Student> form = form(Student.class).bindFromRequest();
 		if (form != null && form.hasErrors() == false) {
