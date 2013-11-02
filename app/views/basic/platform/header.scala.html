@@ -6,30 +6,29 @@
 			<div style="float:right;padding:10px">
 			 @if(session.contains("account")) {
 	        <a href="#"><span class="label label-info">@session.get("account")</span></a>
+	        @if(session.contains("user_roles")) {
+          	@if(session.get("user_roles").contains("1")  ){
+          		<a href="@routes.EducationController.page("index")">我是教育机构</a>
+          	}
+          	@if(session.get("user_roles").contains("2")  ){
+          		<a href="@routes.TeacherController.page("index")">我是讲师</a>
+          	}
+         		@if(session.get("user_roles").contains("3")  ){
+          		<a href="@routes.AgentController.page("index")">我是代理人</a>
+          	}
+          	@if(session.get("user_roles").contains("4")  ){
+          		<a href="@routes.StudentController.page("index")">我是学员</a>
+          	}
+          	@if(session.get("user_roles").contains("6")  ){
+          		<a href="@routes.AdminController.page("index")">我是管理员</a>
+          	}
+        	}
   	      <a href="@routes.PlatformController.logout()">注销</a>
         } else {
+        	<a href="@routes.PlatformController.page("login")">登录</a>
         	<a href="@routes.PlatformController.page("register")">注册</a>
         }
-        @if(!session.contains("account")) {
-    	    <a href="@routes.PlatformController.page("login")">登录</a>
-        }
-        @if(session.contains("user_roles")) {
-          @if(session.get("user_roles").contains("1")  ){
-          <a href="@routes.EducationController.page("index");">教育机构后台</a>
-          }
-          @if(session.get("user_roles").contains("2")  ){
-          <a href="@routes.TeacherController.page("index");">讲师后台</a>
-          }
-         @if(session.get("user_roles").contains("3")  ){
-          <a href="@routes.AgentController.page("index");">代理人后台</a>
-          }
-          @if(session.get("user_roles").contains("4")  ){
-          <a href="@routes.StudentController.page("index");">学员后台</a>
-          }
-          @if(session.get("user_roles").contains("6")  ){
-          <a href="@routes.AdminController.page("index");">管理员后台</a>
-          }
-        }
+        
       </div>
 	  	<!--搜索框开始-->
 	 	 	<!--<div id="search-wrapper" class="ym-g33 ym-gr"> 			            
