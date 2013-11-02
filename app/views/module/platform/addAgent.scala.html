@@ -14,12 +14,25 @@
 		});
 </script>
 
+<div class="row">
+	<center style="font-size:20px;font-weight:200;margin:10px;">
+		请先完善您的信息
+	</center>
+</div>
+
 
 <div class="table-responsive">
 	<div style="overflow: auto">
 		<form class="form-horizontal" id="myform" method="post" action="@routes.PlatformController.addOrUpdateEntity()">
-	
+			
 			@form_validate_info()
+			
+			@if(model != null){
+				@inputText("代理机构名称", "name", model.name, false)
+			} else {
+				@inputText("代理机构名称", "name", null, false)
+			}
+				
 			@if(model != null &&model.user!=null && model.user.basicInfo != null){
 				@inputText("代理人名称", "realname", model.user.basicInfo.realname, false)
 			}else{ 
@@ -47,12 +60,6 @@
 				}
 			}}
 			
-			@if(model != null){
-				@inputText("机构名称", "name", model.name, false)
-			} else {
-				@inputText("机构名称", "name", null, false)
-			}
-				
 			@if(model != null && model.user != null && model.user.basicInfo != null){
 				@inputText("身份证号", "idcard", model.user.basicInfo.idcard, false)
 			} else{
@@ -139,7 +146,7 @@
 			<div class="control-group row">
     		<div class="controls">
 					@if(model != null){
-      			<button type="submit" class="btn btn-large btn-success btn-block span2 disabled">提交</button>
+      			<span type="submit" class="btn btn-large btn-success btn-block span2 disabled">提交</span>
       		} else {
       			<button type="submit" class="btn btn-large btn-success btn-block span2">提交</button>
       		}
