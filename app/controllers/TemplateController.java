@@ -24,12 +24,40 @@ public class TemplateController extends Controller {
 	public static final String PAGE_USE_AGENT_TEMPLATE = "useAgentTemplate";// 使用代理人模板页面
 
 	/**
-	 * 模板跳转
-	 * 
+	 * 模板跳转，直接跳转到对应的模板下，而不是跳转到每个用户的不同模板()
 	 * @param domainStr
 	 * @return
 	 */
 	public static Result index(String domainStr) {
+		Domain domain = Domain.findByDomain(domainStr);
+		if (domain != null && domain.agent != null) {
+			try {
+				// 通过反射调用该类的render方法
+				String clazzName = "views.html.template.t" + domain.agent.template.templateType.id + ".index";
+				clazzName = clazzName.replaceAll("/", ".");
+				
+				play.Logger.debug("redirect: " + clazzName);
+				final Class clazz = Class.forName(clazzName);
+				if (clazz != null) {// 得到render方法
+					Method method = clazz.getMethod("render", null);
+					if (method != null) {
+						flash().put("agentId", domain.agent.id.toString());
+						return ok((Html) method.invoke(null));
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return Application.index();
+	}
+	/**
+	 * 模板跳转
+	 * 已经废弃
+	 * @param domainStr
+	 * @return
+	 */
+	/*public static Result index(String domainStr) {
 		Domain domain = Domain.findByDomain(domainStr);
 		if (domain != null && domain.agent != null) {
 			try {
@@ -54,7 +82,7 @@ public class TemplateController extends Controller {
 			}
 		}
 		return Application.index();
-	}
+	}*/
 
 	/**
 	 * 页面跳转
@@ -125,6 +153,58 @@ public class TemplateController extends Controller {
 	 */
 	@Security.Authenticated(SecuredUseOfTemplate.class)
 	public static Result useTemplate() {
+		Long templateTypeId = FormHelper.getLong(form().bindFromRequest(), "id");
+		if (templateTypeId != null) {
+			User user = LoginController.getSessionUser();
+
+			if (user != null) {
+				if (templateTypeId > 0) {
+					TemplateType templateType = TemplateType.find(templateTypeId);
+					Template template = Template.findByUser(user);// 每个用户都有一个默认模板，在创建的时候就产生
+
+					if (template == null) {// 用户没有模板，则创建一个模板
+						template = new Template(user, templateType);
+						user.updateTemplate(template);
+					} else if (template.templateType != templateType) {// 如果用户没有应用该模板，则修改用户模板
+						template.templateType = templateType;
+						template.update();
+					}// 如果模板相同，则不做操作
+
+				} else {// templateTypeId <= 0，则为设置自定义模板
+					if (user.instructor != null) {// 讲师
+						user.instructor.template.templateType = null;
+						user.instructor.template.update();
+					} else if (user.agent != null) {// 代理人
+						user.agent.template.templateType = null;
+						user.agent.template.update();
+					} else {// 教育机构
+						Long eduId = FormHelper.getLong(form().bindFromRequest(), "eduId");
+						if (eduId != null) {
+							EducationInstitution edu = EducationInstitution
+									.find(eduId);
+							if (edu != null) {
+								edu.template.templateType = null;
+								edu.template.update();
+							}
+						}
+					}
+				}
+
+				return ok(Constants.MSG_SUCCESS);
+			} else {
+				return badRequest(Constants.MSG_NOT_LOGIN);
+			}
+		}
+		return badRequest(Constants.MSG_BAD_REQUEST);
+	}
+	
+	/**
+	 * 使用模板
+	 * 
+	 * @return
+	 */
+	/*@Security.Authenticated(SecuredUseOfTemplate.class)
+	public static Result useTemplate() {
 		Long templateTypeId = FormHelper
 				.getLong(form().bindFromRequest(), "id");
 		if (templateTypeId != null) {
@@ -132,8 +212,7 @@ public class TemplateController extends Controller {
 
 			if (user != null) {
 				if (templateTypeId > 0) {
-					TemplateType templateType = TemplateType
-							.find(templateTypeId);
+					TemplateType templateType = TemplateType.find(templateTypeId);
 					Template template = Template.findByUser(user);// 每个用户都有一个默认模板，在创建的时候就产生
 
 					if (template == null) {// 用户没有模板，则创建一个模板
@@ -206,8 +285,7 @@ public class TemplateController extends Controller {
 			}
 		}
 		return badRequest(Constants.MSG_BAD_REQUEST);
-	}
-
+	}*/
 
 	/**
 	 * 使用模板
@@ -215,6 +293,56 @@ public class TemplateController extends Controller {
 	 * @return
 	 */
 	@Security.Authenticated(SecuredUseOfTemplate.class)
+	public static Result useAgentTemplate() {
+		Long templateTypeId = FormHelper.getLong(form().bindFromRequest(), "id");
+		if (templateTypeId != null) {
+			User user = LoginController.getSessionUser();
+
+			if (user != null) {
+				if (templateTypeId > 0) {
+					TemplateType templateType = TemplateType.find(templateTypeId);
+					Template template = Template.findByUser(user);// 每个用户都有一个默认模板，在创建的时候就产生
+
+					if (template == null) {// 用户没有模板，则创建一个模板
+						template = new Template(user, templateType);
+						user.updateTemplate(template);
+					} else if (template.templateType != templateType) {// 如果用户没有应用该模板，则修改用户模板
+						template.templateType = templateType;
+						template.update();
+					}// 如果模板相同，则不做操作
+
+				} else {// templateTypeId <= 0，则为设置自定义模板
+					if (user.instructor != null) {// 讲师
+						user.instructor.template.templateType = null;
+						user.instructor.template.update();
+					} else if (user.agent != null) {// 代理人
+						user.agent.template.templateType = null;
+						user.agent.template.update();
+					} else {// 教育机构
+						Long eduId = FormHelper.getLong(form().bindFromRequest(), "eduId");
+						if (eduId != null) {
+							EducationInstitution edu = EducationInstitution.find(eduId);
+							if (edu != null) {
+								edu.template.templateType = null;
+								edu.template.update();
+							}
+						}
+					}
+				}
+
+				return ok(Constants.MSG_SUCCESS);
+			} else {
+				return badRequest(Constants.MSG_NOT_LOGIN);
+			}
+		}
+		return badRequest(Constants.MSG_BAD_REQUEST);
+	}
+	/**
+	 * 使用模板
+	 * 
+	 * @return
+	 */
+	/*@Security.Authenticated(SecuredUseOfTemplate.class)
 	public static Result useAgentTemplate() {
 		Long templateTypeId = FormHelper
 				.getLong(form().bindFromRequest(), "id");
@@ -297,7 +425,7 @@ public class TemplateController extends Controller {
 			}
 		}
 		return badRequest(Constants.MSG_BAD_REQUEST);
-	}
+	}*/
 
 	
 	/**
