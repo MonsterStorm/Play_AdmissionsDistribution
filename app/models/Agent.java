@@ -121,6 +121,39 @@ public class Agent extends Model{
 		}
 		return null;
 	}
+	/**
+	 * 新增或更新一个用户
+	 * 
+	 * @param form
+	 * @return
+	 */
+	public static Agent addOrUpdate(Agent agent, User user) {
+		if (agent != null) {
+			if (agent.id == null) {// 新增
+				if(user == null){
+					agent.user = User.createUserForAgent(agent, Role.ROLE_AGENT, Audit.STATUS_SUCCESS);//绑定到当前用户，为每个教育机构新建一个用户号
+				}else{
+					agent.user = user;
+				}
+				agent.id = finder.nextId();
+				
+				//审核
+				agent.audit = new Audit(agent.user, Audit.STATUS_WAIT, AuditType.TYPE_AUDITTYPE_AGENT);
+				
+				//模板
+				agent.template = new Template(agent, TemplateType.TYPE_DEFAULT);
+				
+				//域名
+				agent.domain.add(new Domain(agent));
+				
+				agent.save();
+			} else {// 更新
+				agent.update();
+			}
+			return agent;
+		}
+		return null;
+	}
 	
 	/**
 	 * course

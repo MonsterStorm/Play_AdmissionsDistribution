@@ -47,7 +47,11 @@
 				}
 			}}
 			
-			
+			@if(model != null){
+				@inputText("讲师名称", "name", model.name, false)
+			} else {
+				@inputText("讲师名称", "name", null, false)
+			}
 				
 			@if(model != null && model.user != null && model.user.basicInfo != null){
 				@inputText("身份证号", "idcard", model.user.basicInfo.idcard, false)

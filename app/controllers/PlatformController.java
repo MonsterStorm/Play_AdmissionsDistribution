@@ -881,7 +881,7 @@ public class PlatformController extends BaseController {
 		if (form != null && form.hasErrors() == false) {
 			Agent agent = user.agent;
 			if (agent == null) {
-				Agent agent2 = Agent.addOrUpdate(form.get());
+				Agent agent2 = Agent.addOrUpdate(form.get(), user);
 				if (agent2 != null) {
 					user.agent = agent2;
 					user.update();
@@ -896,7 +896,7 @@ public class PlatformController extends BaseController {
 				agent.contact = FormHelper.getString(form().bindFromRequest(),
 						"contact");
 
-				Agent agent2 = Agent.addOrUpdate(agent);
+				Agent agent2 = Agent.addOrUpdate(agent, user);
 				if (agent2 != null) {
 					user.agent = agent2;
 					user.update();
