@@ -108,16 +108,21 @@
 
 
 <ul class="nav nav-list" id="navList">
-	<li class="nav-header">讲师</li>
-	<li><a href="#">主页</a></li>
+	<li id="home" class="active" onclick="getTeacherPage(this, 'home')"><a href="#">主页</a></li>
+	<li class="divider"></li>
+	<li class="nav-header">基本信息管理</li>
 	<li><a href="#" onclick="getTeacherPage(this, 'teacherInfo')">信息管理</a></li>
-	<li onclick="getTeacherPage(this, 'teacherEnrollInfo')"><a href="#">报名信息管理</a></li>
-	<li onclick="getTeacherPage(this, 'teacherCourseInfo')"><a href="#">培训课程管理</a></li>
 	<li><a href="#"  onclick="getTeacherPage(this, 'teacherDomain')">域名管理</a></li>
-	<li><a href="#">奖励机制管理</a></li>
+	<li class="divider"></li>
+	<li class="nav-header">课程信息管理</li>
+	<li onclick="getTeacherPage(this, 'teacherCourseInfo')"><a href="#">培训课程管理</a></li>
+	<li class="divider"></li>
+	<li class="nav-header">报名管理</li>
+	<li onclick="getTeacherPage(this, 'teacherEnrollInfo')"><a href="#">报名信息管理</a></li>
+	<!-- <li><a href="#">奖励机制管理</a></li>
 	<li><a href="#">统计及结算</a></li>
 	<li><a href="#">专属推广页面</a></li>
 	<li><a href="#">常见问题及解答</a></li>
-	<li><a href="#">问答辅助功能</a></li>
+	<li><a href="#">问答辅助功能</a></li> -->
 	
 </ul>
