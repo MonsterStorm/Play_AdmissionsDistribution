@@ -194,6 +194,34 @@ public class User extends Model {
 		buildUserFields(user, roleId, auditStatus,
 				AuditType.TYPE_AUDITTYPE_STUDENT);
 	}
+	/**
+	 * create a random user for student
+	 * 
+	 * @param user
+	 * @param roleId
+	 * @return
+	 */
+	public static User getRandomUserForStudent(Student student, long roleId,
+			int auditStatus) {
+		if (student == null)
+			return null;
+
+		User user = student.user;
+
+		if (user == null) {
+			user = new User();
+		}
+
+		// 生产随机帐号密码
+		randomAccount(user);
+
+		// 学员信息
+		user.student = student;
+
+		buildUserFields(user, roleId, auditStatus,
+				AuditType.TYPE_AUDITTYPE_STUDENT);
+		return user;
+	}
 
 	/**
 	 * create a random user for instructor
