@@ -53,7 +53,7 @@
 				@textarea("机构简介", "info", null, false)
 			}
 
-			@if(model != null){
+			@if(model != null && model.creator != null){
 				@inputText("创建者", null, model.creator.username, true, true)
 			} else {
 				@inputText("创建者", null, null, false, true)

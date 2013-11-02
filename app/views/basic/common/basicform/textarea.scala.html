@@ -2,6 +2,6 @@
 <div class="control-group">
    <label class="control-label" for="@name">@label</label>
    <div class="controls">
-      	<textarea rows="@rows" class="input-xxlarge" type="text" @if(name){name="@name"} @if(readonly){readonly="readonly"} @if(disabled){disabled}>@value</textarea>
+      	<textarea rows="@rows" @if(name){id="@name"} class="input-xxlarge" type="text" @if(name){name="@name"} @if(readonly){readonly="readonly"} @if(disabled){disabled}>@value</textarea>
    </div>
 </div>

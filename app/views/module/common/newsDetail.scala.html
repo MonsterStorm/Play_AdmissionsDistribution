@@ -2,7 +2,7 @@
 
 @import basic.common._
 @import basic.common.basicform._
-
+@initRequireEditor()
 @bootstrapDatetimepicker()
 
 @toolbar_header={
@@ -96,8 +96,9 @@ $('#toolbar').tooltip(options);
 				@datetimePicker("发布时间", "time",null,true,true)
 			}
 			
+			@requireEditor("detail")
 			@if(model != null){
-				@textarea("新闻详情", "detail", model.detail, true, 20)
+				@textarea("新闻详情", "detail", model.detail, false, 20)
 			} else {
 				@textarea("新闻详情", "detail", null, false, 20)
 			}
