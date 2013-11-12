@@ -45,7 +45,7 @@ $('#toolbar').tooltip(options);
 		@if(user.id == session.get("user_id")){
 			<a class="btn btn-danger" data-toggle="删除，请谨慎操作！" href="#"><i	class="icon-remove icon-white" onclick="doDelete(@user.id)"></i></a>
 		} else {
-			<span class="btn btn-danger disabled" data-toggle="删除，请谨慎操作！" href="#"><i	class="icon-remove icon-white"></i></span>
+			<span class="btn disabled" data-toggle="删除，请谨慎操作！" href="#"><i	class="icon-remove icon-white"></i></span>
 		}		
 	</div>
 </div>

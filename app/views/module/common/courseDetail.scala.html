@@ -2,7 +2,7 @@
 
 @import basic.common._
 @import basic.common.basicform._
-
+@initRequireEditor()
 @bootstrapDatetimepicker()
 
 @toolbar_header={
@@ -100,14 +100,16 @@ $('#toolbar').tooltip(options);
 				@datetimePicker("开课时间", "startTime")
 			}
 
+			@requireEditor("info")
 			@if(model != null){
-				@textarea("课程简介", "info", model.info, true)
+				@textarea("课程简介", "info", model.info, false)
 			} else {
 				@textarea("课程简介", "info", null, false)
 			}
-
+			
+			@requireEditor("detail")
 			@if(model != null){
-				@textarea("课程详细信息", "detail", model.detail, true, 20)
+				@textarea("课程详细信息", "detail", model.detail, false, 20)
 			} else {
 				@textarea("课程详细信息", "detail", null, false, 20)
 			}

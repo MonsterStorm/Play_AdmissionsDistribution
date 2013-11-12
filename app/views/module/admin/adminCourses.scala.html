@@ -87,13 +87,13 @@ $('#toolbar').tooltip(options);
 		@if(course.audit != null && course.audit.status != Audit.STATUS_SUCCESS){
 			<a class="btn btn-success" data-toggle="审核通过" href="#" onclick="showConfirm('@String.valueOf("y" + course.id)')"><i class="icon-ok icon-white"></i></a> 
 		} else {
-			<span class="btn btn-success disabled" data-toggle="审核通过" href="#"><i class="icon-ok icon-white"></i></span>
+			<span class="btn disabled" data-toggle="审核通过" href="#"><i class="icon-ok icon-white"></i></span>
 		}
 		
 		@if(course.audit != null && course.audit.status != Audit.STATUS_FAILED){
 			<a class="btn btn-info"	data-toggle="拒绝通过" href="#" onclick="showConfirm('@String.valueOf("n" + course.id)')"><i class="icon-ban-circle icon-white"></i></a>
 		} else {
-			<span class="btn btn-info disabled"	data-toggle="拒绝通过" href="#"><i class="icon-ban-circle icon-white"></i></span>
+			<span class="btn disabled"	data-toggle="拒绝通过" href="#"><i class="icon-ban-circle icon-white"></i></span>
 		}
 	</div>
 	<div class="btn-group">
@@ -115,7 +115,7 @@ $('#toolbar').tooltip(options);
 					<th>课程类别</th>
 					<th>教育机构</th>
 					<th>开课时间</th>
-					<th>简介</th>
+					<!--<th>简介</th>-->
 					<th>操作</th> 
 				</tr>
 			</thead>
@@ -143,11 +143,11 @@ $('#toolbar').tooltip(options);
 					} else {
 						<td>-</td>
 					}
-					@if(model.info != null){
+					<!--@if(model.info != null){
 						<td>@model.info</td>
 					} else {
 						<td>-</td>
-					}
+					}-->
 					<td>@toolbar(model)</td>
 				</tr>
 				}

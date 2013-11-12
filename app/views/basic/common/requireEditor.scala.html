@@ -1,0 +1,35 @@
+@(divname: String, init: Boolean = false, fun: Html = null)
+
+@if(init){
+	@initRequireEditor()
+}
+
+
+@if(fun == null){
+	
+	<script type="text/javascript">
+		$(function() {
+	  	  $('#@divname').wysihtml5({locale: "zh-CN"});
+		});
+	</script>
+
+} else {
+	@fun
+}
+
+<!--另外一种编辑器-->
+<!--<link href="@routes.Assets.at("/public", "jwysiwyg/jquery.wysiwyg.css")" rel="stylesheet">
+<script type="text/javascript" src="@routes.Assets.at("/public", "jwysiwyg/jquery.wysiwyg.js")"></script>
+
+@if(fun == null){
+	
+	<script type="text/javascript">
+		$(function() {
+	  	  $('#@divname').wysiwyg();
+		});
+	</script>
+
+} else {
+	@fun
+}
+-->
