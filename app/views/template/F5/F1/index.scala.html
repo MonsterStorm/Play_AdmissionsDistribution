@@ -2,17 +2,17 @@
 
 @basic.platform.main("平台"){@meta()}{@styles()}{@scripts()}{<hr/>}{
 
-<h1><center>模板3</center></h1>
+<h1><center>模板2</center></h1>
 
 }{
+
 <!-- content -->
-<div class="ym-wrapper" style="background-color: #777">
+<div class="ym-wrapper" style="background-color: #3de">
 	<div class="ym-wbox">
 		<div class="ym-grid linearize-level-1" id="agentCourses">
 		</div>
 	</div>
 </div>
-
 
 <script>
 	function getAgentCourses(li, url, data){
@@ -24,5 +24,4 @@
 
 	getAgentCourses(this, "templateAgentCourses", "id=@flash().get("agentId")");
 </script>
-
 }{@footer()}
