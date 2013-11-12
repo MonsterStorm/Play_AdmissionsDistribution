@@ -1,0 +1,103 @@
+@(paramNames: Array[String], placeHolders: Array[String], paramValues: Array[Object],  paramTypes: Array[String], url: String, urlType: String, action: Html = Html(""))
+
+<!--参数：
+	paramNames:需要提交到后台的数据字段名，
+	placeHolders:用于提示用户的名称，
+	paramValues:字段数据例如（对于Select是Array，对于radio则是value，其他都为null），
+	paramTypes:字段类型，有text，select，radio，checkbox等
+	vars:用于存放临时变量用
+-->
+
+<script type="text/javascript">
+	function toggleFoldUp(item){
+		if($('#foldup').hasClass('icon-chevron-down')){//展开内容，改变标题为收起
+			$(item).html('<i id="foldup" class="icon-chevron-up"></i>收起');
+			$('#foldcontent').show();
+		} else {//收起内容，改变标题为展开
+			$(item).html('<i id="foldup" class="icon-chevron-down"></i>展开');
+			$('#foldcontent').hide();
+		}
+	}
+</script>
+	
+<div class="well" style="border:1px dashed gray;">
+
+<div class="row">
+	<!--<div class="span2 pull-left">
+		<p>筛选信息</p>
+	</div>-->
+	<div class="pull-right">
+	<a href="#" onclick="toggleFoldUp(this);">
+		<i id="foldup" class="icon-chevron-down"></i>展开
+	</a>
+	</div>
+</div>
+
+<div class="container" id="foldcontent" style="display:none;">
+@for(i <- 0 to paramNames.length - 1){
+	@if(i % 2 == 0){<!--偶数-->
+		<div class="row">
+	}
+	
+	<div class="span5">
+		@paramTypes(i) match {
+	  	case "text" => {
+	  		<input type="text" name="@paramNames(i)" placeHolder="@placeHolders(i)" value="@paramValues(i)">
+	  	}
+	  	case "select" => {
+	  		<select name="@paramNames(i)" placeHolder="@placeHolders(i)">
+					<!--(values:Array[String] = paramValues(i).asInstanceOf[Array[String]])-->
+					<!--vars.put("values", paramValues(i).asInstanceOf[Array[String]])-->
+					<option>--@placeHolders(i)--</option>
+					@if(paramValues(i).asInstanceOf[Array[String]] != null){
+						@for(j <- 0 to paramValues(i).asInstanceOf[Array[String]].length - 1){
+							@if(paramValues(i).asInstanceOf[Array[String]](j).indexOf(":") == -1){<!--不是用value字段，默认使用name作为value-->
+								<option name="@paramValues(i).asInstanceOf[Array[String]](j)">@paramValues(i).asInstanceOf[Array[String]](j)</option>
+							} else {<!--使用value，前面给出的是标题，后面给出的是值，例如Array("a:0", "b:1", "c:2")，对于的select显示为a,b,c，值为0,1,2-->
+								<option name="@paramValues(i).asInstanceOf[Array[String]](j)" value="@paramValues(i).asInstanceOf[Array[String]](j).substring(paramValues(i).asInstanceOf[Array[String]](j).indexOf(":") + 1)">@paramValues(i).asInstanceOf[Array[String]](j).substring(0, paramValues(i).asInstanceOf[Array[String]](j).indexOf(":"))</option>
+							}
+						}
+					}
+				</select>
+	  	}
+	  	case "radio" =>{
+	  		<label class="radio inline">
+	  			<input type="radio" name="@paramNames(i)" value="@paramValues(i)"> @placeHolders(i)
+				</label>
+	  	}
+	  	case "checkbox" =>{
+				<label class="checkbox inline">
+  				 <input type="checkbox" name="@paramNames(i)" value="@paramValues(i)"> @placeHolders(i)
+				</label>
+	  	}
+		}
+	</div>
+
+	@if(i % 2 != 0){<!--奇数-->
+		</div>
+	}
+
+}
+
+@if(paramNames.length % 2 != 0){<!--如果最终是奇数，则添加一个-->
+	</div>
+}
+
+
+<script type="text/javascript">
+<!--function getAllValues(names){
+	var array = names.split(";");
+	for(var i = 0; i < array.length; i++){
+		val value = $("#foldcontent [name='" + array[i] + "']").val();
+		if(value){
+			//flash().put(array[i], value)//没法做到javascript->scala，只能从scala->javascript
+		}
+	}
+}-->
+</script>
+	<!--getAllValues(@paramNames.mkString("'", ";", "'"));-->
+	<input type="button" class="btn btn-xlarge btn-primary" style="margin-top:20px;" onclick="@buildAction(url, urlType, paramNames)" value="过滤">
+</div>
+</div>
+
+

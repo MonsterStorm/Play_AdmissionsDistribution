@@ -55,7 +55,10 @@ public class LogOperation extends Model {
 	 * @param form
 	 * @return
 	 */
-	public static Page<LogOperation> findPage(DynamicForm form, int page, Integer pageSize) {
-		return new QueryHelper<LogOperation>().findPage(finder, form, page, pageSize);
+	@QueryFilters(values = { @QueryFilter(dataName = "user.username", paramName = "username", queryType = QueryFilter.Type.LIKE, dataType = String.class) })
+	public static Page<LogOperation> findPage(DynamicForm form, Integer page, Integer pageSize) {
+		QueryHelper<LogOperation> queryFilter = new QueryFilterHelper<LogOperation>(finder, form).filter(LogOperation.class, "findPage", DynamicForm.class, Integer.class, Integer.class);
+		return queryFilter.findPage(page, pageSize);
+//		return new QueryHelper<LogOperation>().findPage(finder, form, page, pageSize);
 	}
 }

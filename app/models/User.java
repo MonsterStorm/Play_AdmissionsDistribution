@@ -194,6 +194,7 @@ public class User extends Model {
 		buildUserFields(user, roleId, auditStatus,
 				AuditType.TYPE_AUDITTYPE_STUDENT);
 	}
+
 	/**
 	 * create a random user for student
 	 * 
@@ -538,10 +539,17 @@ public class User extends Model {
 	 * @param form
 	 * @return
 	 */
-	public static Page<User> findPage(DynamicForm form, int page,
-			Integer pageSize) {
-		return new QueryHelper<User>(finder, form).addEq("audit.status",
-				"auditStatus", Integer.class).findPage(page, pageSize);
+	@QueryFilters(values = {
+			@QueryFilter(dataName = "username", paramName = "username", queryType = QueryFilter.Type.LIKE, dataType = String.class),
+			@QueryFilter(dataName = "nickname", paramName = "nickname", queryType = QueryFilter.Type.LIKE, dataType = String.class),
+			@QueryFilter(dataName = "mobile", paramName = "mobile", queryType = QueryFilter.Type.LIKE, dataType = String.class),
+			@QueryFilter(dataName = "email", paramName = "email", queryType = QueryFilter.Type.LIKE, dataType = String.class),
+			@QueryFilter(dataName = "audit.status", paramName = "auditStatus", queryType = QueryFilter.Type.EQ, dataType = Integer.class) })
+	public static Page<User> findPage(DynamicForm form, Integer page, Integer pageSize) {
+		QueryHelper<User> queryFilter = new QueryFilterHelper<User>(finder, form).filter(User.class, "findPage", DynamicForm.class, Integer.class, Integer.class);
+		return queryFilter.findPage(page, pageSize);
+		// return new QueryHelper<User>(finder, form).addEq("audit.status",
+		// "auditStatus", Integer.class).findPage(page, pageSize);
 	}
 
 	/**
@@ -628,11 +636,11 @@ public class User extends Model {
 		if (User.findByUsername(username) == null) {// 插入
 			User user = new User(form);
 			Role role = Role.find(Role.ROLE_REGISTED_USER);
-			if(role != null){
+			if (role != null) {
 				user.roles.add(role);
 			}
 			Role role2 = Role.find(Role.ROLE_STUDENT);
-			if(role2 !=null){
+			if (role2 != null) {
 				user.roles.add(role2);
 			}
 

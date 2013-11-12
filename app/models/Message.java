@@ -85,8 +85,14 @@ public class Message extends Model {
 	 * @param form
 	 * @return
 	 */
-	public static Page<Message> findPage(DynamicForm form, int page, Integer pageSize) {
-		return new QueryHelper<Message>().findPage(finder, form, page, pageSize);
+	@QueryFilters(values = {
+			@QueryFilter(dataName="name", paramName="name", queryType=QueryFilter.Type.LIKE, dataType=String.class),
+			@QueryFilter(dataName="title", paramName="title", queryType=QueryFilter.Type.LIKE, dataType=String.class)
+	})
+	public static Page<Message> findPage(DynamicForm form, Integer page, Integer pageSize) {
+		QueryHelper<Message> queryFilter = new QueryFilterHelper<Message>(finder, form).filter(Message.class, "findPage", DynamicForm.class, Integer.class, Integer.class);
+		return queryFilter.findPage(page, pageSize);
+//		return new QueryHelper<Message>().findPage(finder, form, page, pageSize);
 	}
 	
 	/**

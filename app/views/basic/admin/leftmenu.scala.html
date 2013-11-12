@@ -7,8 +7,40 @@
 		 $(li).addClass("active");
   }
 	
-	function getAdminPage(li, url, data){
+	function getAdminPage(li, url, data, extraIds){
+		 
+		 console.dir(data);
+		 console.dir(extraIds);
+		 if(extraIds){
+		 		data = "";
+		 		var array = extraIds.split(";");
+		 		for(var i = 0; i < array.length; i++){
+		 			
+					var obj = $("#foldcontent [name='" + array[i] + "']");
+					
+					//console.dir(obj);
+					//console.dir(obj.val());
+					//console.dir($(obj).prop("selectedIndex"));
+					
+					var value = obj.val();
+					
+					if(value != ""){//有值，则取值
+						if($(obj).is("select")){
+							if($(obj).prop("selectedIndex") == 0)//选中的是默认的一个，则不使用该数据
+								continue;
+						}
+					
+						if(data != ""){//data不空
+							data = data + "&" + array[i] + "=" + value;
+						} else {
+							data = "" + array[i] + "=" + value;
+						}
+					}
+				}
+		 }
+		 
 		 data = data || "";
+		 
      ajaxBasic("/admin/" + url, data, "GET", "#content");
      if(li){//如果给定了li才改变选中状态，否则不改变
 		 	$("#navList li.active").removeClass("active");

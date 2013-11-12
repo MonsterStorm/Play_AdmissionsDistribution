@@ -90,8 +90,15 @@ public class Instructor extends Model {
 	 * @param form
 	 * @return
 	 */
-	public static Page<Instructor> findPage(DynamicForm form, int page, Integer pageSize){
-		return new QueryHelper<Instructor>().findPage(finder, form, page, pageSize);
+	@QueryFilters(values = {
+			@QueryFilter(dataName="name", paramName="instructorName", queryType=QueryFilter.Type.LIKE, dataType=String.class),
+			@QueryFilter(dataName="jobTitle", paramName="instructorJobTitle", queryType=QueryFilter.Type.LIKE, dataType=String.class),
+			@QueryFilter(dataName="audit.status", paramName="auditStatus", queryType=QueryFilter.Type.EQ, dataType=Integer.class)
+	})
+	public static Page<Instructor> findPage(DynamicForm form, Integer page, Integer pageSize){
+		QueryHelper<Instructor> queryFilter = new QueryFilterHelper<Instructor>(finder, form).filter(Instructor.class, "findPage", DynamicForm.class, Integer.class, Integer.class);
+		return queryFilter.findPage(page, pageSize);
+//		return new QueryHelper<Instructor>().findPage(finder, form, page, pageSize);
 	}
 
 	/**

@@ -1,12 +1,14 @@
 package controllers;
 
 import static play.data.Form.form;
+
+import java.util.*;
+
 import models.*;
 import play.mvc.*;
 
 import com.avaje.ebean.*;
 import common.*;
-import common.FormValidator.*;
 
 import controllers.LoginController.Login;
 import controllers.secure.*;
@@ -105,12 +107,20 @@ public class AdminController extends BaseController {
 		// get page
 		int page = FormHelper.getPage(form().bindFromRequest());
 
-		Page<Course> courses = Course.findPage(form().bindFromRequest(), page,
-				null);
-
+		Page<Course> courses = Course.findPage(form().bindFromRequest(), page, null);
+		
+		Page<CourseType> types = CourseType.findPage(form().bindFromRequest(), 0, Constants.MAX_PAGE_SIZE);
+		
+		String[] courseTypes = null;
+		if(types != null && types.getList() != null && types.getList().size() > 0){
+			courseTypes = new String[types.getList().size()];
+			for(int i = 0; i < types.getList().size(); i++){
+				courseTypes[i] = types.getList().get(i).name;
+			}
+		}
 		FormHelper.resetFlash(form().bindFromRequest(), flash());
 
-		return ok(views.html.module.admin.adminCourses.render(courses));
+		return ok(views.html.module.admin.adminCourses.render(courses, courseTypes));
 	}
 
 	/**
@@ -122,8 +132,7 @@ public class AdminController extends BaseController {
 		// get page
 		int page = FormHelper.getPage(form().bindFromRequest());
 
-		Page<EducationInstitution> edus = EducationInstitution.findPage(form()
-				.bindFromRequest(), page, null);
+		Page<EducationInstitution> edus = EducationInstitution.findPage(form().bindFromRequest(), page, null);
 
 		// reset flash
 		FormHelper.resetFlash(form().bindFromRequest(), flash());
@@ -265,8 +274,7 @@ public class AdminController extends BaseController {
 		// get page
 		int page = FormHelper.getPage(form().bindFromRequest());
 
-		Page<Message> messages = Message.findPage(form().bindFromRequest(),
-				page, null);
+		Page<Message> messages = Message.findPage(form().bindFromRequest(),	page, null);
 
 		// reset flash
 		FormHelper.resetFlash(form().bindFromRequest(), flash());
@@ -349,9 +357,19 @@ public class AdminController extends BaseController {
 
 		Page<News> news = News.findPage(form().bindFromRequest(), page, null);
 
+		Page<NewsType> types = NewsType.findPage(form().bindFromRequest(), 0, Constants.MAX_PAGE_SIZE);
+		
+		String[] newsTypes = null;
+		if(types != null && types.getList().size() > 0){
+			newsTypes = new String[types.getList().size()];
+			for(int i = 0; i < types.getList().size(); i++){
+				newsTypes[i] = types.getList().get(i).name;
+			}
+		}
+		
 		FormHelper.resetFlash(form().bindFromRequest(), flash());
 
-		return ok(views.html.module.admin.adminNews.render(news));
+		return ok(views.html.module.admin.adminNews.render(news, newsTypes));
 	}
 
 	/**

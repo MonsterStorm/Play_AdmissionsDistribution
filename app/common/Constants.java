@@ -48,6 +48,9 @@ public class Constants {
 	
 	//分页大小
 	public static final int PAGE_SIZE = 10;
+	
+	//最大分页大小
+	public static final int MAX_PAGE_SIZE = 50;
 
 	//模板类型对应角色
 	public static final String TEMPLATE_TYPE_AGENT = "1";

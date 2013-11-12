@@ -33,6 +33,9 @@
 		</div>
 	</div>
 </div>
+
+@queryFilters(Array("studentName", "studentCompanyName", "studentPosition"), Array("学员名称", "公司名称", "职位"), Array("", "", ""), Array("text", "text", "text"), {baseUrl}, "admin")
+
 } 
 
 @toolbar(student: Student)={
