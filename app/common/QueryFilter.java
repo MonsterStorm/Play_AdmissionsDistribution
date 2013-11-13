@@ -29,7 +29,8 @@ public @interface QueryFilter {
 		LT("<<"), // 小于
 		LET("<="), // 小于等于
 		LIKE("%%"),//Like
-		ORDERBY("><");//排序
+		BETWEEN(">=<="),//>=<=
+		ORDERBY("orderby");//排序
 
 		public String value;
 

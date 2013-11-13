@@ -93,7 +93,8 @@ public class Instructor extends Model {
 	@QueryFilters(values = {
 			@QueryFilter(dataName="name", paramName="instructorName", queryType=QueryFilter.Type.LIKE, dataType=String.class),
 			@QueryFilter(dataName="jobTitle", paramName="instructorJobTitle", queryType=QueryFilter.Type.LIKE, dataType=String.class),
-			@QueryFilter(dataName="audit.status", paramName="auditStatus", queryType=QueryFilter.Type.EQ, dataType=Integer.class)
+			@QueryFilter(dataName="audit.status", paramName="auditStatus", queryType=QueryFilter.Type.EQ, dataType=Integer.class),
+			@QueryFilter(dataName="createTime", paramName="createTime", queryType=QueryFilter.Type.BETWEEN, dataType=Long.class)
 	})
 	public static Page<Instructor> findPage(DynamicForm form, Integer page, Integer pageSize){
 		QueryHelper<Instructor> queryFilter = new QueryFilterHelper<Instructor>(finder, form).filter(Instructor.class, "findPage", DynamicForm.class, Integer.class, Integer.class);

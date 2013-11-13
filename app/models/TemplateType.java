@@ -84,7 +84,8 @@ public class TemplateType extends Model {
 	 * @param form
 	 * @return
 	 */
-	@QueryFilters(values = { @QueryFilter(dataName = "name", paramName = "templateName", queryType = QueryFilter.Type.LIKE, dataType = String.class) })
+	@QueryFilters(values = { @QueryFilter(dataName = "name", paramName = "templateName", queryType = QueryFilter.Type.LIKE, dataType = String.class),
+			@QueryFilter(dataName="lastModified", paramName="lastModified", queryType=QueryFilter.Type.BETWEEN, dataType=Long.class) })
 	public static Page<TemplateType> findPage(DynamicForm form, Integer page, Integer pageSize) {
 		QueryHelper<TemplateType> queryFilter = new QueryFilterHelper<TemplateType>(finder, form).filter(TemplateType.class, "findPage", DynamicForm.class, Integer.class, Integer.class);
 		return queryFilter.findPage(page, pageSize);

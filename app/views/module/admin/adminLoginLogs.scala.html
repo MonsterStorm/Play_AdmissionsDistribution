@@ -30,7 +30,7 @@
 	</div>
 </div>
 
-@queryFilters(Array("username", "logType"), Array("用户名", "操作"), Array("", Array("登录:0", "登出:1")), Array("text", "select"), {baseUrl}, "admin")
+@queryFilters(Array("username", "logType", "time"), Array("用户名", "操作", "操作时间"), Array("", Array("登录:0", "登出:1"), ""), Array("text", "select", "timeBetween"), {baseUrl}, "admin")
 
 } 
 

@@ -55,7 +55,8 @@ public class LogOperation extends Model {
 	 * @param form
 	 * @return
 	 */
-	@QueryFilters(values = { @QueryFilter(dataName = "user.username", paramName = "username", queryType = QueryFilter.Type.LIKE, dataType = String.class) })
+	@QueryFilters(values = { @QueryFilter(dataName = "user.username", paramName = "username", queryType = QueryFilter.Type.LIKE, dataType = String.class),
+			@QueryFilter(dataName="time", paramName="time", queryType=QueryFilter.Type.BETWEEN, dataType=Long.class) })
 	public static Page<LogOperation> findPage(DynamicForm form, Integer page, Integer pageSize) {
 		QueryHelper<LogOperation> queryFilter = new QueryFilterHelper<LogOperation>(finder, form).filter(LogOperation.class, "findPage", DynamicForm.class, Integer.class, Integer.class);
 		return queryFilter.findPage(page, pageSize);

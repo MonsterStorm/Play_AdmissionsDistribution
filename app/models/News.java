@@ -106,7 +106,8 @@ public class News extends Model {
 	 */
 	@QueryFilters(values = {
 			@QueryFilter(dataName="title", paramName="newsTitle", queryType=QueryFilter.Type.LIKE, dataType=String.class),
-			@QueryFilter(dataName="newsType.name", paramName="newsTypeName", queryType=QueryFilter.Type.EQ, dataType=String.class)
+			@QueryFilter(dataName="newsType.name", paramName="newsTypeName", queryType=QueryFilter.Type.EQ, dataType=String.class),
+			@QueryFilter(dataName="time", paramName="startEndTime", queryType=QueryFilter.Type.BETWEEN, dataType=Long.class)
 	})
 	public static Page<News> findPage(DynamicForm form, Integer page, Integer pageSize) {
 		QueryHelper<News> queryFilter = new QueryFilterHelper<News>(finder, form).filter(News.class, "findPage", DynamicForm.class, Integer.class, Integer.class);

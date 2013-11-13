@@ -100,7 +100,7 @@ public class StudentWords extends Model {
 	@QueryFilters(values = {
 			@QueryFilter(dataName="name", paramName="name", queryType=QueryFilter.Type.LIKE, dataType=String.class),
 			@QueryFilter(dataName="company", paramName="company", queryType=QueryFilter.Type.LIKE, dataType=String.class),
-			@QueryFilter(dataName="words", paramName="words", queryType=QueryFilter.Type.LIKE, dataType=String.class),
+			@QueryFilter(dataName="words", paramName="words", queryType=QueryFilter.Type.LIKE, dataType=String.class)
 	})
 	public static Page<StudentWords> findPage(DynamicForm form, Integer page, Integer pageSize) {
 		QueryHelper<StudentWords> queryFilter = new QueryFilterHelper<StudentWords>(finder, form).filter(StudentWords.class, "findPage", DynamicForm.class, Integer.class, Integer.class);

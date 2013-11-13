@@ -83,7 +83,9 @@ public class Agent extends Model {
 	@QueryFilters(values = {
 			@QueryFilter(dataName = "name", paramName = "agentName", queryType = QueryFilter.Type.LIKE, dataType = String.class),
 			@QueryFilter(dataName = "domain.domain", paramName = "domainName", queryType = QueryFilter.Type.LIKE, dataType = String.class),
-			@QueryFilter(dataName = "audit.status", paramName = "auditStatus", queryType = QueryFilter.Type.EQ, dataType = Integer.class) })
+			@QueryFilter(dataName = "audit.status", paramName = "auditStatus", queryType = QueryFilter.Type.EQ, dataType = Integer.class),
+			@QueryFilter(dataName="audit.createTime", paramName="createTime", queryType=QueryFilter.Type.BETWEEN, dataType=Long.class)
+			})
 	public static Page<Agent> findPage(DynamicForm form, Integer page, Integer pageSize) {
 		QueryHelper<Agent> queryFilter = new QueryFilterHelper<Agent>(finder, form).filter(Agent.class, "findPage", DynamicForm.class, Integer.class, Integer.class);
 		return queryFilter.findPage(page, pageSize);

@@ -544,9 +544,13 @@ public class User extends Model {
 			@QueryFilter(dataName = "nickname", paramName = "nickname", queryType = QueryFilter.Type.LIKE, dataType = String.class),
 			@QueryFilter(dataName = "mobile", paramName = "mobile", queryType = QueryFilter.Type.LIKE, dataType = String.class),
 			@QueryFilter(dataName = "email", paramName = "email", queryType = QueryFilter.Type.LIKE, dataType = String.class),
-			@QueryFilter(dataName = "audit.status", paramName = "auditStatus", queryType = QueryFilter.Type.EQ, dataType = Integer.class) })
-	public static Page<User> findPage(DynamicForm form, Integer page, Integer pageSize) {
-		QueryHelper<User> queryFilter = new QueryFilterHelper<User>(finder, form).filter(User.class, "findPage", DynamicForm.class, Integer.class, Integer.class);
+			@QueryFilter(dataName = "audit.status", paramName = "auditStatus", queryType = QueryFilter.Type.EQ, dataType = Integer.class),
+			@QueryFilter(dataName = "audit.createTime", paramName = "auditCreateTime", queryType = QueryFilter.Type.BETWEEN, dataType = Long.class) })
+	public static Page<User> findPage(DynamicForm form, Integer page,
+			Integer pageSize) {
+		QueryHelper<User> queryFilter = new QueryFilterHelper<User>(finder,
+				form).filter(User.class, "findPage", DynamicForm.class,
+				Integer.class, Integer.class);
 		return queryFilter.findPage(page, pageSize);
 		// return new QueryHelper<User>(finder, form).addEq("audit.status",
 		// "auditStatus", Integer.class).findPage(page, pageSize);

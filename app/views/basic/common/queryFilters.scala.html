@@ -1,5 +1,6 @@
 @(paramNames: Array[String], placeHolders: Array[String], paramValues: Array[Object],  paramTypes: Array[String], url: String, urlType: String, action: Html = Html(""))
-
+@import basic.common.basicform._
+@bootstrapDatetimepicker()
 <!--参数：
 	paramNames:需要提交到后台的数据字段名，
 	placeHolders:用于提示用户的名称，
@@ -70,11 +71,39 @@
   				 <input type="checkbox" name="@paramNames(i)" value="@paramValues(i)"> @placeHolders(i)
 				</label>
 	  	}
+			case "timeBetween" =>{
+				<!--时间做特殊处理-->
+				@if(i % 2 == 0){
+					</div>
+					<div class="span5">
+					</div>
+				}
+			}
 		}
 	</div>
 
 	@if(i % 2 != 0){<!--奇数-->
 		</div>
+	}
+
+	@if(paramTypes(i) == "timeBetween"){<!--时间做特殊处理-->
+	
+		<div class="row">
+			<div class="span10">
+				<p><b>@placeHolders(i)</b></p>
+			</div>
+		</div>
+		<div class="row">
+			<div class="span5">
+				@datetimePicker("", "start" + paramNames(i), new Long(0))<!--0表示无用数据-->
+			</div> 
+			<div class="span5">
+				@datetimePicker("", "end" + paramNames(i), new Long(System.currentTimeMillis()))<!--new Long(System.currentTimeMillis())-->
+			</div>
+		
+		@if(i % 2 != 0){<!--为了修正正好偶数开始时最后多了一个</div>的问题-->
+			</div>
+		}
 	}
 
 }

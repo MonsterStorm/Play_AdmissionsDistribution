@@ -209,7 +209,8 @@ public class Course extends Model {
 			@QueryFilter(dataName="name", paramName="courseName", queryType=QueryFilter.Type.LIKE, dataType=String.class),
 			@QueryFilter(dataName="courseType.name", paramName="courseTypeName", queryType=QueryFilter.Type.EQ, dataType=String.class),
 			@QueryFilter(dataName="edu.name", paramName="eduName", queryType=QueryFilter.Type.LIKE, dataType=String.class),
-			@QueryFilter(dataName="audit.status", paramName="auditStatus", queryType=QueryFilter.Type.EQ, dataType=Integer.class)
+			@QueryFilter(dataName="audit.status", paramName="auditStatus", queryType=QueryFilter.Type.EQ, dataType=Integer.class),
+			@QueryFilter(dataName="startTime", paramName="startEndTime", queryType=QueryFilter.Type.BETWEEN, dataType=Long.class)
 	})
 	public static Page<Course> findPage(DynamicForm form, Integer page,	Integer pageSize) {
 		QueryHelper<Course> queryFilter = new QueryFilterHelper<Course>(finder, form).filter(Course.class, "findPage", DynamicForm.class, Integer.class, Integer.class);

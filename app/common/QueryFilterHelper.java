@@ -81,6 +81,9 @@ public class QueryFilterHelper<T> {
 		case LIKE:
 			helper.addLike(dataName, paramName);
 			break;
+		case BETWEEN:
+			helper.addBetween(dataName, paramName, clazz);
+			break;
 		case ORDERBY:
 			helper.addOrderBy(paramName);
 			break;

@@ -390,6 +390,60 @@ public class QueryHelper<T> {
 	}
 
 	/**
+	 * between
+	 * 
+	 * @param field
+	 * @param paramStr
+	 * @param clazz
+	 * @return
+	 */
+	public QueryHelper<T> addBetween(String field, String paramStr,
+			Class<?> clazz) {
+
+		Object obj1 = null, obj2 = null;
+
+		if (paramStr != null && clazz != null) {
+			final String valueStr = FormHelper.getString(form, paramStr);
+
+			if (StringHelper.isValidate(valueStr)) {
+
+				String[] values = valueStr.split(":");
+				if (clazz == Integer.class) {
+					obj1 = Integer.valueOf(values[0]);
+					obj2 = Integer.valueOf(values[1]);
+
+					if ((Integer) obj2 <= 0) {
+						obj2 = System.currentTimeMillis();
+					}
+				} else if (clazz == Float.class) {
+					obj1 = Float.valueOf(values[0]);
+					obj2 = Float.valueOf(values[1]);
+
+					if ((Float) obj2 <= 0) {
+						obj2 = System.currentTimeMillis();
+					}
+				} else if (clazz == Long.class) {
+					obj1 = Long.valueOf(values[0]);
+					obj2 = Long.valueOf(values[1]);
+
+					if ((Long) obj2 <= 0) {
+						obj2 = System.currentTimeMillis();
+					}
+				}
+			}
+		}
+
+		if (obj1 != null && obj2 != null) {
+			if (query == null) {
+				query = finder.where().between(field, obj1, obj2).query();
+			} else {
+				query = query.where().between(field, obj1, obj2).query();
+			}
+		}
+		return this;
+	}
+
+	/**
 	 * 添加like
 	 * 
 	 * @param field
@@ -523,34 +577,21 @@ public class QueryHelper<T> {
 
 		Query<T> query = null;
 
-		/*final String auditStatus = FormHelper.getString(form, "auditStatus");
-		if (StringHelper.isValidate(auditStatus)
-				&& Integer.valueOf(auditStatus) >= 0) {
-			query = finder.where()
-					.eq("audit.status", Integer.valueOf(auditStatus)).query();
-		}
-
-		final String orderby = form.get("orderby");
-		if (StringHelper.isValidate(orderby)) {
-			String[] orders = orderby.split("-");
-			boolean isDesc = false;
-			if (orders.length > 1) {
-				isDesc = StringHelper.isDesc(orders[1]);
-			}
-			if (isDesc) {
-				if (query == null) {
-					query = finder.order().desc(orders[0]);
-				} else {
-					query = query.orderBy().desc(orders[0]);
-				}
-			} else {
-				if (query == null) {
-					query = finder.order().asc(orders[0]);
-				} else {
-					query = query.orderBy().asc(orders[0]);
-				}
-			}
-		}*/
+		/*
+		 * final String auditStatus = FormHelper.getString(form, "auditStatus");
+		 * if (StringHelper.isValidate(auditStatus) &&
+		 * Integer.valueOf(auditStatus) >= 0) { query = finder.where()
+		 * .eq("audit.status", Integer.valueOf(auditStatus)).query(); }
+		 * 
+		 * final String orderby = form.get("orderby"); if
+		 * (StringHelper.isValidate(orderby)) { String[] orders =
+		 * orderby.split("-"); boolean isDesc = false; if (orders.length > 1) {
+		 * isDesc = StringHelper.isDesc(orders[1]); } if (isDesc) { if (query ==
+		 * null) { query = finder.order().desc(orders[0]); } else { query =
+		 * query.orderBy().desc(orders[0]); } } else { if (query == null) {
+		 * query = finder.order().asc(orders[0]); } else { query =
+		 * query.orderBy().asc(orders[0]); } } }
+		 */
 
 		if (query != null) {
 			return query.findPagingList(pageSize).getPage(page);

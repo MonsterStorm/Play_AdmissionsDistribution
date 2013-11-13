@@ -28,7 +28,7 @@
 		</div>
 	</div>
 </div>
-@queryFilters(Array("username", "nickname", "mobile", "email"), Array("用户名", "用户昵称", "电话", "Email"), Array("", "", "", ""), Array("text", "text", "text", "text"), {baseUrl}, "admin")
+@queryFilters(Array("username", "nickname", "mobile", "email", "auditCreateTime"), Array("用户名", "用户昵称", "电话", "Email", "注册时间"), Array("", "", "", "", ""), Array("text", "text", "text", "text", "timeBetween"), {baseUrl}, "admin")
 
 } 
 @toolbar(user: User)={

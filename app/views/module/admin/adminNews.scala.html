@@ -24,7 +24,7 @@
 	</div>
 </div>
 
-@queryFilters(Array("newsTitle", "newsTypeName"), Array("新闻标题", "新闻类型"), Array("", newsTypeNames), Array("text", "select"), {baseUrl}, "admin")
+@queryFilters(Array("newsTitle", "newsTypeName", "startEndTime"), Array("新闻标题", "新闻类型", "发布时间"), Array("", newsTypeNames, ""), Array("text", "select", "timeBetween"), {baseUrl}, "admin")
 
 } 
 

@@ -87,7 +87,8 @@ public class Message extends Model {
 	 */
 	@QueryFilters(values = {
 			@QueryFilter(dataName="name", paramName="name", queryType=QueryFilter.Type.LIKE, dataType=String.class),
-			@QueryFilter(dataName="title", paramName="title", queryType=QueryFilter.Type.LIKE, dataType=String.class)
+			@QueryFilter(dataName="title", paramName="title", queryType=QueryFilter.Type.LIKE, dataType=String.class),
+			@QueryFilter(dataName="time", paramName="startEndTime", queryType=QueryFilter.Type.BETWEEN, dataType=Long.class)
 	})
 	public static Page<Message> findPage(DynamicForm form, Integer page, Integer pageSize) {
 		QueryHelper<Message> queryFilter = new QueryFilterHelper<Message>(finder, form).filter(Message.class, "findPage", DynamicForm.class, Integer.class, Integer.class);

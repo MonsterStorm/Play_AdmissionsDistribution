@@ -78,11 +78,16 @@ public class Advertisment extends Model {
 	 * @return
 	 */
 	@QueryFilters(values = {
-			@QueryFilter(dataName = "title", paramName = "adTitle", queryType = QueryFilter.Type.LIKE, dataType = String.class)})
-	public static Page<Advertisment> findPage(DynamicForm form, Integer page, Integer pageSize) {
-		QueryHelper<Advertisment> queryFilter = new QueryFilterHelper<Advertisment>(finder, form).filter(Advertisment.class, "findPage", DynamicForm.class, Integer.class, Integer.class);
+			@QueryFilter(dataName = "title", paramName = "adTitle", queryType = QueryFilter.Type.LIKE, dataType = String.class),
+			@QueryFilter(dataName = "lastModified", paramName = "lastModified", queryType = QueryFilter.Type.BETWEEN, dataType = Long.class) })
+	public static Page<Advertisment> findPage(DynamicForm form, Integer page,
+			Integer pageSize) {
+		QueryHelper<Advertisment> queryFilter = new QueryFilterHelper<Advertisment>(
+				finder, form).filter(Advertisment.class, "findPage",
+				DynamicForm.class, Integer.class, Integer.class);
 		return queryFilter.findPage(page, pageSize);
-//		return new QueryHelper<Advertisment>().findPage(finder, form, page,	pageSize);
+		// return new QueryHelper<Advertisment>().findPage(finder, form, page,
+		// pageSize);
 	}
 
 	/**
