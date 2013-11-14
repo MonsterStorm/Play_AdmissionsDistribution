@@ -1,4 +1,4 @@
-@(models: com.avaje.ebean.Page[Course], courseTypeNames:Array[String])
+@(models: com.avaje.ebean.Page[Course], courseTypeNames:Array[String], courseClassNames:Array[String])
 
 @import basic.common._
 
@@ -115,6 +115,7 @@ $('#toolbar').tooltip(options);
 				<tr>
 					<th>ID</th>
 					<th>课程名</th>
+					<th>课程类型</th>
 					<th>课程类别</th>
 					<th>教育机构</th>
 					<th>开课时间</th>
@@ -133,6 +134,11 @@ $('#toolbar').tooltip(options);
 					}
 					@if(model.courseType != null){
 						<td>@model.courseType.name</td>
+					} else {
+						<td>-</td>
+					}
+					@if(model.courseType != null){
+						<td>@model.courseClass.name</td>
 					} else {
 						<td>-</td>
 					}

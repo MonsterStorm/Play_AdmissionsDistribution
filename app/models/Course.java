@@ -44,6 +44,9 @@ public class Course extends Model {
 	@ManyToOne
 	public CourseType courseType;// 课程类别
 
+	@ManyToOne
+	public CourseClass courseClass;// 新课程类别
+
 	@Lob
 	public String info;// 课程简介
 
@@ -73,6 +76,7 @@ public class Course extends Model {
 	public List<CourseDistribution> distributions = new ArrayList<CourseDistribution>();// 课程的代理信息，一个课程可以被很多代理人代理。一个代理行为对应一个记录。
 
 	static {
+		FormFormatter.registerCourseClass();
 		FormFormatter.registerCourseType();
 		FormFormatter.registerEducationType();
 	}

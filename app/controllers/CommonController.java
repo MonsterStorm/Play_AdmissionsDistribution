@@ -39,6 +39,7 @@ public class CommonController extends Controller {
 	private static final String PAGE_REBATE_DETAIL = "rebateDetail";// 返利详情
 	private static final String PAGE_ADVERTISEMENT_DETAIL = "advertismentDetail";// 广告详情
 	private static final String PAGE_COURSE_TYPE_DETAIL = "courseTypeDetail";// 课程类别详情
+	private static final String PAGE_COURSE_CLASS_DETAIL = "courseClassDetail";// 新课程类别详情
 	private static final String PAGE_CHANGE_PASSWORD_WITHOUT_AUTH = "changePasswordWithoutAuth";// 修改密码
 	private static final String PAGE_STUDENT_WORDS_DEATIL = "studentWordsDetail";// 学员感言
 
@@ -75,8 +76,10 @@ public class CommonController extends Controller {
 			return pageRebateDetail(null);
 		} else if (PAGE_ADVERTISEMENT_DETAIL.equalsIgnoreCase(page)) {// 广告详情
 			return pageAdvertismentDetail(null);
-		} else if (PAGE_COURSE_TYPE_DETAIL.equalsIgnoreCase(page)) {// 广告详情
+		} else if (PAGE_COURSE_TYPE_DETAIL.equalsIgnoreCase(page)) {// 课程类型详情
 			return pageCourseTypeDetail(null);
+		} else if (PAGE_COURSE_CLASS_DETAIL.equalsIgnoreCase(page)) {// 课程类别详情
+			return pageCourseClassDetail(null);
 		} else if (PAGE_CHANGE_PASSWORD_WITHOUT_AUTH.equalsIgnoreCase(page)) {// 广告详情
 			return pageChangePasswordWithoutAuth();
 		} else if (PAGE_STUDENT_WORDS_DEATIL.equalsIgnoreCase(page)) {// 用户详情
@@ -117,6 +120,8 @@ public class CommonController extends Controller {
 			return addOrUpdateAdvertisment();
 		} else if (CourseType.TABLE_NAME.equalsIgnoreCase(table)) {// 添加或删除课程类型
 			return addOrUpdateCourseType();
+		} else if (CourseClass.TABLE_NAME.equalsIgnoreCase(table)) {// 添加或删除课程类别
+			return addOrUpdateCourseClass();
 		} else if (StudentWords.TABLE_NAME.equalsIgnoreCase(table)) {// 添加或删除学员感言
 			return addOrUpdateStudentWords();
 		} else if (Message.TABLE_NAME.equalsIgnoreCase(table)) {// 添加或删除留言
@@ -632,7 +637,7 @@ public class CommonController extends Controller {
 	}
 
 	/**
-	 * add or update instructor
+	 * add or update courseType
 	 * 
 	 * @return
 	 */
@@ -650,6 +655,36 @@ public class CommonController extends Controller {
 			CourseType courseType = CourseType.addOrUpdate(form.get());
 			if (courseType != null) {
 				return pageCourseTypeDetail(courseType);
+			}
+		} else if (form.hasErrors()) {
+			String error = FormHelper.getFirstError(form.errors());
+			play.Logger.debug("error:" + error);
+			if (error != null) {
+				return badRequest(error);
+			}
+		}
+		return internalServerError(Constants.MSG_INTERNAL_ERROR);
+	}
+
+	/**
+	 * add or update courseClass
+	 * 
+	 * @return
+	 */
+	@FormValidators(values = {
+			@FormValidator(name = "name", validateType = Type.REQUIRED, msg = "课程类别名不能为空")
+	})
+	public static Result addOrUpdateCourseClass() {
+		String msg = Validator.check(CommonController.class, "addOrUpdateCourseClass");
+		if (msg != null) {
+			return badRequest(msg);
+		}
+		
+		Form<CourseClass> form = form(CourseClass.class).bindFromRequest();
+		if (form != null && form.hasErrors() == false) {
+			CourseClass courseClass = CourseClass.addOrUpdate(form.get());
+			if (courseClass != null) {
+				return pageCourseClassDetail(courseClass);
 			}
 		} else if (form.hasErrors()) {
 			String error = FormHelper.getFirstError(form.errors());
@@ -874,8 +909,9 @@ public class CommonController extends Controller {
 		boolean isAddNew = FormHelper.isAddNew(form().bindFromRequest());
 
 		List<CourseType> types = CourseType.findAll();
+		List<CourseClass> cClass = CourseClass.findAll();
 		if (isAddNew) {
-			return ok(views.html.module.common.courseDetail.render(null, types));
+			return ok(views.html.module.common.courseDetail.render(null, types, cClass));
 		}
 
 		if (course == null) {
@@ -884,7 +920,7 @@ public class CommonController extends Controller {
 				course = Course.find(id);
 			}
 		}
-		return ok(views.html.module.common.courseDetail.render(course, types));
+		return ok(views.html.module.common.courseDetail.render(course, types, cClass));
 	}
 
 	/**
@@ -896,8 +932,9 @@ public class CommonController extends Controller {
 		boolean isAddNew = FormHelper.isAddNew(form().bindFromRequest());
 
 		List<CourseType> types = CourseType.findAll();
+		List<CourseClass> cClass = CourseClass.findAll();
 		if (isAddNew) {
-			return ok(views.html.module.common.courseDetail.render(null, types));
+			return ok(views.html.module.common.courseDetail.render(null, types, cClass));
 		}
 
 		if (course == null) {
@@ -1214,6 +1251,27 @@ public class CommonController extends Controller {
 			}
 		}
 		return ok(views.html.module.common.courseTypeDetail.render(courseType));
+	}
+
+	/**
+	 * 课程类别详情
+	 * 
+	 * @return
+	 */
+	public static Result pageCourseClassDetail(CourseClass courseClass) {
+		boolean isAddNew = FormHelper.isAddNew(form().bindFromRequest());
+
+		if (isAddNew) {
+			return ok(views.html.module.common.courseClassDetail.render(null));
+		}
+
+		if (courseClass == null) {
+			Long id = FormHelper.getLong(form().bindFromRequest(), "id");
+			if (id != null) {
+				courseClass = CourseClass.find(id);
+			}
+		}
+		return ok(views.html.module.common.courseClassDetail.render(courseClass));
 	}
 
 	/**
