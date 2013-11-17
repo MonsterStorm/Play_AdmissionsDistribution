@@ -1,0 +1,62 @@
+@(model: EducationInstitution, divid: String=null)
+@import basic.common._
+@import basic.common.basicform._
+<script type="text/javascript">
+    $(document).ready( function() {
+			$('#myform').submit(function() {
+		    $(this).ajaxSubmit(ajaxSubmitOptions);
+		    return false;
+			});
+		});
+</script>
+
+<div @if(divid){id="@divid"} class="table-responsive">
+	<div style="overflow: auto">
+	<form class="form-horizontal" id="myform" method="post" action="@routes.CommonController.addOrUpdateEntity()">
+		
+			@form_validate_info()
+    
+  		@if(model != null){
+				@inputText("机构名称", "name", model.name, true)
+			} else {
+				@inputText("机构名称", "name", null, false)
+			}
+  		
+  		@if(model != null){
+				@textarea("机构简介", "info", model.info, true)
+			} else {
+				@textarea("机构简介", "info", null, false)
+			}
+
+			@if(model != null && model.creator != null){
+				@inputText("创建者", null, model.creator.username, true, true)
+			} else {
+				@inputText("创建者", null, null, false, true)
+			}	  		
+	
+			@if(model != null && model.createTime != null){
+				@datetimePicker("创建日期", "startTime", model.createTime, true, true)				
+			} else {
+				@datetimePicker("创建日期", "startTime", null, true, true)
+			}
+			
+			<input class="input-large" type="hidden" name="table" value="@EducationInstitution.TABLE_NAME">
+			@if(model != null){
+				<input class="input-large" type="hidden" name="id" value="@model.id">
+			} else {
+				<input class="input-large" type="hidden" name="id">
+			}
+			<hr>
+			<div class="control-group row">
+    		<div class="controls">
+					@if(model != null){
+							<button type="submit" class="btn btn-large btn-success btn-block span2" disabled="disabled">提交</button>
+					} else {
+							<button type="submit" class="btn btn-large btn-success btn-block span2">提交</button>
+					}
+    	</div>
+  		</div>
+		
+	</form>
+	</div>
+</div>

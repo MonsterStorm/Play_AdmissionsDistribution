@@ -50,40 +50,55 @@
 		 return data;
 	}
 
-  function getPage(li, domain, url, data){
+  function getPage(li, domain, url, data, nostate){
      data = data || "";
   
      ajaxBasic("/" + domain + "/" + url, data, "GET", "#content");
-		 $("#navList li.active").removeClass("active");
-		 $(li).addClass("active");
+     if(li){
+		 	$("#navList li.active").removeClass("active");
+		 	$(li).addClass("active");
+		 }
+		 $('#' + url).addClass("active");
+		 
+		 if(!nostate){
+		 	pushState(li, domain, url, data);
+		 }
   }
 	
 	function getAdminPage(li, url, data, extraIds){
 		 
 		 data = handleData(data, extraIds);
 		 
-     ajaxBasic("/admin/" + url, data, "GET", "#content");
+		 getPage(li, 'admin', url, data);
+		 
+     /*ajaxBasic("/admin/" + url, data, "GET", "#content");
      if(li){//如果给定了li才改变选中状态，否则不改变
 		 	$("#navList li.active").removeClass("active");
 		 	$(li).addClass("active");
 		 }
 		 $('#' + url).addClass("active");
+		 */
+		
 	}
 	
   function getCommonPage(li, url, data){
-     data = data || "";
-     ajaxBasic("/common/" + url, data, "GET", "#content");
-     $('#' + url).addClass("active");
+     //data = data || "";
+     //ajaxBasic("/common/" + url, data, "GET", "#content");
+     
+      getPage(li, 'common', url, data);
+     
+     //$('#' + url).addClass("active");
   }
   
 	function getTemplatePage(li, url, data){
-     data = data || "";
+     /*data = data || "";
      ajaxBasic("/template/" + url, data, "GET", "#content");
      if(li){//如果给定了li才改变选中状态，否则不改变
 		 	$("#navList li.active").removeClass("active");
 		 	$(li).addClass("active");
 		 }
-		 $('#' + url).addClass("active");
+		 $('#' + url).addClass("active");*/
+		 getPage(li, 'template', url, data);
   }
   
   function changeValue(item, value){
@@ -207,7 +222,6 @@
     $(dialog).modal('hide');
 	}
 </script>
-
 <ul class="nav nav-list" id="navList">
 	<li class="nav-header">管理员</li>
 	<li id="home" class="active" onclick="getAdminPage(this, 'home')"><a href="#">主页</a></li>

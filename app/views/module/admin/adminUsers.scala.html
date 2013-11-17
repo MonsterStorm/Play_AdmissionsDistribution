@@ -73,7 +73,7 @@ $('#toolbar').tooltip(options);
 				<tr>
 					<td>@model.id</td>
 					@if(model.username != null){
-						<td>@model.username</td>
+						<td><a href="#" onclick="getCommonPage(this, 'userDetail', 'id=@model.id');">@model.username</a></td>
 					} else {
 						<td>-</td>
 					}

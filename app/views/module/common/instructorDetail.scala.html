@@ -1,6 +1,7 @@
 @(model: Instructor)
 @import basic.common._
 @import basic.common.basicform._
+@import module.basic._
 
 @toolbar_header={
 <div class="row">
@@ -20,70 +21,11 @@
 </div>
 } 
 
-<script type="text/javascript">
-    $(document).ready( function() {
-			$('#myform').submit(function() {
-		    $(this).ajaxSubmit(ajaxSubmitOptions);
-		    return false;
-			});
-		});
-</script>
-
 @toolbar_header
 
-<div class="table-responsive">
-	<div style="overflow: auto">
-		<form class="form-horizontal" id="myform" method="post" action="@routes.CommonController.addOrUpdateEntity()">
-		
-			@form_validate_info()
+@navBasic(Array("课程列表", "域名列表", "基本信息"), Array("nav1", "nav2", "nav3"))
 
-  		@if(model != null){
-				@inputText("讲师名称", "name", model.name, true)
-			} else {
-				@inputText("讲师名称", "name", null, false)
-			}
+@courseList(model.courses, "nav1")
+@domainList(model.domain, "nav2")
+@instructorInfo(model, "nav3")
 
-  		@if(model != null){
-				@inputText("职称", "jobTitle", model.jobTitle, true)
-			} else {
-				@inputText("职称", "jobTitle", null, false)
-			}
-  		
-  		
-  		@if(model != null){
-				@textarea("简介", "info", model.info, true)
-			} else {
-				@textarea("简介", "info", null, false)
-			}
-			
-		@if(model != null){
-				@textarea("擅长领域", "field", model.field, true)
-			} else {
-				@textarea("擅长领域", "field", null, false)
-			}
-  		
-  		@if(model != null){
-				@datetimePicker("注册时间", "createTime", model.createTime)				
-			} else {
-				@datetimePicker("注册时间", "createTime")
-			}
-
-			<input class="input-large" type="hidden" name="table" value="@Instructor.TABLE_NAME">
-			@if(model != null){
-				<input class="input-large" type="hidden" name="id" value="@model.id">
-			} else {
-				<input class="input-large" type="hidden" name="id">
-			}
-			<hr>
-			<div class="control-group row">
-    		<div class="controls">
-      		@if(model != null){
-							<button type="submit" class="btn btn-large btn-success btn-block span2 disabled">提交</button>
-					} else {
-							<button type="submit" class="btn btn-large btn-success btn-block span2">提交</button>
-					}
-    		</div>
-  		</div>
-		</form>
-	</div>
-</div>

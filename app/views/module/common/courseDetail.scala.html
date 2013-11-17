@@ -2,9 +2,7 @@
 
 @import basic.common._
 @import basic.common.basicform._
-@initRequireEditor()
-@bootstrapDatetimepicker()
-
+@import module.basic._
 @toolbar_header={
 <div class="row">
 	<div class="span2">
@@ -23,129 +21,10 @@
 </div>
 } 
 
-@toolbar={
-<!-- <script type="text/javascript">
-$('#toolbar').tooltip(options);
-</script> -->
-<div class="pull-left" style="width:130px;">
-	<div class="btn-group" id="toolbar">
-		<a class="btn btn-success" data-toggle="审核通过" href="#"><i
-			class="icon-ok icon-white"></i></a> 
-    <a class="btn btn-info"
-			data-toggle="拒绝通过" href="#"><i class="icon-ban-circle icon-white"></i></a>
-	</div>
-	<div class="btn-group">
-		<a class="btn btn-danger" data-toggle="删除，请谨慎操作！" href="#"><i
-			class="icon-remove icon-white"></i></a>
-	</div>
-</div>
-} 
-
-<script type="text/javascript">
-    $(document).ready( function() {
-			$('#myform').submit(function() {
-		    $(this).ajaxSubmit(ajaxSubmitOptions);
-		    return false;
-			});
-		});
-</script>
-
-
 @toolbar_header
 
-<div class="table-responsive">
-	<div style="overflow: auto">
-		<form class="form-horizontal" id="myform" method="post" action="@routes.CommonController.addOrUpdateEntity()">
-	
-			@form_validate_info()
-	
-			@if(model != null){
-				@inputText("课程名称", "name", model.name, true)
-			} else {
-				@inputText("课程名称", "name", null, false)
-			}
-	  	
+@navBasic(Array("代理人列表", "代理记录",  "基本信息"), Array("nav1", "nav2", "nav3"))
 
-			@if(model != null){
-				@inputSelect("课程类别", "courseType", model.courseType.name, true){
-					@for((t, index) <- types.zipWithIndex){
-						@if(model.courseType.id == t.id){
-							<option value="@t.id" onclick="changeValue('#btnCourseType', '@t.name')" selected>@t.name</option>
-						} else {
-	    		  	<option value="@t.id" onclick="changeValue('#btnCourseType', '@t.name')">@t.name</option>
-	    		  }
-      		}	
-				}
-			} else {
-				@inputSelect("课程类别", "courseType", null, false){
-					@for((t, index) <- types.zipWithIndex){
-	    		  @if(model!=null && model.courseType!=null && model.courseType.id == t.id){
-							<option value="@t.id" onclick="changeValue('#btnCourseType', '@t.name')" selected>@t.name</option>
-						} else {
-	    		  	<option value="@t.id" onclick="changeValue('#btnCourseType', '@t.name')">@t.name</option>
-	    		  }
-      		}
-				}
-			}
-  		
-  		@if(model != null){
-				@inputText_money("学费", "money", {String.valueOf(model.money)}, true)  			
-  		} else {
-  			@inputText_money("学费", "money", null, false)
-  		}
-
-			@if(model != null){
-				@datetimePicker("开课时间", "startTime", model.startTime)				
-			} else {
-				@datetimePicker("开课时间", "startTime")
-			}
-
-			@requireEditor("info")
-			@if(model != null){
-				@textarea("课程简介", "info", model.info, false)
-			} else {
-				@textarea("课程简介", "info", null, false)
-			}
-			
-			@requireEditor("detail")
-			@if(model != null){
-				@textarea("课程详细信息", "detail", model.detail, false, 20)
-			} else {
-				@textarea("课程详细信息", "detail", null, false, 20)
-			}
-
-			@if(model != null){
-				@textarea("联系方式", "contact", model.contact, true)
-			} else {
-				@textarea("联系方式", "contact", null, false)
-			}
-
-			@if(model != null && model.edu != null){
-				@inputText("教育机构", null, model.edu.name, true)
-			}
-
-
-			@if(model != null && model.instructor != null){
-				@inputText("讲师", null, model.instructor.user.username, true)
-			}
-
-			<input class="input-large" type="hidden" name="table" value="@Course.TABLE_NAME">
-			@if(model != null){
-				<input class="input-large" type="hidden" name="id" value="@model.id">
-			} else {
-				<input class="input-large" type="hidden" name="id">
-			}
-
-			<hr>
-			<div class="control-group row">
-    		<div class="controls">
-					@if(model != null){
-      			<button type="submit" class="btn btn-large btn-success btn-block span2 disabled" disabled="disabled">提交</button>
-      		} else {
-      			<button type="submit" class="btn btn-large btn-success btn-block span2">提交</button>
-      		}
-    	</div>
-  </div>
-</form>
-	</div>
-</div>
+@agentList(model.agents, "nav1")
+@courseDistributionList(model.distributions, "nav2")
+@courseInfo(model, types, "nav3")

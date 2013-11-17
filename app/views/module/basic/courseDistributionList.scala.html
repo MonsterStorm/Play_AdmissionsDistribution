@@ -1,0 +1,63 @@
+@(models: List[CourseDistribution], divid : String = null)
+
+@import basic.common._
+
+<div @if(divid){id="@divid"} class="table-responsive">
+	<div style="overflow: auto">
+		<table class="table table-hover table-bordered table-striped">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>课程名</th>
+					<th>代理人</th>
+					<th>审核状态</th>
+					<th>返利信息</th>
+				</tr>
+			</thead>
+			<tbody>
+				@for(model <- models){
+				<tr>
+					<td>@model.id</td>
+
+					@if(model.course != null && model.course.name != null){
+						<td><a href="#" onclick="getCommonPage(this, 'courseDetail', 'id=@model.course.id');">@model.course.name</a></td>
+					} else {
+						<td>-</td>
+					}
+					
+					@if(model.agent != null && model.agent.name != null){
+						<td><a href="#" onclick="getCommonPage(this, 'agentDetail', 'id=@model.agent.id');">@model.agent.name</a></td>
+					} else {
+						<td>-</td>
+					}
+				
+					@if(model.audit != null){
+						@model.audit.status match {
+						case Audit.STATUS_WAIT => {
+								  <td>未认证</td>
+							}	
+						case Audit.STATUS_SUCCESS =>{
+									<td>认证成功</td>
+							}
+						case Audit.STATUS_FAILED =>{
+									<td>认证失败</td>
+							}
+						case Audit.STATUS_DISABLED =>{
+									<td>禁用</td>
+							}
+						}
+					} else {
+						 <td>-</td>
+					}					
+
+					@if(model.rebate != null){
+						<td><a href="#" onclick="getCommonPage(this, 'rebateDetail', 'id=@model.rebate.id');">查看</a></td>
+					} else {
+						<td>-</td>
+					}
+				</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+</div>
