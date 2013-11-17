@@ -36,6 +36,34 @@ public class FormFormatter {
 
 		});
 	}
+	/**
+	 * register for course class
+	 */
+	public static void registerCourseClass(){
+		Formatters.register(CourseClass.class, new SimpleFormatter<CourseClass>() {
+
+			@Override
+			public CourseClass parse(String arg, Locale l) throws ParseException {
+				try{
+					Long courseClassId = Long.parseLong(arg);
+					CourseClass courseClass = CourseClass.find(courseClassId);
+					return courseClass;
+				} catch (Exception e){
+					e.printStackTrace();
+				}
+				return null;
+			}
+
+			@Override
+			public String print(CourseClass type, Locale l) {
+				if(type != null){
+					return type.name;
+				}
+				return null;
+			}
+
+		});
+	}
 
 	/**
 	 * register for course type

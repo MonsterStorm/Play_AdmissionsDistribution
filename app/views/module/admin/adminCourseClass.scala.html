@@ -1,0 +1,76 @@
+@(models: com.avaje.ebean.Page[CourseClass])
+
+@import basic.common._
+
+@baseUrl=@{
+	var url = "adminCourseClass";
+	url
+}
+
+@toolbar_header={
+<div class="row">
+	<div class="span2">
+		<h4>课程类别</h4>
+	</div>
+	<div class="btn-toolbar pull-right" role="toolbar">
+		<div class="btn-group">
+			<a class="btn btn-success" data-toggle="新增" href="#" onclick="getCommonPage(this, 'courseClassDetail', 'addNew=true');"><i
+				class="icon-plus icon-white"></i>新增</a>
+		</div>
+	</div>
+</div>
+} 
+
+@toolbar(courseClass: CourseClass)={
+<!-- <script type="text/javascript">
+$('#toolbar').tooltip(options);
+</script> -->
+
+@dialogDelete("删除课程类别", CourseClass.TABLE_NAME, courseClass.id){
+	确定删除&nbsp;
+	<b style="font-size:x-large;color:red">
+	@{
+		if(courseClass.name != null){
+			courseClass.name
+		}
+	}
+	</b>&nbsp;？
+}
+
+<div class="pull-left" style="width:130px;">
+	<div class="btn-group">
+		<a class="btn btn-danger" data-toggle="删除，请谨慎操作！" href="#" onclick="doDelete(@courseClass.id)"><i
+			class="icon-remove icon-white"></i></a>
+	</div>
+</div>
+} 
+
+@toolbar_header
+
+<div class="table-responsive">
+	<div style="overflow: auto">
+		<table class="table table-hover table-bordered table-striped">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>课程类别</th>
+				</tr>
+			</thead>
+			<tbody>
+				@for(model <- models.getList()){
+				<tr>
+					<td>@model.id</td>
+					@if(model.name != null){
+						<td><a href="#" onclick="getCommonPage(this, 'courseClassDetail', 'id=@model.id');">@model.name</a></td>
+					} else {
+						<td>-</td>
+					}
+					<td>@toolbar(model)</td>
+				</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+</div>
+
+@paging(models, {baseUrl}, "admin")

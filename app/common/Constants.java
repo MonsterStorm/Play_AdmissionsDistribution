@@ -46,6 +46,9 @@ public class Constants {
 	//修改密码
 	public static final String MSG_OLD_PASSWORD_ERROR = "原始密码错误";//老密码错误
 	
+	//最大取数据大小
+	public static final int MAX_DATA_SIZE = 200;
+
 	//分页大小
 	public static final int PAGE_SIZE = 10;
 	

@@ -1,4 +1,4 @@
-@(model: Course, types: List[CourseType])
+@(model: Course, types: List[CourseType], cClass: List[CourseClass])
 
 @import basic.common._
 @import basic.common.basicform._
@@ -27,4 +27,4 @@
 
 @agentList(model.agents, "nav1")
 @courseDistributionList(model.distributions, "nav2")
-@courseInfo(model, types, "nav3")
+@courseInfo(model, types, cClass, "nav3")
