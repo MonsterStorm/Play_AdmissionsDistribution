@@ -2,6 +2,7 @@ function pushState(li, domain, url, data) {
 	if (!history.urls) {
 		history.urls = [];// array
 	}
+	
 	history.urls.push({
 		li : li,
 		domain : domain,

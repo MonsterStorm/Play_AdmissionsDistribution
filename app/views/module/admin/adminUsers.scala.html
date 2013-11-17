@@ -22,8 +22,8 @@
 			<ul class="dropdown-menu">
 				<li class="@checkActive("orderby", "username-asc", true)"><a onclick="@buildAction({baseUrl}, "admin", Array("orderby"), Array("username-asc"))">按用户名-升序</a></li>
 				<li class="@checkActive("orderby", "username-desc")"><a onclick="@buildAction({baseUrl}, "admin", Array("orderby"), Array("username-desc"))">按用户名-降序</a></li>
-				<li class="@checkActive("orderby", "auditStatus-asc")"><a onclick="@buildAction({baseUrl}, "admin", Array("orderby"), Array("auditStatus-asc"))">按帐号状态-升序</a></li>
-				<li class="@checkActive("orderby", "auditStatus-desc")"><a onclick="@buildAction({baseUrl}, "admin", Array("orderby"), Array("auditStatus-desc"))">按帐号状态-降序</a></li>
+				<li class="@checkActive("orderby", "audit.status-asc")"><a onclick="@buildAction({baseUrl}, "admin", Array("orderby"), Array("audit.status-asc"))">按帐号状态-升序</a></li>
+				<li class="@checkActive("orderby", "audit.status-desc")"><a onclick="@buildAction({baseUrl}, "admin", Array("orderby"), Array("audit.status-desc"))">按帐号状态-降序</a></li>
 			</ul>
 		</div>
 	</div>

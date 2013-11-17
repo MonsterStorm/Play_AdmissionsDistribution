@@ -24,8 +24,8 @@
 			<ul class="dropdown-menu">
 				<li class="@checkActive("orderby", "title-asc")"><a onclick="@buildAction({baseUrl}, "admin", Array("orderby"), Array("title-asc"))">按名称-升序</a></li>
 				<li class="@checkActive("orderby", "title-desc")"><a onclick="@buildAction({baseUrl}, "admin", Array("orderby"), Array("title-desc"))">按名称-降序</a></li>
-				<li class="@checkActive("orderby", "addTime-asc", true)"><a onclick="@buildAction({baseUrl}, "admin", Array("orderby"), Array("addTime-asc"))">按添加时间-升序</a></li>
-				<li class="@checkActive("orderby", "addTime-desc")"><a onclick="@buildAction({baseUrl}, "admin", Array("orderby"), Array("addTime-desc"))">按添加时间-降序</a></li>
+				<li class="@checkActive("orderby", "createTime-asc", true)"><a onclick="@buildAction({baseUrl}, "admin", Array("orderby"), Array("createTime-asc"))">按添加时间-升序</a></li>
+				<li class="@checkActive("orderby", "createTime-desc")"><a onclick="@buildAction({baseUrl}, "admin", Array("orderby"), Array("createTime-desc"))">按添加时间-降序</a></li>
 				<li class="@checkActive("orderby", "lastModified-asc")"><a onclick="@buildAction({baseUrl}, "admin", Array("orderby"), Array("lastModified-asc"))">按最近修改时间-升序</a></li>
 				<li class="@checkActive("orderby", "lastModified-desc")"><a onclick="@buildAction({baseUrl}, "admin", Array("orderby"), Array("lastModified-desc"))">按最近修改时间-降序</a></li>	
 			</ul>

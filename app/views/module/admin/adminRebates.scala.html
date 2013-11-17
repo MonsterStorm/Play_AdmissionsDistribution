@@ -24,8 +24,8 @@
 				排序 <span class="caret"></span>
 			</a>
 			<ul class="dropdown-menu">
-				<li class="@checkActive("orderby", "course.name-asc")"><a onclick="@buildAction({baseUrl}, "admin", Array("orderby"), Array("course.name-asc"))">按名称-升序</a></li>
-				<li class="@checkActive("orderby", "course.name-desc")"><a onclick="@buildAction({baseUrl}, "admin", Array("orderby"), Array("course.name-desc"))">按名称-降序</a></li>
+				<li class="@checkActive("orderby", "distribution.course.name-asc")"><a onclick="@buildAction({baseUrl}, "admin", Array("orderby"), Array("distribution.course.name-asc"))">按名称-升序</a></li>
+				<li class="@checkActive("orderby", "distribution.course.name-desc")"><a onclick="@buildAction({baseUrl}, "admin", Array("orderby"), Array("distribution.course.name-desc"))">按名称-降序</a></li>
 			</ul>
 		</div>
 	</div>
@@ -89,6 +89,7 @@ $('#toolbar').tooltip(options);
 				</tr>
 			</thead>
 			<tbody>
+				@if(models != null){
 				@for(model <- models.getList()){
 				<tr>
 					<td>@model.id</td>
@@ -148,6 +149,7 @@ $('#toolbar').tooltip(options);
 					}
 					<td>@toolbar(model)</td>
 				</tr>
+				}
 				}
 			</tbody>
 		</table>
