@@ -14,7 +14,7 @@
 				class="icon-plus icon-white"></i>新增</a>
 		</div>
 		<div class="btn-group">
-			<a class="btn btn-info" data-toggle="编辑" href="#" onclick="toggleAllEdit(this, '#myform')"><i
+			<a class="btn btn-info" data-toggle="编辑" href="#" onclick="toggleAllEdit(this, '#myform'),toggleAllEdit(this, '#myform1')"><i
 				class="icon-edit icon-white"></i>编辑</a>
 		</div>
 	</div>
@@ -23,8 +23,9 @@
 
 @toolbar_header
 
-@navBasic(Array("代理人列表", "代理记录",  "基本信息"), Array("nav1", "nav2", "nav3"))
+@navBasic(Array("代理人列表", "代理记录",  "基本信息", "返点详情"), Array("nav1", "nav2", "nav3", "nav4"))
 
 @agentList(model.agents, "nav1")
 @courseDistributionList(model.distributions, "nav2")
 @courseInfo(model, types, cClass, "nav3")
+@courseRebateTypeInfo(model, "nav4")

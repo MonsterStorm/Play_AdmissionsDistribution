@@ -67,7 +67,7 @@ $('#toolbar').tooltip(options);
 				}
 			}
 
-			@if(model != null){
+			@if(model != null && model.courseClass !=null){
 				@inputSelect("课程类别", "courseClass", model.courseClass.name, true){
 					@for((t, index) <- cClass.zipWithIndex){
 						@if(model.courseClass.id == t.id){
@@ -149,4 +149,5 @@ $('#toolbar').tooltip(options);
   </div>
 </form>
 	</div>
+</div>
 </div>

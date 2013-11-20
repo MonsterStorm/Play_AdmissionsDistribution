@@ -1,4 +1,4 @@
-@(model: Course, types: List[CourseType],  edus: List[EducationInstitution])
+@(model: Course, types: List[CourseType],  edus: List[EducationInstitution], cClass:List[CourseClass])
 
 @import basic.common._
 @import basic.common.basicform._
@@ -66,8 +66,8 @@ $('#toolbar').tooltip(options);
 			}
 	  	
 
-			@if(model != null){
-				@inputSelect("课程类别", "courseType", model.courseType.name, true){
+			@if(model != null && model.courseType !=null){
+				@inputSelect("课程类型", "courseType", model.courseType.name, true){
 					@for((t, index) <- types.zipWithIndex){
 						@if(model.courseType.id == t.id){
 							<option value="@t.id" onclick="changeValue('#btnCourseType', '@t.name')" selected>@t.name</option>
@@ -77,12 +77,34 @@ $('#toolbar').tooltip(options);
       					}	
 				}
 			} else {
-				@inputSelect("课程类别", "courseType", null, false){
+				@inputSelect("课程类型", "courseType", null, false){
 					@for((t, index) <- types.zipWithIndex){
 	    		  @if(model!=null && model.courseType!=null && model.courseType.id == t.id){
 							<option value="@t.id" onclick="changeValue('#btnCourseType', '@t.name')" selected>@t.name</option>
 						} else {
 	    		  	<option value="@t.id" onclick="changeValue('#btnCourseType', '@t.name')">@t.name</option>
+	    		 			 }
+      					}
+				}
+			}
+
+			@if(model != null && model.courseClass !=null){
+				@inputSelect("课程类别", "courseClass", model.courseClass.name, true){
+					@for((t, index) <- cClass.zipWithIndex){
+						@if(model.courseClass.id == t.id){
+							<option value="@t.id" onclick="changeValue('#btnCourseClass', '@t.name')" selected>@t.name</option>
+						} else {
+	    		  	<option value="@t.id" onclick="changeValue('#btnCourseClass', '@t.name')">@t.name</option>
+	    		  			}
+      					}	
+				}
+			} else {
+				@inputSelect("课程类别", "courseClass", null, false){
+					@for((t, index) <- cClass.zipWithIndex){
+	    		  @if(model!=null && model.courseClass!=null && model.courseClass.id == t.id){
+							<option value="@t.id" onclick="changeValue('#btnCourseClass', '@t.name')" selected>@t.name</option>
+						} else {
+	    		  	<option value="@t.id" onclick="changeValue('#btnCourseClass', '@t.name')">@t.name</option>
 	    		 			 }
       					}
 				}

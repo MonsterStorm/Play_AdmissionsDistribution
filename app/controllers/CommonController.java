@@ -126,7 +126,10 @@ public class CommonController extends Controller {
 			return addOrUpdateStudentWords();
 		} else if (Message.TABLE_NAME.equalsIgnoreCase(table)) {// 添加或删除留言
 			return addOrUpdateMessage();
-		} else {
+		}else if ("CourseRebateType".equalsIgnoreCase(table)) {// 添加或删除留言
+			return addOrUpdateCourseRebateType();
+		}
+		 else {
 			return badRequest(Constants.MSG_PAGE_NOT_FOUND);
 		}
 	}
@@ -313,6 +316,51 @@ public class CommonController extends Controller {
 				return badRequest(error);
 			}
 		}
+		return internalServerError(Constants.MSG_INTERNAL_ERROR);
+	}
+
+	@FormValidators(values = {
+			@FormValidator(name = "eduRebateType.ratioOfTotal", validateType = Type.NUMBER, msg = "教育机构总金额返点比例只能是数字"),
+			@FormValidator(name = "eduRebateType.ratioOfPerStudent", validateType = Type.NUMBER, msg = " 教育机构每个学生返点金额只能是数字"),
+			@FormValidator(name = "agentRebateType.ratioOfTotal", validateType = Type.NUMBER, msg = "代理人总金额返点比例只能是数字"),
+			@FormValidator(name = "agentRebateType.ratioOfPerStudent", validateType = Type.NUMBER, msg = " 代理人每个学生返点金额只能是数字")
+
+	})
+	public static Result addOrUpdateCourseRebateType() {
+		String msg = Validator.check(CommonController.class, "addOrUpdateCourseRebateType");
+		if (msg != null) {
+			return badRequest(msg);
+		}
+		Long id = FormHelper.getLong(form().bindFromRequest(), "id");
+		if (id != null) {
+			Course course = Course.find(id);
+			if(course.eduRebateType ==null){
+				course.eduRebateType = new RebateType();
+			}
+			if(course.agentRebateType ==null){
+				course.agentRebateType = new RebateType();
+			}
+
+			course.eduRebateType.ratioOfTotal = FormHelper.getDouble(form().bindFromRequest(), "eduRebateType.ratioOfTotal");
+			course.eduRebateType.ratioOfPerStudent = FormHelper.getDouble(form().bindFromRequest(), "eduRebateType.ratioOfPerStudent");
+			course.agentRebateType.ratioOfTotal = FormHelper.getDouble(form().bindFromRequest(), "agentRebateType.ratioOfTotal");
+			course.agentRebateType.ratioOfPerStudent = FormHelper.getDouble(form().bindFromRequest(), "agentRebateType.ratioOfPerStudent");
+			course.update();
+			return pageCourseDetail(course);
+		}
+		//Form<Course> form = form(Course.class).bindFromRequest();
+		// if (form != null && form.hasErrors() == false) {
+		// 	Course course = Course.addOrUpdate(form.get());
+		// 	if (course != null) {
+		// 		return pageCourseRebateType(course);
+		// 	}
+		// } else if (form.hasErrors()) {
+		// 	String error = FormHelper.getFirstError(form.errors());
+		// 	play.Logger.debug("error:" + error);
+		// 	if (error != null) {
+		// 		return badRequest(error);
+		// 	}
+		// }
 		return internalServerError(Constants.MSG_INTERNAL_ERROR);
 	}
 
@@ -921,6 +969,16 @@ public class CommonController extends Controller {
 			}
 		}
 		return ok(views.html.module.common.courseDetail.render(course, types, cClass));
+	}
+
+	/**
+	 * 课程详情
+	 * 
+	 * @return
+	 */
+	public static Result pageCourseRebateType(Course course) {
+		
+		return ok(views.html.module.basic.courseRebateTypeInfo.render(course, "nav4"));
 	}
 
 	/**

@@ -403,8 +403,9 @@ public class EducationController extends BaseController {
 			return badRequest(Constants.MSG_NOT_LOGIN);
 		}
 		List<CourseType> types = CourseType.findAll();
+		List<CourseClass> cClass = CourseClass.findAll();
 		if (isAddNew) {
-			return ok(views.html.module.education.courseDetail.render(null, types, user.edus));
+			return ok(views.html.module.education.courseDetail.render(null, types, user.edus, cClass));
 		}
 
 		if (course == null) {
@@ -413,7 +414,7 @@ public class EducationController extends BaseController {
 				course = Course.find(id);
 			}
 		}
-		return ok(views.html.module.education.courseDetail.render(course, types,user.edus));
+		return ok(views.html.module.education.courseDetail.render(course, types,user.edus, cClass));
 	}
 
 	/**
