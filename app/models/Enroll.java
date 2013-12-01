@@ -44,6 +44,9 @@ public class Enroll extends Model {
 
 	@OneToOne
 	public Audit auditOfEdu;// 教育机构的审核信息
+	//付款确认信息
+	@OneToOne
+	public ConfirmReceipt confirmOfStu;// 学生付款确认信息
 
 	// -- 收款确认信息
 	@OneToOne
@@ -54,13 +57,14 @@ public class Enroll extends Model {
 
 	@OneToOne
 	public ConfirmReceipt confirmOfAgent;// 代理人收款信息
-	
-	//其他基本信息
+
 	public Long enrollTime;// 报名时间
 
 	public String enrollIp;// 登记时的ip
 
 	public String enrollDomain;// 来源域名，如www.google.com，用于分销的统计
+	//其他基本信息
+	public int enrollByAgent;//1 表示由代理人报名 代理人可以查看  用户名  密码等信息
 
 	// -- 查询
 	public static Model.Finder<Long, Enroll> finder = new Model.Finder(Long.class, Enroll.class);

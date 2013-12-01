@@ -40,6 +40,7 @@ public class AgentController extends BaseController {
 	private static final String PAGE_REG_AGENT  = "regAgent";
 	private static final String PAGE_AGENT_DOMAIN  = "agentDomain";
 	private static final String PAGE_DOMAIN_DETAIL  = "domainDetail";
+	private static final String PAGE_USER_ENROLL_BY_AGENT = "userEnrollByAgent";
 	/**
 	 * agent pages
 	 * 
@@ -69,6 +70,8 @@ public class AgentController extends BaseController {
 			return pageAgentDomain();
 		} else if (PAGE_DOMAIN_DETAIL.equalsIgnoreCase(page)) {// 
 			return pageDomainDetail(null);
+		} else if (PAGE_USER_ENROLL_BY_AGENT.equalsIgnoreCase(page)) {// 
+			return userEnrollByAgent(null);
 		} else {
 			return badRequest("页面不存在");
 		}
@@ -94,9 +97,12 @@ public class AgentController extends BaseController {
 		String table = form().bindFromRequest().get("table");
 		if (Agent.TABLE_NAME.equalsIgnoreCase(table)) {// 代理人更新或添加
 			return addOrUpdateAgent();
-		}if (Domain.TABLE_NAME.equalsIgnoreCase(table)) {// 代理人更新或添加
+		}else if (Domain.TABLE_NAME.equalsIgnoreCase(table)) {// 代理人更新或添加
 			return addOrUpdateDomain();
-		} else {
+		}else if( "agent_enroll".equalsIgnoreCase(table) ){//代理人更新
+			return addOrUpdateAgentEnroll();
+
+		}else {
 			return badRequest(Constants.MSG_PAGE_NOT_FOUND);
 		}
 	}
@@ -418,6 +424,34 @@ public class AgentController extends BaseController {
 	}
 
 	/**
+	 * 代理人为用户报名课程 此时生成随机用户名和密码
+	 * 
+	 * @return
+	 */
+	public static Result userEnrollByAgent(Enroll enroll) {
+		play.Logger.error(form().bindFromRequest().get("courseId"));
+		User user =  LoginController.getSessionUser();
+		if (user == null) {
+			return badRequest(Constants.MSG_NOT_LOGIN);
+		}
+		Agent agent = user.agent;
+		if (enroll == null) {
+			//新报名
+			Long courseId =   FormHelper.getLong( form().bindFromRequest(), "courseId" );//FormHelper.getLong(form().bindFromRequest(), "courseId");
+			Course course = Course.find( courseId );
+			//return badRequest( String.valueOf (courseId));
+
+			return ok(views.html.module.agent.userEnrollByAgent.render(agent, null, null, course));		
+		}else{
+			//旧报名
+			Course course = enroll.course;
+			Student student = enroll.student;
+
+			return ok(views.html.module.agent.userEnrollByAgent.render(agent, enroll, student, course));
+		}
+	}
+
+	/**
 	 * 代理人
 	 * 
 	 * @return
@@ -473,4 +507,149 @@ public class AgentController extends BaseController {
 		}
 		return internalServerError(Constants.MSG_INTERNAL_ERROR);
 	}
+
+	/**
+	 * add or update instructor
+	 * 
+	 * @return
+	 */
+	public static Result addOrUpdateAgentEnroll() {
+
+		Long enrollId = FormHelper.getLong(form().bindFromRequest(), "enrollId");
+		if( enrollId == null ){
+			//添加新的报名
+			Long courseId = FormHelper.getLong(form().bindFromRequest(), "courseId");
+
+			Student student = new Student();
+			User user = User.getRandomUserForStudent(student, Role.ROLE_STUDENT, Audit.STATUS_SUCCESS );
+
+
+
+
+		}else{
+			//更新报名
+			Long courseId = FormHelper.getLong(form().bindFromRequest(), "courseId");
+
+		}
+
+
+		// play.Logger.error(form().bindFromRequest().get("courseId"));
+		// User user =  LoginController.getSessionUser();
+		// Student student = null;
+		// if(user == null){
+		// 	//return badRequest(Constants.MSG_NOT_LOGIN);
+			
+		// 	student = new Student();
+		// 	user = User.getRandomUserForStudent(student, Role.ROLE_STUDENT, Audit.STATUS_SUCCESS );
+		// }
+		// student = user.student;
+		// if(student!=null){
+		// 	Long courseId =  FormHelper.getLong(form().bindFromRequest(),"courseId");
+		// 	Course course = Course.find(courseId);
+		// 	if(course!=null){
+		// 		Enroll enroll = Enroll.findByStudentAndCourse(student, course);
+		// 		if(enroll!=null){
+		// 			return badRequest(Constants.MSG_USER_ENROLLED);
+		// 		}
+		// 	}else{
+		// 		return badRequest(Constants.MSG_COURSE_NOT_EXIST);
+		// 	}
+		// }
+
+
+		// UserInfo basicInfo = user.basicInfo;
+		// if(basicInfo == null){
+		// 	basicInfo = new UserInfo();
+
+		// 	basicInfo.realname = form().bindFromRequest().get("realname");
+		// 	basicInfo.sex = form().bindFromRequest().get("sex");
+		// 	basicInfo.idcard = form().bindFromRequest().get("idcard");
+		// 	basicInfo.birthday = Long.parseLong(form().bindFromRequest().get("birthday"));
+			
+
+		// 	basicInfo.phone = form().bindFromRequest().get("phone");
+			
+		// 	basicInfo.qq = form().bindFromRequest().get("qq");
+		// 	basicInfo.address = form().bindFromRequest().get("address");
+		// 	basicInfo.user = user;
+		// 	basicInfo.save();
+		// 	user.basicInfo = basicInfo;
+		// 	user.mobile = form().bindFromRequest().get("mobile");
+		// 	user.email = form().bindFromRequest().get("email");
+		// 	if(user.id == null){
+		// 		user.save();
+		// 		user.basicInfo.user = user;
+		// 		user.basicInfo.update();
+		// 	}else{
+		// 		user.update();
+		// 	}
+		// }
+		// else{
+		// 	basicInfo.realname = form().bindFromRequest().get("realname");
+		// 	basicInfo.sex = form().bindFromRequest().get("sex");
+		// 	basicInfo.idcard = form().bindFromRequest().get("idcard");
+		// 	basicInfo.birthday = Long.parseLong(form().bindFromRequest().get("birthday"));
+
+
+		// 	basicInfo.phone = form().bindFromRequest().get("phone");
+		// 	basicInfo.qq = form().bindFromRequest().get("qq");
+		// 	basicInfo.address = form().bindFromRequest().get("address");
+		// 	basicInfo.user = user;
+		// 	basicInfo.update();
+		// 	user.basicInfo = basicInfo;
+		// 	user.mobile = form().bindFromRequest().get("mobile");
+		// 	user.email = form().bindFromRequest().get("email");
+		// 	if(user.id == null){
+		// 		user.save();
+		// 		user.basicInfo.user = user;
+		// 		user.basicInfo.update();
+		// 	}
+		// 	else{
+		// 		user.update();
+		// 	}
+		// }
+		// Form<Student> form = form(Student.class).bindFromRequest();
+		// if (form != null && form.hasErrors() == false) {
+		// 	student = Student.addOrUpdate(form.get());
+		// 	if (student != null) {
+		// 		user.student = student;
+		// 		user.update();
+		// 		Enroll enroll = new Enroll();
+		// 		Agent agent = null;
+		// 		if(form().bindFromRequest().get("agentId") != null){
+		// 			Long agentId =  FormHelper.getLong(form().bindFromRequest(),"agentId");
+		// 			agent = Agent.find(agentId);
+		// 		}
+		// 		if( form().bindFromRequest().get("courseId") != null){
+		// 			Long courseId =  FormHelper.getLong(form().bindFromRequest(),"courseId");
+		// 			Course course = Course.find(courseId);
+		// 			enroll.course = course;
+		// 			if(course!=null && course.edu!=null){
+		// 				enroll.edu = course.edu;
+		// 			}
+		// 		}
+
+		// 		if(agent!=null){
+		// 			enroll.fromAgent = agent;
+		// 		}
+		// 		enroll.student = student;
+		// 		enroll.enrollTime = System.currentTimeMillis();
+		// 		//enroll.save();
+		// 		Enroll.addOrUpdate(enroll);
+
+
+		// 		return ok(views.html.module.platform.platformUserEnroll.render(enroll, enroll.course ,enroll.fromAgent,enroll.student.user,enroll.student));
+		// 	}
+		// } else if (form.hasErrors()) {
+		// 	String error = FormHelper.getFirstError(form.errors());
+		// 	play.Logger.debug("error:" + error);
+		// 	if (error != null) {
+		// 		return badRequest(error);
+		// 	}
+		// }
+		// return internalServerError(Constants.MSG_INTERNAL_ERROR);
+		return internalServerError(Constants.MSG_INTERNAL_ERROR);
+	}
+
+
 }

@@ -464,12 +464,14 @@ CREATE TABLE `enroll` (
   `edu_id` bigint(20) DEFAULT NULL,
   `audit_of_agent_id` bigint(20) DEFAULT NULL,
   `audit_of_edu_id` bigint(20) DEFAULT NULL,
+  `confirm_of_stu_id` bigint(20) DEFAULT NULL,
   `confirm_of_edu_id` bigint(20) DEFAULT NULL,
   `confirm_of_platform_id` bigint(20) DEFAULT NULL,
   `confirm_of_agent_id` bigint(20) DEFAULT NULL,
   `enroll_time` bigint(20) DEFAULT NULL,
   `enroll_ip` varchar(255) DEFAULT NULL,
   `enroll_domain` varchar(255) DEFAULT NULL,
+  `enroll_by_agent` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `ix_enroll_student_20` (`student_id`),
   KEY `ix_enroll_course_21` (`course_id`),
@@ -485,7 +487,7 @@ CREATE TABLE `enroll` (
 -- ----------------------------
 -- Records of enroll
 -- ----------------------------
-INSERT INTO `enroll` VALUES ('1', '2', '1', null, '1', null, null, null, null, null, '1381136024622', '10.10.10.103', 'www.baidu.com');
+INSERT INTO `enroll` VALUES ('1', '2', '1', null, '1', null, null, null, null, null, null, '1381136024622', '10.10.10.103', 'www.baidu.com', '0');
 
 -- ----------------------------
 -- Table structure for `function`

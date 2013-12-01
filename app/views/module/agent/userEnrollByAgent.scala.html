@@ -1,0 +1,156 @@
+@(agent: Agent, enroll:Enroll, student:Student, course:Course)
+
+@import basic.common._
+@import basic.common.basicform._
+@import module.basic._
+
+
+@bootstrapDatetimepicker()
+@toolbar_header={
+<div class="row">
+	<div class="span2">
+		<h4>报名详情</h4>
+	</div>
+	<div class="btn-toolbar pull-right" role="toolbar">
+		<div class="btn-group">
+			<a class="btn btn-info" data-toggle="修改" href="#" onclick="toggleAllEdit(this, '#myform')"><i
+				class="icon-edit icon-white"></i>修改</a>
+		</div>
+	</div>
+</div>
+} 
+
+<script type="text/javascript">
+    $(document).ready( function() {
+			$('#myform').submit(function() {
+		    $(this).ajaxSubmit(ajaxSubmitOptions);
+		    return false;
+			});
+		});
+</script>
+
+
+@toolbar_header
+
+<div class="table-responsive">
+	<div style="overflow: auto">
+		<form id="myform"  class="form-horizontal"  method="post" action="@routes.AgentController.addOrUpdateEntity()">
+	
+			@form_validate_info()
+			@if(course!=null){
+				@inputText("课程名称", "coursename", course.name, true)		
+				@inputNumber("课程费用", "coursemoney", course.money, true)
+			}
+			@if(student!=null &&student.user!=null && student.user.basicInfo != null){
+				@inputText("学员名称", "realname", student.user.basicInfo.realname, false)
+			}else{ 
+				@inputText("学员名称", "realname", null, false)
+			}
+  		
+			@if(student != null && student.user != null && student.user.basicInfo != null){
+				@inputSelect("性别", "sex", String.valueOf(student.user.basicInfo.sex), false){
+				<option value="1" onclick="changeValue('#btnCourseType', '男')">男</option>
+	      			<option value="0" onclick="changeValue('#btnCourseType', '女')">女</option>
+				}
+			} else{
+				@inputSelect("性别", "sex", null, false){
+					<option value="1" onclick="changeValue('#btnCourseType', '男')">男</option>
+	      				<option value="0" onclick="changeValue('#btnCourseType', '女')">女</option>
+				}	
+			}
+			
+			@if(student != null){
+				@inputText("公司名称", "companyName", student.companyName, false)
+			} else {
+				@inputText("公司名称", "companyName", null, false)
+			}
+			
+			@if(student != null){
+				@inputText("职务", "position", student.position, false)
+			} else {
+				@inputText("职务", "position", null, false)
+			}
+				
+			@if(student != null && student.user != null && student.user.basicInfo != null){
+				@inputText("身份证号", "idcard", student.user.basicInfo.idcard, false)
+			} else{
+				@inputText("身份证号", "idcard", null, false)
+			}
+  		
+			@if(student != null && student.user != null && student.user.basicInfo != null){
+				@datetimePicker("出生日期", "birthday", student.user.basicInfo.birthday,true)				
+			} else{
+				@datetimePicker("出生日期", "birthday",null, true)
+			}
+			
+			@if(student != null && student.user != null && student.user.basicInfo != null){
+				@inputText("座机号码", "phone", student.user.basicInfo.phone, false)
+			} else{
+				@inputText("座机号码", "phone", null, false)
+			}
+	
+			@if(student != null && student.user != null){
+				@inputText("手机号码", "mobile", student.user.mobile, false)
+			}else{
+				@inputText("手机号码", "mobile", null, false)
+			}
+				
+			@if(student != null && student.user != null && student.user.basicInfo != null){
+				@inputText("QQ号码", "qq", student.user.basicInfo.qq, false)
+			}else{
+				@inputText("QQ号码", "qq", null, false)
+			}
+  		
+  			@if(student != null && student.user != null){
+				@inputText("Email", "email", student.user.email, false)
+			} else{
+				@inputText("Email", "email", null, false)
+			}
+			
+			@if(student != null && student.user != null && student.user.basicInfo != null){
+				@textarea("联系地址", "address", student.user.basicInfo.address, false)
+			} else{
+				@textarea("联系地址", "address", null, false)
+			}
+			
+			@if(student != null){
+				@textarea("额外信息", "info", student.info, false)
+			} else {
+				@textarea("额外信息", "info", null, false)
+			}
+  		
+			<input class="input-large" type="hidden" name="table" value="agent_enroll">
+			@if(student != null){
+				<input class="input-large" type="hidden" name="id" value="@student.id">
+			} else {
+				<input class="input-large" type="hidden" name="id">
+			}
+			@if(agent != null){
+				<input class="input-large" type="hidden" name="agentId" value="@agent.id">
+			} else {
+				<input class="input-large" type="hidden" name="agentId">
+			}
+			@if(enroll != null ){
+				<input class="input-large" type="hidden" name="enrollId" value="@enroll.id">
+			} else {
+				<input class="input-large" type="hidden" name="enrollId">
+			}
+			@if(course != null ){
+				<input class="input-large" type="hidden" name="courseId" value="@course.id">
+			} else {
+				<input class="input-large" type="hidden" name="courseId">
+			}
+			
+			<hr>
+			<div class="control-group row">
+		    		<div class="controls">
+					@if(enroll != null){
+			      			<button type="submit" class="btn btn-large btn-success btn-block span2 disabled">提交</button>
+			      		} else {
+			      			<button type="submit" class="btn btn-large btn-success btn-block span2">提交</button>
+			      		}
+			    	</div>
+			  </div>
+		</form>
+	</div>
+</div>
