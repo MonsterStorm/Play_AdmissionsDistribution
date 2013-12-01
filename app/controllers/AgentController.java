@@ -486,6 +486,9 @@ public class AgentController extends BaseController {
 	 */
 	public static Result applyCourse() {
 		User user = LoginController.getSessionUser();
+		if(user ==null){
+			return badRequest(Constants.MSG_NOT_LOGIN);
+		}
 		Agent agent = user.agent;
 		if(agent ==null){
 			return badRequest(Constants.MSG_AGENT_NOT_EXIST);
@@ -515,20 +518,79 @@ public class AgentController extends BaseController {
 	 */
 	public static Result addOrUpdateAgentEnroll() {
 
+		User user1 =  LoginController.getSessionUser();
+		if(user1 ==null){
+			return badRequest(Constants.MSG_NOT_LOGIN);
+		}
+		Agent agent = user1.agent;
+		if(agent ==null){
+			return badRequest(Constants.MSG_AGENT_NOT_EXIST);
+		}
+
+
 		Long enrollId = FormHelper.getLong(form().bindFromRequest(), "enrollId");
 		if( enrollId == null ){
 			//添加新的报名
 			Long courseId = FormHelper.getLong(form().bindFromRequest(), "courseId");
-
+			Course course = Course.find( courseId );
 			Student student = new Student();
 			User user = User.getRandomUserForStudent(student, Role.ROLE_STUDENT, Audit.STATUS_SUCCESS );
+			student.user = user;
+			student.user.basicInfo = new UserInfo();
 
-
+			student.user.basicInfo.realname =  FormHelper.getString( form().bindFromRequest(),"realname");
+			student.user.basicInfo.sex =  FormHelper.getString( form().bindFromRequest(),"sex");
+			student.companyName =  FormHelper.getString( form().bindFromRequest(),"companyName");
+			student.position =  FormHelper.getString( form().bindFromRequest(),"position");
+			student.user.basicInfo.idcard = FormHelper.getString( form().bindFromRequest(),"idcard");
+			student.user.basicInfo.birthday = FormHelper.getLong( form().bindFromRequest(),"birthday");
+			student.user.basicInfo.phone  = FormHelper.getString( form().bindFromRequest(),"phone");
+			student.user.mobile  = FormHelper.getString( form().bindFromRequest(),"mobile");
+			student.user.basicInfo.qq  = FormHelper.getString( form().bindFromRequest(),"qq");
+			student.user.email = FormHelper.getString( form().bindFromRequest(),"email");
+			student.user.basicInfo.address = FormHelper.getString( form().bindFromRequest(),"address");
+			student.info = FormHelper.getString( form().bindFromRequest(),"info");
+			student.save();
+			Enroll enroll = new Enroll();
+			enroll.student = student;
+			enroll.course = course;
+			enroll.fromAgent = agent;
+			enroll.edu = course.edu;
+			enroll.save();
+			return ok(views.html.module.agent.userEnrollByAgent.render(enroll.fromAgent, enroll ,enroll.student,enroll.course));
 
 
 		}else{
 			//更新报名
 			Long courseId = FormHelper.getLong(form().bindFromRequest(), "courseId");
+			Long studentId = FormHelper.getLong(form().bindFromRequest(), "studentId");
+			Course course = Course.find(courseId);
+			Student student = Student.find(studentId);
+			student.user.basicInfo = new UserInfo();
+
+			student.user.basicInfo.realname =  FormHelper.getString( form().bindFromRequest(),"realname");
+			student.user.basicInfo.sex =  FormHelper.getString( form().bindFromRequest(),"sex");
+			student.companyName =  FormHelper.getString( form().bindFromRequest(),"companyName");
+			student.position =  FormHelper.getString( form().bindFromRequest(),"position");
+			student.user.basicInfo.idcard = FormHelper.getString( form().bindFromRequest(),"idcard");
+			student.user.basicInfo.birthday = FormHelper.getLong( form().bindFromRequest(),"birthday");
+			student.user.basicInfo.phone  = FormHelper.getString( form().bindFromRequest(),"phone");
+			student.user.mobile  = FormHelper.getString( form().bindFromRequest(),"mobile");
+			student.user.basicInfo.qq  = FormHelper.getString( form().bindFromRequest(),"qq");
+			student.user.email = FormHelper.getString( form().bindFromRequest(),"email");
+			student.user.basicInfo.address = FormHelper.getString( form().bindFromRequest(),"address");
+			student.info = FormHelper.getString( form().bindFromRequest(),"info");
+			student.update();
+
+			Enroll enroll = Enroll.find(enrollId);
+
+			enroll.student = student;
+			enroll.course = course;
+			enroll.fromAgent = agent;
+			enroll.edu = course.edu;
+			enroll.update();
+			return ok(views.html.module.agent.userEnrollByAgent.render(enroll.fromAgent, enroll ,enroll.student,enroll.course));
+
 
 		}
 
@@ -648,8 +710,8 @@ public class AgentController extends BaseController {
 		// 	}
 		// }
 		// return internalServerError(Constants.MSG_INTERNAL_ERROR);
-		return internalServerError(Constants.MSG_INTERNAL_ERROR);
+		//return internalServerError(Constants.MSG_INTERNAL_ERROR);
 	}
 
-
+  
 }
