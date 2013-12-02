@@ -41,6 +41,7 @@ public class AgentController extends BaseController {
 	private static final String PAGE_AGENT_DOMAIN  = "agentDomain";
 	private static final String PAGE_DOMAIN_DETAIL  = "domainDetail";
 	private static final String PAGE_USER_ENROLL_BY_AGENT = "userEnrollByAgent";
+	private static final String PAGE_AGENT_ENROLL_INFO = "agentEnrollInfo";
 	/**
 	 * agent pages
 	 * 
@@ -72,6 +73,8 @@ public class AgentController extends BaseController {
 			return pageDomainDetail(null);
 		} else if (PAGE_USER_ENROLL_BY_AGENT.equalsIgnoreCase(page)) {// 
 			return userEnrollByAgent(null);
+		} else if (PAGE_AGENT_ENROLL_INFO.equalsIgnoreCase(page)) {// 
+			return pageAgentEnrollInfo();
 		} else {
 			return badRequest("页面不存在");
 		}
@@ -205,6 +208,26 @@ public class AgentController extends BaseController {
 
 		return ok(views.html.module.agent.allCourse.render(courses));
 	}
+
+
+	/**
+	 * 报名管理
+	 * 
+	 * @return
+	 */
+	public static Result pageAgentEnrollInfo() {
+		play.Logger.error(form().bindFromRequest().get("page"));
+		// get page
+		int page = FormHelper.getPage(form().bindFromRequest());
+
+		Page<Enroll> enrolls = Enroll.findPageByAgentId(form().bindFromRequest(), page,
+				null);
+
+		FormHelper.resetFlash(form().bindFromRequest(), flash());
+
+		return ok(views.html.module.agent.agentEnrollInfo.render(enrolls));
+	}
+
 
 	/**
 	 * 教育机构课程详情
@@ -556,6 +579,8 @@ public class AgentController extends BaseController {
 			enroll.course = course;
 			enroll.fromAgent = agent;
 			enroll.edu = course.edu;
+			enroll.enrollByAgent = 1;
+			enroll.enrollTime = System.currentTimeMillis();
 			enroll.save();
 			return ok(views.html.module.agent.userEnrollByAgent.render(enroll.fromAgent, enroll ,enroll.student,enroll.course));
 
@@ -588,6 +613,8 @@ public class AgentController extends BaseController {
 			enroll.course = course;
 			enroll.fromAgent = agent;
 			enroll.edu = course.edu;
+			enroll.enrollByAgent = 1;
+			enroll.enrollTime = System.currentTimeMillis();
 			enroll.update();
 			return ok(views.html.module.agent.userEnrollByAgent.render(enroll.fromAgent, enroll ,enroll.student,enroll.course));
 

@@ -159,7 +159,7 @@ public class Enroll extends Model {
 		Map<String, String> datas = form.data();
 		datas.put("stuId", student.id.toString());
 		form = form.bind(datas);
-		return new QueryHelper<Enroll>(finder, form).addEq("course.id", "stuId", Long.class).addOrderBy("orderby").findPage(page, pageSize);
+		return new QueryHelper<Enroll>(finder, form).addEq("student.id", "stuId", Long.class).addOrderBy("orderby").findPage(page, pageSize);
 //		return new QueryHelper<Enroll>(finder, form).addEqual("student.id", student.id.toString(), Long.class).addOrderBy("orderby").findPage(page, pageSize);
 	}
 
@@ -175,6 +175,20 @@ public class Enroll extends Model {
 		datas.put("instructorId", instructor.id.toString());
 		form = form.bind(datas);
 		return new QueryHelper<Enroll>(finder, form).addEq("course.instructor.id", "instructorId", Long.class).addOrderBy("orderby").findPage(page, pageSize);
+//		return new QueryHelper<Enroll>(finder, form).addEqual("course.instructor.id", instructor.id.toString(), Long.class).addOrderBy("orderby").findPage(page, pageSize);
+	}
+	/**
+	 * find page with filter
+	 * 
+	 * @param page
+	 * @param form
+	 * @return
+	 */
+	public static Page<Enroll> findPageByAgent(Agent agent, DynamicForm form, int page, Integer pageSize) {
+		Map<String, String> datas = form.data();
+		datas.put("agentId", agent.id.toString());
+		form = form.bind(datas);
+		return new QueryHelper<Enroll>(finder, form).addEq("fromAgent.id", "agentId", Long.class).addOrderBy("orderby").findPage(page, pageSize);
 //		return new QueryHelper<Enroll>(finder, form).addEqual("course.instructor.id", instructor.id.toString(), Long.class).addOrderBy("orderby").findPage(page, pageSize);
 	}
 
