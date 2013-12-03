@@ -72,6 +72,11 @@ $('#toolbar').tooltip(options);
 		} else {
 			<span class="btn disabled"	data-toggle="拒绝通过" href="#"><i class="icon-ban-circle icon-white"></i></span>
 		}
+		@if(enroll.auditOfAgent != null && enroll.auditOfAgent.status == Audit.STATUS_SUCCESS && enroll.auditOfEdu != null && enroll.auditOfEdu.status == Audit.STATUS_SUCCESS && enroll.confirmOfStu.money != null && enroll.confirmOfEdu.money != null && enroll.confirmOfPlatform.money != null && enroll.confirmOfAgent.money == null ){
+			<a class="btn btn-info" data-toggle="确认收款" href="#" onclick="getAgentPage(this, 'agentReceiptInfo', 'enrollId=@enroll.id')"><i class="icon-edit icon-white"></i></a> 
+		} else {
+			<span class="btn disabled" data-toggle="确认收款" href="#"><i class="icon-edit icon-white"></i></span>
+		}
 	</div>
 </div>
 } 
@@ -90,6 +95,8 @@ $('#toolbar').tooltip(options);
 					<th>报名时间</th>
 					<th>代理人审核</th>
 					<th>教育机构审核</th> 
+					<th>平台收款</th> 
+					<th>代理人收款</th> 
 					<th>操作</th> 
 				</tr>
 			</thead>
@@ -155,6 +162,17 @@ $('#toolbar').tooltip(options);
 						}
 					} else {
 						<td>-</td>
+					}
+
+					@if(model !=null && model.confirmOfPlatform!=null && model.confirmOfPlatform.money != null ){
+						<td>已收款</td>	
+					} else {
+						<td>未收款</td>
+					}
+					@if(model !=null&& model.confirmOfAgent!=null && model.confirmOfAgent.money != null ){
+						<td>已收款</td>	
+					} else {
+						<td>未收款</td>
 					}
 
 					<td>@toolbar(model)</td>

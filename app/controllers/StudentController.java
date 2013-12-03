@@ -138,7 +138,7 @@ public class StudentController extends BaseController {
 		if(user!=null){
 			Student student = user.student;
 			if(student == null){
-				 badRequest(Constants.MSG_STUDENT_NOT_EXIST);
+				return badRequest(Constants.MSG_STUDENT_NOT_EXIST);
 			}
 			Long enrollId =  FormHelper.getLong(form().bindFromRequest(),"enrollId");
 			Enroll enroll = Enroll.find( enrollId );

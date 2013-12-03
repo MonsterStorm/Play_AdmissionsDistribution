@@ -44,7 +44,7 @@ public class EducationController extends BaseController {
 	private static final String PAGE_DOMAIN_DETAIL  = "domainDetail";
 	private static final String PAGE_ALL_COURSE_DISTRIBUTION = "allCourseDistribution";
 	private static final String PAGE_EDU_ENROLL_INFO = "eduEnrollInfo";
-
+	private static final String PAGE_EDU_RECEIPT_INFO = "eduReceiptInfo";
 	/**
 	 * education pages
 	 * 
@@ -76,6 +76,8 @@ public class EducationController extends BaseController {
 			return pageAllCourseDistribution();
 		} else if (PAGE_EDU_ENROLL_INFO.equalsIgnoreCase(page)) {// 
 			return pageEduEnrollInfo();
+		}else if (PAGE_EDU_RECEIPT_INFO.equalsIgnoreCase(page)) {// 
+			return eduReceiptInfo();
 		}  else {
 			return badRequest("页面不存在");
 		}
@@ -119,6 +121,8 @@ public class EducationController extends BaseController {
 			return addOrUpdateCourse();
 		}if (Domain.TABLE_NAME.equalsIgnoreCase(table)) {// 域名更新或添加
 			return addOrUpdateDomain();
+		} if ("edu_receipt".equalsIgnoreCase(table)) {// 域名更新或添加
+			return addOrUpdateEduReceipt();
 		} 
 		 else {
 			return badRequest(Constants.MSG_PAGE_NOT_FOUND);
@@ -463,6 +467,35 @@ public class EducationController extends BaseController {
 		return ok(views.html.module.education.educationInfo.render(edu, user));
 	}
 
+	/**
+	 * 收款确认
+	 * 
+	 * @return
+	 */
+	public static Result eduReceiptInfo() {
+		// get page
+		User user = LoginController.getSessionUser();
+		if(user!=null){
+			
+			Long enrollId =  FormHelper.getLong(form().bindFromRequest(),"enrollId");
+			Enroll enroll = Enroll.find( enrollId );
+
+			EducationInstitution edu = enroll.edu;
+
+			if( edu == null || edu.creator.id != user.id ){
+				return badRequest(Constants.MSG_FORBIDDEN);
+			}
+
+			// reset flash
+			FormHelper.resetFlash(form().bindFromRequest(), flash());
+			if( enroll != null){
+				return ok(views.html.module.education.eduReceiptInfo.render(enroll));
+			}else{
+				return badRequest(Constants.MSG_ENROLL_NOT_EXIST);
+			}
+		}
+		return badRequest(Constants.MSG_NOT_LOGIN);
+	}
 
 	/**
 	 * 域名
@@ -555,5 +588,52 @@ public class EducationController extends BaseController {
 			}
 		}
 		return internalServerError(Constants.MSG_INTERNAL_ERROR);
+	}
+
+
+	/**
+	 * add or update instructor
+	 * 
+	 * @return
+	 */
+	public static Result addOrUpdateEduReceipt() {
+		User user =  LoginController.getSessionUser();
+		if(user == null){
+			return badRequest(Constants.MSG_NOT_LOGIN);
+		}
+		
+		Long enrollId =  FormHelper.getLong(form().bindFromRequest(),"enrollId");
+		Enroll enroll = Enroll.find(enrollId);
+		if( enroll == null ){
+			return badRequest(Constants.MSG_ENROLL_NOT_EXIST);
+		}
+
+		EducationInstitution edu = enroll.edu;
+		if( edu == null || edu.creator.id != user.id  ){
+			return badRequest(Constants.MSG_FORBIDDEN);
+		}
+
+		if( enroll.confirmOfEdu.money!= null && enroll.confirmOfEdu.money > 0 ){
+			return badRequest(Constants.MSG_RECEIPT_CONFIRMED);
+		}
+		enroll.confirmOfEdu.money = FormHelper.getDouble(form().bindFromRequest(),"money");
+		enroll.confirmOfEdu.time = System.currentTimeMillis();
+		enroll.confirmOfEdu.info =  FormHelper.getString(form().bindFromRequest(),"info");
+		enroll.confirmOfEdu.confirmer =  user;
+		enroll.confirmOfEdu.update();
+		enroll.update();
+
+		CourseDistribution cd = CourseDistribution.findByEnrollId( enroll.id );
+		if( cd != null){
+			
+			cd.rebate.numEduAdmit ++;
+			cd.rebate.moneyEduAdmit += enroll.confirmOfEdu.money;
+			
+			cd.rebate.update();
+			cd.update();
+		}
+
+		return ok(views.html.module.education.eduReceiptInfo.render(enroll));
+
 	}
 }

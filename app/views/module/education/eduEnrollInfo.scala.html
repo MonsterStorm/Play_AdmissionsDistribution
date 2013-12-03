@@ -72,6 +72,12 @@ $('#toolbar').tooltip(options);
 		} else {
 			<span class="btn disabled"	data-toggle="拒绝通过" href="#"><i class="icon-ban-circle icon-white"></i></span>
 		}
+
+		@if(enroll.auditOfAgent != null && enroll.auditOfAgent.status == Audit.STATUS_SUCCESS && enroll.auditOfEdu != null && enroll.auditOfEdu.status == Audit.STATUS_SUCCESS && enroll.confirmOfStu.money != null && enroll.confirmOfEdu.money == null ){
+			<a class="btn btn-info" data-toggle="确认收款" href="#" onclick="getEducationPage(this, 'eduReceiptInfo', 'enrollId=@enroll.id')"><i class="icon-edit icon-white"></i></a> 
+		} else {
+			<span class="btn disabled" data-toggle="确认收款" href="#"><i class="icon-edit icon-white"></i></span>
+		}
 	</div>
 </div>
 } 
@@ -90,74 +96,86 @@ $('#toolbar').tooltip(options);
 					<th>报名时间</th>
 					<th>代理人审核</th>
 					<th>教育机构审核</th> 
+					<th>付款情况</th> 
+					<th>收款情况</th> 
 					<th>操作</th> 
 				</tr>
 			</thead>
 			<tbody>
 				@for(model <- models.getList()){
 				<tr>
-					<td>@model.id</td>
-					@if(model.course != null){
-						<td>@model.course.name</td>
-					} else {
-						<td>-</td>
-					}
+				<td>@model.id</td>
+				@if(model.course != null){
+					<td>@model.course.name</td>
+				} else {
+					<td>-</td>
+				}
+				
+				@if(model.course != null){
+					<td>@datetime_formatter(model.course.startTime, true)</td>
+				} else {
+					<td>-</td>
+				}
+				
+				@if(model.student !=null && model.student.user !=null && model.student.user.basicInfo !=null && model.student.user.basicInfo.realname !=null  ){
+					<td>@model.student.user.basicInfo.realname
+					</td>
+				} else {
+					<td>-</td>
+				}
+
+				@if(model.enrollTime != null){
+					<td>@datetime_formatter(model.enrollTime, true)</td>
+				} else {
+					<td>-</td>
+				}
+
+				@if(model != null && model.auditOfAgent != null && model.auditOfAgent.status != null){
 					
-					@if(model.course != null){
-						<td>@datetime_formatter(model.course.startTime, true)</td>
-					} else {
-						<td>-</td>
+					@if(model.auditOfAgent.status == Audit.STATUS_WAIT){
+						<td>未审核</td>
 					}
-					
-					@if(model.student !=null && model.student.user !=null && model.student.user.basicInfo !=null && model.student.user.basicInfo.realname !=null  ){
-						<td>@model.student.user.basicInfo.realname
-						</td>
-					} else {
-						<td>-</td>
+					@if(model.auditOfAgent.status == Audit.STATUS_SUCCESS){
+						<td>已审核</td>
 					}
+					@if(model.auditOfAgent.status == Audit.STATUS_FAILED){
+						<td>审核失败</td>
+					}
+					@if(model.auditOfAgent.status == Audit.STATUS_DISABLED){
+						<td>禁用</td>
+					}
+				} else {
+					<td>-</td>
+				}
 
-					@if(model.enrollTime != null){
-						<td>@datetime_formatter(model.enrollTime, true)</td>
-					} else {
-						<td>-</td>
+				@if(model != null && model.auditOfEdu != null && model.auditOfEdu.status != null){
+					@if(model.auditOfEdu.status == Audit.STATUS_WAIT){
+						<td>未审核</td>
 					}
-
-					@if(model != null && model.auditOfAgent != null && model.auditOfAgent.status != null){
-						
-						@if(model.auditOfAgent.status == Audit.STATUS_WAIT){
-							<td>未审核</td>
-						}
-						@if(model.auditOfAgent.status == Audit.STATUS_SUCCESS){
-							<td>已审核</td>
-						}
-						@if(model.auditOfAgent.status == Audit.STATUS_FAILED){
-							<td>审核失败</td>
-						}
-						@if(model.auditOfAgent.status == Audit.STATUS_DISABLED){
-							<td>禁用</td>
-						}
-					} else {
-						<td>-</td>
+					@if(model.auditOfEdu.status == Audit.STATUS_SUCCESS){
+						<td>已审核</td>
 					}
-
-					@if(model != null && model.auditOfEdu != null && model.auditOfEdu.status != null){
-						@if(model.auditOfEdu.status == Audit.STATUS_WAIT){
-							<td>未审核</td>
-						}
-						@if(model.auditOfEdu.status == Audit.STATUS_SUCCESS){
-							<td>已审核</td>
-						}
-						@if(model.auditOfEdu.status == Audit.STATUS_FAILED){
-							<td>审核失败</td>
-						}
-						@if(model.auditOfEdu.status == Audit.STATUS_DISABLED){
-							<td>禁用</td>
-						}
-					} else {
-						<td>-</td>
+					@if(model.auditOfEdu.status == Audit.STATUS_FAILED){
+						<td>审核失败</td>
 					}
+					@if(model.auditOfEdu.status == Audit.STATUS_DISABLED){
+						<td>禁用</td>
+					}
+				} else {
+					<td>-</td>
+				}
+				@if(model !=null && model.confirmOfStu!=null && model.confirmOfStu.money != null ){
+					<td>已付款</td>	
+				} else {
+					<td>未付款</td>
+				}
+				@if(model !=null&& model.confirmOfEdu!=null && model.confirmOfEdu.money != null ){
+					<td>已收款</td>	
+				} else {
+					<td>未收款</td>
+				}
 
-					<td>@toolbar(model)</td>
+				<td>@toolbar(model)</td>
 				</tr>
 				}
 			</tbody>

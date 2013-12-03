@@ -42,6 +42,7 @@ public class AgentController extends BaseController {
 	private static final String PAGE_DOMAIN_DETAIL  = "domainDetail";
 	private static final String PAGE_USER_ENROLL_BY_AGENT = "userEnrollByAgent";
 	private static final String PAGE_AGENT_ENROLL_INFO = "agentEnrollInfo";
+	private static final String PAGE_AGENT_RECEIPT_INFO = "agentReceiptInfo";//学员报名信息
 	/**
 	 * agent pages
 	 * 
@@ -75,7 +76,9 @@ public class AgentController extends BaseController {
 			return userEnrollByAgent(null);
 		} else if (PAGE_AGENT_ENROLL_INFO.equalsIgnoreCase(page)) {// 
 			return pageAgentEnrollInfo();
-		} else {
+		} else if(PAGE_AGENT_RECEIPT_INFO.equalsIgnoreCase(page)){
+			return agentReceiptInfo();
+		}else {
 			return badRequest("页面不存在");
 		}
 	}
@@ -104,7 +107,8 @@ public class AgentController extends BaseController {
 			return addOrUpdateDomain();
 		}else if( "agent_enroll".equalsIgnoreCase(table) ){//代理人更新
 			return addOrUpdateAgentEnroll();
-
+		}else if("agent_receipt".equalsIgnoreCase(table)){//学员报名
+			return addOrUpdateAgentReceipt();
 		}else {
 			return badRequest(Constants.MSG_PAGE_NOT_FOUND);
 		}
@@ -763,5 +767,77 @@ public class AgentController extends BaseController {
 		//return internalServerError(Constants.MSG_INTERNAL_ERROR);
 	}
 
+	/**
+	 * 收款确认管理
+	 * 
+	 * @return
+	 */
+	public static Result agentReceiptInfo() {
+		// get page
+		User user = LoginController.getSessionUser();
+		if(user!=null){
+			Agent agent = user.agent;
+			if(agent == null){
+				return badRequest(Constants.MSG_AGENT_NOT_EXIST);
+			}
+			Long enrollId =  FormHelper.getLong(form().bindFromRequest(),"enrollId");
+			Enroll enroll = Enroll.find( enrollId );
+
+			// reset flash
+			FormHelper.resetFlash(form().bindFromRequest(), flash());
+			if( enroll != null){
+				return ok(views.html.module.agent.agentReceiptInfo.render(enroll));
+			}else{
+				return badRequest(Constants.MSG_ENROLL_NOT_EXIST);
+			}
+		}
+		return badRequest(Constants.MSG_NOT_LOGIN);
+	}
+
+	/**
+	 * add or update instructor
+	 * 
+	 * @return
+	 */
+	public static Result addOrUpdateAgentReceipt() {
+		User user =  LoginController.getSessionUser();
+		if(user == null){
+			return badRequest(Constants.MSG_NOT_LOGIN);
+		}
+		Agent agent = user.agent;
+		if(agent!=null){
+			Long enrollId =  FormHelper.getLong(form().bindFromRequest(),"enrollId");
+			Enroll enroll = Enroll.find(enrollId);
+			if(enroll!=null && enroll.fromAgent.id == agent.id ){
+				if( enroll.confirmOfAgent.money!= null && enroll.confirmOfAgent.money > 0 ){
+					return badRequest(Constants.MSG_RECEIPT_CONFIRMED);
+				}
+				enroll.confirmOfAgent.money = FormHelper.getDouble(form().bindFromRequest(),"money");
+				enroll.confirmOfAgent.time = System.currentTimeMillis();
+				enroll.confirmOfAgent.info =  FormHelper.getString(form().bindFromRequest(),"info");
+				enroll.confirmOfAgent.confirmer =  user;
+				enroll.confirmOfAgent.update();
+				enroll.update();
+
+				CourseDistribution cd = CourseDistribution.findByEnrollId( enroll.id );
+				if( cd != null){
+					
+					cd.rebate.numAgentAdmit ++;
+					cd.rebate.moneyAgentAdmit += enroll.confirmOfAgent.money;
+					
+					cd.rebate.update();
+					cd.update();
+				}
+
+				return ok(views.html.module.agent.agentReceiptInfo.render(enroll));
+
+			}else{
+				return badRequest(Constants.MSG_ENROLL_NOT_EXIST);
+			}
+		}else{
+
+			return badRequest(Constants.MSG_AGENT_NOT_EXIST);
+		}
+	}
   
 }
