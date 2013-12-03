@@ -11,6 +11,8 @@ import views.html.helper.*;
 import com.avaje.ebean.*;
 import common.*;
 
+import controllers.*;
+
 /**
  * 报名信息
  * 
@@ -223,6 +225,30 @@ public class Enroll extends Model {
 	 */
 	public static Page<Enroll> findPageByEduId(DynamicForm form, int page, Integer pageSize) {
 		return new QueryHelper<Enroll>(finder, form).addEq("edu.id", "id", Long.class).addOrderBy("orderby").findPage(page, pageSize);
+	}
+
+
+	/**
+	 * enroll
+	 * 
+	 * @param enrollId
+	 * @param auditStatus
+	 * @return
+	 */
+	public static Enroll updateAgentAudit(Long enrollId, Integer auditStatus) {
+		Enroll enroll = Enroll.find(enrollId);
+		if (enroll != null) {
+			if( enroll.auditOfAgent == null ){
+				return null;
+			}
+			enroll.auditOfAgent.status = auditStatus;
+			enroll.auditOfAgent.auditTime = System.currentTimeMillis();
+			enroll.auditOfAgent.auditor = LoginController.getSessionUser();
+			enroll.auditOfAgent.update();
+			enroll.update();
+			return enroll;
+		}
+		return null;
 	}
 
 

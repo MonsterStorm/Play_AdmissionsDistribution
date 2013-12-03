@@ -8,26 +8,72 @@
 @toolbar_header={
 <div class="row">
 	<div class="span2">
-		<h4>我的报名</h4>
+		<h4>学员报名</h4>
 	</div>
 	<div class="btn-toolbar pull-right" role="toolbar">
 		
+		<div class="btn-group" id="btnGroup">
+			<button type="button" class="btn btn-default @checkActive("auditStatus", "-1")" onclick="@buildAction({baseUrl}, "agent", Array("auditStatus"), Array("-1"), true)">所有</button>
+			<button type="button" class="btn btn-default @checkActive("auditStatus", {String.valueOf(Audit.STATUS_WAIT)})" onclick="@buildAction({baseUrl}, "agent", Array("auditStatus"), Array({String.valueOf(Audit.STATUS_WAIT)}), true)">所有待审核</button>
+			<button type="button" class="btn btn-default @checkActive("auditStatus", {String.valueOf(Audit.STATUS_SUCCESS)})" onclick="@buildAction({baseUrl}, "agent", Array("auditStatus"), Array({String.valueOf(Audit.STATUS_SUCCESS)}), true)">所有已审核</button>
+		</div>
 		<div class="btn-group">
 			<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
 				排序 <span class="caret"></span>
 			</a>
 			<ul class="dropdown-menu">
-				<li class="@checkActive("orderby", "course.name-asc", true)"><a onclick="@buildAction({baseUrl}, "student", Array("orderby"), Array("course.name-asc"))">按课程名称升序</a></li>
-				<li class="@checkActive("orderby", "course.name-desc")"><a onclick="@buildAction({baseUrl}, "student", Array("orderby"), Array("course.name-desc"))">按课程名称-降序</a></li>
-				<li class="@checkActive("orderby", "enrollTime-asc")"><a onclick="@buildAction({baseUrl}, "student", Array("orderby"), Array("enrollTime-asc"))">按报名时间-升序</a></li>
-				<li class="@checkActive("orderby", "enrollTime-desc")"><a onclick="@buildAction({baseUrl}, "student", Array("orderby"), Array("enrollTime-desc"))">按报名时间-降序</a></li>
+				<li class="@checkActive("orderby", "name-asc", true)"><a onclick="@buildAction({baseUrl}, "admin", Array("orderby"), Array("name-asc"))">按名称-升序</a></li>
+				<li class="@checkActive("orderby", "name-desc")"><a onclick="@buildAction({baseUrl}, "admin", Array("orderby"), Array("name-desc"))">按名称-降序</a></li>
 			</ul>
 		</div>
 	</div>
 </div>
-} 
-@toolbar(enroll: Enroll)={
 
+} 
+
+@toolbar(enroll: Enroll)={
+<!-- <script type="text/javascript">
+$('#toolbar').tooltip(options);
+</script> -->
+
+@dialogConfirm("确定审核通过", String.valueOf("y" + enroll.id), String.valueOf("doAgentAudit('" + String.valueOf("y" + enroll.id) + "', {id:" + enroll.id + ",status:" + Audit.STATUS_SUCCESS + ",table:'" + Enroll.TABLE_NAME + "'});")){
+	确定审核通过对&nbsp;
+	<b style="font-size:x-large;color:red">
+	@{
+		if(enroll.course != null){
+			enroll.course.name
+		}
+	}
+	</b>&nbsp;的报名？
+}
+
+
+@dialogConfirm("确定拒绝通过", String.valueOf("n" + enroll.id), "doAgentAudit('n" + enroll.id + "', {id:" + enroll.id + ",status:" + Audit.STATUS_FAILED + ",table:'" + Enroll.TABLE_NAME + "'})"){
+	确定拒绝通过对&nbsp;
+	<b style="font-size:x-large;color:red">
+	@{
+		if(enroll.course != null){
+			enroll.course.name
+		}
+	}
+	</b>&nbsp;的报名？
+}
+
+<div class="pull-left" style="width:130px;">
+	<div class="btn-group" id="toolbar">
+		@if(enroll.auditOfAgent == null || enroll.auditOfAgent.status != Audit.STATUS_SUCCESS){
+			<a class="btn btn-success" data-toggle="审核通过" href="#" onclick="showConfirm('@String.valueOf("y" + enroll.id)')"><i class="icon-ok icon-white"></i></a> 
+		} else {
+			<span class="btn disabled" data-toggle="审核通过" href="#"><i class="icon-ok icon-white"></i></span>
+		}
+		
+		@if(enroll.auditOfAgent == null || enroll.auditOfAgent.status != Audit.STATUS_FAILED){
+			<a class="btn btn-info"	data-toggle="拒绝通过" href="#" onclick="showConfirm('@String.valueOf("n" + enroll.id)')"><i class="icon-ban-circle icon-white"></i></a>
+		} else {
+			<span class="btn disabled"	data-toggle="拒绝通过" href="#"><i class="icon-ban-circle icon-white"></i></span>
+		}
+	</div>
+</div>
 } 
 
 @toolbar_header
@@ -44,6 +90,7 @@
 					<th>报名时间</th>
 					<th>代理人审核</th>
 					<th>教育机构审核</th> 
+					<th>操作</th> 
 				</tr>
 			</thead>
 			<tbody>
@@ -76,32 +123,35 @@
 					}
 
 					@if(model != null && model.auditOfAgent != null && model.auditOfAgent.status != null){
-						if(model.auditOfAgent.status == Audit.STATUS_WAIT){
+						
+						@if(model.auditOfAgent.status == Audit.STATUS_WAIT){
 							<td>未审核</td>
-						} else if (model.auditOfAgent.status == Audit.STATUS_SUCCESS){
+						}
+						@if(model.auditOfAgent.status == Audit.STATUS_SUCCESS){
 							<td>已审核</td>
-						} else if (model.auditOfAgent.status == Audit.STATUS_FAILED){
+						}
+						@if(model.auditOfAgent.status == Audit.STATUS_FAILED){
 							<td>审核失败</td>
-						} else if (model.auditOfAgent.status == Audit.STATUS_DISABLED){
+						}
+						@if(model.auditOfAgent.status == Audit.STATUS_DISABLED){
 							<td>禁用</td>
-						} else {
-							<td>-</td>
 						}
 					} else {
 						<td>-</td>
 					}
 
 					@if(model != null && model.auditOfEdu != null && model.auditOfEdu.status != null){
-						if(model.auditOfEdu.status == Audit.STATUS_WAIT){
+						@if(model.auditOfEdu.status == Audit.STATUS_WAIT){
 							<td>未审核</td>
-						} else if (model.auditOfEdu.status == Audit.STATUS_SUCCESS){
+						}
+						@if(model.auditOfEdu.status == Audit.STATUS_SUCCESS){
 							<td>已审核</td>
-						} else if (model.auditOfEdu.status == Audit.STATUS_FAILED){
+						}
+						@if(model.auditOfEdu.status == Audit.STATUS_FAILED){
 							<td>审核失败</td>
-						} else if (model.auditOfEdu.status == Audit.STATUS_DISABLED){
+						}
+						@if(model.auditOfEdu.status == Audit.STATUS_DISABLED){
 							<td>禁用</td>
-						} else {
-							<td>-</td>
 						}
 					} else {
 						<td>-</td>

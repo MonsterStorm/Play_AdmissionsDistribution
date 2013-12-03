@@ -533,7 +533,11 @@ public class PlatformController extends BaseController {
 				return badRequest(Constants.MSG_COURSE_NOT_EXIST);
 			}
 		}
-
+		Agent agent = null;
+		if(form().bindFromRequest().get("agentId") != null){
+			Long agentId =  FormHelper.getLong(form().bindFromRequest(),"agentId");
+			agent = Agent.find(agentId);
+		}
 
 		UserInfo basicInfo = user.basicInfo;
 		if(basicInfo == null){
@@ -593,11 +597,7 @@ public class PlatformController extends BaseController {
 				user.student = student;
 				user.update();
 				Enroll enroll = new Enroll();
-				Agent agent = null;
-				if(form().bindFromRequest().get("agentId") != null){
-					Long agentId =  FormHelper.getLong(form().bindFromRequest(),"agentId");
-					agent = Agent.find(agentId);
-				}
+				
 				if( form().bindFromRequest().get("courseId") != null){
 					Long courseId =  FormHelper.getLong(form().bindFromRequest(),"courseId");
 					Course course = Course.find(courseId);
@@ -612,6 +612,26 @@ public class PlatformController extends BaseController {
 				}
 				enroll.student = student;
 				enroll.enrollTime = System.currentTimeMillis();
+
+				Audit auditOfAgent = new Audit(student.user, Audit.STATUS_WAIT, AuditType.TYPE_AUDITTYPE_AGENT_ENROLL);  // 代理人审核
+				Audit auditOfEdu = new Audit(student.user, Audit.STATUS_WAIT, AuditType.TYPE_AUDITTYPE_EDU_ENROLL);// 教育机构的审核信息
+				ConfirmReceipt confirmOfStu = new ConfirmReceipt(); // 学生付款确认信息
+				ConfirmReceipt confirmOfEdu = new ConfirmReceipt(); // 教育机构收款信息
+				ConfirmReceipt confirmOfPlatform  = new ConfirmReceipt(); // 平台收款信息
+				ConfirmReceipt confirmOfAgent  = new ConfirmReceipt(); // 代理人收款信息
+				auditOfAgent.save();
+				auditOfEdu.save();
+				confirmOfStu.save();
+				confirmOfEdu.save();
+				confirmOfPlatform.save();
+				confirmOfAgent.save();
+
+				enroll.auditOfAgent = auditOfAgent;
+				enroll.auditOfEdu = auditOfEdu;
+				enroll.confirmOfStu = confirmOfStu;
+				enroll.confirmOfEdu = confirmOfEdu;
+				enroll.confirmOfPlatform = confirmOfPlatform;
+				enroll.confirmOfAgent = confirmOfAgent;
 				//enroll.save();
 				Enroll.addOrUpdate(enroll);
 

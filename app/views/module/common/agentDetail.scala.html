@@ -25,8 +25,15 @@
 @toolbar_header
 
 @navBasic(Array("课程列表", "代理记录", "域名列表", "基本信息"), Array("nav1", "nav2", "nav3", "nav4"))
-
-@courseList(model.courses, "nav1")
-@courseDistributionList(model.distributons, "nav2")
-@domainList(model.domain, "nav3")
-@agentInfo(model, "nav4")
+@if( model!=null ){
+	@if(model.courses!= null ){
+		@courseList(model.courses, "nav1")
+	}
+	@if( model.distributons!= null ){
+		@courseDistributionList(model.distributons, "nav2")
+	}
+	@if( model.domain!= null ){
+		@domainList(model.domain, "nav3")
+	}
+	@agentInfo(model, "nav4")
+}

@@ -574,6 +574,21 @@ public class AgentController extends BaseController {
 			student.user.basicInfo.address = FormHelper.getString( form().bindFromRequest(),"address");
 			student.info = FormHelper.getString( form().bindFromRequest(),"info");
 			student.save();
+
+
+			Audit auditOfAgent = new Audit(student.user, Audit.STATUS_WAIT, AuditType.TYPE_AUDITTYPE_AGENT_ENROLL);  // 代理人审核
+			Audit auditOfEdu = new Audit(student.user, Audit.STATUS_WAIT, AuditType.TYPE_AUDITTYPE_EDU_ENROLL);// 教育机构的审核信息
+			ConfirmReceipt confirmOfStu = new ConfirmReceipt(); // 学生付款确认信息
+			ConfirmReceipt confirmOfEdu = new ConfirmReceipt(); // 教育机构收款信息
+			ConfirmReceipt confirmOfPlatform  = new ConfirmReceipt(); // 平台收款信息
+			ConfirmReceipt confirmOfAgent  = new ConfirmReceipt(); // 代理人收款信息
+			auditOfAgent.save();
+			auditOfEdu.save();
+			confirmOfStu.save();
+			confirmOfEdu.save();
+			confirmOfPlatform.save();
+			confirmOfAgent.save();
+
 			Enroll enroll = new Enroll();
 			enroll.student = student;
 			enroll.course = course;
@@ -581,6 +596,14 @@ public class AgentController extends BaseController {
 			enroll.edu = course.edu;
 			enroll.enrollByAgent = 1;
 			enroll.enrollTime = System.currentTimeMillis();
+
+			enroll.auditOfAgent = auditOfAgent;
+			enroll.auditOfEdu = auditOfEdu;
+			enroll.confirmOfStu = confirmOfStu;
+			enroll.confirmOfEdu = confirmOfEdu;
+			enroll.confirmOfPlatform = confirmOfPlatform;
+			enroll.confirmOfAgent = confirmOfAgent;
+
 			enroll.save();
 			return ok(views.html.module.agent.userEnrollByAgent.render(enroll.fromAgent, enroll ,enroll.student,enroll.course));
 

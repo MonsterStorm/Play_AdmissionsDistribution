@@ -24,6 +24,8 @@ public class AuditType extends Model {
 	public static final long TYPE_AUDITTYPE_COURSE = 6;//课程审核
 	public static final long TYPE_AUDITTYPE_DOMAIN = 7;//域名审核
 	public static final long TYPE_AUDITTYPE_COURSE_DISTRIBUTION = 8;//课程代理审核
+	public static final long TYPE_AUDITTYPE_AGENT_ENROLL = 9;//代理人审核报名
+	public static final long TYPE_AUDITTYPE_EDU_ENROLL = 10;//教育机构审核报名
 	@Id
 	public Long id;
 

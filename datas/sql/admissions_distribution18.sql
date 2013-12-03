@@ -212,6 +212,8 @@ INSERT INTO `audit_type` VALUES ('3', '讲师审核', '审核讲师资格');
 INSERT INTO `audit_type` VALUES ('7', '域名审核', '审核域名');
 INSERT INTO `audit_type` VALUES ('1', '用户审核', '审核用户');
 INSERT INTO `audit_type` VALUES ('8', '课程经销审核', '审核代理人代理课程行为');
+INSERT INTO `audit_type` VALUES ('9', '代理人审核报名', '代理人审核报名的行为');
+INSERT INTO `audit_type` VALUES ('10', '教育机构审核报名', '教育机构审核报名的行为');
 
 -- ----------------------------
 -- Table structure for `confirm_receipt`
