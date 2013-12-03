@@ -251,6 +251,29 @@ public class Enroll extends Model {
 		return null;
 	}
 
+	/**
+	 * enroll
+	 * 
+	 * @param enrollId
+	 * @param auditStatus
+	 * @return
+	 */
+	public static Enroll updateEduAudit(Long enrollId, Integer auditStatus) {
+		Enroll enroll = Enroll.find(enrollId);
+		if (enroll != null) {
+			if( enroll.auditOfEdu == null ){
+				return null;
+			}
+			enroll.auditOfEdu.status = auditStatus;
+			enroll.auditOfEdu.auditTime = System.currentTimeMillis();
+			enroll.auditOfEdu.auditor = LoginController.getSessionUser();
+			enroll.auditOfEdu.update();
+			enroll.update();
+			return enroll;
+		}
+		return null;
+	}
+
 
 
 

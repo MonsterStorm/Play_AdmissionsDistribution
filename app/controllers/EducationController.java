@@ -43,6 +43,7 @@ public class EducationController extends BaseController {
 	private static final String PAGE_EDUCATION_DOMAIN  = "eduDomain";
 	private static final String PAGE_DOMAIN_DETAIL  = "domainDetail";
 	private static final String PAGE_ALL_COURSE_DISTRIBUTION = "allCourseDistribution";
+	private static final String PAGE_EDU_ENROLL_INFO = "eduEnrollInfo";
 
 	/**
 	 * education pages
@@ -73,6 +74,8 @@ public class EducationController extends BaseController {
 			return pageDomainDetail(null);
 		}  else if (PAGE_ALL_COURSE_DISTRIBUTION.equalsIgnoreCase(page)) {// 
 			return pageAllCourseDistribution();
+		} else if (PAGE_EDU_ENROLL_INFO.equalsIgnoreCase(page)) {// 
+			return pageEduEnrollInfo();
 		}  else {
 			return badRequest("页面不存在");
 		}
@@ -295,6 +298,24 @@ public class EducationController extends BaseController {
 			}
 		}
 		return internalServerError(Constants.MSG_INTERNAL_ERROR);
+	}
+
+	/**
+	 * 报名管理
+	 * 
+	 * @return
+	 */
+	public static Result pageEduEnrollInfo() {
+		play.Logger.error(form().bindFromRequest().get("page"));
+		// get page
+		int page = FormHelper.getPage(form().bindFromRequest());
+
+		Page<Enroll> enrolls = Enroll.findPageByEduId(form().bindFromRequest(), page,
+				null);
+
+		FormHelper.resetFlash(form().bindFromRequest(), flash());
+
+		return ok(views.html.module.education.eduEnrollInfo.render(enrolls));
 	}
 
 	/**

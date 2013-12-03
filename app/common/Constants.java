@@ -24,6 +24,7 @@ public class Constants {
 	public static final String MSG_ENROLL_NOT_EXIST = "报名不存在";
 	public static final String MSG_COURSE_NOT_SELECT = "未选择课程";
 	public static final String MSG_COURSE_AGENTED = "已代理该课程";
+	public static final String MSG_RECEIPT_CONFIRMED = "已确认过该付款";
 	public static final String MSG_COURSE_REGED = "已有一个申请";
 	public static final String MSG_DOMAIN_EXIST = "域名已存在";
 	public static final String MSG_NOT_USER_EDUCATION = "教育机构与用户不匹配";

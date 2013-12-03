@@ -71,10 +71,10 @@ public class AuditController extends Controller {
 		if("auditCourseAgent".equalsIgnoreCase(table)){
 			return auditCourseAgent();
 		}
-
-		// if (Course.TABLE_NAME.equalsIgnoreCase(table)) {// 课程，认证
-		// 	return auditAdminCourse();
-		// } else if (EducationInstitution.TABLE_NAME.equalsIgnoreCase(table)) {
+		else if (Enroll.TABLE_NAME.equalsIgnoreCase(table)) {// 课程，认证
+		 	return auditEduEnroll();
+		 }
+		 // else if (EducationInstitution.TABLE_NAME.equalsIgnoreCase(table)) {
 		// 	return auditAdminEdu();
 		// } else if (Instructor.TABLE_NAME.equalsIgnoreCase(table)) {
 		// 	return auditAdminInstructor();
@@ -221,6 +221,26 @@ public class AuditController extends Controller {
 
 		if( id != null && status != null ){
 			Enroll enroll = Enroll.updateAgentAudit(id, status);
+			if (enroll != null) {
+				return ok(Constants.MSG_SUCCESS);
+			} else {
+				return internalServerError(Constants.MSG_ENROLL_NOT_EXIST);
+			}
+
+		}
+		return internalServerError(Constants.MSG_INTERNAL_ERROR);
+	}
+
+	/**
+	 * 教育机构审核学生的报名申请
+	 * @return
+	 */
+	public static Result auditEduEnroll(){
+		Long id = FormHelper.getLong(form().bindFromRequest(), "id");
+		Integer status = FormHelper.getInt(form().bindFromRequest(), "status");
+
+		if( id != null && status != null ){
+			Enroll enroll = Enroll.updateEduAudit(id, status);
 			if (enroll != null) {
 				return ok(Constants.MSG_SUCCESS);
 			} else {

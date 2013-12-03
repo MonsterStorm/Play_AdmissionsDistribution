@@ -33,6 +33,7 @@ public class StudentController extends BaseController {
 	private static final String PAGE_LOGIN = "login";// 登录
 	private static final String PAGE_STUDENT_INFO = "studentInfo";//学员信息
 	private static final String PAGE_STUDENT_ENROLL_INFO = "studentEnrollInfo";//学员报名信息
+	private static final String PAGE_STUDENT_RECEIPT_INFO = "studentReceiptInfo";//学员报名信息
 	/**
 	 * student pages
 	 * 
@@ -50,6 +51,8 @@ public class StudentController extends BaseController {
 			return pageStudentInfo();
 		}else if(PAGE_STUDENT_ENROLL_INFO.equalsIgnoreCase(page)){
 			return pageStudentEnrollInfo();
+		}else if(PAGE_STUDENT_RECEIPT_INFO.equalsIgnoreCase(page)){
+			return studentReceiptInfo();
 		}
 		else {
 			return badRequest("页面不存在");
@@ -67,6 +70,8 @@ public class StudentController extends BaseController {
 			return addOrUpdateStudent();
 		} if("student_enroll".equalsIgnoreCase(table)){//学员报名
 			return addOrUpdateStudentEnroll();
+		} if("student_receipt".equalsIgnoreCase(table)){//学员报名
+			return addOrUpdateStudentReceipt();
 		}
 		 else {
 			return badRequest(Constants.MSG_PAGE_NOT_FOUND);
@@ -119,6 +124,33 @@ public class StudentController extends BaseController {
 			return ok(views.html.module.student.studentEnrollInfo.render(enroll));
 		}
 
+		return badRequest(Constants.MSG_NOT_LOGIN);
+	}
+
+	/**
+	 * 学生报名管理
+	 * 
+	 * @return
+	 */
+	public static Result studentReceiptInfo() {
+		// get page
+		User user = LoginController.getSessionUser();
+		if(user!=null){
+			Student student = user.student;
+			if(student == null){
+				 badRequest(Constants.MSG_STUDENT_NOT_EXIST);
+			}
+			Long enrollId =  FormHelper.getLong(form().bindFromRequest(),"enrollId");
+			Enroll enroll = Enroll.find( enrollId );
+
+			// reset flash
+			FormHelper.resetFlash(form().bindFromRequest(), flash());
+			if( enroll != null){
+				return ok(views.html.module.student.studentReceiptInfo.render(enroll));
+			}else{
+				return badRequest(Constants.MSG_ENROLL_NOT_EXIST);
+			}
+		}
 		return badRequest(Constants.MSG_NOT_LOGIN);
 	}
 	/**
@@ -300,5 +332,42 @@ public class StudentController extends BaseController {
 			}
 		}
 		return internalServerError(Constants.MSG_INTERNAL_ERROR);
+	}
+
+
+
+	/**
+	 * add or update instructor
+	 * 
+	 * @return
+	 */
+	public static Result addOrUpdateStudentReceipt() {
+		User user =  LoginController.getSessionUser();
+		if(user == null){
+			return badRequest(Constants.MSG_NOT_LOGIN);
+		}
+		Student student = user.student;
+		if(student!=null){
+			Long enrollId =  FormHelper.getLong(form().bindFromRequest(),"enrollId");
+			Enroll enroll = Enroll.find(enrollId);
+			if(enroll!=null && enroll.student.id == student.id ){
+				if( enroll.confirmOfStu.money!= null && enroll.confirmOfStu.money > 0 ){
+					return badRequest(Constants.MSG_RECEIPT_CONFIRMED);
+				}
+				enroll.confirmOfStu.money = FormHelper.getDouble(form().bindFromRequest(),"money");
+				enroll.confirmOfStu.time = System.currentTimeMillis();
+				enroll.confirmOfStu.info =  FormHelper.getString(form().bindFromRequest(),"info");
+				enroll.confirmOfStu.confirmer =  user;
+				enroll.confirmOfStu.update();
+				enroll.update();
+				return ok(views.html.module.student.studentReceiptInfo.render(enroll));
+
+			}else{
+				return badRequest(Constants.MSG_ENROLL_NOT_EXIST);
+			}
+		}else{
+
+			return badRequest(Constants.MSG_STUDENT_NOT_EXIST);
+		}
 	}
 }
