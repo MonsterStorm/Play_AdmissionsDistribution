@@ -45,9 +45,19 @@ $('#toolbar').tooltip(options);
 		}
 	}
 	</b>&nbsp;？
-	@inputText_money("收款数：", "money", "", false, false)  		
+	@inputText_money_for_rebate("收款数：", "money", "", "moneyForTest", false, false)  		
 	@inputText("备注说明：", "info", "", false)
 
+	<div class="control-group">
+	<label class="control-label" for="inputEmail">应付款</label>
+ 		<div class="controls">
+			<div class="input-prepend input-append">
+				<input class="input span2" type="text" id="moneyShow" name="moneyShow"  readonly="true" disabled >
+				<span class="add-on">元</span>
+			</div>
+		</div>
+	</div>
+	<div id="tmp" style="background:red;width:300px;height:300px"></div>
 
 }
 
