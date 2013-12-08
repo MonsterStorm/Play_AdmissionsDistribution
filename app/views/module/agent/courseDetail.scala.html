@@ -92,9 +92,9 @@ $('#toolbar').tooltip(options);
 				@inputSelect("所属教育机构", "edu", model.edu.name, true){
 					@for((t, index) <- edus.zipWithIndex){
 						@if(model.edu.id == t.id){
-							<option value="@t.id" onclick="changeValue('#eduId', '@t.id')" selected>@t.name</option>
+							<option value="@t.id" onclick="changeValue('#eduId', '@t.name')" selected>@t.name</option>
 						} else {
-	    		  	<option value="@t.id" onclick="changeValue('#eduId', '@t.id')">@t.name</option>
+	    		  	<option value="@t.id" onclick="changeValue('#eduId', '@t.name')">@t.name</option>
 	    		  			}
       					}
 
@@ -103,9 +103,9 @@ $('#toolbar').tooltip(options);
 				@inputSelect("所属教育机构", "edu", null, false){
 					@for((t, index) <- edus.zipWithIndex){
 	    		  @if(model!=null && model.edu!=null && model.edu.id == t.id){
-							<option value="@t.id" onclick="changeValue('#eduId', '@t.id')" selected>@t.name</option>
+							<option value="@t.id" onclick="changeValue('#eduId', '@t.name')" selected>@t.name</option>
 						} else {
-	    		  	<option value="@t.id" onclick="changeValue('#eduId', '@t.id')">@t.name</option>
+	    		  	<option value="@t.id" onclick="changeValue('#eduId', '@t.name')">@t.name</option>
 	    		 			 }
       					}
 				}

@@ -87,8 +87,16 @@ public class EducationInstitution extends Model {
 	 * @param form
 	 * @return
 	 */
-	public static Page<EducationInstitution> findPage(DynamicForm form, int page, Integer pageSize){
-		return new QueryHelper<EducationInstitution>().findPage(finder, form, page, pageSize);
+	@QueryFilters(values = {
+			@QueryFilter(dataName="name", paramName="eduName", queryType=QueryFilter.Type.LIKE, dataType=String.class),
+			@QueryFilter(dataName="creator.username", paramName="creatorUsername", queryType=QueryFilter.Type.LIKE, dataType=String.class),
+			@QueryFilter(dataName="audit.status", paramName="auditStatus", queryType=QueryFilter.Type.EQ, dataType=Integer.class),
+			@QueryFilter(dataName="createTime", paramName="createTime", queryType=QueryFilter.Type.BETWEEN, dataType=Long.class)
+	})
+	public static Page<EducationInstitution> findPage(DynamicForm form, Integer page, Integer pageSize){
+		QueryHelper<EducationInstitution> queryFilter = new QueryFilterHelper<EducationInstitution>(finder, form).filter(EducationInstitution.class, "findPage", DynamicForm.class, Integer.class, Integer.class);
+		return queryFilter.findPage(page, pageSize);
+//		return new QueryHelper<EducationInstitution>().findPage(finder, form, page, pageSize);
 	}
 
 	/**

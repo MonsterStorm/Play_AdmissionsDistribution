@@ -25,6 +25,10 @@ public class ConfirmReceipt extends Model {
 
 	public String info;// 额外信息
 
+	public ConfirmReceipt() {
+
+	}
+
 	public ConfirmReceipt(User user, Double money, String info) {
 		confirmer = user;
 		this.money = money;

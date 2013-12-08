@@ -1,0 +1,40 @@
+@(navs: Array[String], divids: Array[String] = null)
+
+<script type="text/javascript">
+	function init(){
+		@if(divids != null){
+			var tmp = '@divids.mkString(",")';
+			var navNames = tmp.split(",");
+			for(i = 1; i < navNames.length; i++){
+				$('#' + navNames[i]).hide();
+			} 
+		}
+	}
+	
+	function changeDiv(item, index){
+		@if(divids != null){
+			var tmp = '@divids.mkString(",")';
+			var navNames = tmp.split(",");
+			for(i = 0; i < navNames.length; i++){
+				if(i == index){
+					$('#' + navNames[i]).show();
+				} else {
+					$('#' + navNames[i]).hide();
+				}
+			} 
+		}
+		
+		$('#navlist li').removeClass("active");
+		$(item).addClass("active");
+	}	
+
+	init();
+</script>
+
+<ul class="nav nav-tabs" id="navlist">
+	@for(i <- 0 to navs.length - 1){
+  	<li @if(i==0){class="active"} onclick="changeDiv(this, @i)">
+    	<a href="#">@navs(i)</a>
+  	</li>
+  }
+</ul>

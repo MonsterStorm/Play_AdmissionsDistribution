@@ -57,6 +57,9 @@ $('#toolbar').tooltip(options);
 		<a class="btn btn-danger" data-toggle="删除，请谨慎操作！" href="#" onclick="doDelete(@course.id)"><i
 			class="icon-remove icon-white"></i></a>
 	</div>
+	<div class="btn-group">
+		<a class="btn btn btn-success" data-toggle="报名" href="#" onclick="getAgentPage(this, 'userEnrollByAgent','courseId=@course.id')"><i class="icon-plus icon-white"></i>报名</a>
+	</div>
 </div>
 } 
 
@@ -72,7 +75,6 @@ $('#toolbar').tooltip(options);
 					<th>课程类别</th>
 					<th>教育机构</th>
 					<th>开课时间</th>
-					<th>简介</th>
 					<th>操作</th> 
 				</tr>
 			</thead>
@@ -97,11 +99,6 @@ $('#toolbar').tooltip(options);
 					}
 					@if(model.startTime != null){
 						<td>@datetime_formatter(model.startTime, true)</td>
-					} else {
-						<td>-</td>
-					}
-					@if(model.info != null){
-						<td>@model.info</td>
 					} else {
 						<td>-</td>
 					}

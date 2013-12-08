@@ -80,6 +80,7 @@ public class User extends Model {
 		final String logo = form.get("logo");
 
 		UserInfo userInfo = new UserInfo(form);
+		userInfo.user = this;
 
 		this.username = username;
 		this.password = password;
@@ -94,7 +95,7 @@ public class User extends Model {
 		this.logo = User.LOGO_DEFAULT;// 默认头像
 		this.basicInfo = userInfo;
 	}
-	
+
 	/**
 	 * update info
 	 * 
@@ -118,49 +119,54 @@ public class User extends Model {
 
 	/**
 	 * create a user for edu
+	 * 
 	 * @param edu
 	 * @param roleId
 	 * @param auditStatus
 	 * @return
 	 */
-	public static User createUserForEdu(EducationInstitution edu, long roleId, int auditStatus) {
-		if(edu == null){
+	public static User createUserForEdu(EducationInstitution edu, long roleId,
+			int auditStatus) {
+		if (edu == null) {
 			return null;
 		}
-		
+
 		User user = new User();
-		
+
 		user.edus.add(edu);
-		
+
 		randomAccount(user);
-		
+
 		buildUserFields(user, roleId, auditStatus, AuditType.TYPE_AUDITTYPE_EDU);
-		
+
 		return user;
 	}
-	
+
 	/**
 	 * create a user for agent
+	 * 
 	 * @param agent
 	 * @param roleId
 	 * @param auditStatus
 	 * @return
 	 */
-	public static User createUserForAgent(Agent agent, long roleId, int auditStatus){
-		if(agent == null){
+	public static User createUserForAgent(Agent agent, long roleId,
+			int auditStatus) {
+		if (agent == null) {
 			return null;
 		}
-		
+
 		User user = new User();
 		user.agent = agent;
-		
+
 		randomAccount(user);
-		
-		buildUserFields(user, roleId, auditStatus, AuditType.TYPE_AUDITTYPE_AGENT);
-		
+
+		buildUserFields(user, roleId, auditStatus,
+				AuditType.TYPE_AUDITTYPE_AGENT);
+
 		return user;
 	}
-	
+
 	/**
 	 * create a random user for student
 	 * 
@@ -185,38 +191,73 @@ public class User extends Model {
 		// 学员信息
 		user.student = student;
 
-		buildUserFields(user, roleId, auditStatus, AuditType.TYPE_AUDITTYPE_STUDENT);
+		buildUserFields(user, roleId, auditStatus,
+				AuditType.TYPE_AUDITTYPE_STUDENT);
 	}
-	
+
+	/**
+	 * create a random user for student
+	 * 
+	 * @param user
+	 * @param roleId
+	 * @return
+	 */
+	public static User getRandomUserForStudent(Student student, long roleId,
+			int auditStatus) {
+		if (student == null)
+			return null;
+
+		User user = student.user;
+
+		if (user == null) {
+			user = new User();
+		}
+
+		// 生产随机帐号密码
+		randomAccount(user);
+
+		// 学员信息
+		user.student = student;
+
+		buildUserFields(user, roleId, auditStatus,
+				AuditType.TYPE_AUDITTYPE_STUDENT);
+		return user;
+	}
+
 	/**
 	 * create a random user for instructor
+	 * 
 	 * @param instructor
 	 * @param roleId
 	 * @param auditStatus
 	 */
-	public static void updateRandomUserForInstructor(Instructor instructor, long roleId, int auditStatus){
-		if(instructor == null){
+	public static void updateRandomUserForInstructor(Instructor instructor,
+			long roleId, int auditStatus) {
+		if (instructor == null) {
 			return;
 		}
-		
+
 		User user = instructor.user;
-		
-		//生成随机帐号
+
+		// 生成随机帐号
 		randomAccount(user);
-		
-		//讲师信息
+
+		// 讲师信息
 		user.instructor = instructor;
-		
-		buildUserFields(user, roleId, auditStatus, AuditType.TYPE_AUDITTYPE_INSTRUCTOR);
+
+		buildUserFields(user, roleId, auditStatus,
+				AuditType.TYPE_AUDITTYPE_INSTRUCTOR);
 	}
 
 	/**
 	 * build user fields
+	 * 
 	 * @param user
 	 * @param roleId
 	 * @param auditStatus
 	 */
-	public static void buildUserFields(User user, long roleId, int auditStatus, long type) {
+	public static void buildUserFields(User user, long roleId, int auditStatus,
+			long type) {
 		// 角色
 		Role role = Role.find(roleId);
 		if (role != null) {
@@ -229,7 +270,8 @@ public class User extends Model {
 		}
 
 		// 审核信息
-		Audit audit = new Audit(user, auditStatus, AuditType.TYPE_AUDITTYPE_USER);
+		Audit audit = new Audit(user, auditStatus,
+				AuditType.TYPE_AUDITTYPE_USER);
 		AuditType auditType = AuditType.find(type);// 学员审核
 		audit.type = auditType;
 		user.audit = audit;
@@ -429,34 +471,37 @@ public class User extends Model {
 	public static User findByUsername(String username) {
 		return finder.where().eq("username", username).findUnique();
 	}
-	
+
 	/**
 	 * is a username is registered
+	 * 
 	 * @param username
 	 * @return
 	 */
-	public static boolean isUsernameRegistered(String username){
+	public static boolean isUsernameRegistered(String username) {
 		return finder.where().eq("username", username).findRowCount() > 0;
 	}
-	
+
 	/**
 	 * is a mobile is registered
+	 * 
 	 * @param mobile
 	 * @return
 	 */
-	public static boolean isMobileRegistered(String mobile){
+	public static boolean isMobileRegistered(String mobile) {
 		return finder.where().eq("mobile", mobile).findRowCount() > 0;
 	}
 
 	/**
 	 * is a email is registered
+	 * 
 	 * @param email
 	 * @return
 	 */
-	public static boolean isEmailRegistered(String email){
+	public static boolean isEmailRegistered(String email) {
 		return finder.where().eq("email", email).findRowCount() > 0;
 	}
-	
+
 	/**
 	 * find user by email
 	 * 
@@ -494,10 +539,21 @@ public class User extends Model {
 	 * @param form
 	 * @return
 	 */
-	public static Page<User> findPage(DynamicForm form, int page,
+	@QueryFilters(values = {
+			@QueryFilter(dataName = "username", paramName = "username", queryType = QueryFilter.Type.LIKE, dataType = String.class),
+			@QueryFilter(dataName = "nickname", paramName = "nickname", queryType = QueryFilter.Type.LIKE, dataType = String.class),
+			@QueryFilter(dataName = "mobile", paramName = "mobile", queryType = QueryFilter.Type.LIKE, dataType = String.class),
+			@QueryFilter(dataName = "email", paramName = "email", queryType = QueryFilter.Type.LIKE, dataType = String.class),
+			@QueryFilter(dataName = "audit.status", paramName = "auditStatus", queryType = QueryFilter.Type.EQ, dataType = Integer.class),
+			@QueryFilter(dataName = "audit.createTime", paramName = "auditCreateTime", queryType = QueryFilter.Type.BETWEEN, dataType = Long.class) })
+	public static Page<User> findPage(DynamicForm form, Integer page,
 			Integer pageSize) {
-		return new QueryHelper<User>(finder, form).addEq("audit.status",
-				"auditStatus", Integer.class).findPage(page, pageSize);
+		QueryHelper<User> queryFilter = new QueryFilterHelper<User>(finder,
+				form).filter(User.class, "findPage", DynamicForm.class,
+				Integer.class, Integer.class);
+		return queryFilter.findPage(page, pageSize);
+		// return new QueryHelper<User>(finder, form).addEq("audit.status",
+		// "auditStatus", Integer.class).findPage(page, pageSize);
 	}
 
 	/**
@@ -583,6 +639,15 @@ public class User extends Model {
 		}
 		if (User.findByUsername(username) == null) {// 插入
 			User user = new User(form);
+			Role role = Role.find(Role.ROLE_REGISTED_USER);
+			if (role != null) {
+				user.roles.add(role);
+			}
+			Role role2 = Role.find(Role.ROLE_STUDENT);
+			if (role2 != null) {
+				user.roles.add(role2);
+			}
+
 			user.save();
 			return user;
 		}
@@ -616,13 +681,21 @@ public class User extends Model {
 				if (StringHelper.isValidate(user.password) == false) {// 密码不合法
 					user.password = buildRandomPassword();
 				}
-				
-				User.buildUserFields(user, Role.ROLE_REGISTED_USER, Audit.STATUS_WAIT, AuditType.TYPE_AUDITTYPE_USER);
+
+				User.buildUserFields(user, Role.ROLE_REGISTED_USER,
+						Audit.STATUS_WAIT, AuditType.TYPE_AUDITTYPE_USER);
 
 				user.save();
 				user.update();// 更新一下链接
 			} else {// 更新
-				user.update();
+				User oldUser = User.find(user.id);
+				if (oldUser != null) {
+					oldUser.nickname = user.nickname;
+					oldUser.logo = user.logo;
+					oldUser.email = user.email;
+					oldUser.mobile = user.mobile;
+					oldUser.update();
+				}
 			}
 			return user;
 		}

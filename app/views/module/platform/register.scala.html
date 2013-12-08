@@ -1,7 +1,7 @@
 @(form: Form[RegisterController.Register]) 
 @import basic.platform._
 @import basic.common._
-@basic.platform.main("注册"){@meta()}{@styles()}{@scripts()}{@nav()}{@header()}{
+@basic.platform.main("注册"){@meta()}{@styles2()}{@scripts()}{@nav()}{@header()}{
 <style type="text/css">
 .form-signin {
 	max-width: 350px;
@@ -19,7 +19,7 @@
 </style>
 
 <!-- content -->
-<div class="container" id="content">
+<div class="container" id="content" style="border:none;">
 	<div class="row">
 		<div class="span12">
 				<form class="form-signin" id="myform" method="post" action="@routes.RegisterController.addUser()">
@@ -27,15 +27,35 @@
 						<div class="alert alert-danger">@form.globalError.message</div>
 					} 
 					@form_validate_info()
-					<h5>用户名</h5>
-					<input type="text" name="username" class="input-block-level"  value="@form("username").value"> 
-					<h5>密码</h5>
-					<input type="password" name="password" class="input-block-level" placeholder="密码"  value="@form("password").value"> 
-					<h5>确认密码</h5>
-					<input type="password" name="passwordConfirm" class="input-block-level" placeholder="确认密码"  value="@form("passwordConfirm").value"> 
-					<h5>邮箱</h5>
-					<input type="email" name="email" class="input-block-level" placeholder="邮箱"  value="@form("email").value"> 
-						
+
+					<div class="control-group">
+   					<label class="control-label" for="username"><b>用户名</b></label>
+   					<div class="controls">
+							<input class="input-block-level" type="text" name="username" value="@form("username").value">
+  					</div>
+					</div>
+
+					<div class="control-group">
+   					<label class="control-label" for="password"><b>密码</b></label>
+   					<div class="controls">
+							<input class="input-block-level" type="password" name="password" value="@form("password").value">
+  					</div>
+					</div>
+					
+					<div class="control-group">
+   					<label class="control-label" for="passwordConfirm"><b>确认密码</b></label>
+   					<div class="controls">
+							<input class="input-block-level" type="password" name="passwordConfirm" value="@form("passwordConfirm").value">
+  					</div>
+					</div>
+
+					<div class="control-group">
+   					<label class="control-label" for="email"><b>邮箱</b></label>
+   					<div class="controls">
+							<input class="input-block-level" type="email" name="email" value="@form("email").value">
+  					</div>
+					</div>
+
 					<button class="btn btn-large btn-primary btn-block" type="submit">注册</button>
 					
 				</form>

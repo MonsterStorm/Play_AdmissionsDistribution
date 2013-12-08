@@ -1,0 +1,114 @@
+@(models: List[Agent], divid : String = null)
+
+@import basic.common._
+@baseUrl=@{
+	var url = "adminAgents";
+	url
+}
+@toolbar(agent: Agent)={
+<!-- <script type="text/javascript">
+$('#toolbar').tooltip(options);
+</script> -->
+
+@dialogDelete("删除代理人", Agent.TABLE_NAME, agent.id){
+	确定删除&nbsp;
+	<b style="font-size:x-large;color:red">
+	@{
+		if(agent.name != null){
+			agent.name
+		}
+	}
+	</b>&nbsp;？
+}
+
+@dialogConfirm("确定审核通过", String.valueOf("y" + agent.id), String.valueOf("doAdminAudit('" + String.valueOf("y" + agent.id) + "', {id:" + agent.id + ",status:" + Audit.STATUS_SUCCESS + ",table:'" + Agent.TABLE_NAME + "'});")){
+	确定审核通过&nbsp;
+	<b style="font-size:x-large;color:red">
+	@{
+		if(agent.name != null){
+			agent.name
+		}
+	}
+	</b>&nbsp;？
+}
+
+
+@dialogConfirm("确定拒绝通过", String.valueOf("n" + agent.id), "doAdminAudit('n" + agent.id + "', {id:" + agent.id + ",status:" + Audit.STATUS_FAILED + ",table:'" + Agent.TABLE_NAME + "'})"){
+	确定拒绝通过&nbsp;
+	<b style="font-size:x-large;color:red">
+	@{
+		if(agent.name != null){
+			agent.name
+		}
+	}
+	</b>&nbsp;？
+}
+
+<div class="pull-left" style="width:130px;">
+	<div class="btn-group" id="toolbar">
+		@if(agent.audit != null && agent.audit.status != Audit.STATUS_SUCCESS){
+			<a class="btn btn-success" data-toggle="审核通过" href="#" onclick="showConfirm('@String.valueOf("y" + agent.id)')"><i class="icon-ok icon-white"></i></a> 
+		} else {
+			<span class="btn disabled" data-toggle="审核通过" href="#"><i class="icon-ok icon-white"></i></span>
+		}
+		
+		@if(agent.audit != null && agent.audit.status != Audit.STATUS_FAILED){
+			<a class="btn btn-info"	data-toggle="拒绝通过" href="#" onclick="showConfirm('@String.valueOf("n" + agent.id)')"><i class="icon-ban-circle icon-white"></i></a>
+		} else {
+			<span class="btn disabled"	data-toggle="拒绝通过" href="#"><i class="icon-ban-circle icon-white"></i></span>
+		}
+	</div>
+	<div class="btn-group">
+		<a class="btn btn-danger" data-toggle="删除，请谨慎操作！" href="#" onclick="doDelete(@agent.id)"><i
+			class="icon-remove icon-white"></i></a>
+	</div>
+</div>
+} 
+<div @if(divid){id="@divid"} class="table-responsive">
+	<div style="overflow: auto">
+		<table class="table table-hover table-bordered table-striped">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>代理人</th>
+					<th>联系方式</th>
+					<th>简介</th>
+					<th>请求认证时间</th>
+					<th>操作</th> 
+				</tr>
+			</thead>
+			<tbody>
+				@for(model <- models){
+				<tr>
+					<td>@model.id</td>
+					@if(model != null){
+						<td><a href="#" onclick="getCommonPage(this, 'agentDetail', 'id=@model.id');">@model.name</a></td>
+					} else {
+						<td>-</td>
+					}
+					
+					@if(model != null){
+						<td>@model.contact</td>
+					} else {
+						<td>-</td>
+					}				
+					
+
+					@if(model != null){
+						<td>@model.info</td>	
+					} else {
+						<td>-</td>
+					}
+					
+					@if(model != null && model.audit != null){
+						<td>@datetime_formatter(model.audit.createTime, true)</td>
+					} else {
+						<td>-</td>
+					}
+					<td>@toolbar(model)</td>
+				</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+</div>

@@ -148,19 +148,29 @@ function showConfirm(id){
 
 <ul class="nav nav-list" id="navList">
 	<li class="nav-header">代理人</li>
-	<li><a href="#">主页</a></li>
+	<li id="home" class="active" onclick="getAgentPage(this, 'home')"><a href="#">主页</a></li>
+	<li class="divider"></li>
+	<li class="nav-header">基本信息管理</li>
 	<li><a href="#" onclick="getAgentPage(this, 'agentInfo')">个人基本信息</a></li>
+	<li><a href="#"  onclick="getAgentPage(this, 'agentDomain')">域名管理</a></li>
+
+	<li class="divider"></li>
+	<li class="nav-header">模板管理</li>
 	<li id="useTemplate" onclick="getTemplatePage(this, 'useAgentTemplate')"><a href="#">使用模板</a></li>
+	<li class="divider"></li>
+	<li class="nav-header">课程管理</li>
 	<li><a href="#" onclick="getAgentPage(this, 'agentCourses')">查看代理课程</a></li>
 	<li><a href="#"  onclick="getAgentPage(this, 'allCourse')">申请代理课程</a></li>
-	<li><a href="#"  onclick="getAgentPage(this, 'agentDomain')">域名管理</a></li>
-	<li><a href="#">管理模板</a></li>
+	<li class="divider"></li>
+	<li class="nav-header">报名管理</li>
+	<li><a href="#" onclick="getAgentPage(this, 'agentEnrollInfo')">查看报名情况</a></li>
+	<!-- <li><a href="#">管理模板</a></li>
 	<li><a href="#">查看返点奖励</a></li>
 	<li><a href="#">管理培训项目</a></li>
 	<li><a href="#">学员报名功能</a></li>
 	<li><a href="#">在线留言</a></li>
 	<li><a href="#">在线咨询</a></li>
 	<li><a href="#">在线报名</a></li>
-	<li><a href="#">查看报名情况</a></li>
+	<li><a href="#">查看报名情况</a></li> -->
 	
 </ul>

@@ -1,0 +1,65 @@
+@(model: Course, divid : String = null)
+
+@import basic.common._
+@import basic.common.basicform._
+
+<script type="text/javascript">
+    $(document).ready( function() {
+			$('#myform1').submit(function() {
+		    $(this).ajaxSubmit(ajaxSubmitOptions);
+		    return false;
+			});
+		});
+</script>
+
+<div @if(divid){id="@divid"} class="table-responsive">
+	<div style="overflow: auto">
+		<form class="form-horizontal" id="myform1" method="post" action="@routes.CommonController.addOrUpdateEntity()">
+	
+			@form_validate_info()
+	
+			@if(model != null && model.eduRebateType != null && model.eduRebateType.ratioOfTotal !=null){
+				@inputText("教育机构总金额返点比例", "eduRebateType.ratioOfTotal", {String.valueOf(model.eduRebateType.ratioOfTotal)}, true)
+			} else {
+				@inputText("教育机构总金额返点比例", "eduRebateType.ratioOfTotal", null, false)
+			}
+
+			@if(model != null && model.eduRebateType != null && model.eduRebateType.ratioOfPerStudent != null){
+				@inputText("教育机构每个学生返点金额", "eduRebateType.ratioOfPerStudent", {String.valueOf(model.eduRebateType.ratioOfPerStudent)}, true)
+			} else {
+				@inputText("教育机构每个学生返点金额", "eduRebateType.ratioOfPerStudent", null, false)
+			}
+
+
+			@if(model != null && model.agentRebateType != null && model.agentRebateType.ratioOfTotal!=null){
+				@inputText("代理人总金额返点比例", "agentRebateType.ratioOfTotal", {String.valueOf(model.agentRebateType.ratioOfTotal)}, true)
+			} else {
+				@inputText("代理人总金额返点比例", "agentRebateType.ratioOfTotal", null, false)
+			}
+
+			@if(model != null && model.agentRebateType != null && model.agentRebateType.ratioOfPerStudent!=null){
+				@inputText("代理人每个学生返点金额", "agentRebateType.ratioOfPerStudent", {String.valueOf(model.agentRebateType.ratioOfPerStudent)}, true)
+			} else {
+				@inputText("代理人每个学生返点金额", "agentRebateType.ratioOfPerStudent", null, false)
+			}
+	  	
+			<input class="input-large" type="hidden" name="table" value="CourseRebateType">
+			@if(model != null){
+				<input class="input-large" type="hidden" name="id" value="@model.id">
+			} else {
+				<input class="input-large" type="hidden" name="id">
+			}
+
+			<hr>
+			<div class="control-group row">
+		    		<div class="controls">
+				@if(model != null){
+		      			<button type="submit" class="btn btn-large btn-success btn-block span2 disabled" disabled="disabled">提交</button>
+		      		} else {
+		      			<button type="submit" class="btn btn-large btn-success btn-block span2">提交</button>
+		      		}
+			    	</div>
+			  </div>
+		</form>
+	</div>
+</div>

@@ -1,6 +1,7 @@
 @(models: com.avaje.ebean.Page[Rebate])
 
 @import basic.common._
+@import basic.common.basicform._
 
 @baseUrl=@{
 	var url = "adminRebates";
@@ -23,8 +24,8 @@
 				排序 <span class="caret"></span>
 			</a>
 			<ul class="dropdown-menu">
-				<li class="@checkActive("orderby", "course.name-asc")"><a onclick="@buildAction({baseUrl}, "admin", Array("orderby"), Array("course.name-asc"))">按名称-升序</a></li>
-				<li class="@checkActive("orderby", "course.name-desc")"><a onclick="@buildAction({baseUrl}, "admin", Array("orderby"), Array("course.name-desc"))">按名称-降序</a></li>
+				<li class="@checkActive("orderby", "distribution.course.name-asc")"><a onclick="@buildAction({baseUrl}, "admin", Array("orderby"), Array("distribution.course.name-asc"))">按名称-升序</a></li>
+				<li class="@checkActive("orderby", "distribution.course.name-desc")"><a onclick="@buildAction({baseUrl}, "admin", Array("orderby"), Array("distribution.course.name-desc"))">按名称-降序</a></li>
 			</ul>
 		</div>
 	</div>
@@ -35,7 +36,7 @@
 <!-- <script type="text/javascript">
 $('#toolbar').tooltip(options);
 </script> -->
-@dialogConfirm("确认收款", String.valueOf(rebate.id), String.valueOf("doConfirmReceipt('" + rebate.id + "', {id:" + rebate.id + "});")){
+@dialogConfirm("确认收款", String.valueOf(rebate.id), String.valueOf("doConfirmReceipt(" + rebate.id + ");")){
 	确认收款&nbsp;
 	<b style="font-size:x-large;color:red">
 	@{
@@ -44,6 +45,20 @@ $('#toolbar').tooltip(options);
 		}
 	}
 	</b>&nbsp;？
+	@inputText_money_for_rebate("收款数：", "money", "", "moneyForTest", false, false)  		
+	@inputText("备注说明：", "info", "", false)
+
+	<div class="control-group">
+	<label class="control-label" for="inputEmail">应付款</label>
+ 		<div class="controls">
+			<div class="input-prepend input-append">
+				<input class="input span2" type="text" id="moneyShow" name="moneyShow"  readonly="true" disabled >
+				<span class="add-on">元</span>
+			</div>
+		</div>
+	</div>
+	<div id="tmp" style="background:red;width:300px;height:300px"></div>
+
 }
 
 <div class="pull-left" style="width:130px;">
@@ -58,7 +73,7 @@ $('#toolbar').tooltip(options);
 				|| (session.get(LoginController.KEY_USER_ROLES).indexOf(String.valueOf(Role.ROLE_AGENT)) != -1 && rebate.lastReceiptOfAgent == null)){
 			<a class="btn btn-success" data-toggle="确认收款" href="#" onclick="showConfirm('@String.valueOf(rebate.id)')"><i class="icon-ok icon-white"></i></a>
 		} else {
-			<span class="btn btn-success disabled" data-toggle="确认收款" href="#"><i class="icon-ok icon-white"></i></span>
+			<span class="btn disabled" data-toggle="确认收款" href="#"><i class="icon-ok icon-white"></i></span>
 		}
 		
 	</div>
@@ -86,6 +101,7 @@ $('#toolbar').tooltip(options);
 				</tr>
 			</thead>
 			<tbody>
+				@if(models != null){
 				@for(model <- models.getList()){
 				<tr>
 					<td>@model.id</td>
@@ -145,6 +161,7 @@ $('#toolbar').tooltip(options);
 					}
 					<td>@toolbar(model)</td>
 				</tr>
+				}
 				}
 			</tbody>
 		</table>

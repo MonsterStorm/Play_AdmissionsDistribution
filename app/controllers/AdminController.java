@@ -1,12 +1,14 @@
 package controllers;
 
 import static play.data.Form.form;
+
+import java.util.*;
+
 import models.*;
 import play.mvc.*;
 
 import com.avaje.ebean.*;
 import common.*;
-import common.FormValidator.*;
 
 import controllers.LoginController.Login;
 import controllers.secure.*;
@@ -39,6 +41,7 @@ public class AdminController extends BaseController {
 	private static final String PAGE_ADMIN_NEWS = "adminNews";// 新闻信息
 	private static final String PAGE_ADMIN_ADVERTISMENTS = "adminAdvertisments";// 广告信息
 	private static final String PAGE_ADMIN_COURSE_TYPE = "adminCourseType";// 课程类型管理
+	private static final String PAGE_ADMIN_COURSE_CLASS = "adminCourseClass";// 课程类别管理
 	private static final String PAGE_ADMIN_USERS = "adminUsers";//用户管理
 	private static final String PAGE_ADMIN_STUDENT_WORDS = "adminStudentWords";//用户管理
 	/**
@@ -88,6 +91,8 @@ public class AdminController extends BaseController {
 			return pageAdminAdvertisments();
 		} else if(PAGE_ADMIN_COURSE_TYPE.equalsIgnoreCase(page)) {
 			return pageAdminCourseType();
+		}else if(PAGE_ADMIN_COURSE_CLASS.equalsIgnoreCase(page)) {
+			return pageAdminCourseClass();
 		}else if(PAGE_ADMIN_STUDENT_WORDS.equalsIgnoreCase(page)) {
 			return pageAdminStudentWords();
 		}  else {
@@ -105,12 +110,30 @@ public class AdminController extends BaseController {
 		// get page
 		int page = FormHelper.getPage(form().bindFromRequest());
 
-		Page<Course> courses = Course.findPage(form().bindFromRequest(), page,
-				null);
+		Page<Course> courses = Course.findPage(form().bindFromRequest(), page, null);
+		
+		Page<CourseType> types = CourseType.findPage(form().bindFromRequest(), 0, Constants.MAX_DATA_SIZE);
+		
+		String[] courseTypes = null;
+		if(types != null && types.getList() != null && types.getList().size() > 0){
+			courseTypes = new String[types.getList().size()];
+			for(int i = 0; i < types.getList().size(); i++){
+				courseTypes[i] = types.getList().get(i).name;
+			}
+		}
 
+		Page<CourseClass> cClass = CourseClass.findPage(form().bindFromRequest(), 0, Constants.MAX_DATA_SIZE);
+		
+		String[] courseClass = null;
+		if(cClass != null && cClass.getList() != null && cClass.getList().size() > 0){
+			courseClass = new String[cClass.getList().size()];
+			for(int i = 0; i < cClass.getList().size(); i++){
+				courseClass[i] = cClass.getList().get(i).name;
+			}
+		}
 		FormHelper.resetFlash(form().bindFromRequest(), flash());
 
-		return ok(views.html.module.admin.adminCourses.render(courses));
+		return ok(views.html.module.admin.adminCourses.render(courses, courseTypes, courseClass));
 	}
 
 	/**
@@ -122,8 +145,7 @@ public class AdminController extends BaseController {
 		// get page
 		int page = FormHelper.getPage(form().bindFromRequest());
 
-		Page<EducationInstitution> edus = EducationInstitution.findPage(form()
-				.bindFromRequest(), page, null);
+		Page<EducationInstitution> edus = EducationInstitution.findPage(form().bindFromRequest(), page, null);
 
 		// reset flash
 		FormHelper.resetFlash(form().bindFromRequest(), flash());
@@ -265,8 +287,7 @@ public class AdminController extends BaseController {
 		// get page
 		int page = FormHelper.getPage(form().bindFromRequest());
 
-		Page<Message> messages = Message.findPage(form().bindFromRequest(),
-				page, null);
+		Page<Message> messages = Message.findPage(form().bindFromRequest(),	page, null);
 
 		// reset flash
 		FormHelper.resetFlash(form().bindFromRequest(), flash());
@@ -349,9 +370,19 @@ public class AdminController extends BaseController {
 
 		Page<News> news = News.findPage(form().bindFromRequest(), page, null);
 
+		Page<NewsType> types = NewsType.findPage(form().bindFromRequest(), 0, Constants.MAX_PAGE_SIZE);
+		
+		String[] newsTypes = null;
+		if(types != null && types.getList().size() > 0){
+			newsTypes = new String[types.getList().size()];
+			for(int i = 0; i < types.getList().size(); i++){
+				newsTypes[i] = types.getList().get(i).name;
+			}
+		}
+		
 		FormHelper.resetFlash(form().bindFromRequest(), flash());
 
-		return ok(views.html.module.admin.adminNews.render(news));
+		return ok(views.html.module.admin.adminNews.render(news, newsTypes));
 	}
 
 	/**
@@ -385,6 +416,21 @@ public class AdminController extends BaseController {
 		FormHelper.resetFlash(form().bindFromRequest(), flash());
 
 		return ok(views.html.module.admin.adminCourseType.render(courseType));
+	}
+	/**
+	 * 课程类别详情
+	 * 
+	 * @return
+	 */
+	public static Result pageAdminCourseClass() {
+		// get page
+		int page = FormHelper.getPage(form().bindFromRequest());
+
+		Page<CourseClass> courseClass = CourseClass.findPage(form().bindFromRequest(), page, null);
+
+		FormHelper.resetFlash(form().bindFromRequest(), flash());
+
+		return ok(views.html.module.admin.adminCourseClass.render(courseClass));
 	}
 
 	/**

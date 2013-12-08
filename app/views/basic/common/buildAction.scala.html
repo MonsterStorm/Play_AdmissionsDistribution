@@ -2,13 +2,13 @@
 @params=@{
 	var paramsMap = new HashMap[String,String]();
 	var array = flash().keySet().toArray();
-	for(i <- 0 to array.length - 1){//put all into flash
+	for(i <- 0 to array.length - 1){//put all into flash, values form flash
 		var k = String.valueOf(array(i));
 		var v = flash().get(k);
 		paramsMap.put(k, v);
 	}
 
-	if(key != null && value != null){
+	if(key != null && value != null){//values form params
 		for(i <- 0 to key.length - 1){
 			paramsMap.put(key(i), value(i));
 		}	
@@ -36,7 +36,11 @@
 
 @urlType match {
   case "admin" => {
-  	getAdminPage(this, '@url', {@params})
+  	@if(value == null){<!--没有参数值才使用额外参数-->
+  		getAdminPage(this, '@url', {@params}, @key.mkString("'", ";", "'"))
+  	} else {
+  		getAdminPage(this, '@url', {@params})
+  	}
   }
   case "normal" => {
   }

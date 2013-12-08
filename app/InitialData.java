@@ -19,7 +19,7 @@ public class InitialData {
 	 * @param app
 	 */
 	public static void insert(Application app) {
-		if (Ebean.find(User.class).findRowCount() == 0) {
+		/*if (Ebean.find(User.class).findRowCount() == 0) {
 
 			System.out.println("===InitialData===");
 			Map<String, List<Object>> all = (Map<String, List<Object>>) Yaml
@@ -97,7 +97,7 @@ public class InitialData {
 
 // 			// Insert Rebates
 // 			Ebean.save(all.get("rebates"));
-		}
+		}*/
 	}
 
 }

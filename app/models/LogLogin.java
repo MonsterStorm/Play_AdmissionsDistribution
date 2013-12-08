@@ -53,7 +53,12 @@ public class LogLogin extends Model {
 	 * @param form
 	 * @return
 	 */
-	public static Page<LogLogin> findPage(DynamicForm form, int page, Integer pageSize) {
-		return new QueryHelper<LogLogin>().findPage(finder, form, page, pageSize);
+	@QueryFilters(values = { @QueryFilter(dataName = "user.username", paramName = "username", queryType = QueryFilter.Type.LIKE, dataType = String.class),
+			@QueryFilter(dataName="logType", paramName="logType", queryType=QueryFilter.Type.EQ, dataType=Integer.class),
+			@QueryFilter(dataName="time", paramName="time", queryType=QueryFilter.Type.BETWEEN, dataType=Long.class)})
+	public static Page<LogLogin> findPage(DynamicForm form, Integer page, Integer pageSize) {
+		QueryHelper<LogLogin> queryFilter = new QueryFilterHelper<LogLogin>(finder, form).filter(LogLogin.class, "findPage", DynamicForm.class, Integer.class, Integer.class);
+		return queryFilter.findPage(page, pageSize);
+//		return new QueryHelper<LogLogin>().findPage(finder, form, page, pageSize);
 	}
 }

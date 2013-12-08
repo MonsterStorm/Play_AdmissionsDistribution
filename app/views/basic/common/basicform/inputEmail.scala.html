@@ -1,0 +1,7 @@
+@(label: String, name: String, value: String, readonly: Boolean, disabled: Boolean = false)
+<div class="control-group">
+   <label class="control-label" for="@name">@label</label>
+   <div class="controls">
+			<input class="input-xxlarge" type="email" @if(name){name="@name"} @if(value){value="@value"} @if(readonly){readonly="readonly"} @if(disabled){disabled}>
+   </div>
+</div>

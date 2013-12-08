@@ -1,0 +1,108 @@
+@(models: List[Enroll], divid : String = null)
+@import basic.common._
+<div @if(divid){id="@divid"} class="table-responsive">
+	<div style="overflow: auto">
+		<table class="table table-hover table-bordered table-striped">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>课程</th>
+					<th>课程所属教育机构/审核状态</th>					
+					<th>代理人/审核状态</th>
+					<th>来源域名</th>
+					<th>报名IP</th>
+					<th>报名时间</th>
+				</tr>
+			</thead>
+			<tbody>
+				@for(model <- models){
+				<tr>
+					<td>@model.id</td>
+					
+					@if(model.course != null && model.course.name != null){
+						<td><a href="#" onclick="getCommonPage(this, 'courseDetail', 'id=@model.course.id');">@model.course.name</a></td>
+					} else {
+						<td>-</td>
+					}
+					
+					@if(model.edu != null && model.edu.name != null){
+						<td>
+							<a href="#" onclick="getCommonPage(this, 'eduDetail', 'id=@model.edu.id');">
+								@model.edu.name/
+									@if(model.auditOfEdu != null){
+										@model.auditOfEdu.status match {
+								  		case Audit.STATUS_WAIT => {
+								  			未认证
+								  		}	
+											case Audit.STATUS_SUCCESS =>{
+												认证成功
+											}
+											case Audit.STATUS_FAILED =>{
+												认证失败
+											}
+											case Audit.STATUS_DISABLED =>{
+												禁用
+											}
+										}
+									} else {
+									  -
+									}
+							</a>
+						</td>
+					} else {
+						<td>-</td>
+					}
+					
+					@if(model.fromAgent != null && model.fromAgent.name != null){
+						<td>
+							<a href="#" onclick="getCommonPage(this, 'agentDetail', 'id=@model.fromAgent.id');">
+								@model.fromAgent.name/
+									@if(model.auditOfAgent != null){
+										@model.auditOfAgent.status match {
+								  		case Audit.STATUS_WAIT => {
+								  			未认证
+								  		}	
+											case Audit.STATUS_SUCCESS =>{
+												认证成功
+											}
+											case Audit.STATUS_FAILED =>{
+												认证失败
+											}
+											case Audit.STATUS_DISABLED =>{
+												禁用
+											}
+										}
+									} else {
+									  -
+									}
+							</a>
+						</td>
+				} else {
+					<td>-</td>
+				}
+	
+				
+				@if(model.enrollDomain != null){
+					<td>@model.enrollDomain</td>
+				} else {
+					<td>-</td>
+				}
+				
+				@if(model.enrollIp != null){
+					<td>@model.enrollIp</td>
+				} else {
+					<td>-</td>
+				}
+				
+				@if(model.enrollTime != null){
+						<td>@datetime_formatter(model.enrollTime, true)</td>
+					} else {
+						<td>-</td>
+					}
+				
+			</tr>
+			}
+			</tbody>
+		</table>
+	</div>
+</div>

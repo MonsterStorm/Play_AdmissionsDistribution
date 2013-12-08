@@ -1,0 +1,26 @@
+@(models: List[Domain], divid : String = null)
+
+<div @if(divid){id="@divid"} class="table-responsive">
+	<div style="overflow: auto">
+		<table class="table table-hover table-bordered table-striped">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>域名</th>
+				</tr>
+			</thead>
+			<tbody>
+				@for(model <- models){
+				<tr>
+					<td>@model.id</td>
+					@if(model.domain != null){
+						<td><a href="/t/@model.domain">@model.domain</a></td>
+					} else {
+						<td>-</td>
+					}
+				</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+</div>

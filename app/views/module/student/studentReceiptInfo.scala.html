@@ -1,0 +1,67 @@
+@(model:Enroll)
+
+@import basic.common._
+@import basic.common.basicform._
+
+@bootstrapDatetimepicker()
+
+@toolbar_header={
+<div class="row">
+	<div class="span2">
+		<h4>付款确认</h4>
+	</div>
+</div>
+} 
+
+<script type="text/javascript">
+    $(document).ready( function() {
+			$('#myform').submit(function() {
+		    $(this).ajaxSubmit(ajaxSubmitOptions);
+		    return false;
+			});
+		});
+</script>
+
+
+@toolbar_header
+<div class="table-responsive">
+	<div style="overflow: auto">
+		<form class="form-horizontal" id="myform" method="post" action="@routes.StudentController.addOrUpdateEntity()">
+	
+			@form_validate_info()
+			@inputText("课程名称", "coursename", model.course.name, true)		
+			@inputNumber("课程费用", "coursemoney", model.course.money, true)
+			@datetimePicker("开课时间", "coursetime", model.course.startTime,true)
+	
+			@if(model != null && model.confirmOfStu != null && model.confirmOfStu.money != null){
+				@inputNumber("付款金额", "money", model.confirmOfStu.money, false)
+			}else{
+				@inputNumber("付款金额", "money", null, false)
+			}
+
+			@if(model != null && model.confirmOfStu != null && model.confirmOfStu.time != null){
+				@datetimePicker("付款时间", "time", model.confirmOfStu.time,true)
+			}else{
+				@datetimePicker("付款时间", "time", null,true)
+			}
+			@if(model != null && model.confirmOfStu != null && model.confirmOfStu.info != null){
+				@textarea("付款说明", "info", model.confirmOfStu.info, false)
+			}else{
+				@textarea("付款说明", "info", null, false)
+			}
+  		
+			<input class="input-large" type="hidden" name="table" value="student_receipt">
+			@if(model != null){
+				<input class="input-large" type="hidden" name="enrollId" value="@model.id">
+			} else {
+				<input class="input-large" type="hidden" name="enrollId">
+			}
+			<hr>
+			<div class="control-group row">
+    		<div class="controls">
+      			<button type="submit" class="btn btn-large btn-success btn-block span2">提交</button>
+    	</div>
+  </div>
+</form>
+	</div>
+</div>

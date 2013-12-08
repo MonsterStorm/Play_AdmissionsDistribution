@@ -22,12 +22,14 @@
 			<ul class="dropdown-menu">
 				<li class="@checkActive("orderby", "username-asc", true)"><a onclick="@buildAction({baseUrl}, "admin", Array("orderby"), Array("username-asc"))">按用户名-升序</a></li>
 				<li class="@checkActive("orderby", "username-desc")"><a onclick="@buildAction({baseUrl}, "admin", Array("orderby"), Array("username-desc"))">按用户名-降序</a></li>
-				<li class="@checkActive("orderby", "auditStatus-asc")"><a onclick="@buildAction({baseUrl}, "admin", Array("orderby"), Array("auditStatus-asc"))">按帐号状态-升序</a></li>
-				<li class="@checkActive("orderby", "auditStatus-desc")"><a onclick="@buildAction({baseUrl}, "admin", Array("orderby"), Array("auditStatus-desc"))">按帐号状态-降序</a></li>
+				<li class="@checkActive("orderby", "audit.status-asc")"><a onclick="@buildAction({baseUrl}, "admin", Array("orderby"), Array("audit.status-asc"))">按帐号状态-升序</a></li>
+				<li class="@checkActive("orderby", "audit.status-desc")"><a onclick="@buildAction({baseUrl}, "admin", Array("orderby"), Array("audit.status-desc"))">按帐号状态-降序</a></li>
 			</ul>
 		</div>
 	</div>
 </div>
+@queryFilters(Array("username", "nickname", "mobile", "email", "auditCreateTime"), Array("用户名", "用户昵称", "电话", "Email", "注册时间"), Array("", "", "", "", ""), Array("text", "text", "text", "text", "timeBetween"), {baseUrl}, "admin")
+
 } 
 @toolbar(user: User)={
 <!-- <script type="text/javascript">
@@ -45,7 +47,7 @@ $('#toolbar').tooltip(options);
 		@if(user.id == session.get("user_id")){
 			<a class="btn btn-danger" data-toggle="删除，请谨慎操作！" href="#"><i	class="icon-remove icon-white" onclick="doDelete(@user.id)"></i></a>
 		} else {
-			<span class="btn btn-danger disabled" data-toggle="删除，请谨慎操作！" href="#"><i	class="icon-remove icon-white"></i></span>
+			<span class="btn disabled" data-toggle="删除，请谨慎操作！" href="#"><i	class="icon-remove icon-white"></i></span>
 		}		
 	</div>
 </div>
@@ -71,7 +73,7 @@ $('#toolbar').tooltip(options);
 				<tr>
 					<td>@model.id</td>
 					@if(model.username != null){
-						<td>@model.username</td>
+						<td><a href="#" onclick="getCommonPage(this, 'userDetail', 'id=@model.id');">@model.username</a></td>
 					} else {
 						<td>-</td>
 					}

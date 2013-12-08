@@ -47,17 +47,20 @@ function tick2(time,id)
 }
 </script>
 
-<h5><strong class="middle-title">精品课程</strong>
-<a onclick="getPlatformPage(this, 'course');">更多</a></h5>
+<h5>
+	<strong class="middle-title">精品课程</strong>
+	<a href="#" onclick="getPlatformPage(this, 'course');">更多</a>
+</h5>
 <div class="middle-content">
 	<ul class="middle-list">
 		@for(model <-models.getList()){
 		<li>
-			<a class="middle-detail-title"  onclick="getPlatformPage(this, 'courseDetail', 'id=@model.id');" href="#" title="@model.name">
-			@model.name</a>
+			<a class="middle-detail-title" onclick="getPlatformPage(this, 'courseDetail', 'id=@model.id');" href="#" title="@model.name">
+				@model.name
+			</a>
 			<span class="middle-detail-time"  id="localtimec@model.id"></span>
 			<script type="text/javascript">
-			tick2(@model.startTime,@model.id);
+				tick2(@model.startTime,@model.id);
 			</script>
 		</li>
 		}

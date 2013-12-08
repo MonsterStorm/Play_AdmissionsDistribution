@@ -1,36 +1,104 @@
 <script type="text/javascript">
-  function getPage(li, domain, url, data){
+	function handleData(data, extraIds){
+		/**
+		 * 处理过滤
+		 */
+		 //console.dir(data);
+		 //console.dir(extraIds);
+		 if(extraIds){
+		 		data = "";
+		 		var array = extraIds.split(";");
+		 		for(var i = 0; i < array.length; i++){
+		 			
+					var obj = $("#foldcontent [name='" + array[i] + "']");
+					//console.dir(i);
+					//console.dir(obj);
+					//console.dir(obj.val());
+					//console.dir($(obj).prop("selectedIndex"));
+					
+					var value = obj.val();
+					
+					if(value){//有值，则取值
+						if($(obj).is("select")){
+							if($(obj).prop("selectedIndex") == 0)//选中的是默认的一个，则不使用该数据
+								continue;
+						}
+					
+						if(data != ""){//data不空
+							data = data + "&" + array[i] + "=" + value;
+						} else {
+							data = "" + array[i] + "=" + value;
+						}
+					} else if(value == undefined){//undefined，则看是不是时间控件
+						obj = $("#start" + array[i] + "_form_datetime_long");
+						
+						//console.dir("#start" + array[i] + "_form_datetime_long");
+						
+						if(obj.val() != undefined){							
+							value = obj.val() + ":" + $("#end" + array[i] + "_form_datetime_long").val();		
+							if(data != ""){//data不空
+								data = data + "&" + array[i] + "=" + value;
+							} else {
+								data = "" + array[i] + "=" + value;
+							}					
+						}					
+					}
+				}
+		 }
+		 
+		 data = data || "";
+		 return data;
+	}
+
+  function getPage(li, domain, url, data, nostate){
      data = data || "";
   
      ajaxBasic("/" + domain + "/" + url, data, "GET", "#content");
-		 $("#navList li.active").removeClass("active");
-		 $(li).addClass("active");
+     if(li){
+		 	$("#navList li.active").removeClass("active");
+		 	$(li).addClass("active");
+		 }
+		 $('#' + url).addClass("active");
+		 
+		 if(!nostate){
+		 	pushState(li, domain, url, data);
+		 }
   }
 	
-	function getAdminPage(li, url, data){
-		 data = data || "";
-     ajaxBasic("/admin/" + url, data, "GET", "#content");
+	function getAdminPage(li, url, data, extraIds){
+		 
+		 data = handleData(data, extraIds);
+		 
+		 getPage(li, 'admin', url, data);
+		 
+     /*ajaxBasic("/admin/" + url, data, "GET", "#content");
      if(li){//如果给定了li才改变选中状态，否则不改变
 		 	$("#navList li.active").removeClass("active");
 		 	$(li).addClass("active");
 		 }
 		 $('#' + url).addClass("active");
+		 */
+		
 	}
 	
   function getCommonPage(li, url, data){
-     data = data || "";
-     ajaxBasic("/common/" + url, data, "GET", "#content");
-     $('#' + url).addClass("active");
+     //data = data || "";
+     //ajaxBasic("/common/" + url, data, "GET", "#content");
+     
+      getPage(li, 'common', url, data);
+     
+     //$('#' + url).addClass("active");
   }
   
 	function getTemplatePage(li, url, data){
-     data = data || "";
+     /*data = data || "";
      ajaxBasic("/template/" + url, data, "GET", "#content");
      if(li){//如果给定了li才改变选中状态，否则不改变
 		 	$("#navList li.active").removeClass("active");
 		 	$(li).addClass("active");
 		 }
-		 $('#' + url).addClass("active");
+		 $('#' + url).addClass("active");*/
+		 getPage(li, 'template', url, data);
   }
   
   function changeValue(item, value){
@@ -134,13 +202,26 @@
     $(dialog).modal('hide');
 	}
 	
-	function doConfirmReceipt(id, data){
+	function doConfirmReceipt(id){
+		var money = $(":input[name=money]").val();
+		var info = $(":input[name=info]").val();
+		var data = "{id:" + id;
+		
+		if(money){
+			data += ",money:" + money;
+		}
+		
+		if(info){
+			data += ",info:" + info;
+		}
+		
+		data += "}";
+		
 		ajaxBasic("/common/confirmReceipt", data, "POST", "#content");
 		var dialog = '#dialogConfirm_' + id;
     $(dialog).modal('hide');
 	}
 </script>
-
 <ul class="nav nav-list" id="navList">
 	<li class="nav-header">管理员</li>
 	<li id="home" class="active" onclick="getAdminPage(this, 'home')"><a href="#">主页</a></li>
@@ -157,7 +238,7 @@
 	<li id="adminStudents" onclick="getAdminPage(this, 'adminStudents')"><a href="#">学员管理</a></li>
 	<li id="adminAgents" onclick="getAdminPage(this, 'adminAgents')"><a href="#">代理人管理</a></li>
 	<li id="adminUsers" onclick="getAdminPage(this, 'adminUsers')"><a href="#">用户管理</a></li>
-	<li id="useTemplate" onclick="getTemplatePage(this, 'useTemplate')"><a href="#">使用模板</a></li>
+	<!--<li id="useTemplate" onclick="getTemplatePage(this, 'useTemplate')"><a href="#">使用模板</a></li>-->
 
 	<li class="divider"></li>
 	<li class="nav-header">数据和统计</li>
@@ -169,6 +250,7 @@
 	<li id="adminContracts" onclick="getAdminPage(this, 'adminContracts')"><a href="#">协议管理</a></li>
 	<li id="adminTemplateTypes" onclick="getAdminPage(this, 'adminTemplateTypes')"><a href="#">模板管理</a></li>
 	<li id="adminCourseType" onclick="getAdminPage(this, 'adminCourseType')"><a href="#">项目类型管理</a></li>
+	<li id="adminCourseClass" onclick="getAdminPage(this, 'adminCourseClass')"><a href="#">项目类别管理</a></li>
 	<li id="adminNewsType" onclick="getAdminPage(this, 'adminNewsType')"><a href="#">新闻类型管理</a></li>
 	
 	<li class="divider"></li>

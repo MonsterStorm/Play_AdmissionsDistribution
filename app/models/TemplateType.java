@@ -20,15 +20,15 @@ import common.*;
 @Entity
 @Table(name = TemplateType.TABLE_NAME)
 public class TemplateType extends Model {
-	public static final long TYPE_DEFAULT = 1;//默认模板
-	
+	public static final long TYPE_DEFAULT = 1;// 默认模板
+
 	public static final String TABLE_NAME = "template_type";
 	@Id
 	public Long id;
 
 	public String name;// 模板名称
 
-	//public int tType;// 模板类型  1 代理人 2教育机构 3讲师
+	// public int tType;// 模板类型 1 代理人 2教育机构 3讲师
 
 	@Lob
 	public String info;// 简介
@@ -84,10 +84,12 @@ public class TemplateType extends Model {
 	 * @param form
 	 * @return
 	 */
-	public static Page<TemplateType> findPage(DynamicForm form, int page,
-			Integer pageSize) {
-		return new QueryHelper<TemplateType>().findPage(finder, form, page,
-				pageSize);
+	@QueryFilters(values = { @QueryFilter(dataName = "name", paramName = "templateName", queryType = QueryFilter.Type.LIKE, dataType = String.class),
+			@QueryFilter(dataName="lastModified", paramName="lastModified", queryType=QueryFilter.Type.BETWEEN, dataType=Long.class) })
+	public static Page<TemplateType> findPage(DynamicForm form, Integer page, Integer pageSize) {
+		QueryHelper<TemplateType> queryFilter = new QueryFilterHelper<TemplateType>(finder, form).filter(TemplateType.class, "findPage", DynamicForm.class, Integer.class, Integer.class);
+		return queryFilter.findPage(page, pageSize);
+//		return new QueryHelper<TemplateType>().findPage(finder, form, page,	pageSize);
 	}
 
 	/**
@@ -97,14 +99,17 @@ public class TemplateType extends Model {
 	 * @param form
 	 * @return
 	 */
-	public static Page<TemplateType> findAgentPage(Agent agent, DynamicForm form, int page, Integer pageSize) {
+	public static Page<TemplateType> findAgentPage(Agent agent,
+			DynamicForm form, int page, Integer pageSize) {
 		// Map<String, String> datas = form.data();
 		// datas.put("agentId", agent.id.toString());
 		// form = form.bind(datas);
-		return new QueryHelper<TemplateType>(finder, form).addEq("type", Constants.TEMPLATE_TYPE_AGENT, Long.class).addOrderBy("orderby").findPage(page, pageSize);
+		return new QueryHelper<TemplateType>(finder, form)
+				.addEq("type", Constants.TEMPLATE_TYPE_AGENT, Long.class)
+				.addOrderBy("orderby").findPage(page, pageSize);
 
 	}
-	
+
 	/**
 	 * add or update
 	 * 

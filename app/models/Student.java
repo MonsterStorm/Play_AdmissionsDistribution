@@ -40,6 +40,10 @@ public class Student extends Model {
 
 	public String info;// 额外信息
 
+	static {
+		FormFormatter.registerUser();
+	}
+
 	// -- 查询
 	public static Model.Finder<Long, Student> finder = new Model.Finder(Long.class, Student.class);
 
@@ -79,8 +83,17 @@ public class Student extends Model {
 	 * @param form
 	 * @return
 	 */
-	public static Page<Student> findPage(DynamicForm form, int page, Integer pageSize) {
-		return new QueryHelper<Student>(finder, form).addEq("user.audit.status", "auditStatus", Integer.class).addOrderBy("orderby").findPage(page, pageSize);
+	@QueryFilters(values = {
+			@QueryFilter(dataName="name", paramName="studentName", queryType=QueryFilter.Type.LIKE, dataType=String.class),
+			@QueryFilter(dataName="companyName", paramName="studentCompanyName", queryType=QueryFilter.Type.LIKE, dataType=String.class),
+			@QueryFilter(dataName="position", paramName="studentPosition", queryType=QueryFilter.Type.LIKE, dataType=String.class),
+			@QueryFilter(dataName="user.audit.status", paramName="auditStatus", queryType=QueryFilter.Type.EQ, dataType=Integer.class),
+			@QueryFilter(dataName="user.audit.createTime", paramName="auditCreateTime", queryType=QueryFilter.Type.BETWEEN, dataType=Long.class)
+	})
+	public static Page<Student> findPage(DynamicForm form, Integer page, Integer pageSize) {
+		QueryHelper<Student> queryFilter = new QueryFilterHelper<Student>(finder, form).filter(Student.class, "findPage", DynamicForm.class, Integer.class, Integer.class);
+		return queryFilter.findPage(page, pageSize);
+//		return new QueryHelper<Student>(finder, form).addEq("user.audit.status", "auditStatus", Integer.class).addOrderBy("orderby").findPage(page, pageSize);
 	}
 	
 	/**

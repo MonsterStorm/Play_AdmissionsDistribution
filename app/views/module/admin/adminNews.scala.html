@@ -1,4 +1,4 @@
-@(models: com.avaje.ebean.Page[News])
+@(models: com.avaje.ebean.Page[News], newsTypeNames:Array[String])
 
 @import basic.common._
 
@@ -23,6 +23,9 @@
 		</div>
 	</div>
 </div>
+
+@queryFilters(Array("newsTitle", "newsTypeName", "startEndTime"), Array("新闻标题", "新闻类型", "发布时间"), Array("", newsTypeNames, ""), Array("text", "select", "timeBetween"), {baseUrl}, "admin")
+
 } 
 
 @toolbar(news: News)={

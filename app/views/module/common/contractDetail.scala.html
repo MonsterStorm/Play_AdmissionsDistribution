@@ -2,8 +2,9 @@
 
 @import basic.common._
 @import basic.common.basicform._
-
+@initRequireEditor()
 @bootstrapDatetimepicker()
+
 @baseUrl=@{
 	var url = "adminContract";
 	url
@@ -65,14 +66,16 @@
 				}
 			}			
 
+			@requireEditor("detail");
   		@if(model != null){
-				@textarea("协议详情", "detail", model.detail, true, 20)
+				@textarea("协议详情", "detail", model.detail, false, 20)
 			} else {
 				@textarea("协议详情", "detail", null, false, 20)
 			}
 			
+			@requireEditor("info");
 			@if(model != null){
-				@textarea("协议说明", "info", model.info, true)
+				@textarea("协议说明", "info", model.info, false)
 			} else {
 				@textarea("协议说明", "info", null, false)
 			}

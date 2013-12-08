@@ -11,6 +11,8 @@ import views.html.helper.*;
 import com.avaje.ebean.*;
 import common.*;
 
+import controllers.*;
+
 /**
  * 报名信息
  * 
@@ -44,6 +46,9 @@ public class Enroll extends Model {
 
 	@OneToOne
 	public Audit auditOfEdu;// 教育机构的审核信息
+	//付款确认信息
+	@OneToOne
+	public ConfirmReceipt confirmOfStu;// 学生付款确认信息
 
 	// -- 收款确认信息
 	@OneToOne
@@ -54,13 +59,14 @@ public class Enroll extends Model {
 
 	@OneToOne
 	public ConfirmReceipt confirmOfAgent;// 代理人收款信息
-	
-	//其他基本信息
+
 	public Long enrollTime;// 报名时间
 
 	public String enrollIp;// 登记时的ip
 
 	public String enrollDomain;// 来源域名，如www.google.com，用于分销的统计
+	//其他基本信息
+	public int enrollByAgent;//1 表示由代理人报名 代理人可以查看  用户名  密码等信息
 
 	// -- 查询
 	public static Model.Finder<Long, Enroll> finder = new Model.Finder(Long.class, Enroll.class);
@@ -155,7 +161,7 @@ public class Enroll extends Model {
 		Map<String, String> datas = form.data();
 		datas.put("stuId", student.id.toString());
 		form = form.bind(datas);
-		return new QueryHelper<Enroll>(finder, form).addEq("course.id", "stuId", Long.class).addOrderBy("orderby").findPage(page, pageSize);
+		return new QueryHelper<Enroll>(finder, form).addEq("student.id", "stuId", Long.class).addOrderBy("orderby").findPage(page, pageSize);
 //		return new QueryHelper<Enroll>(finder, form).addEqual("student.id", student.id.toString(), Long.class).addOrderBy("orderby").findPage(page, pageSize);
 	}
 
@@ -171,6 +177,20 @@ public class Enroll extends Model {
 		datas.put("instructorId", instructor.id.toString());
 		form = form.bind(datas);
 		return new QueryHelper<Enroll>(finder, form).addEq("course.instructor.id", "instructorId", Long.class).addOrderBy("orderby").findPage(page, pageSize);
+//		return new QueryHelper<Enroll>(finder, form).addEqual("course.instructor.id", instructor.id.toString(), Long.class).addOrderBy("orderby").findPage(page, pageSize);
+	}
+	/**
+	 * find page with filter
+	 * 
+	 * @param page
+	 * @param form
+	 * @return
+	 */
+	public static Page<Enroll> findPageByAgent(Agent agent, DynamicForm form, int page, Integer pageSize) {
+		Map<String, String> datas = form.data();
+		datas.put("agentId", agent.id.toString());
+		form = form.bind(datas);
+		return new QueryHelper<Enroll>(finder, form).addEq("fromAgent.id", "agentId", Long.class).addOrderBy("orderby").findPage(page, pageSize);
 //		return new QueryHelper<Enroll>(finder, form).addEqual("course.instructor.id", instructor.id.toString(), Long.class).addOrderBy("orderby").findPage(page, pageSize);
 	}
 
@@ -205,6 +225,53 @@ public class Enroll extends Model {
 	 */
 	public static Page<Enroll> findPageByEduId(DynamicForm form, int page, Integer pageSize) {
 		return new QueryHelper<Enroll>(finder, form).addEq("edu.id", "id", Long.class).addOrderBy("orderby").findPage(page, pageSize);
+	}
+
+
+	/**
+	 * enroll
+	 * 
+	 * @param enrollId
+	 * @param auditStatus
+	 * @return
+	 */
+	public static Enroll updateAgentAudit(Long enrollId, Integer auditStatus) {
+		Enroll enroll = Enroll.find(enrollId);
+		if (enroll != null) {
+			if( enroll.auditOfAgent == null ){
+				return null;
+			}
+			enroll.auditOfAgent.status = auditStatus;
+			enroll.auditOfAgent.auditTime = System.currentTimeMillis();
+			enroll.auditOfAgent.auditor = LoginController.getSessionUser();
+			enroll.auditOfAgent.update();
+			enroll.update();
+			return enroll;
+		}
+		return null;
+	}
+
+	/**
+	 * enroll
+	 * 
+	 * @param enrollId
+	 * @param auditStatus
+	 * @return
+	 */
+	public static Enroll updateEduAudit(Long enrollId, Integer auditStatus) {
+		Enroll enroll = Enroll.find(enrollId);
+		if (enroll != null) {
+			if( enroll.auditOfEdu == null ){
+				return null;
+			}
+			enroll.auditOfEdu.status = auditStatus;
+			enroll.auditOfEdu.auditTime = System.currentTimeMillis();
+			enroll.auditOfEdu.auditor = LoginController.getSessionUser();
+			enroll.auditOfEdu.update();
+			enroll.update();
+			return enroll;
+		}
+		return null;
 	}
 
 

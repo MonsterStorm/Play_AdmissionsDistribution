@@ -21,12 +21,17 @@ public class Constants {
 	public static final String MSG_TEACHER_NOT_EXIST = "讲师不存在";
 	public static final String MSG_EDUCATION_NOT_EXIST = "教育机构不存在";
 	public static final String MSG_AGENT_NOT_EXIST = "代理人不存在";
+	public static final String MSG_ENROLL_NOT_EXIST = "报名不存在";
 	public static final String MSG_COURSE_NOT_SELECT = "未选择课程";
 	public static final String MSG_COURSE_AGENTED = "已代理该课程";
+	public static final String MSG_RECEIPT_CONFIRMED = "已确认过该付款";
 	public static final String MSG_COURSE_REGED = "已有一个申请";
 	public static final String MSG_DOMAIN_EXIST = "域名已存在";
 	public static final String MSG_NOT_USER_EDUCATION = "教育机构与用户不匹配";
 	public static final String MSG_NOT_IN_WAIT_AUDIT = "不在等待审核状态";
+
+	public static final String MSG_ALREADY_TEACHER = "你已经是讲师，无需申请";
+	public static final String MSG_ALREADY_AGENT = "你已经是代理人，无需申请";
 
 	//申请
 	public static final String MSG_AGENT_APPLYED_COURSE = "已有一个申请";
@@ -43,8 +48,14 @@ public class Constants {
 	//修改密码
 	public static final String MSG_OLD_PASSWORD_ERROR = "原始密码错误";//老密码错误
 	
+	//最大取数据大小
+	public static final int MAX_DATA_SIZE = 200;
+
 	//分页大小
 	public static final int PAGE_SIZE = 10;
+	
+	//最大分页大小
+	public static final int MAX_PAGE_SIZE = 50;
 
 	//模板类型对应角色
 	public static final String TEMPLATE_TYPE_AGENT = "1";

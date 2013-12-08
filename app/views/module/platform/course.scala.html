@@ -57,24 +57,26 @@ function tick(time,id)
 	<div class="ym-wbox">
 		<div class="ym-grid linearize-level-1">
 			<div class="ym-g66 ym-gl">
-				<div class="ym-gbox-left">
-					<h2>热门课程</h2>
+					<div class="ym-gbox"><h1><strong>热门课程</strong></h1></div>
 					@for(model <- models.getList()){
-						<p><a href="#" onclick="getPlatformPage(this, 'courseDetail', 'id=@model.id');">
-						@model.name</a>
-						<span style="float:right;">开课时间：
-						<span id="localtime@model.id"></span>
-						</span>
-						
-						
-						
-						<script type="text/javascript">
-						tick(@model.startTime,@model.id);
-						</script>
-						</p>
+						<div class="ym-gbox" style="margin-top:5px;margin-bottom:5px;">
+							<p>
+								<a href="#" onclick="getPlatformPage(this, 'courseDetail', 'id=@model.id');">
+									<b style="font-size:20px;">@model.name</b>
+								</a>
+							<span style="float:right;">开课时间：
+								<span id="localtime@model.id"></span>
+							</span>
+							<script type="text/javascript">
+								tick(@model.startTime,@model.id);
+							</script>
+							</p>
+							<p style="overflow:hidden; text-align:left; text-overflow:ellipsis;padding:10px;">
+								@model.info
+							</p>
+						</div>
 					}
-					@paging(models, {baseUrl}, "platform")
-				</div>
+					<div class="ym-gbox">@paging(models, {baseUrl}, "platform")</div>
 			</div>
 			<div class="ym-g33 ym-gr">
 				<div class="ym-gbox-right">

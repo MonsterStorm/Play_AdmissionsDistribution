@@ -44,10 +44,11 @@ public class AuditController extends Controller {
 	 */
 	@Security.Authenticated(SecuredAgent.class)
 	public static Result auditAgent() {
-		// String table = form().bindFromRequest().get("table");
-		// if (Course.TABLE_NAME.equalsIgnoreCase(table)) {// 课程，认证
-		// 	return auditAdminCourse();
-		// } else if (EducationInstitution.TABLE_NAME.equalsIgnoreCase(table)) {
+		String table = form().bindFromRequest().get("table");
+		 if (Enroll.TABLE_NAME.equalsIgnoreCase(table)) {// 课程，认证
+		 	return auditAgentEnroll();
+		 } 
+		 //else if (EducationInstitution.TABLE_NAME.equalsIgnoreCase(table)) {
 		// 	return auditAdminEdu();
 		// } else if (Instructor.TABLE_NAME.equalsIgnoreCase(table)) {
 		// 	return auditAdminInstructor();
@@ -70,10 +71,10 @@ public class AuditController extends Controller {
 		if("auditCourseAgent".equalsIgnoreCase(table)){
 			return auditCourseAgent();
 		}
-
-		// if (Course.TABLE_NAME.equalsIgnoreCase(table)) {// 课程，认证
-		// 	return auditAdminCourse();
-		// } else if (EducationInstitution.TABLE_NAME.equalsIgnoreCase(table)) {
+		else if (Enroll.TABLE_NAME.equalsIgnoreCase(table)) {// 课程，认证
+		 	return auditEduEnroll();
+		 }
+		 // else if (EducationInstitution.TABLE_NAME.equalsIgnoreCase(table)) {
 		// 	return auditAdminEdu();
 		// } else if (Instructor.TABLE_NAME.equalsIgnoreCase(table)) {
 		// 	return auditAdminInstructor();
@@ -116,6 +117,13 @@ public class AuditController extends Controller {
 			EducationInstitution edu = EducationInstitution.updateAudit(id,
 					status);
 			if (edu != null) {
+				User user = edu.creator;
+				if(Role.findByUserId(Role.ROLE_EDU, user.id)==null){
+					Role role = Role.find(Role.ROLE_EDU);
+					role.users.add(user);
+					role.update();
+
+				}
 				return ok(Constants.MSG_SUCCESS);
 			} else {
 				return internalServerError(Constants.MSG_EDUCATION_NOT_EXIST);
@@ -134,6 +142,13 @@ public class AuditController extends Controller {
 		if (id != null && status != null) {
 			Instructor instructor = Instructor.updateAudit(id, status);
 			if (instructor != null) {
+				User user = instructor.user;
+				if(Role.findByUserId(Role.ROLE_INSTRUCTOR, user.id)==null){
+					Role role = Role.find(Role.ROLE_INSTRUCTOR);
+					role.users.add(user);
+					role.update();
+
+				}
 				return ok(Constants.MSG_SUCCESS);
 			} else {
 				return internalServerError(Constants.MSG_EDUCATION_NOT_EXIST);
@@ -152,6 +167,14 @@ public class AuditController extends Controller {
 		if (id != null && status != null) {
 			Agent agent = Agent.updateAudit(id, status);
 			if (agent != null) {
+				User user = agent.user;
+				if(Role.findByUserId(Role.ROLE_AGENT, user.id)== null){
+					Role role = Role.find(Role.ROLE_AGENT);
+					role.users.add(user);
+					role.update();
+
+				}
+
 				return ok(Constants.MSG_SUCCESS);
 			} else {
 				return internalServerError(Constants.MSG_EDUCATION_NOT_EXIST);
@@ -185,6 +208,46 @@ public class AuditController extends Controller {
 		// 		return internalServerError(Constants.MSG_EDUCATION_NOT_EXIST);
 		// 	}
 		// }
+		return internalServerError(Constants.MSG_INTERNAL_ERROR);
+	}
+
+	/**
+	 * 代理人审核学生的报名申请
+	 * @return
+	 */
+	public static Result auditAgentEnroll(){
+		Long id = FormHelper.getLong(form().bindFromRequest(), "id");
+		Integer status = FormHelper.getInt(form().bindFromRequest(), "status");
+
+		if( id != null && status != null ){
+			Enroll enroll = Enroll.updateAgentAudit(id, status);
+			if (enroll != null) {
+				return ok(Constants.MSG_SUCCESS);
+			} else {
+				return internalServerError(Constants.MSG_ENROLL_NOT_EXIST);
+			}
+
+		}
+		return internalServerError(Constants.MSG_INTERNAL_ERROR);
+	}
+
+	/**
+	 * 教育机构审核学生的报名申请
+	 * @return
+	 */
+	public static Result auditEduEnroll(){
+		Long id = FormHelper.getLong(form().bindFromRequest(), "id");
+		Integer status = FormHelper.getInt(form().bindFromRequest(), "status");
+
+		if( id != null && status != null ){
+			Enroll enroll = Enroll.updateEduAudit(id, status);
+			if (enroll != null) {
+				return ok(Constants.MSG_SUCCESS);
+			} else {
+				return internalServerError(Constants.MSG_ENROLL_NOT_EXIST);
+			}
+
+		}
 		return internalServerError(Constants.MSG_INTERNAL_ERROR);
 	}
 }

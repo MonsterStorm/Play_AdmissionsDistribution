@@ -75,7 +75,6 @@ $('#toolbar').tooltip(options);
 					<th>课程类别</th>
 					<th>教育机构</th>
 					<th>开课时间</th>
-					<th>简介</th>
 					<th>操作</th> 
 				</tr>
 			</thead>
@@ -100,11 +99,6 @@ $('#toolbar').tooltip(options);
 					}
 					@if(model.startTime != null){
 						<td>@datetime_formatter(model.startTime, true)</td>
-					} else {
-						<td>-</td>
-					}
-					@if(model.info != null){
-						<td>@model.info</td>
 					} else {
 						<td>-</td>
 					}

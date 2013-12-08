@@ -2,8 +2,7 @@
 
 @import basic.common._
 @import basic.common.basicform._
-
-@bootstrapDatetimepicker()
+@import module.basic._
 
 @toolbar_header={
 <div class="row">
@@ -23,59 +22,18 @@
 </div>
 } 
 
-<script type="text/javascript">
-    $(document).ready( function() {
-			$('#myform').submit(function() {
-		    $(this).ajaxSubmit(ajaxSubmitOptions);
-		    return false;
-			});
-		});
-</script>
 @toolbar_header
 
-<div id="aaa"></div>
-
-<div class="table-responsive">
-	<div style="overflow: auto">
-	<form class="form-horizontal" id="myform" method="post" action="@routes.CommonController.addOrUpdateEntity()">
-		
-			@form_validate_info()
-    
-  		@if(model != null){
-				@inputText("代理人名称", "name", model.name, true)
-			} else {
-				@inputText("代理人名称", "name", null, false)
-			}
-			
-			@if(model != null){
-				@inputText("联系方式", "contact", model.contact, true)
-			} else {
-				@inputText("联系方式", "contact", null, false)
-			}
-  		
-  		@if(model != null){
-				@textarea("代理简介", "info", model.info, true)
-			} else {
-				@textarea("代理简介", "info", null, false)
-			}
-
-			<input class="input-large" type="hidden" name="table" value="@Agent.TABLE_NAME">
-			@if(model != null){
-				<input class="input-large" type="hidden" name="id" value="@model.id">
-			} else {
-				<input class="input-large" type="hidden" name="id">
-			}
-			<hr>
-			<div class="control-group row">
-    		<div class="controls">
-					@if(model != null){
-							<button type="submit" class="btn btn-large btn-success btn-block span2" disabled="disabled">提交</button>
-					} else {
-							<button type="submit" class="btn btn-large btn-success btn-block span2">提交</button>
-					}
-    	</div>
-  		</div>
-		
-	</form>
-	</div>
-</div>
+@navBasic(Array("课程列表", "代理记录", "域名列表", "基本信息"), Array("nav1", "nav2", "nav3", "nav4"))
+@if( model!=null ){
+	@if(model.courses!= null ){
+		@courseList(model.courses, "nav1")
+	}
+	@if( model.distributons!= null ){
+		@courseDistributionList(model.distributons, "nav2")
+	}
+	@if( model.domain!= null ){
+		@domainList(model.domain, "nav3")
+	}
+	@agentInfo(model, "nav4")
+}

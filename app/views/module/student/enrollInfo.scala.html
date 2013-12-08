@@ -32,10 +32,30 @@
 		@inputNumber("课程费用", "coursemoney", enroll.course.money, true)
 		@datetimePicker("开课时间", "coursetime", enroll.course.startTime, true)
 		@if(enroll.auditOfAgent != null){
-			@datetimePicker("代理人审核状况", "auditOfAgent", enroll.auditOfAgent.status)
+			if(enroll.auditOfAgent.status == Audit.STATUS_WAIT){
+				@inputText("代理人审核", "agentAudit", "未审核", true)
+			} else if (model.auditOfAgent.status == Audit.STATUS_SUCCESS){
+				@inputText("代理人审核", "agentAudit", "已审核", true)
+			} else if (model.auditOfAgent.status == Audit.STATUS_FAILED){
+				@inputText("代理人审核", "agentAudit", "审核失败", true)
+			} else if (model.auditOfAgent.status == Audit.STATUS_DISABLED){
+				@inputText("代理人审核", "agentAudit", "禁用", true)
+			} else {
+				@inputText("代理人审核", "agentAudit", "-", true)
+			}
 		}
 		@if(enroll.auditOfEdu != null){
-			@datetimePicker("教育平台审核状况", "auditOfEdu", enroll.auditOfEdu.status)
+			if(enroll.auditOfEdu.status == Audit.STATUS_WAIT){
+				@inputText("教育机构审核", "eduAudit", "未审核", true)
+			} else if (model.auditOfEdu.status == Audit.STATUS_SUCCESS){
+				@inputText("教育机构审核", "eduAudit", "已审核", true)
+			} else if (model.auditOfEdu.status == Audit.STATUS_FAILED){
+				@inputText("教育机构审核", "eduAudit", "审核失败", true)
+			} else if (model.auditOfEdu.status == Audit.STATUS_DISABLED){
+				@inputText("教育机构审核", "eduAudit", "禁用", true)
+			} else {
+				@inputText("教育机构审核", "eduAudit", "-", true)
+			}
 		}
 		
 		@inputText("学员名称", "realname", user.basicInfo.realname, true)

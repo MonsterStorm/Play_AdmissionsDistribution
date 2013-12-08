@@ -63,6 +63,7 @@ public class CourseDistribution extends Model {
 		}
 
 		cd.rebate = Rebate.createRebate(cd);
+		cd.save();
 	}
 
 
@@ -83,6 +84,20 @@ public class CourseDistribution extends Model {
 	 */
 	public static CourseDistribution find(Long id) {
 		return finder.where().eq("id", id).findUnique();
+	}
+
+	/**
+	 * find one by Enrollid
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public static CourseDistribution findByEnrollId(Long id) {
+		Enroll enroll = Enroll.find( id );
+		if( enroll == null || enroll.fromAgent == null ){
+			return null;
+		}
+		return finder.where().eq("agent.id", enroll.fromAgent.id).eq("course.id", enroll.course.id).findUnique();
 	}
 
 
@@ -176,10 +191,26 @@ public class CourseDistribution extends Model {
 	 * @param form
 	 * @return
 	 */
+	public static Page<CourseDistribution> findPageByAgent(Agent agent, DynamicForm form, int page, Integer pageSize) {
+		Map<String, String> datas = form.data();
+		datas.put("agentId", agent.id.toString());
+		form = form.bind(datas);
+		return new QueryHelper<CourseDistribution>(finder, form).addEq("agent.id", "agentId", Long.class).findPage(page, pageSize);
+	}
+
+	/**
+	 * find page with filter
+	 * 
+	 * @param page
+	 * @param form
+	 * @return
+	 */
 	public static Page<CourseDistribution> findPageByEduUser(User user, DynamicForm form, int page, Integer pageSize) {
 		Map<String, String> datas = form.data();
 		datas.put("userId", user.id.toString());
 		form = form.bind(datas);
 		return new QueryHelper<CourseDistribution>(finder, form).addEq("course.edu.creator.id", "userId", Long.class).findPage(page, pageSize);
 	}
+
+
 }

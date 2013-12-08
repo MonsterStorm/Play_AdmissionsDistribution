@@ -31,6 +31,8 @@
 		</div>
 	</div>
 </div>
+@queryFilters(Array("agentName", "domainName", "createTime"), Array("代理机构名称", "域名", "请求认证时间"), Array("", "", ""), Array("text", "text", "timeBetween"), {baseUrl}, "admin")
+
 } 
 
 @toolbar(agent: Agent)={
@@ -77,13 +79,13 @@ $('#toolbar').tooltip(options);
 		@if(agent.audit != null && agent.audit.status != Audit.STATUS_SUCCESS){
 			<a class="btn btn-success" data-toggle="审核通过" href="#" onclick="showConfirm('@String.valueOf("y" + agent.id)')"><i class="icon-ok icon-white"></i></a> 
 		} else {
-			<span class="btn btn-success disabled" data-toggle="审核通过" href="#"><i class="icon-ok icon-white"></i></span>
+			<span class="btn disabled" data-toggle="审核通过" href="#"><i class="icon-ok icon-white"></i></span>
 		}
 		
 		@if(agent.audit != null && agent.audit.status != Audit.STATUS_FAILED){
 			<a class="btn btn-info"	data-toggle="拒绝通过" href="#" onclick="showConfirm('@String.valueOf("n" + agent.id)')"><i class="icon-ban-circle icon-white"></i></a>
 		} else {
-			<span class="btn btn-info disabled"	data-toggle="拒绝通过" href="#"><i class="icon-ban-circle icon-white"></i></span>
+			<span class="btn disabled"	data-toggle="拒绝通过" href="#"><i class="icon-ban-circle icon-white"></i></span>
 		}
 	</div>
 	<div class="btn-group">

@@ -109,11 +109,13 @@
 
 <ul class="nav nav-list" id="navList">
 	<li class="nav-header">学员</li>
-	<li><a href="#">主页</a></li>
+	<li id="home" class="active" onclick="getStudentPage(this, 'home')"><a href="#">主页</a></li>
+	<li class="divider"></li>
+	<li class="nav-header">基本信息管理</li>
 	<li onclick="getStudentPage(this, 'studentInfo')"><a href="#">学员信息</a></li>
 	<li onclick="getStudentPage(this, 'studentEnrollInfo')"><a href="#">报名信息</a></li>
-	<li><a href="#">在线报名</a></li>
+	<!-- <li><a href="#">在线报名</a></li>
 	<li><a href="#">我的课程</a></li>
 	<li><a href="#">QQ咨询功能</a></li>
-	<li><a href="#">选择辅助功能</a></li>
+	<li><a href="#">选择辅助功能</a></li> -->
 </ul>

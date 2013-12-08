@@ -35,6 +35,9 @@
 		</div>
 	</div>
 </div>
+
+@queryFilters(Array("eduName", "creatorUsername", "createTime"), Array("教育机构名称", "创建者帐号", "注册时间"), Array("", "", ""), Array("text", "text", "timeBetween"), {baseUrl}, "admin")
+
 } 
 
 @toolbar(edu: EducationInstitution)={
@@ -72,13 +75,13 @@ $('#toolbar').tooltip(options);
 		@if(edu.audit != null && edu.audit.status != Audit.STATUS_SUCCESS){
 			<a class="btn btn-success" data-toggle="审核通过" href="#" onclick="showConfirm('@String.valueOf("y" + edu.id)')"><i class="icon-ok icon-white"></i></a> 
 		} else {
-			<span class="btn btn-success disabled" data-toggle="审核通过" href="#"><i class="icon-ok icon-white"></i></span>
+			<span class="btn disabled" data-toggle="审核通过" href="#"><i class="icon-ok icon-white"></i></span>
 		}
 		
 		@if(edu.audit != null && edu.audit.status != Audit.STATUS_FAILED){
 			<a class="btn btn-info"	data-toggle="拒绝通过" href="#" onclick="showConfirm('@String.valueOf("n" + edu.id)')"><i class="icon-ban-circle icon-white"></i></a>
 		} else {
-			<span class="btn btn-info disabled"	data-toggle="拒绝通过" href="#"><i class="icon-ban-circle icon-white"></i></span>
+			<span class="btn disabled"	data-toggle="拒绝通过" href="#"><i class="icon-ban-circle icon-white"></i></span>
 		}
 	</div>
 	<div class="btn-group">
@@ -96,7 +99,7 @@ $('#toolbar').tooltip(options);
 					<th>ID</th>
 					<th>名称</th>
 					<th>最新课程</th>
-					<th>简介</th>
+					<!--<th>简介</th>-->
 					<th>注册时间</th>
 					<th>创建者</th>
 					<th>操作</th> 
@@ -113,11 +116,11 @@ $('#toolbar').tooltip(options);
 					} else {
 						<td>-</td>
 					}
-					@if(model.info != null){
+					<!--@if(model.info != null){
 						<td>@model.info</td>
 					} else {
 						<td>-</td>
-					}
+					}-->
 					@if(model.createTime != null){
 						<td>@datetime_formatter(model.createTime, true)</td>
 					} else {

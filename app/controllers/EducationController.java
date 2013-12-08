@@ -14,15 +14,13 @@ import java.util.*;
 import java.text.*;
 import java.lang.*;
 
-import javax.validation.*;
-
 import play.data.*;
 import play.data.validation.Constraints.ValidateWith;
 import play.mvc.Http.MultipartFormData;
 import play.mvc.Http.MultipartFormData.FilePart;
 
 import common.FileHelper.ErrorType;
-//import common.FormValidator.Type;
+import common.FormValidator.Type;
 
 
 /**
@@ -45,7 +43,8 @@ public class EducationController extends BaseController {
 	private static final String PAGE_EDUCATION_DOMAIN  = "eduDomain";
 	private static final String PAGE_DOMAIN_DETAIL  = "domainDetail";
 	private static final String PAGE_ALL_COURSE_DISTRIBUTION = "allCourseDistribution";
-
+	private static final String PAGE_EDU_ENROLL_INFO = "eduEnrollInfo";
+	private static final String PAGE_EDU_RECEIPT_INFO = "eduReceiptInfo";
 	/**
 	 * education pages
 	 * 
@@ -75,6 +74,10 @@ public class EducationController extends BaseController {
 			return pageDomainDetail(null);
 		}  else if (PAGE_ALL_COURSE_DISTRIBUTION.equalsIgnoreCase(page)) {// 
 			return pageAllCourseDistribution();
+		} else if (PAGE_EDU_ENROLL_INFO.equalsIgnoreCase(page)) {// 
+			return pageEduEnrollInfo();
+		}else if (PAGE_EDU_RECEIPT_INFO.equalsIgnoreCase(page)) {// 
+			return eduReceiptInfo();
 		}  else {
 			return badRequest("页面不存在");
 		}
@@ -118,6 +121,8 @@ public class EducationController extends BaseController {
 			return addOrUpdateCourse();
 		}if (Domain.TABLE_NAME.equalsIgnoreCase(table)) {// 域名更新或添加
 			return addOrUpdateDomain();
+		} if ("edu_receipt".equalsIgnoreCase(table)) {// 域名更新或添加
+			return addOrUpdateEduReceipt();
 		} 
 		 else {
 			return badRequest(Constants.MSG_PAGE_NOT_FOUND);
@@ -146,6 +151,9 @@ public class EducationController extends BaseController {
 	})
 	public static Result addOrUpdateEducation() {
 		String msg = Validator.check(EducationController.class, "addOrUpdateEducation");
+		if (msg != null) {
+			return badRequest(msg);
+		}
 		User user =  LoginController.getSessionUser();
 		if(user == null){
 			return badRequest(Constants.MSG_NOT_LOGIN);
@@ -271,10 +279,15 @@ public class EducationController extends BaseController {
 			@FormValidator(name = "startTime", validateType = Type.REQUIRED, msg = "开课时间不能为空"),
 			@FormValidator(name = "contact", validateType = Type.REQUIRED, msg = "联系方式不能为空"),
 			@FormValidator(name = "info", validateType = Type.REQUIRED, msg = "课程简介不能为空"),
-			@FormValidator(name = "detail", validateType = Type.REQUIRED, msg = "课程详情不能为空")
+			@FormValidator(name = "detail", validateType = Type.REQUIRED, msg = "课程详情不能为空"),
+			@FormValidator(name = "eduRebateType.ratioOfTotal", validateType = Type.NUMBER, msg = "总金额返点比例只能是数字"),
+			@FormValidator(name = "eduRebateType.ratioOfPerStudent", validateType = Type.NUMBER, msg = " 每个学生返点金额只能是数字")
 	})
 	public static Result addOrUpdateCourse() {
 		String msg = Validator.check(EducationController.class, "addOrUpdateCourse");
+		if (msg != null) {
+			return badRequest(msg);
+		}
 		Form<Course> form = form(Course.class).bindFromRequest();
 		if (form != null && form.hasErrors() == false) {
 			Course course = Course.addOrUpdate(form.get());
@@ -289,6 +302,24 @@ public class EducationController extends BaseController {
 			}
 		}
 		return internalServerError(Constants.MSG_INTERNAL_ERROR);
+	}
+
+	/**
+	 * 报名管理
+	 * 
+	 * @return
+	 */
+	public static Result pageEduEnrollInfo() {
+		play.Logger.error(form().bindFromRequest().get("page"));
+		// get page
+		int page = FormHelper.getPage(form().bindFromRequest());
+
+		Page<Enroll> enrolls = Enroll.findPageByEduId(form().bindFromRequest(), page,
+				null);
+
+		FormHelper.resetFlash(form().bindFromRequest(), flash());
+
+		return ok(views.html.module.education.eduEnrollInfo.render(enrolls));
 	}
 
 	/**
@@ -397,8 +428,9 @@ public class EducationController extends BaseController {
 			return badRequest(Constants.MSG_NOT_LOGIN);
 		}
 		List<CourseType> types = CourseType.findAll();
+		List<CourseClass> cClass = CourseClass.findAll();
 		if (isAddNew) {
-			return ok(views.html.module.education.courseDetail.render(null, types, user.edus));
+			return ok(views.html.module.education.courseDetail.render(null, types, user.edus, cClass));
 		}
 
 		if (course == null) {
@@ -407,7 +439,7 @@ public class EducationController extends BaseController {
 				course = Course.find(id);
 			}
 		}
-		return ok(views.html.module.education.courseDetail.render(course, types,user.edus));
+		return ok(views.html.module.education.courseDetail.render(course, types,user.edus, cClass));
 	}
 
 	/**
@@ -435,6 +467,35 @@ public class EducationController extends BaseController {
 		return ok(views.html.module.education.educationInfo.render(edu, user));
 	}
 
+	/**
+	 * 收款确认
+	 * 
+	 * @return
+	 */
+	public static Result eduReceiptInfo() {
+		// get page
+		User user = LoginController.getSessionUser();
+		if(user!=null){
+			
+			Long enrollId =  FormHelper.getLong(form().bindFromRequest(),"enrollId");
+			Enroll enroll = Enroll.find( enrollId );
+
+			EducationInstitution edu = enroll.edu;
+
+			if( edu == null || edu.creator.id != user.id ){
+				return badRequest(Constants.MSG_FORBIDDEN);
+			}
+
+			// reset flash
+			FormHelper.resetFlash(form().bindFromRequest(), flash());
+			if( enroll != null){
+				return ok(views.html.module.education.eduReceiptInfo.render(enroll));
+			}else{
+				return badRequest(Constants.MSG_ENROLL_NOT_EXIST);
+			}
+		}
+		return badRequest(Constants.MSG_NOT_LOGIN);
+	}
 
 	/**
 	 * 域名
@@ -483,6 +544,9 @@ public class EducationController extends BaseController {
 	})
 	public static Result addOrUpdateDomain() {
 		String msg = Validator.check(CommonController.class, "addOrUpdateDomain");
+		if (msg != null) {
+			return badRequest(msg);
+		}
 		User user = LoginController.getSessionUser();
 		if (user == null) {
 			return badRequest(Constants.MSG_NOT_LOGIN);
@@ -524,5 +588,52 @@ public class EducationController extends BaseController {
 			}
 		}
 		return internalServerError(Constants.MSG_INTERNAL_ERROR);
+	}
+
+
+	/**
+	 * add or update instructor
+	 * 
+	 * @return
+	 */
+	public static Result addOrUpdateEduReceipt() {
+		User user =  LoginController.getSessionUser();
+		if(user == null){
+			return badRequest(Constants.MSG_NOT_LOGIN);
+		}
+		
+		Long enrollId =  FormHelper.getLong(form().bindFromRequest(),"enrollId");
+		Enroll enroll = Enroll.find(enrollId);
+		if( enroll == null ){
+			return badRequest(Constants.MSG_ENROLL_NOT_EXIST);
+		}
+
+		EducationInstitution edu = enroll.edu;
+		if( edu == null || edu.creator.id != user.id  ){
+			return badRequest(Constants.MSG_FORBIDDEN);
+		}
+
+		if( enroll.confirmOfEdu.money!= null && enroll.confirmOfEdu.money > 0 ){
+			return badRequest(Constants.MSG_RECEIPT_CONFIRMED);
+		}
+		enroll.confirmOfEdu.money = FormHelper.getDouble(form().bindFromRequest(),"money");
+		enroll.confirmOfEdu.time = System.currentTimeMillis();
+		enroll.confirmOfEdu.info =  FormHelper.getString(form().bindFromRequest(),"info");
+		enroll.confirmOfEdu.confirmer =  user;
+		enroll.confirmOfEdu.update();
+		enroll.update();
+
+		CourseDistribution cd = CourseDistribution.findByEnrollId( enroll.id );
+		if( cd != null){
+			
+			cd.rebate.numEduAdmit ++;
+			cd.rebate.moneyEduAdmit += enroll.confirmOfEdu.money;
+			
+			cd.rebate.update();
+			cd.update();
+		}
+
+		return ok(views.html.module.education.eduReceiptInfo.render(enroll));
+
 	}
 }

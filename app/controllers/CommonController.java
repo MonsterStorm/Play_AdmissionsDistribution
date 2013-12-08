@@ -39,6 +39,7 @@ public class CommonController extends Controller {
 	private static final String PAGE_REBATE_DETAIL = "rebateDetail";// 返利详情
 	private static final String PAGE_ADVERTISEMENT_DETAIL = "advertismentDetail";// 广告详情
 	private static final String PAGE_COURSE_TYPE_DETAIL = "courseTypeDetail";// 课程类别详情
+	private static final String PAGE_COURSE_CLASS_DETAIL = "courseClassDetail";// 新课程类别详情
 	private static final String PAGE_CHANGE_PASSWORD_WITHOUT_AUTH = "changePasswordWithoutAuth";// 修改密码
 	private static final String PAGE_STUDENT_WORDS_DEATIL = "studentWordsDetail";// 学员感言
 
@@ -75,8 +76,10 @@ public class CommonController extends Controller {
 			return pageRebateDetail(null);
 		} else if (PAGE_ADVERTISEMENT_DETAIL.equalsIgnoreCase(page)) {// 广告详情
 			return pageAdvertismentDetail(null);
-		} else if (PAGE_COURSE_TYPE_DETAIL.equalsIgnoreCase(page)) {// 广告详情
+		} else if (PAGE_COURSE_TYPE_DETAIL.equalsIgnoreCase(page)) {// 课程类型详情
 			return pageCourseTypeDetail(null);
+		} else if (PAGE_COURSE_CLASS_DETAIL.equalsIgnoreCase(page)) {// 课程类别详情
+			return pageCourseClassDetail(null);
 		} else if (PAGE_CHANGE_PASSWORD_WITHOUT_AUTH.equalsIgnoreCase(page)) {// 广告详情
 			return pageChangePasswordWithoutAuth();
 		} else if (PAGE_STUDENT_WORDS_DEATIL.equalsIgnoreCase(page)) {// 用户详情
@@ -117,11 +120,16 @@ public class CommonController extends Controller {
 			return addOrUpdateAdvertisment();
 		} else if (CourseType.TABLE_NAME.equalsIgnoreCase(table)) {// 添加或删除课程类型
 			return addOrUpdateCourseType();
+		} else if (CourseClass.TABLE_NAME.equalsIgnoreCase(table)) {// 添加或删除课程类别
+			return addOrUpdateCourseClass();
 		} else if (StudentWords.TABLE_NAME.equalsIgnoreCase(table)) {// 添加或删除学员感言
 			return addOrUpdateStudentWords();
 		} else if (Message.TABLE_NAME.equalsIgnoreCase(table)) {// 添加或删除留言
 			return addOrUpdateMessage();
-		} else {
+		}else if ("CourseRebateType".equalsIgnoreCase(table)) {// 添加或删除留言
+			return addOrUpdateCourseRebateType();
+		}
+		 else {
 			return badRequest(Constants.MSG_PAGE_NOT_FOUND);
 		}
 	}
@@ -220,15 +228,22 @@ public class CommonController extends Controller {
 		
 		Form<User> form = form(User.class).bindFromRequest();
 		if (form != null && form.hasErrors() == false) {
-			final String username = FormHelper.getString(form().bindFromRequest(), "username");
-			final String mobile = FormHelper.getString(form().bindFromRequest(), "mobile");
-			final String email = FormHelper.getString(form().bindFromRequest(), "email");
-			if (User.isUsernameRegistered(username)) {
-				return badRequest(Constants.MSG_USER_USERNAME_EXIST);
-			} else if (User.isMobileRegistered(mobile)){
-				return badRequest(Constants.MSG_USER_USERNAME_EXIST);
-			} else if (User.isEmailRegistered(email)){
-				return badRequest(Constants.MSG_USER_USERNAME_EXIST);
+			User userTemp = form.get();
+			
+			if(userTemp != null){
+				if(userTemp.id == null){//新增，判断用户是否已经存在
+					final String username = FormHelper.getString(form().bindFromRequest(), "username");
+					final String mobile = FormHelper.getString(form().bindFromRequest(), "mobile");
+					final String email = FormHelper.getString(form().bindFromRequest(), "email");
+					
+					if (User.isUsernameRegistered(username)) {
+						return badRequest(Constants.MSG_USER_USERNAME_EXIST);
+					} else if (User.isMobileRegistered(mobile)){
+						return badRequest(Constants.MSG_USER_USERNAME_EXIST);
+					} else if (User.isEmailRegistered(email)){
+						return badRequest(Constants.MSG_USER_USERNAME_EXIST);
+					}
+				}
 			}
 			
 			MultipartFormData body = request().body().asMultipartFormData();
@@ -301,6 +316,51 @@ public class CommonController extends Controller {
 				return badRequest(error);
 			}
 		}
+		return internalServerError(Constants.MSG_INTERNAL_ERROR);
+	}
+
+	@FormValidators(values = {
+			@FormValidator(name = "eduRebateType.ratioOfTotal", validateType = Type.NUMBER, msg = "教育机构总金额返点比例只能是数字"),
+			@FormValidator(name = "eduRebateType.ratioOfPerStudent", validateType = Type.NUMBER, msg = " 教育机构每个学生返点金额只能是数字"),
+			@FormValidator(name = "agentRebateType.ratioOfTotal", validateType = Type.NUMBER, msg = "代理人总金额返点比例只能是数字"),
+			@FormValidator(name = "agentRebateType.ratioOfPerStudent", validateType = Type.NUMBER, msg = " 代理人每个学生返点金额只能是数字")
+
+	})
+	public static Result addOrUpdateCourseRebateType() {
+		String msg = Validator.check(CommonController.class, "addOrUpdateCourseRebateType");
+		if (msg != null) {
+			return badRequest(msg);
+		}
+		Long id = FormHelper.getLong(form().bindFromRequest(), "id");
+		if (id != null) {
+			Course course = Course.find(id);
+			if(course.eduRebateType ==null){
+				course.eduRebateType = new RebateType();
+			}
+			if(course.agentRebateType ==null){
+				course.agentRebateType = new RebateType();
+			}
+
+			course.eduRebateType.ratioOfTotal = FormHelper.getDouble(form().bindFromRequest(), "eduRebateType.ratioOfTotal");
+			course.eduRebateType.ratioOfPerStudent = FormHelper.getDouble(form().bindFromRequest(), "eduRebateType.ratioOfPerStudent");
+			course.agentRebateType.ratioOfTotal = FormHelper.getDouble(form().bindFromRequest(), "agentRebateType.ratioOfTotal");
+			course.agentRebateType.ratioOfPerStudent = FormHelper.getDouble(form().bindFromRequest(), "agentRebateType.ratioOfPerStudent");
+			course.update();
+			return pageCourseDetail(course);
+		}
+		//Form<Course> form = form(Course.class).bindFromRequest();
+		// if (form != null && form.hasErrors() == false) {
+		// 	Course course = Course.addOrUpdate(form.get());
+		// 	if (course != null) {
+		// 		return pageCourseRebateType(course);
+		// 	}
+		// } else if (form.hasErrors()) {
+		// 	String error = FormHelper.getFirstError(form.errors());
+		// 	play.Logger.debug("error:" + error);
+		// 	if (error != null) {
+		// 		return badRequest(error);
+		// 	}
+		// }
 		return internalServerError(Constants.MSG_INTERNAL_ERROR);
 	}
 
@@ -625,7 +685,7 @@ public class CommonController extends Controller {
 	}
 
 	/**
-	 * add or update instructor
+	 * add or update courseType
 	 * 
 	 * @return
 	 */
@@ -643,6 +703,36 @@ public class CommonController extends Controller {
 			CourseType courseType = CourseType.addOrUpdate(form.get());
 			if (courseType != null) {
 				return pageCourseTypeDetail(courseType);
+			}
+		} else if (form.hasErrors()) {
+			String error = FormHelper.getFirstError(form.errors());
+			play.Logger.debug("error:" + error);
+			if (error != null) {
+				return badRequest(error);
+			}
+		}
+		return internalServerError(Constants.MSG_INTERNAL_ERROR);
+	}
+
+	/**
+	 * add or update courseClass
+	 * 
+	 * @return
+	 */
+	@FormValidators(values = {
+			@FormValidator(name = "name", validateType = Type.REQUIRED, msg = "课程类别名不能为空")
+	})
+	public static Result addOrUpdateCourseClass() {
+		String msg = Validator.check(CommonController.class, "addOrUpdateCourseClass");
+		if (msg != null) {
+			return badRequest(msg);
+		}
+		
+		Form<CourseClass> form = form(CourseClass.class).bindFromRequest();
+		if (form != null && form.hasErrors() == false) {
+			CourseClass courseClass = CourseClass.addOrUpdate(form.get());
+			if (courseClass != null) {
+				return pageCourseClassDetail(courseClass);
 			}
 		} else if (form.hasErrors()) {
 			String error = FormHelper.getFirstError(form.errors());
@@ -867,8 +957,9 @@ public class CommonController extends Controller {
 		boolean isAddNew = FormHelper.isAddNew(form().bindFromRequest());
 
 		List<CourseType> types = CourseType.findAll();
+		List<CourseClass> cClass = CourseClass.findAll();
 		if (isAddNew) {
-			return ok(views.html.module.common.courseDetail.render(null, types));
+			return ok(views.html.module.common.courseDetail.render(null, types, cClass));
 		}
 
 		if (course == null) {
@@ -877,7 +968,17 @@ public class CommonController extends Controller {
 				course = Course.find(id);
 			}
 		}
-		return ok(views.html.module.common.courseDetail.render(course, types));
+		return ok(views.html.module.common.courseDetail.render(course, types, cClass));
+	}
+
+	/**
+	 * 课程详情
+	 * 
+	 * @return
+	 */
+	public static Result pageCourseRebateType(Course course) {
+		
+		return ok(views.html.module.basic.courseRebateTypeInfo.render(course, "nav4"));
 	}
 
 	/**
@@ -889,8 +990,9 @@ public class CommonController extends Controller {
 		boolean isAddNew = FormHelper.isAddNew(form().bindFromRequest());
 
 		List<CourseType> types = CourseType.findAll();
+		List<CourseClass> cClass = CourseClass.findAll();
 		if (isAddNew) {
-			return ok(views.html.module.common.courseDetail.render(null, types));
+			return ok(views.html.module.common.courseDetail.render(null, types, cClass));
 		}
 
 		if (course == null) {
@@ -1210,6 +1312,27 @@ public class CommonController extends Controller {
 	}
 
 	/**
+	 * 课程类别详情
+	 * 
+	 * @return
+	 */
+	public static Result pageCourseClassDetail(CourseClass courseClass) {
+		boolean isAddNew = FormHelper.isAddNew(form().bindFromRequest());
+
+		if (isAddNew) {
+			return ok(views.html.module.common.courseClassDetail.render(null));
+		}
+
+		if (courseClass == null) {
+			Long id = FormHelper.getLong(form().bindFromRequest(), "id");
+			if (id != null) {
+				courseClass = CourseClass.find(id);
+			}
+		}
+		return ok(views.html.module.common.courseClassDetail.render(courseClass));
+	}
+
+	/**
 	 * 学员感言详情
 	 * 
 	 * @return
@@ -1306,7 +1429,15 @@ public class CommonController extends Controller {
 	 * 确认收款
 	 * @return
 	 */
+	/*@FormValidators(values = {
+			@FormValidator(name = "money", validateType = Type.NUMBER, msg = "收款数必须为数字"),
+	})*/
 	public static Result confirmReceipt(){
+		/*String msg = Validator.check(CommonController.class, "confirmReceipt");
+		if (msg != null) {
+			return badRequest(msg);
+		}*/
+		
 		User user = LoginController.getSessionUser();
 		if (user != null) {
 			Long rebateId = FormHelper.getLong(form().bindFromRequest(), "id");

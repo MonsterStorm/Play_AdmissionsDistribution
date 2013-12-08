@@ -189,12 +189,16 @@ public class TeacherController extends BaseController {
 			@FormValidator(name = "address", validateType = Type.REQUIRED, msg = "联系地址不能为空"),
 			@FormValidator(name = "mobile", validateType = Type.PHONE, msg = "请填写正确的手机号码"),
 			@FormValidator(name = "email", validateType = Type.EMAIL, msg = "请填写正确的邮箱地址"),
-			@FormValidator(name = "info", validateType = Type.REQUIRED, msg = "个人简介不能为空")/*,
+			@FormValidator(name = "info", validateType = Type.REQUIRED, msg = "个人简介不能为空"),
 			@FormValidator(name = "jobTitle", validateType = Type.REQUIRED, msg = "职称不能为空"),
-			@FormValidator(name = "field", validateType = Type.REQUIRED, msg = "擅长领域不能为空")*/
+			@FormValidator(name = "field", validateType = Type.REQUIRED, msg = "擅长领域不能为空")
 	})
 	public static Result addOrUpdateTeacher() {
-		String msg = Validator.check(CommonController.class, "addOrUpdateTeacher");
+		String msg = Validator.check(TeacherController.class, "addOrUpdateTeacher");
+		if (msg != null) {
+			return badRequest(msg);
+		}
+
 		User user =  LoginController.getSessionUser();
 		if(user == null){
 			return badRequest(Constants.MSG_NOT_LOGIN);
@@ -251,6 +255,7 @@ public class TeacherController extends BaseController {
 			}else{
 				instructor.info = FormHelper.getString(form().bindFromRequest(),"info");
 				instructor.jobTitle = FormHelper.getString(form().bindFromRequest(),"jobTitle");
+				instructor.field = FormHelper.getString(form().bindFromRequest(),"field");
 
 				Instructor instructor2 = Instructor.addOrUpdate(instructor);
 				if (instructor2 != null) {
@@ -372,6 +377,6 @@ public class TeacherController extends BaseController {
 	}
 
 
-
+  
 
 }

@@ -40,6 +40,9 @@ public class AgentController extends BaseController {
 	private static final String PAGE_REG_AGENT  = "regAgent";
 	private static final String PAGE_AGENT_DOMAIN  = "agentDomain";
 	private static final String PAGE_DOMAIN_DETAIL  = "domainDetail";
+	private static final String PAGE_USER_ENROLL_BY_AGENT = "userEnrollByAgent";
+	private static final String PAGE_AGENT_ENROLL_INFO = "agentEnrollInfo";
+	private static final String PAGE_AGENT_RECEIPT_INFO = "agentReceiptInfo";//学员报名信息
 	/**
 	 * agent pages
 	 * 
@@ -69,7 +72,13 @@ public class AgentController extends BaseController {
 			return pageAgentDomain();
 		} else if (PAGE_DOMAIN_DETAIL.equalsIgnoreCase(page)) {// 
 			return pageDomainDetail(null);
-		} else {
+		} else if (PAGE_USER_ENROLL_BY_AGENT.equalsIgnoreCase(page)) {// 
+			return userEnrollByAgent(null);
+		} else if (PAGE_AGENT_ENROLL_INFO.equalsIgnoreCase(page)) {// 
+			return pageAgentEnrollInfo();
+		} else if(PAGE_AGENT_RECEIPT_INFO.equalsIgnoreCase(page)){
+			return agentReceiptInfo();
+		}else {
 			return badRequest("页面不存在");
 		}
 	}
@@ -94,9 +103,13 @@ public class AgentController extends BaseController {
 		String table = form().bindFromRequest().get("table");
 		if (Agent.TABLE_NAME.equalsIgnoreCase(table)) {// 代理人更新或添加
 			return addOrUpdateAgent();
-		}if (Domain.TABLE_NAME.equalsIgnoreCase(table)) {// 代理人更新或添加
+		}else if (Domain.TABLE_NAME.equalsIgnoreCase(table)) {// 代理人更新或添加
 			return addOrUpdateDomain();
-		} else {
+		}else if( "agent_enroll".equalsIgnoreCase(table) ){//代理人更新
+			return addOrUpdateAgentEnroll();
+		}else if("agent_receipt".equalsIgnoreCase(table)){//学员报名
+			return addOrUpdateAgentReceipt();
+		}else {
 			return badRequest(Constants.MSG_PAGE_NOT_FOUND);
 		}
 	}
@@ -139,21 +152,25 @@ public class AgentController extends BaseController {
 			return  badRequest(Constants.MSG_COURSE_AGENTED);
 
 		}
-		Audit audit = Audit.findByCourseIdAndAgentId(course.id, user.agent.id, Audit.STATUS_WAIT);
-		if(audit !=null){
+		CourseDistribution cd = CourseDistribution.findByAgentAndCourse(user.agent.id, course.id);
+		Audit audit = new Audit();
+		if(cd !=null && cd.audit !=null){
 			return  badRequest(Constants.MSG_COURSE_REGED);
+		}else{
+			audit.status = Audit.STATUS_WAIT;
+			audit.creator = user;
+			audit.createTime = System.currentTimeMillis();
+			audit.save();
 		}
-		Audit a = new Audit();
-//		a.course = course;
 		
 		CourseDistribution.createDistributon(course, user.agent, audit);
-		
-		a.status = Audit.STATUS_WAIT;
-		a.creator = user;
-		a.createTime = System.currentTimeMillis();
-		a.save();
 		List<CourseType> types = CourseType.findAll();
-		return ok(views.html.module.agent.courseDetail.render(course, types,user.edus,false));
+		List<EducationInstitution> edus = null;
+		if( course!=null && course.edu!=null && course.edu.creator !=null){
+			edus = course.edu.creator.edus;
+		}
+
+		return ok(views.html.module.agent.courseDetail.render(course, types,edus,false));
 	
 	}
 
@@ -196,6 +213,26 @@ public class AgentController extends BaseController {
 		return ok(views.html.module.agent.allCourse.render(courses));
 	}
 
+
+	/**
+	 * 报名管理
+	 * 
+	 * @return
+	 */
+	public static Result pageAgentEnrollInfo() {
+		play.Logger.error(form().bindFromRequest().get("page"));
+		// get page
+		int page = FormHelper.getPage(form().bindFromRequest());
+
+		Page<Enroll> enrolls = Enroll.findPageByAgentId(form().bindFromRequest(), page,
+				null);
+
+		FormHelper.resetFlash(form().bindFromRequest(), flash());
+
+		return ok(views.html.module.agent.agentEnrollInfo.render(enrolls));
+	}
+
+
 	/**
 	 * 教育机构课程详情
 	 * 
@@ -214,13 +251,17 @@ public class AgentController extends BaseController {
 				course = Course.find(id);
 			}
 		}
+		List<EducationInstitution> edus= null;
+		if(course.edu != null){
+			edus = course.edu.creator.edus;
+		}
 		if(course!=null && course.agents!=null && user.agent !=null){
 			if(course.agents.contains(user.agent)){
-				return ok(views.html.module.agent.courseDetail.render(course, types,user.edus,false));
+				return ok(views.html.module.agent.courseDetail.render(course, types,edus,false));
 			}
-			return ok(views.html.module.agent.courseDetail.render(course, types,user.edus,true));
+			return ok(views.html.module.agent.courseDetail.render(course, types,edus,true));
 		}
-		return ok(views.html.module.agent.courseDetail.render(course, types,user.edus,false));
+		return ok(views.html.module.agent.courseDetail.render(course, types,edus,false));
 	}
 
 	/**
@@ -246,6 +287,9 @@ public class AgentController extends BaseController {
 	})
 	public static Result addOrUpdateAgent() {
 		String msg = Validator.check(AgentController.class, "addOrUpdateAgent");
+		if (msg != null) {
+			return badRequest(msg);
+		}
 		User user = LoginController.getSessionUser();
 		if (user == null) {
 			return badRequest(Constants.MSG_NOT_LOGIN);
@@ -332,10 +376,13 @@ public class AgentController extends BaseController {
 	 * @return
 	 */
 	@FormValidators(values = {
-			@FormValidator(name = "id", validateType = Type.REQUIRED, msg = "id不能为空")
+			@FormValidator(name = "domain", validateType = Type.REQUIRED, msg = "domain不能为空")
 	})
 	public static Result addOrUpdateDomain() {
 		String msg = Validator.check(AgentController.class, "addOrUpdateDomain");
+		if (msg != null) {
+			return badRequest(msg);
+		}
 		User user = LoginController.getSessionUser();
 		if (user == null) {
 			return badRequest(Constants.MSG_NOT_LOGIN);
@@ -404,6 +451,34 @@ public class AgentController extends BaseController {
 	}
 
 	/**
+	 * 代理人为用户报名课程 此时生成随机用户名和密码
+	 * 
+	 * @return
+	 */
+	public static Result userEnrollByAgent(Enroll enroll) {
+		play.Logger.error(form().bindFromRequest().get("courseId"));
+		User user =  LoginController.getSessionUser();
+		if (user == null) {
+			return badRequest(Constants.MSG_NOT_LOGIN);
+		}
+		Agent agent = user.agent;
+		if (enroll == null) {
+			//新报名
+			Long courseId =   FormHelper.getLong( form().bindFromRequest(), "courseId" );//FormHelper.getLong(form().bindFromRequest(), "courseId");
+			Course course = Course.find( courseId );
+			//return badRequest( String.valueOf (courseId));
+
+			return ok(views.html.module.agent.userEnrollByAgent.render(agent, null, null, course));		
+		}else{
+			//旧报名
+			Course course = enroll.course;
+			Student student = enroll.student;
+
+			return ok(views.html.module.agent.userEnrollByAgent.render(agent, enroll, student, course));
+		}
+	}
+
+	/**
 	 * 代理人
 	 * 
 	 * @return
@@ -438,6 +513,9 @@ public class AgentController extends BaseController {
 	 */
 	public static Result applyCourse() {
 		User user = LoginController.getSessionUser();
+		if(user ==null){
+			return badRequest(Constants.MSG_NOT_LOGIN);
+		}
 		Agent agent = user.agent;
 		if(agent ==null){
 			return badRequest(Constants.MSG_AGENT_NOT_EXIST);
@@ -459,4 +537,307 @@ public class AgentController extends BaseController {
 		}
 		return internalServerError(Constants.MSG_INTERNAL_ERROR);
 	}
+
+	/**
+	 * add or update instructor
+	 * 
+	 * @return
+	 */
+	public static Result addOrUpdateAgentEnroll() {
+
+		User user1 =  LoginController.getSessionUser();
+		if(user1 ==null){
+			return badRequest(Constants.MSG_NOT_LOGIN);
+		}
+		Agent agent = user1.agent;
+		if(agent ==null){
+			return badRequest(Constants.MSG_AGENT_NOT_EXIST);
+		}
+
+
+		Long enrollId = FormHelper.getLong(form().bindFromRequest(), "enrollId");
+		if( enrollId == null ){
+			//添加新的报名
+			Long courseId = FormHelper.getLong(form().bindFromRequest(), "courseId");
+			Course course = Course.find( courseId );
+			Student student = new Student();
+			User user = User.getRandomUserForStudent(student, Role.ROLE_STUDENT, Audit.STATUS_SUCCESS );
+			student.user = user;
+			student.user.basicInfo = new UserInfo();
+
+			student.user.basicInfo.realname =  FormHelper.getString( form().bindFromRequest(),"realname");
+			student.user.basicInfo.sex =  FormHelper.getString( form().bindFromRequest(),"sex");
+			student.companyName =  FormHelper.getString( form().bindFromRequest(),"companyName");
+			student.position =  FormHelper.getString( form().bindFromRequest(),"position");
+			student.user.basicInfo.idcard = FormHelper.getString( form().bindFromRequest(),"idcard");
+			student.user.basicInfo.birthday = FormHelper.getLong( form().bindFromRequest(),"birthday");
+			student.user.basicInfo.phone  = FormHelper.getString( form().bindFromRequest(),"phone");
+			student.user.mobile  = FormHelper.getString( form().bindFromRequest(),"mobile");
+			student.user.basicInfo.qq  = FormHelper.getString( form().bindFromRequest(),"qq");
+			student.user.email = FormHelper.getString( form().bindFromRequest(),"email");
+			student.user.basicInfo.address = FormHelper.getString( form().bindFromRequest(),"address");
+			student.info = FormHelper.getString( form().bindFromRequest(),"info");
+			student.save();
+
+
+			Audit auditOfAgent = new Audit(student.user, Audit.STATUS_WAIT, AuditType.TYPE_AUDITTYPE_AGENT_ENROLL);  // 代理人审核
+			Audit auditOfEdu = new Audit(student.user, Audit.STATUS_WAIT, AuditType.TYPE_AUDITTYPE_EDU_ENROLL);// 教育机构的审核信息
+			ConfirmReceipt confirmOfStu = new ConfirmReceipt(); // 学生付款确认信息
+			ConfirmReceipt confirmOfEdu = new ConfirmReceipt(); // 教育机构收款信息
+			ConfirmReceipt confirmOfPlatform  = new ConfirmReceipt(); // 平台收款信息
+			ConfirmReceipt confirmOfAgent  = new ConfirmReceipt(); // 代理人收款信息
+			auditOfAgent.save();
+			auditOfEdu.save();
+			confirmOfStu.save();
+			confirmOfEdu.save();
+			confirmOfPlatform.save();
+			confirmOfAgent.save();
+
+			Enroll enroll = new Enroll();
+			enroll.student = student;
+			enroll.course = course;
+			enroll.fromAgent = agent;
+			enroll.edu = course.edu;
+			enroll.enrollByAgent = 1;
+			enroll.enrollTime = System.currentTimeMillis();
+
+			enroll.auditOfAgent = auditOfAgent;
+			enroll.auditOfEdu = auditOfEdu;
+			enroll.confirmOfStu = confirmOfStu;
+			enroll.confirmOfEdu = confirmOfEdu;
+			enroll.confirmOfPlatform = confirmOfPlatform;
+			enroll.confirmOfAgent = confirmOfAgent;
+
+			enroll.save();
+			return ok(views.html.module.agent.userEnrollByAgent.render(enroll.fromAgent, enroll ,enroll.student,enroll.course));
+
+
+		}else{
+			//更新报名
+			Long courseId = FormHelper.getLong(form().bindFromRequest(), "courseId");
+			Long studentId = FormHelper.getLong(form().bindFromRequest(), "studentId");
+			Course course = Course.find(courseId);
+			Student student = Student.find(studentId);
+			student.user.basicInfo = new UserInfo();
+
+			student.user.basicInfo.realname =  FormHelper.getString( form().bindFromRequest(),"realname");
+			student.user.basicInfo.sex =  FormHelper.getString( form().bindFromRequest(),"sex");
+			student.companyName =  FormHelper.getString( form().bindFromRequest(),"companyName");
+			student.position =  FormHelper.getString( form().bindFromRequest(),"position");
+			student.user.basicInfo.idcard = FormHelper.getString( form().bindFromRequest(),"idcard");
+			student.user.basicInfo.birthday = FormHelper.getLong( form().bindFromRequest(),"birthday");
+			student.user.basicInfo.phone  = FormHelper.getString( form().bindFromRequest(),"phone");
+			student.user.mobile  = FormHelper.getString( form().bindFromRequest(),"mobile");
+			student.user.basicInfo.qq  = FormHelper.getString( form().bindFromRequest(),"qq");
+			student.user.email = FormHelper.getString( form().bindFromRequest(),"email");
+			student.user.basicInfo.address = FormHelper.getString( form().bindFromRequest(),"address");
+			student.info = FormHelper.getString( form().bindFromRequest(),"info");
+			student.update();
+
+			Enroll enroll = Enroll.find(enrollId);
+
+			enroll.student = student;
+			enroll.course = course;
+			enroll.fromAgent = agent;
+			enroll.edu = course.edu;
+			enroll.enrollByAgent = 1;
+			enroll.enrollTime = System.currentTimeMillis();
+			enroll.update();
+			return ok(views.html.module.agent.userEnrollByAgent.render(enroll.fromAgent, enroll ,enroll.student,enroll.course));
+
+
+		}
+
+
+		// play.Logger.error(form().bindFromRequest().get("courseId"));
+		// User user =  LoginController.getSessionUser();
+		// Student student = null;
+		// if(user == null){
+		// 	//return badRequest(Constants.MSG_NOT_LOGIN);
+			
+		// 	student = new Student();
+		// 	user = User.getRandomUserForStudent(student, Role.ROLE_STUDENT, Audit.STATUS_SUCCESS );
+		// }
+		// student = user.student;
+		// if(student!=null){
+		// 	Long courseId =  FormHelper.getLong(form().bindFromRequest(),"courseId");
+		// 	Course course = Course.find(courseId);
+		// 	if(course!=null){
+		// 		Enroll enroll = Enroll.findByStudentAndCourse(student, course);
+		// 		if(enroll!=null){
+		// 			return badRequest(Constants.MSG_USER_ENROLLED);
+		// 		}
+		// 	}else{
+		// 		return badRequest(Constants.MSG_COURSE_NOT_EXIST);
+		// 	}
+		// }
+
+
+		// UserInfo basicInfo = user.basicInfo;
+		// if(basicInfo == null){
+		// 	basicInfo = new UserInfo();
+
+		// 	basicInfo.realname = form().bindFromRequest().get("realname");
+		// 	basicInfo.sex = form().bindFromRequest().get("sex");
+		// 	basicInfo.idcard = form().bindFromRequest().get("idcard");
+		// 	basicInfo.birthday = Long.parseLong(form().bindFromRequest().get("birthday"));
+			
+
+		// 	basicInfo.phone = form().bindFromRequest().get("phone");
+			
+		// 	basicInfo.qq = form().bindFromRequest().get("qq");
+		// 	basicInfo.address = form().bindFromRequest().get("address");
+		// 	basicInfo.user = user;
+		// 	basicInfo.save();
+		// 	user.basicInfo = basicInfo;
+		// 	user.mobile = form().bindFromRequest().get("mobile");
+		// 	user.email = form().bindFromRequest().get("email");
+		// 	if(user.id == null){
+		// 		user.save();
+		// 		user.basicInfo.user = user;
+		// 		user.basicInfo.update();
+		// 	}else{
+		// 		user.update();
+		// 	}
+		// }
+		// else{
+		// 	basicInfo.realname = form().bindFromRequest().get("realname");
+		// 	basicInfo.sex = form().bindFromRequest().get("sex");
+		// 	basicInfo.idcard = form().bindFromRequest().get("idcard");
+		// 	basicInfo.birthday = Long.parseLong(form().bindFromRequest().get("birthday"));
+
+
+		// 	basicInfo.phone = form().bindFromRequest().get("phone");
+		// 	basicInfo.qq = form().bindFromRequest().get("qq");
+		// 	basicInfo.address = form().bindFromRequest().get("address");
+		// 	basicInfo.user = user;
+		// 	basicInfo.update();
+		// 	user.basicInfo = basicInfo;
+		// 	user.mobile = form().bindFromRequest().get("mobile");
+		// 	user.email = form().bindFromRequest().get("email");
+		// 	if(user.id == null){
+		// 		user.save();
+		// 		user.basicInfo.user = user;
+		// 		user.basicInfo.update();
+		// 	}
+		// 	else{
+		// 		user.update();
+		// 	}
+		// }
+		// Form<Student> form = form(Student.class).bindFromRequest();
+		// if (form != null && form.hasErrors() == false) {
+		// 	student = Student.addOrUpdate(form.get());
+		// 	if (student != null) {
+		// 		user.student = student;
+		// 		user.update();
+		// 		Enroll enroll = new Enroll();
+		// 		Agent agent = null;
+		// 		if(form().bindFromRequest().get("agentId") != null){
+		// 			Long agentId =  FormHelper.getLong(form().bindFromRequest(),"agentId");
+		// 			agent = Agent.find(agentId);
+		// 		}
+		// 		if( form().bindFromRequest().get("courseId") != null){
+		// 			Long courseId =  FormHelper.getLong(form().bindFromRequest(),"courseId");
+		// 			Course course = Course.find(courseId);
+		// 			enroll.course = course;
+		// 			if(course!=null && course.edu!=null){
+		// 				enroll.edu = course.edu;
+		// 			}
+		// 		}
+
+		// 		if(agent!=null){
+		// 			enroll.fromAgent = agent;
+		// 		}
+		// 		enroll.student = student;
+		// 		enroll.enrollTime = System.currentTimeMillis();
+		// 		//enroll.save();
+		// 		Enroll.addOrUpdate(enroll);
+
+
+		// 		return ok(views.html.module.platform.platformUserEnroll.render(enroll, enroll.course ,enroll.fromAgent,enroll.student.user,enroll.student));
+		// 	}
+		// } else if (form.hasErrors()) {
+		// 	String error = FormHelper.getFirstError(form.errors());
+		// 	play.Logger.debug("error:" + error);
+		// 	if (error != null) {
+		// 		return badRequest(error);
+		// 	}
+		// }
+		// return internalServerError(Constants.MSG_INTERNAL_ERROR);
+		//return internalServerError(Constants.MSG_INTERNAL_ERROR);
+	}
+
+	/**
+	 * 收款确认管理
+	 * 
+	 * @return
+	 */
+	public static Result agentReceiptInfo() {
+		// get page
+		User user = LoginController.getSessionUser();
+		if(user!=null){
+			Agent agent = user.agent;
+			if(agent == null){
+				return badRequest(Constants.MSG_AGENT_NOT_EXIST);
+			}
+			Long enrollId =  FormHelper.getLong(form().bindFromRequest(),"enrollId");
+			Enroll enroll = Enroll.find( enrollId );
+
+			// reset flash
+			FormHelper.resetFlash(form().bindFromRequest(), flash());
+			if( enroll != null){
+				return ok(views.html.module.agent.agentReceiptInfo.render(enroll));
+			}else{
+				return badRequest(Constants.MSG_ENROLL_NOT_EXIST);
+			}
+		}
+		return badRequest(Constants.MSG_NOT_LOGIN);
+	}
+
+	/**
+	 * add or update instructor
+	 * 
+	 * @return
+	 */
+	public static Result addOrUpdateAgentReceipt() {
+		User user =  LoginController.getSessionUser();
+		if(user == null){
+			return badRequest(Constants.MSG_NOT_LOGIN);
+		}
+		Agent agent = user.agent;
+		if(agent!=null){
+			Long enrollId =  FormHelper.getLong(form().bindFromRequest(),"enrollId");
+			Enroll enroll = Enroll.find(enrollId);
+			if(enroll!=null && enroll.fromAgent.id == agent.id ){
+				if( enroll.confirmOfAgent.money!= null && enroll.confirmOfAgent.money > 0 ){
+					return badRequest(Constants.MSG_RECEIPT_CONFIRMED);
+				}
+				enroll.confirmOfAgent.money = FormHelper.getDouble(form().bindFromRequest(),"money");
+				enroll.confirmOfAgent.time = System.currentTimeMillis();
+				enroll.confirmOfAgent.info =  FormHelper.getString(form().bindFromRequest(),"info");
+				enroll.confirmOfAgent.confirmer =  user;
+				enroll.confirmOfAgent.update();
+				enroll.update();
+
+				CourseDistribution cd = CourseDistribution.findByEnrollId( enroll.id );
+				if( cd != null){
+					
+					cd.rebate.numAgentAdmit ++;
+					cd.rebate.moneyAgentAdmit += enroll.confirmOfAgent.money;
+					
+					cd.rebate.update();
+					cd.update();
+				}
+
+				return ok(views.html.module.agent.agentReceiptInfo.render(enroll));
+
+			}else{
+				return badRequest(Constants.MSG_ENROLL_NOT_EXIST);
+			}
+		}else{
+
+			return badRequest(Constants.MSG_AGENT_NOT_EXIST);
+		}
+	}
+  
 }
