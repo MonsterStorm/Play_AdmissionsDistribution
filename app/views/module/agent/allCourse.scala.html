@@ -1,4 +1,4 @@
-@(models: com.avaje.ebean.Page[Course])
+@(models: com.avaje.ebean.Page[Course], courseTypeNames:Array[String])
 
 @import basic.common._
 
@@ -34,6 +34,9 @@
 		</div>
 	</div>
 </div>
+
+@queryFilters(Array("courseName", "courseTypeName", "eduName", "startEndTime"), Array("课程名", "课程类别", "教育机构名", "开始结束时间"), Array("", courseTypeNames, "", ""), Array("text", "select", "text", "timeBetween"), {baseUrl}, "agent")
+
 } 
 
 @toolbar(course: Course)={

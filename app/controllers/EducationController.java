@@ -339,15 +339,26 @@ public class EducationController extends BaseController {
 		}
 		// get page
 		int page = FormHelper.getPage(form().bindFromRequest());
+		
+		Page<CourseType> types = CourseType.findPage(form().bindFromRequest(), 0, Constants.MAX_DATA_SIZE);
+		
+		String[] courseTypes = null;
+		if(types != null && types.getList() != null && types.getList().size() > 0){
+			courseTypes = new String[types.getList().size()];
+			for(int i = 0; i < types.getList().size(); i++){
+				courseTypes[i] = types.getList().get(i).name;
+			}
+		}
+		
 		if(form().bindFromRequest().get("eduId") == null){
 			Page<Course> courses  = Course.findPageByEducationUser(user,form().bindFromRequest(),page,null);
-			return ok(views.html.module.education.educationCourses.render(courses));
+			return ok(views.html.module.education.educationCourses.render(courses, courseTypes));
 		}else{
 			Long eduId = FormHelper.getLong(form().bindFromRequest(), "eduId");
 			EducationInstitution edu = EducationInstitution.find(eduId);
 
 			Page<Course> courses  = Course.findPageByEducation(edu,form().bindFromRequest(),page,null);
-			return ok(views.html.module.education.educationCourses.render(courses));
+			return ok(views.html.module.education.educationCourses.render(courses, courseTypes));
 		}
 	}
 

@@ -192,7 +192,18 @@ public class AgentController extends BaseController {
 		int page = FormHelper.getPage(form().bindFromRequest());
 		
 		Page<Course> courses  = Course.findPageByAgent(user.agent,form().bindFromRequest(),page,null);
-		return ok(views.html.module.agent.agentCourses.render(courses));
+		
+		Page<CourseType> types = CourseType.findPage(form().bindFromRequest(), 0, Constants.MAX_DATA_SIZE);
+		
+		String[] courseTypes = null;
+		if(types != null && types.getList() != null && types.getList().size() > 0){
+			courseTypes = new String[types.getList().size()];
+			for(int i = 0; i < types.getList().size(); i++){
+				courseTypes[i] = types.getList().get(i).name;
+			}
+		}
+		
+		return ok(views.html.module.agent.agentCourses.render(courses, courseTypes));
 	}
 
 	/**
@@ -207,10 +218,20 @@ public class AgentController extends BaseController {
 
 		Page<Course> courses = Course.findPage(form().bindFromRequest(), page,
 				null);
+				
+		Page<CourseType> types = CourseType.findPage(form().bindFromRequest(), 0, Constants.MAX_DATA_SIZE);
+		
+		String[] courseTypes = null;
+		if(types != null && types.getList() != null && types.getList().size() > 0){
+			courseTypes = new String[types.getList().size()];
+			for(int i = 0; i < types.getList().size(); i++){
+				courseTypes[i] = types.getList().get(i).name;
+			}
+		}
 
 		FormHelper.resetFlash(form().bindFromRequest(), flash());
 
-		return ok(views.html.module.agent.allCourse.render(courses));
+		return ok(views.html.module.agent.allCourse.render(courses, courseTypes));
 	}
 
 

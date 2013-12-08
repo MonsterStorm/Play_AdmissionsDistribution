@@ -232,8 +232,10 @@ public class Course extends Model {
 	 */
 	public static Page<Course> findPageByAgent(DynamicForm form, int page,
 			Integer pageSize) {
-		return new QueryHelper<Course>(finder, form).addEq("agents.id",
-				"agentId", Long.class).findPage(page, pageSize);
+		QueryHelper<Course> queryFilter = new QueryFilterHelper<Course>(finder, form).filter(Course.class, "findPage", DynamicForm.class, Integer.class, Integer.class);
+		return queryFilter.findPage(page, pageSize);
+	//	return new QueryHelper<Course>(finder, form).addEq("agents.id",
+	//			"agentId", Long.class).findPage(page, pageSize);
 	}
 
 	/**
@@ -269,9 +271,13 @@ public class Course extends Model {
 		Map<String, String> datas = form.data();
 		datas.put("eduId", edu.id.toString());
 		form = form.bind(datas);
-		return new QueryHelper<Course>(finder, form)
-				.addEq("edu.id", "eduId", Long.class).addOrderBy("orderby")
-				.findPage(page, pageSize);
+		
+		QueryHelper<Course> queryFilter = new QueryFilterHelper<Course>(finder, form).filter(Course.class, "findPage", DynamicForm.class, Integer.class, Integer.class);
+		return queryFilter.findPage(page, pageSize);
+		
+		// return new QueryHelper<Course>(finder, form)
+		//		.addEq("edu.id", "eduId", Long.class).addOrderBy("orderby")
+		//		.findPage(page, pageSize);
 		// return new QueryHelper<Course>(finder, form).addEqual("edu.id",
 		// edu.id.toString(), Long.class).addOrderBy("orderby").findPage(finder,
 		// form, page, pageSize);
@@ -289,9 +295,13 @@ public class Course extends Model {
 		Map<String, String> datas = form.data();
 		datas.put("creatorId", user.id.toString());
 		form = form.bind(datas);
-		return new QueryHelper<Course>(finder, form)
-				.addEq("edu.creator.id", "creatorId", Long.class)
-				.addOrderBy("orderby").findPage(page, pageSize);
+		
+		QueryHelper<Course> queryFilter = new QueryFilterHelper<Course>(finder, form).filter(Course.class, "findPage", DynamicForm.class, Integer.class, Integer.class);
+		return queryFilter.findPage(page, pageSize);
+		
+		// return new QueryHelper<Course>(finder, form)
+		//		.addEq("edu.creator.id", "creatorId", Long.class)
+		//		.addOrderBy("orderby").findPage(page, pageSize);
 		// return new QueryHelper<Course>(finder,
 		// form).addEqual("edu.creator.id", user.id.toString(),
 		// Long.class).addOrderBy("orderby").findPage(finder, form, page,
