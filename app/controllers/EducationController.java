@@ -45,6 +45,8 @@ public class EducationController extends BaseController {
 	private static final String PAGE_ALL_COURSE_DISTRIBUTION = "allCourseDistribution";
 	private static final String PAGE_EDU_ENROLL_INFO = "eduEnrollInfo";
 	private static final String PAGE_EDU_RECEIPT_INFO = "eduReceiptInfo";
+	private static final String PAGE_EDU_REBATE_INFOS = "eduRebateInfos";
+	private static final String PAGE_EDU_REBATE_INFO = "eduRebateInfo";
 	/**
 	 * education pages
 	 * 
@@ -78,6 +80,10 @@ public class EducationController extends BaseController {
 			return pageEduEnrollInfo();
 		}else if (PAGE_EDU_RECEIPT_INFO.equalsIgnoreCase(page)) {// 
 			return eduReceiptInfo();
+		} else if (PAGE_EDU_REBATE_INFOS.equalsIgnoreCase(page)) {// 
+			return pageRebateInfos();
+		} else if (PAGE_EDU_REBATE_INFO.equalsIgnoreCase(page)) {// 
+			return pageRebateInfo();
 		}  else {
 			return badRequest("页面不存在");
 		}
@@ -123,7 +129,9 @@ public class EducationController extends BaseController {
 			return addOrUpdateDomain();
 		} if ("edu_receipt".equalsIgnoreCase(table)) {// 域名更新或添加
 			return addOrUpdateEduReceipt();
-		} 
+		} if( "edu_rebate".equalsIgnoreCase(table) ) {//最终确认收款更新
+			return addOrUpdateEduRebate();
+		}
 		 else {
 			return badRequest(Constants.MSG_PAGE_NOT_FOUND);
 		}
@@ -323,6 +331,21 @@ public class EducationController extends BaseController {
 	}
 
 	/**
+	 * 报名管理
+	 * 
+	 * @return
+	 */
+	public static Result pageRebateInfo() {
+		Long id = FormHelper.getLong(form().bindFromRequest(), "rebateId");
+		if (id != null) {
+			Rebate rebate = Rebate.find(id);
+			return ok(views.html.module.education.eduRebateInfo.render(rebate));
+		}
+
+		return badRequest(Constants.MSG_FORBIDDEN);
+	}
+
+	/**
 	 * 教育机构课程
 	 * 
 	 * @return
@@ -359,6 +382,36 @@ public class EducationController extends BaseController {
 
 			Page<Course> courses  = Course.findPageByEducation(edu,form().bindFromRequest(),page,null);
 			return ok(views.html.module.education.educationCourses.render(courses, courseTypes));
+		}
+	}
+
+
+	/**
+	 * 教育机构分账
+	 * 
+	 * @return
+	 */
+	public static Result pageRebateInfos() {
+		play.Logger.error(form().bindFromRequest().get("page"));
+
+		User user =  LoginController.getSessionUser();
+		if(user == null){
+			return badRequest(Constants.MSG_NOT_LOGIN);
+		}
+		if(user.edus == null){
+			return badRequest(Constants.MSG_EDUCATION_NOT_EXIST);
+		}
+		// get page
+		int page = FormHelper.getPage(form().bindFromRequest());
+		if(form().bindFromRequest().get("eduId") == null){
+			Page<Rebate> rebate  = Rebate.findPageByEduUser(user,form().bindFromRequest(),page,null);
+			return ok(views.html.module.education.eduRebateInfos.render(rebate));
+		}else{
+			Long eduId = FormHelper.getLong(form().bindFromRequest(), "eduId");
+			EducationInstitution edu = EducationInstitution.find(eduId);
+
+			Page<Rebate> rebate  = Rebate.findPageByEdu(edu,form().bindFromRequest(),page,null);
+			return ok(views.html.module.education.eduRebateInfos.render(rebate));
 		}
 	}
 
@@ -647,4 +700,42 @@ public class EducationController extends BaseController {
 		return ok(views.html.module.education.eduReceiptInfo.render(enroll));
 
 	}
+
+	/**
+	 * add or update instructor
+	 * 
+	 * @return
+	 */
+	public static Result addOrUpdateEduRebate() {
+		User user =  LoginController.getSessionUser();
+		if(user == null){
+			return badRequest(Constants.MSG_NOT_LOGIN);
+		}
+		
+		Long rebateId =  FormHelper.getLong(form().bindFromRequest(),"rebateId");
+		Rebate rebate = Rebate.find(rebateId);
+		if( rebate == null ){
+			return badRequest(Constants.MSG_ENROLL_NOT_EXIST);
+		}
+
+		EducationInstitution edu = rebate.distribution.course.edu;
+		if( edu == null || edu.creator.id != user.id  ){
+			return badRequest(Constants.MSG_FORBIDDEN);
+		}
+
+		if( rebate.lastReceiptOfEdu.money!= null && rebate.lastReceiptOfEdu.money > 0 ){
+			return badRequest(Constants.MSG_RECEIPT_CONFIRMED);
+		}
+		rebate.lastReceiptOfEdu.money = FormHelper.getDouble(form().bindFromRequest(),"lastReceiptOfEdu.money");
+		rebate.lastReceiptOfEdu.time = System.currentTimeMillis();
+		rebate.lastReceiptOfEdu.info =  FormHelper.getString(form().bindFromRequest(),"lastReceiptOfEdu.info");
+		rebate.lastReceiptOfEdu.confirmer =  user;
+		rebate.rebateToPlatform = ( rebate.lastReceiptOfEdu.money *  rebate.typeToPlatform.ratioOfTotal ) + ( rebate.numEduAdmit * rebate.typeToPlatform.ratioOfPerStudent );
+		rebate.lastReceiptOfEdu.update();
+		rebate.update();
+
+		return ok(views.html.module.education.eduRebateInfo.render(rebate));
+
+	}
+
 }

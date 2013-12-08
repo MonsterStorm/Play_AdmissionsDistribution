@@ -140,6 +140,15 @@ public class CourseDistribution extends Model {
 		}
 
 		Rebate rebate = Rebate.createRebate(cd);
+		rebate.typeToPlatform = course.eduRebateType;
+		rebate.typeToAgent = course.agentRebateType;
+		rebate.lastReceiptOfEdu = new ConfirmReceipt();
+		rebate.lastReceiptOfPlatform = new ConfirmReceipt();
+		rebate.lastReceiptOfAgent = new ConfirmReceipt();
+		rebate.lastReceiptOfEdu.save();
+		rebate.lastReceiptOfPlatform.save();
+		rebate.lastReceiptOfAgent.save();
+
 		rebate.save();
 		cd.rebate = rebate;
 
