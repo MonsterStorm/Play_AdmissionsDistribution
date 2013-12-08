@@ -42,6 +42,7 @@ public class CommonController extends Controller {
 	private static final String PAGE_COURSE_CLASS_DETAIL = "courseClassDetail";// 新课程类别详情
 	private static final String PAGE_CHANGE_PASSWORD_WITHOUT_AUTH = "changePasswordWithoutAuth";// 修改密码
 	private static final String PAGE_STUDENT_WORDS_DEATIL = "studentWordsDetail";// 学员感言
+	private static final String PAGE_REBATE_INFO = "rebateInfo";// 分账
 
 	/**
 	 * common pages
@@ -84,6 +85,8 @@ public class CommonController extends Controller {
 			return pageChangePasswordWithoutAuth();
 		} else if (PAGE_STUDENT_WORDS_DEATIL.equalsIgnoreCase(page)) {// 用户详情
 			return pageStudentWordsDetail(null);
+		} else if (PAGE_REBATE_INFO.equalsIgnoreCase(page)) {// 分账详情
+			return pageRebateInfo();
 		} else {
 			return badRequest(Constants.MSG_PAGE_NOT_FOUND);
 		}
@@ -126,8 +129,10 @@ public class CommonController extends Controller {
 			return addOrUpdateStudentWords();
 		} else if (Message.TABLE_NAME.equalsIgnoreCase(table)) {// 添加或删除留言
 			return addOrUpdateMessage();
-		}else if ("CourseRebateType".equalsIgnoreCase(table)) {// 添加或删除留言
+		}else if ("CourseRebateType".equalsIgnoreCase(table)) {// 添加或更新课程返点
 			return addOrUpdateCourseRebateType();
+		}else if ("admin_rebate".equalsIgnoreCase(table)) {// 添加或更新平台分账
+			return addOrUpdateAdminRebate();
 		}
 		 else {
 			return badRequest(Constants.MSG_PAGE_NOT_FOUND);
@@ -1354,6 +1359,23 @@ public class CommonController extends Controller {
 				.render(studentWords));
 	}
 
+
+	/**
+	 * 分账管理
+	 * 
+	 * @return
+	 */
+	public static Result pageRebateInfo() {
+		Long id = FormHelper.getLong(form().bindFromRequest(), "rebateId");
+		if (id != null) {
+			Rebate rebate = Rebate.find(id);
+			return ok(views.html.module.common.rebateInfo.render(rebate));
+		}
+
+		return badRequest(Constants.MSG_FORBIDDEN);
+	}
+
+
 	/**
 	 * 留言页面
 	 * 
@@ -1451,5 +1473,37 @@ public class CommonController extends Controller {
 			}
 		}
 		return badRequest(Constants.MSG_NOT_LOGIN);
+	}
+
+	/**
+	 * 平台确认收款同时向代理人分账
+	 * 
+	 * @return
+	 */
+	public static Result addOrUpdateAdminRebate() {
+		User user =  LoginController.getSessionUser();
+		if(user == null){
+			return badRequest(Constants.MSG_NOT_LOGIN);
+		}
+		
+		Long rebateId =  FormHelper.getLong(form().bindFromRequest(),"rebateId");
+		Rebate rebate = Rebate.find(rebateId);
+		if( rebate == null ){
+			return badRequest(Constants.MSG_ENROLL_NOT_EXIST);
+		}
+
+		if( rebate.lastReceiptOfPlatform.money!= null && rebate.lastReceiptOfPlatform.money > 0 ){
+			return badRequest(Constants.MSG_RECEIPT_CONFIRMED);
+		}
+		rebate.lastReceiptOfPlatform.money = FormHelper.getDouble(form().bindFromRequest(),"lastReceiptOfPlatform.money");
+		rebate.lastReceiptOfPlatform.time = System.currentTimeMillis();
+		rebate.lastReceiptOfPlatform.info =  FormHelper.getString(form().bindFromRequest(),"lastReceiptOfPlatform.info");
+		rebate.lastReceiptOfPlatform.confirmer =  user;
+		rebate.rebateToAgent = ( rebate.lastReceiptOfEdu.money *  rebate.typeToAgent.ratioOfTotal ) + ( rebate.numEduAdmit * rebate.typeToAgent.ratioOfPerStudent );
+		rebate.lastReceiptOfPlatform.update();
+		rebate.update();
+
+		return ok(views.html.module.common.rebateInfo.render(rebate));
+
 	}
 }

@@ -44,6 +44,7 @@ public class AdminController extends BaseController {
 	private static final String PAGE_ADMIN_COURSE_CLASS = "adminCourseClass";// 课程类别管理
 	private static final String PAGE_ADMIN_USERS = "adminUsers";//用户管理
 	private static final String PAGE_ADMIN_STUDENT_WORDS = "adminStudentWords";//用户管理
+	private static final String PAGE_ADMIN_REBATE_INFOS = "adminRebateInfos";
 	/**
 	 * adming pages
 	 * 
@@ -95,7 +96,9 @@ public class AdminController extends BaseController {
 			return pageAdminCourseClass();
 		}else if(PAGE_ADMIN_STUDENT_WORDS.equalsIgnoreCase(page)) {
 			return pageAdminStudentWords();
-		}  else {
+		} else if(PAGE_ADMIN_REBATE_INFOS.equalsIgnoreCase(page)) {
+			return pageAdminRebateInfos();
+		} else {
 			return badRequest("页面不存在");
 		}
 	}
@@ -447,6 +450,26 @@ public class AdminController extends BaseController {
 		FormHelper.resetFlash(form().bindFromRequest(), flash());
 
 		return ok(views.html.module.admin.adminStudentWords.render(studentWords));
+	}
+
+	/**
+	 * 平台确认收款并分账
+	 * 
+	 * @return
+	 */
+	public static Result pageAdminRebateInfos() {
+		play.Logger.error(form().bindFromRequest().get("page"));
+
+		User user =  LoginController.getSessionUser();
+		if(user == null){
+			return badRequest(Constants.MSG_NOT_LOGIN);
+		}
+
+		// get page
+		int page = FormHelper.getPage(form().bindFromRequest());
+
+		Page<Rebate> rebate  = Rebate.findPage(form().bindFromRequest(),page,null);
+		return ok(views.html.module.admin.adminRebateInfos.render(rebate));
 	}
 
 }

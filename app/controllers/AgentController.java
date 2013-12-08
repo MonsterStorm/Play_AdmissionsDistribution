@@ -43,6 +43,8 @@ public class AgentController extends BaseController {
 	private static final String PAGE_USER_ENROLL_BY_AGENT = "userEnrollByAgent";
 	private static final String PAGE_AGENT_ENROLL_INFO = "agentEnrollInfo";
 	private static final String PAGE_AGENT_RECEIPT_INFO = "agentReceiptInfo";//学员报名信息
+	private static final String PAGE_AGENT_REBATE_INFOS = "agentRebateInfos";
+	private static final String PAGE_AGENT_REBATE_INFO = "agentRebateInfo";
 	/**
 	 * agent pages
 	 * 
@@ -78,7 +80,11 @@ public class AgentController extends BaseController {
 			return pageAgentEnrollInfo();
 		} else if(PAGE_AGENT_RECEIPT_INFO.equalsIgnoreCase(page)){
 			return agentReceiptInfo();
-		}else {
+		} else if (PAGE_AGENT_REBATE_INFOS.equalsIgnoreCase(page)) {// 
+			return pageRebateInfos();
+		} else if (PAGE_AGENT_REBATE_INFO.equalsIgnoreCase(page)) {// 
+			return pageRebateInfo();
+		} else {
 			return badRequest("页面不存在");
 		}
 	}
@@ -109,6 +115,8 @@ public class AgentController extends BaseController {
 			return addOrUpdateAgentEnroll();
 		}else if("agent_receipt".equalsIgnoreCase(table)){//学员报名
 			return addOrUpdateAgentReceipt();
+		}else if("agent_rebate".equalsIgnoreCase(table)){//学员报名
+			return addOrUpdateAgentRebate();
 		}else {
 			return badRequest(Constants.MSG_PAGE_NOT_FOUND);
 		}
@@ -859,6 +867,82 @@ public class AgentController extends BaseController {
 
 			return badRequest(Constants.MSG_AGENT_NOT_EXIST);
 		}
+	}
+
+
+
+	/**
+	 * 代理人分账
+	 * 
+	 * @return
+	 */
+	public static Result pageRebateInfos() {
+		play.Logger.error(form().bindFromRequest().get("page"));
+
+		User user =  LoginController.getSessionUser();
+		if(user == null){
+			return badRequest(Constants.MSG_NOT_LOGIN);
+		}
+		if(user.agent == null){
+			return badRequest(Constants.MSG_AGENT_NOT_EXIST);
+		}
+		// get page
+		int page = FormHelper.getPage(form().bindFromRequest());
+		
+		Page<Rebate> rebate  = Rebate.findPageByAgent(user.agent,form().bindFromRequest(),page,null);
+		return ok(views.html.module.agent.agentRebateInfos.render(rebate));
+	}
+
+	/**
+	 * 分账管理
+	 * 
+	 * @return
+	 */
+	public static Result pageRebateInfo() {
+		Long id = FormHelper.getLong(form().bindFromRequest(), "rebateId");
+		if (id != null) {
+			Rebate rebate = Rebate.find(id);
+			return ok(views.html.module.agent.agentRebateInfo.render(rebate));
+		}
+
+		return badRequest(Constants.MSG_FORBIDDEN);
+	}
+
+	/**
+	 * 分账确认
+	 * 
+	 * @return
+	 */
+	public static Result addOrUpdateAgentRebate() {
+		User user =  LoginController.getSessionUser();
+		if(user == null){
+			return badRequest(Constants.MSG_NOT_LOGIN);
+		}
+		
+		Long rebateId =  FormHelper.getLong(form().bindFromRequest(),"rebateId");
+		Rebate rebate = Rebate.find(rebateId);
+		if( rebate == null ){
+			return badRequest(Constants.MSG_REBATE_NOT_EXIST);
+		}
+
+		Agent agent = rebate.distribution.agent;
+		if( agent == null || agent.user.id != user.id  ){
+			return badRequest(Constants.MSG_FORBIDDEN);
+		}
+
+		if( rebate.lastReceiptOfAgent.money!= null && rebate.lastReceiptOfAgent.money > 0 ){
+			return badRequest(Constants.MSG_RECEIPT_CONFIRMED);
+		}
+		rebate.lastReceiptOfAgent.money = FormHelper.getDouble(form().bindFromRequest(),"lastReceiptOfAgent.money");
+		rebate.lastReceiptOfAgent.time = System.currentTimeMillis();
+		rebate.lastReceiptOfAgent.info =  FormHelper.getString(form().bindFromRequest(),"lastReceiptOfAgent.info");
+		rebate.lastReceiptOfAgent.confirmer =  user;
+		
+		rebate.lastReceiptOfAgent.update();
+		rebate.update();
+
+		return ok(views.html.module.agent.agentRebateInfo.render(rebate));
+
 	}
   
 }

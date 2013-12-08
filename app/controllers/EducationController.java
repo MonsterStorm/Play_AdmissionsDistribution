@@ -331,7 +331,7 @@ public class EducationController extends BaseController {
 	}
 
 	/**
-	 * 报名管理
+	 * 分账管理
 	 * 
 	 * @return
 	 */

@@ -2,7 +2,7 @@
 @import basic.common._
 
 @baseUrl=@{
-	var url = "eduRebateInfos";
+	var url = "agentRebateInfos";
 	url
 }
 @toolbar_header={
@@ -13,17 +13,17 @@
 	<div class="btn-toolbar pull-right" role="toolbar">
 		
 		<div class="btn-group" id="btnGroup">
-			<button type="button" class="btn btn-default @checkActive("auditStatus", "-1")" onclick="@buildAction({baseUrl}, "education", Array("auditStatus"), Array("-1"), true)">所有</button>
-			<button type="button" class="btn btn-default @checkActive("auditStatus", {String.valueOf(Audit.STATUS_WAIT)})" onclick="@buildAction({baseUrl}, "education", Array("auditStatus"), Array({String.valueOf(Audit.STATUS_WAIT)}), true)">所有待审核</button>
-			<button type="button" class="btn btn-default @checkActive("auditStatus", {String.valueOf(Audit.STATUS_SUCCESS)})" onclick="@buildAction({baseUrl}, "education", Array("auditStatus"), Array({String.valueOf(Audit.STATUS_SUCCESS)}), true)">所有已审核</button>
+			<button type="button" class="btn btn-default @checkActive("auditStatus", "-1")" onclick="@buildAction({baseUrl}, "agent", Array("auditStatus"), Array("-1"), true)">所有</button>
+			<button type="button" class="btn btn-default @checkActive("auditStatus", {String.valueOf(Audit.STATUS_WAIT)})" onclick="@buildAction({baseUrl}, "agent", Array("auditStatus"), Array({String.valueOf(Audit.STATUS_WAIT)}), true)">所有待审核</button>
+			<button type="button" class="btn btn-default @checkActive("auditStatus", {String.valueOf(Audit.STATUS_SUCCESS)})" onclick="@buildAction({baseUrl}, "agent", Array("auditStatus"), Array({String.valueOf(Audit.STATUS_SUCCESS)}), true)">所有已审核</button>
 		</div>
 		<div class="btn-group">
 			<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
 				排序 <span class="caret"></span>
 			</a>
 			<ul class="dropdown-menu">
-				<li class="@checkActive("orderby", "name-asc", true)"><a onclick="@buildAction({baseUrl}, "education", Array("orderby"), Array("name-asc"))">按名称-升序</a></li>
-				<li class="@checkActive("orderby", "name-desc")"><a onclick="@buildAction({baseUrl}, "education", Array("orderby"), Array("name-desc"))">按名称-降序</a></li>
+				<li class="@checkActive("orderby", "name-asc", true)"><a onclick="@buildAction({baseUrl}, "agent", Array("orderby"), Array("name-asc"))">按名称-升序</a></li>
+				<li class="@checkActive("orderby", "name-desc")"><a onclick="@buildAction({baseUrl}, "agent", Array("orderby"), Array("name-desc"))">按名称-降序</a></li>
 			</ul>
 		</div>
 	</div>
@@ -38,8 +38,8 @@
 	<div class="btn-group" id="toolbar">
 		
 
-		@if( rebate!=null && rebate.numOfStudents !=null && rebate.numEduAdmit !=null && rebate.numOfStudents == rebate.numEduAdmit){
-			<a class="btn btn-info" data-toggle="确认分账" href="#" onclick="getEducationPage(this, 'eduRebateInfo', 'rebateId=@rebate.id')"><i class="icon-edit icon-white"></i></a> 
+		@if( rebate!=null && rebate.lastReceiptOfPlatform !=null && rebate.lastReceiptOfPlatform.time !=null ){
+			<a class="btn btn-info" data-toggle="确认分账" href="#" onclick="getAgentPage(this, 'agentRebateInfo', 'rebateId=@rebate.id')"><i class="icon-edit icon-white"></i></a> 
 		} else {
 			<span class="btn disabled" data-toggle="确认分账" href="#"><i class="icon-edit icon-white"></i></span>
 		}
@@ -60,11 +60,12 @@
 					<th>开课时间</th>
 					<th>学生人数</th>
 					<th>学费总数</th>
-					<th>确认收款人数</th>
-					<th>确认收款金额</th> 
+					<th>教育机构确认收款人数</th>
+					<th>教育机构确认收款金额</th> 
+					<th>教育机构最终确认收款金额</th> 
 					<th>按每个学生返利金额</th> 
 					<th>按总金额返利比例</th> 
-					<th>给平台的总返利数量</th> 
+					<th>给代理人的总返利数量</th> 
 				</tr>
 			</thead>
 			<tbody>
@@ -113,22 +114,28 @@
 				} else {
 					<td>-</td>
 				}
+
+				@if(model.lastReceiptOfEdu != null && model.lastReceiptOfEdu.money != null ){
+					<td>@model.lastReceiptOfEdu.money</td>
+				} else {
+					<td>-</td>
+				}
 				
-				@if( model.typeToPlatform !=null && model.typeToPlatform.ratioOfPerStudent !=null ){
-					<td>@model.typeToPlatform.ratioOfPerStudent</td>
+				@if( model.typeToPlatform !=null && model.typeToAgent.ratioOfPerStudent !=null ){
+					<td>@model.typeToAgent.ratioOfPerStudent</td>
 
 				} else{
 					<td>0</td>
 				}
 
-				@if( model.typeToPlatform !=null && model.typeToPlatform.ratioOfTotal !=null ){
-					<td>@model.typeToPlatform.ratioOfTotal</td>
+				@if( model.typeToPlatform !=null && model.typeToAgent.ratioOfTotal !=null ){
+					<td>@model.typeToAgent.ratioOfTotal</td>
 
 				} else {
 					<td>0</td>
 				}
-				@if( model.moneyEduAdmit != null && model.numEduAdmit != null &&  model.typeToPlatform != null ){
-					<td>@model.moneyEduAdmit * @model.typeToPlatform.ratioOfTotal + @model.numEduAdmit * @model.typeToPlatform.ratioOfPerStudent </td>
+				@if( model.lastReceiptOfEdu != null && model.lastReceiptOfEdu.money != null  && model.numEduAdmit != null &&  model.typeToAgent != null ){
+					<td>@model.lastReceiptOfEdu.money * @model.typeToAgent.ratioOfTotal + @model.numEduAdmit * @model.typeToAgent.ratioOfPerStudent </td>
 				} else {
 					<td>暂无结果</td>
 				}
@@ -143,4 +150,4 @@
 	</div>
 </div>
 
-@paging(models, {baseUrl}, "education")
+@paging(models, {baseUrl}, "agent")
