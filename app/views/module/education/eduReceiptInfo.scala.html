@@ -29,7 +29,8 @@
 		<form class="form-horizontal" id="myform" method="post" action="@routes.EducationController.addOrUpdateEntity()">
 	
 			@form_validate_info()
-			@inputText("课程名称", "coursename", model.course.name, true)		
+			@inputText("课程名称", "course.name", model.course.name, true)
+			@inputText("代理名称", "fromAgent.name", model.fromAgent.name, true)		
 			@inputNumber("课程费用", "coursemoney", model.course.money, true)
 			@datetimePicker("开课时间", "coursetime", model.course.startTime,true)
 	

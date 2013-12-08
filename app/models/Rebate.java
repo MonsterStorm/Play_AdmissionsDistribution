@@ -198,4 +198,47 @@ public class Rebate extends Model {
 		}
 		return rebate;
 	}
+
+
+	/**
+	 * find page with filter
+	 * 
+	 * @param page
+	 * @param form
+	 * @return
+	 */
+	public static Page<Rebate> findPageByEdu(EducationInstitution edu, DynamicForm form, int page, Integer pageSize) {
+		Map<String, String> datas = form.data();
+		datas.put("eduId", edu.id.toString());
+		form = form.bind(datas);
+		return new QueryHelper<Rebate>(finder, form).addEq("distribution.course.edu.id", "eduId", Long.class).findPage(page, pageSize);
+	}
+
+	/**
+	 * find page with filter
+	 * 
+	 * @param page
+	 * @param form
+	 * @return
+	 */
+	public static Page<Rebate> findPageByAgent(Agent agent, DynamicForm form, int page, Integer pageSize) {
+		Map<String, String> datas = form.data();
+		datas.put("agentId", agent.id.toString());
+		form = form.bind(datas);
+		return new QueryHelper<Rebate>(finder, form).addEq("distribution.agent.id", "agentId", Long.class).findPage(page, pageSize);
+	}
+
+	/**
+	 * find page with filter
+	 * 
+	 * @param page
+	 * @param form
+	 * @return
+	 */
+	public static Page<Rebate> findPageByEduUser(User user, DynamicForm form, int page, Integer pageSize) {
+		Map<String, String> datas = form.data();
+		datas.put("userId", user.id.toString());
+		form = form.bind(datas);
+		return new QueryHelper<Rebate>(finder, form).addEq("distribution.course.edu.creator.id", "userId", Long.class).findPage(page, pageSize);
+	}
 }

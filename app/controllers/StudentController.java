@@ -360,6 +360,17 @@ public class StudentController extends BaseController {
 				enroll.confirmOfStu.confirmer =  user;
 				enroll.confirmOfStu.update();
 				enroll.update();
+
+				CourseDistribution cd = CourseDistribution.findByEnrollId( enroll.id );
+				if( cd != null){
+					
+					cd.rebate.numOfStudents ++;
+					cd.rebate.totalMoney += enroll.confirmOfStu.money;
+					
+					cd.rebate.update();
+					cd.update();
+				}
+
 				return ok(views.html.module.student.studentReceiptInfo.render(enroll));
 
 			}else{
