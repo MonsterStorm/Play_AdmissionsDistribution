@@ -45,6 +45,7 @@ public class AgentController extends BaseController {
 	private static final String PAGE_AGENT_RECEIPT_INFO = "agentReceiptInfo";//学员报名信息
 	private static final String PAGE_AGENT_REBATE_INFOS = "agentRebateInfos";
 	private static final String PAGE_AGENT_REBATE_INFO = "agentRebateInfo";
+	private static final String PAGE_AGENT_STATISTICE = "agentStatistics";
 	/**
 	 * agent pages
 	 * 
@@ -84,6 +85,8 @@ public class AgentController extends BaseController {
 			return pageRebateInfos();
 		} else if (PAGE_AGENT_REBATE_INFO.equalsIgnoreCase(page)) {// 
 			return pageRebateInfo();
+		} else if (PAGE_AGENT_STATISTICE.equalsIgnoreCase(page)) {// 
+			return agentStatistics();
 		} else {
 			return badRequest("页面不存在");
 		}
@@ -117,7 +120,10 @@ public class AgentController extends BaseController {
 			return addOrUpdateAgentReceipt();
 		}else if("agent_rebate".equalsIgnoreCase(table)){//学员报名
 			return addOrUpdateAgentRebate();
-		}else {
+		}else if( "agentStatistics".equalsIgnoreCase(table)  ){ //收支统计
+			return statisticsAgent();
+		}
+		else {
 			return badRequest(Constants.MSG_PAGE_NOT_FOUND);
 		}
 	}
@@ -942,6 +948,45 @@ public class AgentController extends BaseController {
 		rebate.update();
 
 		return ok(views.html.module.agent.agentRebateInfo.render(rebate));
+
+	}
+
+
+	/**
+	 * 统计
+	 * 输入参数为起止时间   还可以输入一些过滤数据
+	 * @return
+	 */
+	public static Result agentStatistics() {
+		User user =  LoginController.getSessionUser();
+		if(user == null){
+			return badRequest(Constants.MSG_NOT_LOGIN);
+		}
+		Long start = FormHelper.getLong(form().bindFromRequest(), "start");
+		Long end = FormHelper.getLong(form().bindFromRequest(), "end");
+		Statistics st = new Statistics();
+		st.startTime = start;
+		st.endTime = end;
+		return ok(views.html.module.agent.agentStatistics.render(st));		
+	}
+
+	/**
+	 * add or update instructor
+	 * 
+	 * @return
+	 */
+	public static Result statisticsAgent() {
+		User user =  LoginController.getSessionUser();
+		if(user == null){
+			return badRequest(Constants.MSG_NOT_LOGIN);
+		}
+		//return badRequest(form().bindFromRequest()+"");
+		Agent agent = user.agent;
+
+
+		Statistics statis = Statistics.getAgentStatistics(agent, form().bindFromRequest());
+
+		return ok(views.html.module.agent.agentStatistics.render(statis));
 
 	}
   

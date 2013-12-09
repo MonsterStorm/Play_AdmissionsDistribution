@@ -45,6 +45,7 @@ public class AdminController extends BaseController {
 	private static final String PAGE_ADMIN_USERS = "adminUsers";//用户管理
 	private static final String PAGE_ADMIN_STUDENT_WORDS = "adminStudentWords";//用户管理
 	private static final String PAGE_ADMIN_REBATE_INFOS = "adminRebateInfos";
+	private static final String PAGE_ADMIN_STATISTICE = "adminStatistics";
 	/**
 	 * adming pages
 	 * 
@@ -98,7 +99,9 @@ public class AdminController extends BaseController {
 			return pageAdminStudentWords();
 		} else if(PAGE_ADMIN_REBATE_INFOS.equalsIgnoreCase(page)) {
 			return pageAdminRebateInfos();
-		} else {
+		} else if (PAGE_ADMIN_STATISTICE.equalsIgnoreCase(page)) {// 
+			return adminStatistics();
+		}else {
 			return badRequest("页面不存在");
 		}
 	}
@@ -470,6 +473,24 @@ public class AdminController extends BaseController {
 
 		Page<Rebate> rebate  = Rebate.findPage(form().bindFromRequest(),page,null);
 		return ok(views.html.module.admin.adminRebateInfos.render(rebate));
+	}
+
+	/**
+	 * 统计
+	 * 输入参数为起止时间   还可以输入一些过滤数据
+	 * @return
+	 */
+	public static Result adminStatistics() {
+		User user =  LoginController.getSessionUser();
+		if(user == null){
+			return badRequest(Constants.MSG_NOT_LOGIN);
+		}
+		Long start = FormHelper.getLong(form().bindFromRequest(), "start");
+		Long end = FormHelper.getLong(form().bindFromRequest(), "end");
+		Statistics st = new Statistics();
+		st.startTime = start;
+		st.endTime = end;
+		return ok(views.html.module.admin.adminStatistics.render(st));		
 	}
 
 }

@@ -37,6 +37,13 @@
 		<form id="myform"  class="form-horizontal"  method="post" action="@routes.AgentController.addOrUpdateEntity()">
 	
 			@form_validate_info()
+			
+			@if(student!=null && enroll!=null && enroll.enrollByAgent == 1 ){
+				@inputText("用户名", "username", student.user.username, true)		
+				@inputText("密码", "password", student.user.password, true)		
+			}
+
+
 			@if(course!=null){
 				@inputText("课程名称", "coursename", course.name, true)		
 				@inputNumber("课程费用", "coursemoney", course.money, true)

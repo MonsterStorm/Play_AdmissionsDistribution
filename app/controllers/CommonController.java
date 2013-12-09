@@ -133,6 +133,8 @@ public class CommonController extends Controller {
 			return addOrUpdateCourseRebateType();
 		}else if ("admin_rebate".equalsIgnoreCase(table)) {// 添加或更新平台分账
 			return addOrUpdateAdminRebate();
+		}else if( "adminStatistics".equalsIgnoreCase(table)  ){ //收支统计
+			return statisticsAdmin();
 		}
 		 else {
 			return badRequest(Constants.MSG_PAGE_NOT_FOUND);
@@ -1504,6 +1506,23 @@ public class CommonController extends Controller {
 		rebate.update();
 
 		return ok(views.html.module.common.rebateInfo.render(rebate));
+
+	}
+
+	/**
+	 * add or update instructor
+	 * 
+	 * @return
+	 */
+	public static Result statisticsAdmin() {
+		User user =  LoginController.getSessionUser();
+		if(user == null){
+			return badRequest(Constants.MSG_NOT_LOGIN);
+		}
+
+		Statistics statis = Statistics.getPlatformStatistics( form().bindFromRequest());
+
+		return ok(views.html.module.admin.adminStatistics.render(statis));
 
 	}
 }

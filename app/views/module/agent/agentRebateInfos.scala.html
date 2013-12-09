@@ -63,9 +63,12 @@
 					<th>教育机构确认收款人数</th>
 					<th>教育机构确认收款金额</th> 
 					<th>教育机构最终确认收款金额</th> 
+					<!--
 					<th>按每个学生返利金额</th> 
 					<th>按总金额返利比例</th> 
-					<th>给代理人的总返利数量</th> 
+					<th>应给代理人的总返利数量</th> 
+					<th>实际给代理人的总返利数量</th> --> 
+					<th>操作</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -120,7 +123,7 @@
 				} else {
 					<td>-</td>
 				}
-				
+				<!--
 				@if( model.typeToPlatform !=null && model.typeToAgent.ratioOfPerStudent !=null ){
 					<td>@model.typeToAgent.ratioOfPerStudent</td>
 
@@ -134,13 +137,19 @@
 				} else {
 					<td>0</td>
 				}
-				@if( model.lastReceiptOfEdu != null && model.lastReceiptOfEdu.money != null  && model.numEduAdmit != null &&  model.typeToAgent != null ){
-					<td>@model.lastReceiptOfEdu.money * @model.typeToAgent.ratioOfTotal + @model.numEduAdmit * @model.typeToAgent.ratioOfPerStudent </td>
+				@if( model.moneyEduAdmit != null  && model.numEduAdmit != null &&  model.typeToAgent != null ){
+					<td>@model.moneyEduAdmit * @model.typeToAgent.ratioOfTotal + @model.numEduAdmit * @model.typeToAgent.ratioOfPerStudent </td>
 				} else {
 					<td>暂无结果</td>
 				}
 
-				
+				@if( model.rebateToAgent != null ){
+					<td>@model.rebateToAgent </td>
+				} else {
+					<td>暂无结果</td>
+				}
+
+				-->
 
 				<td>@toolbar(model)</td>
 				</tr>

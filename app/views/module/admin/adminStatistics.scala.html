@@ -1,0 +1,75 @@
+@(model: Statistics)
+
+@import basic.common._
+@import basic.common.basicform._
+
+@bootstrapDatetimepicker()
+
+@baseUrl=@{
+	var url = "agentStatistics";
+	url
+}
+
+@toolbar_header={
+<div class="row">
+	<div class="span2">
+		<h4>收支统计</h4>
+	</div>
+</div>
+
+} 
+
+
+<script type="text/javascript">
+    $(document).ready( function() {
+			$('#myform').submit(function() {
+		    $(this).ajaxSubmit(ajaxSubmitOptions);
+		    return false;
+			});
+		});
+</script>
+
+
+@toolbar_header
+
+<div class="table-responsive">
+	<div style="overflow: auto">
+		<form class="form-horizontal" id="myform" method="post" action="@routes.CommonController.addOrUpdateEntity()">
+	
+			@form_validate_info()
+			
+			
+			@if(model != null && model.startTime != null){
+				@datetimePicker("开始时间", "startTime", model.startTime, true)
+			}else{
+				@datetimePicker("开始时间", "startTime", null, true)
+			}
+			@if(model != null && model.endTime != null){
+				@datetimePicker("结束时间", "endTime", model.endTime, true)
+			}else{
+				@datetimePicker("结束时间", "endTime", null, true)
+			}
+
+			@if(model != null && model.income != null){
+				@inputNumber("总收入", "income", model.income, true)
+			}else{
+				@inputNumber("总收入", "income", null, true)
+			}
+			@if(model != null && model.pay != null){
+				@inputNumber("总支出", "pay", model.pay, true)
+			}else{
+				@inputNumber("总支出", "pay", null, true)
+			}
+
+			<input class="input-large" type="hidden" name="table" value="adminStatistics">
+			
+			<hr>
+			<div class="control-group row">
+		    		<div class="controls">
+			      		<button type="submit" class="btn btn-large btn-success btn-block span2">统计</button>
+			    	</div>
+			  </div>
+		</form>
+	</div>
+</div>
+

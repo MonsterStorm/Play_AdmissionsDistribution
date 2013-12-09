@@ -47,6 +47,7 @@ public class EducationController extends BaseController {
 	private static final String PAGE_EDU_RECEIPT_INFO = "eduReceiptInfo";
 	private static final String PAGE_EDU_REBATE_INFOS = "eduRebateInfos";
 	private static final String PAGE_EDU_REBATE_INFO = "eduRebateInfo";
+	private static final String PAGE_EDU_STATISTICE = "eduStatistics";
 	/**
 	 * education pages
 	 * 
@@ -84,6 +85,8 @@ public class EducationController extends BaseController {
 			return pageRebateInfos();
 		} else if (PAGE_EDU_REBATE_INFO.equalsIgnoreCase(page)) {// 
 			return pageRebateInfo();
+		}else if (PAGE_EDU_STATISTICE.equalsIgnoreCase(page)) {// 
+			return eduStatistics();
 		}  else {
 			return badRequest("页面不存在");
 		}
@@ -131,6 +134,8 @@ public class EducationController extends BaseController {
 			return addOrUpdateEduReceipt();
 		} if( "edu_rebate".equalsIgnoreCase(table) ) {//最终确认收款更新
 			return addOrUpdateEduRebate();
+		} if( "eduStatistics".equalsIgnoreCase(table)  ){ //收支统计
+			return statisticsEdu();
 		}
 		 else {
 			return badRequest(Constants.MSG_PAGE_NOT_FOUND);
@@ -578,6 +583,38 @@ public class EducationController extends BaseController {
 		
 	}
 
+
+	/**
+	 * 统计
+	 * 输入参数为起止时间   还可以输入一些过滤数据
+	 * @return
+	 */
+	public static Result eduStatistics() {
+		User user =  LoginController.getSessionUser();
+		if(user == null){
+			return badRequest(Constants.MSG_NOT_LOGIN);
+		}
+		Long start = FormHelper.getLong(form().bindFromRequest(), "start");
+		Long end = FormHelper.getLong(form().bindFromRequest(), "end");
+		Statistics st = new Statistics();
+		st.startTime = start;
+		st.endTime = end;
+		List<EducationInstitution> edus = user.edus;
+		
+
+
+		return ok(views.html.module.education.eduStatistics.render(st, edus));
+
+		//return badRequest(start +"--" + end);
+		// User user =  LoginController.getSessionUser();
+		// if(user == null){
+		// 	return badRequest(Constants.MSG_NOT_LOGIN);
+		// }
+		// Page<Domain> domain  = Domain.findPageByEducationUser(user,form().bindFromRequest(),page,null);
+		// return ok(views.html.module.education.eduDomain.render(domain));
+		
+	}
+
 	/**
 	 * 域名详情
 	 * 
@@ -735,6 +772,28 @@ public class EducationController extends BaseController {
 		rebate.update();
 
 		return ok(views.html.module.education.eduRebateInfo.render(rebate));
+
+	}
+
+	/**
+	 * add or update instructor
+	 * 
+	 * @return
+	 */
+	public static Result statisticsEdu() {
+		User user =  LoginController.getSessionUser();
+		if(user == null){
+			return badRequest(Constants.MSG_NOT_LOGIN);
+		}
+		//return badRequest(form().bindFromRequest()+"");
+		Long eduId = FormHelper.getLong(form().bindFromRequest(), "edu");
+		EducationInstitution edu = EducationInstitution.find(eduId);
+
+
+		Statistics statis = Statistics.getEduStatistics(edu, form().bindFromRequest());
+		List<EducationInstitution> edus = user.edus;
+
+		return ok(views.html.module.education.eduStatistics.render(statis, edus));
 
 	}
 
