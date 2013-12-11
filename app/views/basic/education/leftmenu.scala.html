@@ -6,6 +6,16 @@
 		 $("#navList li.active").removeClass("active");
 		 $(li).addClass("active");
   }
+  
+ function getTemplatePage(li, url, data){
+     data = data || "";
+     ajaxBasic("/template/" + url, data, "GET", "#content");
+     if(li){//如果给定了li才改变选中状态，否则不改变
+		 	$("#navList li.active").removeClass("active");
+		 	$(li).addClass("active");
+		 }
+		 $('#' + url).addClass("active");
+  }
 	
 	function getEducationPage(li, url, data){
 		 data = data || "";
@@ -124,6 +134,12 @@ function doApply(id, data){
 	var dialog = '#dialogConfirm_' + id;
 	$(dialog).modal('hide');
 }
+
+function doUseTemplate(id, data){
+		ajaxBasic("/template/useEdu", data, "POST", "#content");
+		var dialog = '#dialogModal_' + id;
+    $(dialog).modal('hide');
+	}
 	
 </script>
 
@@ -134,7 +150,8 @@ function doApply(id, data){
 	<li class="divider"></li>
 	<li class="nav-header">基本信息管理</li>
 	<li><a href="#" onclick="getEducationPage(this, 'educationInstitution')">子帐号管理</a></li>
-	<li><a href="#"  onclick="getEducationPage(this, 'eduDomain')">域名管理</a></li>
+	<li><a href="#" onclick="getEducationPage(this, 'eduDomain')">域名管理</a></li>
+	<li id="useTemplate" onclick="getTemplatePage(this, 'useEduTemplate')"><a href="#">个性化页面</a></li>
 	<li class="divider"></li>
 	<li class="nav-header">课程信息管理</li>
 	<li><a href="#" onclick="getEducationPage(this, 'educationCourses')">查看旗下课程</a></li>

@@ -21,7 +21,10 @@ public class TemplateController extends Controller {
 
 	public static final String PAGE_USE_TEMPLATE = "useTemplate";// 使用模板页面
 	private static final String PAGE_TEMPLATE_AGENT_COURSES = "templateAgentCourses";// 代理人的课程信息模板页面
+	private static final String PAGE_TEMPLATE_EDU_COURSES = "templateEduCourses";//教育机构的课程信息模板页面
+	private static final String PAGE_TEMPLATE_INSTRUCTOR_COURSES = "templateInstructorCourses";//讲师的课程信息模板页面
 	public static final String PAGE_USE_AGENT_TEMPLATE = "useAgentTemplate";// 使用代理人模板页面
+	public static final String PAGE_USE_EDU_TEMPLATE = "useEduTemplate";//教育机构的模板页面
 
 	/**
 	 * 模板跳转，直接跳转到对应的模板下，而不是跳转到每个用户的不同模板()
@@ -30,10 +33,19 @@ public class TemplateController extends Controller {
 	 */
 	public static Result index(String domainStr) {
 		Domain domain = Domain.findByDomain(domainStr);
-		if (domain != null && domain.agent != null) {
+		if (domain != null) {
 			try {
 				// 通过反射调用该类的render方法
-				String clazzName = "views.html.template.t" + domain.agent.template.templateType.id + ".index";
+				String clazzName = null;
+				
+				if(domain.agent != null){
+					clazzName = "views.html.template.t" + domain.agent.template.templateType.id + ".index";
+				} else if (domain.edu != null){
+					clazzName = "views.html.template.t" + domain.edu.template.templateType.id + ".index";
+				} else if (domain.instructor != null){
+					clazzName = "views.html.template.t" + domain.instructor.template.templateType.id + ".index";
+				}
+				
 				clazzName = clazzName.replaceAll("/", ".");
 				
 				play.Logger.debug("redirect: " + clazzName);
@@ -41,7 +53,15 @@ public class TemplateController extends Controller {
 				if (clazz != null) {// 得到render方法
 					Method method = clazz.getMethod("render", null);
 					if (method != null) {
-						flash().put("agentId", domain.agent.id.toString());
+						if(domain.agent != null){
+							flash().put("agentId", domain.agent.id.toString());
+						}
+						if(domain.edu != null){
+							flash().put("eduId", domain.edu.id.toString());
+						}
+						if(domain.instructor != null){
+							flash().put("instructorId", domain.instructor.id.toString());
+						}
 						return ok((Html) method.invoke(null));
 					}
 				}
@@ -95,9 +115,15 @@ public class TemplateController extends Controller {
 			return pageUseTemplate();
 		} else if (PAGE_TEMPLATE_AGENT_COURSES.equalsIgnoreCase(page)) {
 			return getTemplateAgentCourses();
+		} else if (PAGE_TEMPLATE_EDU_COURSES.equalsIgnoreCase(page)){
+			return getTemplateEduCourses();
+		} else if (PAGE_TEMPLATE_INSTRUCTOR_COURSES.equalsIgnoreCase(page)){
+			return getTemplateInstructorCourses();
 		} else if (PAGE_USE_AGENT_TEMPLATE.equalsIgnoreCase(page)) {// 使用模板
 			return pageUseAgentTemplate();
-		}else {
+		} else if (PAGE_USE_EDU_TEMPLATE.equalsIgnoreCase(page)){//教育机构
+			return pageUseEduTemplate();
+		} else {
 			return badRequest(Constants.MSG_BAD_REQUEST);
 		}
 	}
@@ -120,7 +146,7 @@ public class TemplateController extends Controller {
 		return ok(views.html.module.common.useTemplate.render(templateTypes));
 	}
 	/**
-	 * 使用模板页面
+	 * Agent使用模板页面
 	 * 
 	 * @return
 	 */
@@ -136,13 +162,38 @@ public class TemplateController extends Controller {
 		// get page
 		int page = FormHelper.getPage(form().bindFromRequest());
 
-		Page<TemplateType> templateTypes = TemplateType.findAgentPage(user.agent,form()
+		Page<TemplateType> templateTypes = TemplateType.findAgentPage(form()
 				.bindFromRequest(), page, null);
 
 		// reset flash
 		FormHelper.resetFlash(form().bindFromRequest(), flash());
 		
 		return ok(views.html.module.agent.useTemplate.render(templateTypes, user));
+	}
+	
+	/**
+	 * 使用模板页面
+	 * 
+	 * @return
+	 */
+	
+	public static Result pageUseEduTemplate() {
+		User user = LoginController.getSessionUser();
+		if (user == null) {
+			return badRequest(Constants.MSG_NOT_LOGIN);
+		}
+		if(user.edus == null || user.edus.size() < 1){
+			return badRequest(Constants.MSG_EDU_NOT_EXIST);
+		}
+		// get page
+		int page = FormHelper.getPage(form().bindFromRequest());
+
+		Page<TemplateType> templateTypes = TemplateType.findEduPage(form()
+				.bindFromRequest(), page, null);
+		// reset flash
+		FormHelper.resetFlash(form().bindFromRequest(), flash());
+		
+		return ok(views.html.module.education.useTemplate.render(templateTypes, user));
 	}
 
 
@@ -154,14 +205,21 @@ public class TemplateController extends Controller {
 	@Security.Authenticated(SecuredUseOfTemplate.class)
 	public static Result useTemplate() {
 		Long templateTypeId = FormHelper.getLong(form().bindFromRequest(), "id");
+		Long eduId = FormHelper.getLong(form().bindFromRequest(), "eduId");
 		if (templateTypeId != null) {
 			User user = LoginController.getSessionUser();
-
 			if (user != null) {
 				if (templateTypeId > 0) {
 					TemplateType templateType = TemplateType.find(templateTypeId);
-					Template template = Template.findByUser(user);// 每个用户都有一个默认模板，在创建的时候就产生
-
+					
+					Template template;
+					if(eduId != null){
+						EducationInstitution edu = EducationInstitution.find(eduId);
+						template = edu.template;
+					} else {
+						template = Template.findByUser(user);// 每个用户都有一个默认模板，在创建的时候就产生
+					}
+					 
 					if (template == null) {// 用户没有模板，则创建一个模板
 						template = new Template(user, templateType);
 						user.updateTemplate(template);
@@ -178,7 +236,6 @@ public class TemplateController extends Controller {
 						user.agent.template.templateType = null;
 						user.agent.template.update();
 					} else {// 教育机构
-						Long eduId = FormHelper.getLong(form().bindFromRequest(), "eduId");
 						if (eduId != null) {
 							EducationInstitution edu = EducationInstitution
 									.find(eduId);
@@ -337,6 +394,7 @@ public class TemplateController extends Controller {
 		}
 		return badRequest(Constants.MSG_BAD_REQUEST);
 	}
+	
 	/**
 	 * 使用模板
 	 * 
@@ -438,7 +496,39 @@ public class TemplateController extends Controller {
 			Agent agent = Agent.find(agentId);
 			play.Logger.debug("agent:" + agent);
 			if(agent != null){
-				return ok(views.html.basic.template.agentCourses.render(agent.courses));
+				return ok(views.html.basic.template.courses.render(agent.courses));
+			}
+		}
+		return internalServerError(Constants.MSG_INTERNAL_ERROR);
+	}
+	
+	/**
+	 * get template edu courses
+	 * @return
+	 */
+	public static Result getTemplateEduCourses(){
+		Long eduId = FormHelper.getLong(form().bindFromRequest(), "id");
+		if(eduId != null){
+			EducationInstitution edu = EducationInstitution.find(eduId);
+			play.Logger.debug("edu:" + edu);
+			if(edu != null){
+				return ok(views.html.basic.template.courses.render(edu.courses));
+			}
+		}
+		return internalServerError(Constants.MSG_INTERNAL_ERROR);
+	}
+	
+	/**
+	 * get template edu courses
+	 * @return
+	 */
+	public static Result getTemplateInstructorCourses(){
+		Long instructorId = FormHelper.getLong(form().bindFromRequest(), "id");
+		if(instructorId != null){
+			Instructor instructor = Instructor.find(instructorId);
+			play.Logger.debug("instructor:" + instructor);
+			if(instructor != null){
+				return ok(views.html.basic.template.courses.render(instructor.courses));
 			}
 		}
 		return internalServerError(Constants.MSG_INTERNAL_ERROR);

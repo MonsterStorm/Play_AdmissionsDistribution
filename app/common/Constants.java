@@ -21,6 +21,7 @@ public class Constants {
 	public static final String MSG_TEACHER_NOT_EXIST = "讲师不存在";
 	public static final String MSG_EDUCATION_NOT_EXIST = "教育机构不存在";
 	public static final String MSG_AGENT_NOT_EXIST = "代理人不存在";
+	public static final String MSG_EDU_NOT_EXIST = "教育机构不存在";
 	public static final String MSG_ENROLL_NOT_EXIST = "报名不存在";
 	public static final String MSG_REBATE_NOT_EXIST = "分账不存在";
 	public static final String MSG_COURSE_NOT_SELECT = "未选择课程";
@@ -60,6 +61,7 @@ public class Constants {
 
 	//模板类型对应角色
 	public static final String TEMPLATE_TYPE_AGENT = "1";
+	public static final String TEMPLATE_TYPE_EDU = "2";
 	
 	
 	//----------------------------------表单错误提示-----------------------------

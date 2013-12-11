@@ -9,19 +9,23 @@
 <!-- content -->
 <div class="ym-wrapper" style="background-color: #3de">
 	<div class="ym-wbox">
-		<div class="ym-grid linearize-level-1" id="agentCourses">
+		<div class="ym-grid linearize-level-1" id="dataResult">
 		</div>
 	</div>
 </div>
 
 <script>
-	function getAgentCourses(li, url, data){
-		 data = data || "";
-     ajaxBasic("/template/" + url, data, "GET", "#agentCourses");
-		 $("#navList li.active").removeClass("active");
-		 $(li).addClass("active");
+
+	function getData(agentId, eduId, instructorId){
+		if(agentId != ""){
+    	ajaxBasic("/template/templateAgentCourses", "id=" + agentId, "GET", "#dataResult");
+    } else if (eduId != ""){
+    	ajaxBasic("/template/templateEduCourses", "id=" + eduId, "GET", "#dataResult");
+    } else if (instructorId != ""){
+    	ajaxBasic("/template/templateInstructorCourses", "id=" + instructorId, "GET", "#dataResult");
+    }
 	}
 
-	getAgentCourses(this, "templateAgentCourses", "id=@flash().get("agentId")");
+	getData("@flash().get("agentId")", "@flash().get("eduId")", "@flash().get("instructorId")");
 </script>
 }{@footer()}

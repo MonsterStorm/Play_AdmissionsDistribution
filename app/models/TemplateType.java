@@ -99,13 +99,29 @@ public class TemplateType extends Model {
 	 * @param form
 	 * @return
 	 */
-	public static Page<TemplateType> findAgentPage(Agent agent,
-			DynamicForm form, int page, Integer pageSize) {
+	public static Page<TemplateType> findAgentPage(DynamicForm form, int page, Integer pageSize) {
 		// Map<String, String> datas = form.data();
 		// datas.put("agentId", agent.id.toString());
 		// form = form.bind(datas);
 		return new QueryHelper<TemplateType>(finder, form)
 				.addEq("type", Constants.TEMPLATE_TYPE_AGENT, Long.class)
+				.addOrderBy("orderby").findPage(page, pageSize);
+
+	}
+	
+	/**
+	 * find page with filter
+	 * 
+	 * @param page
+	 * @param form
+	 * @return
+	 */
+	public static Page<TemplateType> findEduPage(DynamicForm form, int page, Integer pageSize) {
+		// Map<String, String> datas = form.data();
+		// datas.put("agentId", agent.id.toString());
+		// form = form.bind(datas);
+		return new QueryHelper<TemplateType>(finder, form)
+				.addEq("type", Constants.TEMPLATE_TYPE_EDU, Long.class)
 				.addOrderBy("orderby").findPage(page, pageSize);
 
 	}
