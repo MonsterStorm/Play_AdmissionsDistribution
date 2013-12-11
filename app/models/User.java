@@ -692,9 +692,13 @@ public class User extends Model {
 				if (oldUser != null) {
 					oldUser.nickname = user.nickname;
 					oldUser.logo = user.logo;
-					oldUser.email = user.email;
-					oldUser.mobile = user.mobile;
+					if (StringHelper.isValidate(user.email))
+						oldUser.email = user.email;
+					if (StringHelper.isValidate(user.mobile))
+						oldUser.mobile = user.mobile;
 					oldUser.update();
+					
+					LoginController.updateSession(oldUser);
 				}
 			}
 			return user;

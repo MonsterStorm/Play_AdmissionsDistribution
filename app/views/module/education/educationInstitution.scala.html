@@ -15,7 +15,7 @@
 	<div class="btn-toolbar pull-right" role="toolbar">
 		<div class="btn-group">
 			<a class="btn btn-success" data-toggle="新增" href="#" onclick="getEducationPage(this, 'educationInfo', 'addNew=true');"><i
-				class="icon-plus icon-white"></i>新增</a>
+				class="icon-plus icon-white"></i>新增子帐号</a>
 		</div>
 		<div class="btn-group" id="btnGroup">
 			<button type="button" class="btn btn-default @checkActive("auditStatus", "-1")" onclick="@buildAction({baseUrl}, "education", Array("auditStatus"), Array("-1"))">所有</button>
@@ -70,7 +70,7 @@ $('#toolbar').tooltip(options);
 				<tr>
 					<td>@model.id</td>
 					@if(model.creator != null){
-						<td>@model.creator.username</td>
+						<td>@model.creator.nickname</td>
 					} else {
 						<td>-</td>
 					}

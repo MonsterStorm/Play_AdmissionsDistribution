@@ -214,11 +214,11 @@ public class CommonController extends Controller {
 	 * @return
 	 */
 	@FormValidators(values = {
-			@FormValidator(name = "username", validateType = Type.REQUIRED, msg = "帐号不能为空"),
-			@FormValidator(name = "mobile", validateType = Type.REQUIRED, msg = "移动电话不能为空"),
-			@FormValidator(name = "mobile", validateType = Type.PHONE, msg = "请填写正确的电话号码"),
-			@FormValidator(name = "email", validateType = Type.REQUIRED, msg = "邮箱地址不能为空"),
-			@FormValidator(name = "email", validateType = Type.EMAIL, msg = "请填写正确的邮箱地址")
+//			@FormValidator(name = "username", validateType = Type.REQUIRED, msg = "帐号不能为空"),//不可修改
+//			@FormValidator(name = "mobile", validateType = Type.REQUIRED, msg = "移动电话不能为空"),//不可修改
+//			@FormValidator(name = "mobile", validateType = Type.PHONE, msg = "请填写正确的电话号码"),//不可修改
+//			@FormValidator(name = "email", validateType = Type.REQUIRED, msg = "邮箱地址不能为空"),//不可修改
+//			@FormValidator(name = "email", validateType = Type.EMAIL, msg = "请填写正确的邮箱地址")//不可修改
 	})
 	public static Result addOrUpdateUser() {
 		String msg = Validator.check(CommonController.class, "addOrUpdateUser");
@@ -1155,8 +1155,10 @@ public class CommonController extends Controller {
 	public static Result pageUserDetail(User user) {
 		boolean isAddNew = FormHelper.isAddNew(form().bindFromRequest());
 
+		User sessionUser = LoginController.getSessionUser();
+		
 		if (isAddNew) {
-			return ok(views.html.module.common.userDetail.render(null));
+			return ok(views.html.module.common.userDetail.render(null, sessionUser));
 		}
 
 		if (user == null) {
@@ -1168,7 +1170,7 @@ public class CommonController extends Controller {
 
 		// List<Role> roles = Role.findAll();
 
-		return ok(views.html.module.common.userDetail.render(user));
+		return ok(views.html.module.common.userDetail.render(user, sessionUser));
 	}
 
 	/**

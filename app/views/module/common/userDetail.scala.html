@@ -1,4 +1,4 @@
-@(model: User)
+@(model: User, sessionUser: User)
 
 @import basic.common._
 @import basic.common.basicform._
@@ -12,8 +12,10 @@
 	</div>
 	<div class="btn-toolbar pull-right" role="toolbar">
 		<div class="btn-group">
-			<a class="btn btn-success" data-toggle="新增" href="#" onclick="doAddNew('#myform')"><i
-				class="icon-plus icon-white"></i>新增</a>
+			@if(sessionUser.hasRole(Role.ROLE_ADMIN)){
+				<a class="btn btn-success" data-toggle="新增" href="#" onclick="doAddNew('#myform')"><i
+					class="icon-plus icon-white"></i>新增</a>
+			}
 		</div>
 		<div class="btn-group">
 			<a class="btn btn-info" data-toggle="编辑" href="#" onclick="toggleAllEdit(this, '#myform')"><i
@@ -43,9 +45,9 @@
     
 
 			@if(model != null){
-				@inputText("帐号", "username", model.username, true)
+				@inputText("帐号", null/*"username"*/, model.username, true, true)
 			} else {
-				@inputText("帐号", "username", null, false)
+				@inputText("帐号", null/*"username"*/, null, false)
 			}
   		
   		@if(model != null){
@@ -69,15 +71,15 @@
   		</div>  		
 
   		@if(model != null){
-				@inputText("移动电话", "mobile", model.mobile, true)
+				@inputText("移动电话", null/*"mobile"*/, model.mobile, true, true)
 			} else {
-				@inputText("移动电话", "mobile", null, false)
+				@inputText("移动电话", null/*"mobile"*/, null, false, true)
 			}
   		
   		@if(model != null){
-				@inputText("邮箱地址", "email", model.email, true)
+				@inputText("邮箱地址", null/*"email"*/, model.email, true, true)
 			} else {
-				@inputText("邮箱地址", "email", null, false)
+				@inputText("邮箱地址", null/*"email"*/, null, false, true)
 			}
   		
   		@if(model != null && model.audit != null){

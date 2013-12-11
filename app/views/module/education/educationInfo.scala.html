@@ -7,12 +7,18 @@
 @toolbar_header={
 <div class="row">
 	<div class="span2">
-		<h4>教育机构详情</h4>
+	@if(model != null){
+		<h4>机构详情</h4>
+	} else {
+		<h4>新增子帐号</h4>
+	}
 	</div>
 	<div class="btn-toolbar pull-right" role="toolbar">
 		<div class="btn-group">
-			<a class="btn btn-info" data-toggle="修改" href="#" onclick="toggleAllEdit(this, '#myform')"><i
+			@if(model == null){
+				<a class="btn btn-info" data-toggle="修改" href="#" onclick="toggleAllEdit(this, '#myform')"><i
 				class="icon-edit icon-white"></i>修改</a>
+			}
 		</div>
 	</div>
 </div>
@@ -38,11 +44,8 @@
 			@if(model != null &&model.creator!=null && model.creator.basicInfo != null){
 				@inputText("真实姓名", "realname", model.creator.basicInfo.realname, true)
 			}else{ 
-			@if(user!=null && user.basicInfo!=null){
-				@inputText("真实姓名", "realname", user.basicInfo.realname, false)
-			} else{
 				@inputText("真实姓名", "realname", null, false)
-			}}
+			}
   		
 			@if(model != null && model.creator != null && model.creator.basicInfo != null){
 				@inputSelect("性别", "sex", String.valueOf(model.creator.basicInfo.sex), true){
@@ -50,82 +53,53 @@
 	      	<option value="0" onclick="changeValue('#btnCourseType', '女')">女</option>
 				}
 			} else{
-				@if(user!= null && user.basicInfo!=null ){
-					@inputSelect("性别", "sex", String.valueOf(user.basicInfo.sex), true){
-					<option value="1" onclick="changeValue('#btnCourseType', '男')">男</option>
-					<option value="0" onclick="changeValue('#btnCourseType', '女')">女</option>
-					}
-				} else {
 				@inputSelect("性别", "sex", null, false){
 					<option value="1" onclick="changeValue('#btnCourseType', '男')">男</option>
 	      	<option value="0" onclick="changeValue('#btnCourseType', '女')">女</option>
 				}
-			}}
-			
-			
+			}
 				
 			@if(model != null && model.creator != null && model.creator.basicInfo != null){
 				@inputText("身份证号", "idcard", model.creator.basicInfo.idcard, true)
 			} else{
-			@if(user!=null && user.basicInfo!=null){
-				@inputText("身份证号", "idcard", user.basicInfo.idcard, true)
-			}else {
 				@inputText("身份证号", "idcard", null, false)
-			}}
+			}
   		
 			@if(model != null && model.creator != null && model.creator.basicInfo != null){
 				@datetimePicker("出生日期", "birthday", model.creator.basicInfo.birthday)				
 			} else{
-			@if(user!=null && user.basicInfo!=null){
-				@datetimePicker("出生日期", "birthday", user.basicInfo.birthday)	
-			} else {
 				@datetimePicker("出生日期", "birthday")
-			}}
+			}
 			
 			@if(model != null && model.creator != null && model.creator.basicInfo != null){
 				@inputText("座机号码", "phone", model.creator.basicInfo.phone, true)
 			} else{
-			@if(user!=null && user.basicInfo!=null){
-				@inputText("座机号码", "phone", user.basicInfo.phone, true)
-			}else {
 				@inputText("座机号码", "phone", null, false)
-			}}
+			}
 	
 			@if(model != null && model.creator != null){
 				@inputText("手机号码", "mobile", model.creator.mobile, true)
 			}else{
-			@if(user!=null){
-				@inputText("手机号码", "mobile", user.mobile, true)
-			}else {
 				@inputText("手机号码", "mobile", null, false)
-			}}
+			}
 				
 			@if(model != null && model.creator != null && model.creator.basicInfo != null){
 				@inputText("QQ号码", "qq", model.creator.basicInfo.qq, true)
 			}else{
-			@if(user!=null && user.basicInfo!=null){
-				@inputText("QQ号码", "qq", user.basicInfo.qq, true)
-			}else {
 				@inputText("QQ号码", "qq", null, false)
-			}}
+			}
   		
-  			@if(model != null && model.creator != null){
+  		@if(model != null && model.creator != null){
 				@inputText("Email", "email", model.creator.email, true)
 			} else{
-			@if(user!=null){
-				@inputText("Email", "email", user.email, true)
-			}else {
 				@inputText("Email", "email", null, false)
-			}}
+			}
 			
 			@if(model != null && model.creator != null && model.creator.basicInfo != null){
 				@textarea("联系地址", "address", model.creator.basicInfo.address, true)
 			} else{
-			@if(user!=null && user.basicInfo!=null){
-				@textarea("联系地址", "address", user.basicInfo.address, true)
-			}else {
 				@textarea("联系地址", "address", null, false)
-			}}
+			}
 			
 			@if(model != null){
 				@textarea("机构简介", "info", model.info, true)
@@ -150,7 +124,7 @@
 			<div class="control-group row">
 		    		<div class="controls">
 							@if(model != null){
-		      			<button type="submit" class="btn btn-large btn-success btn-block span2 disabled">提交</button>
+		      			<!--不让修改<button type="submit" class="btn btn-large btn-success btn-block span2 disabled">提交</button>-->
 		      		} else {
 		      			<button type="submit" class="btn btn-large btn-success btn-block span2">提交</button>
 		      		}

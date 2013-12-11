@@ -140,9 +140,10 @@ public class EducationController extends BaseController {
 			@FormValidator(name = "idcard", validateType = Type.REQUIRED, msg = "身份证号不能为空"),
 			@FormValidator(name = "idcard", validateType = Type.NUMBER, msg = "身份证号只能为数字"),
 			@FormValidator(name = "birthday", validateType = Type.REQUIRED, msg = "出生日期不能为空"),
-			@FormValidator(name = "phone", validateType = Type.PHONE, msg = "请填写正确的座机号码"),
+			@FormValidator(name = "phone", validateType = Type.REQUIRED, msg = "座机号码不能为空"),
+//			@FormValidator(name = "phone", validateType = Type.PHONE, msg = "请填写正确的座机号码"),//使用PHONE有问题，需要座机的regex，暂时先去掉,bycst
 			@FormValidator(name = "mobile", validateType = Type.PHONE, msg = "请填写正确的手机号码"),
-			@FormValidator(name = "qq", validateType = Type.PHONE, msg = "qq号码不能为空"),
+			@FormValidator(name = "qq", validateType = Type.REQUIRED, msg = "qq号码不能为空"),
 			@FormValidator(name = "qq", validateType = Type.NUMBER, msg = "qq号码只能为数字"),
 			@FormValidator(name = "email", validateType = Type.EMAIL, msg = "请填写正确的邮箱"),
 			@FormValidator(name = "address", validateType = Type.REQUIRED, msg = "联系地址不能为空"),
@@ -162,10 +163,10 @@ public class EducationController extends BaseController {
 		if(basicInfo == null){
 			basicInfo = new UserInfo();
 
-			basicInfo.realname = form().bindFromRequest().get("realname");
-			basicInfo.sex = form().bindFromRequest().get("sex");
-			basicInfo.idcard = form().bindFromRequest().get("idcard");
-			basicInfo.birthday = Long.parseLong(form().bindFromRequest().get("birthday"));
+			basicInfo.realname = form().bindFromRequest().get("realname");//不可修改
+			basicInfo.sex = form().bindFromRequest().get("sex");//不可修改
+			basicInfo.idcard = form().bindFromRequest().get("idcard");//不可修改
+			basicInfo.birthday = Long.parseLong(form().bindFromRequest().get("birthday"));//不可修改
 			
 
 			basicInfo.phone = form().bindFromRequest().get("phone");
@@ -175,27 +176,25 @@ public class EducationController extends BaseController {
 			basicInfo.user = user;
 			basicInfo.save();
 			user.basicInfo = basicInfo;
-			user.mobile = form().bindFromRequest().get("mobile");
-			user.email = form().bindFromRequest().get("email");
+			user.mobile = form().bindFromRequest().get("mobile");//不可修改
+			user.email = form().bindFromRequest().get("email");//不可修改
 			
 		}
 		else{
-			basicInfo.realname = form().bindFromRequest().get("realname");
-			basicInfo.sex = form().bindFromRequest().get("sex");
-			basicInfo.idcard = form().bindFromRequest().get("idcard");
-			basicInfo.birthday = Long.parseLong(form().bindFromRequest().get("birthday"));
+			basicInfo.realname = form().bindFromRequest().get("realname");//不可修改
+			basicInfo.sex = form().bindFromRequest().get("sex");//不可修改
+			basicInfo.idcard = form().bindFromRequest().get("idcard");//不可修改
+			basicInfo.birthday = Long.parseLong(form().bindFromRequest().get("birthday"));//不可修改
 
 
-			basicInfo.phone = form().bindFromRequest().get("phone");
+			basicInfo.phone = form().bindFromRequest().get("phone");//不可修改
 			basicInfo.qq = form().bindFromRequest().get("qq");
 			basicInfo.address = form().bindFromRequest().get("address");
 			basicInfo.user = user;
 			basicInfo.update();
 			user.basicInfo = basicInfo;
-			user.mobile = form().bindFromRequest().get("mobile");
-			user.email = form().bindFromRequest().get("email");
-			
-
+			user.mobile = form().bindFromRequest().get("mobile");//不可修改
+			user.email = form().bindFromRequest().get("email");//不可修改
 		}
 		Form<EducationInstitution> form = form(EducationInstitution.class).bindFromRequest();
 		if (form != null && form.hasErrors() == false) {
@@ -453,8 +452,8 @@ public class EducationController extends BaseController {
 		if(user == null){
 			return badRequest(Constants.MSG_NOT_LOGIN);
 		}
+		
 		if (isAddNew) {
-
 			return ok(views.html.module.education.educationInfo.render(null, user));
 		}
 

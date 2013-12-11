@@ -22,8 +22,8 @@
 				排序 <span class="caret"></span>
 			</a>
 			<ul class="dropdown-menu">
-				<li class="@checkActive("orderby", "name-asc", true)"><a onclick="@buildAction({baseUrl}, "education", Array("orderby"), Array("name-asc"))">按名称-升序</a></li>
-				<li class="@checkActive("orderby", "name-desc")"><a onclick="@buildAction({baseUrl}, "education", Array("orderby"), Array("name-desc"))">按名称-降序</a></li>
+				<li class="@checkActive("orderby", "student.name-asc", true)"><a onclick="@buildAction({baseUrl}, "education", Array("orderby"), Array("student.name-asc"))">按名称-升序</a></li>
+				<li class="@checkActive("orderby", "student.name-desc")"><a onclick="@buildAction({baseUrl}, "education", Array("orderby"), Array("student.name-desc"))">按名称-降序</a></li>
 			</ul>
 		</div>
 	</div>
