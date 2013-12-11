@@ -68,13 +68,7 @@ $('#toolbar').tooltip(options);
 	</div>
 	<div class="btn-group" id="toolbar">
 		<!--EDU, Admin, Agent-->
-		@if((session.get(LoginController.KEY_USER_ROLES).indexOf(String.valueOf(Role.ROLE_EDU)) != -1 && rebate.lastReceiptOfEdu == null)
-				|| (session.get(LoginController.KEY_USER_ROLES).indexOf(String.valueOf(Role.ROLE_ADMIN)) != -1 && rebate.lastReceiptOfPlatform == null)
-				|| (session.get(LoginController.KEY_USER_ROLES).indexOf(String.valueOf(Role.ROLE_AGENT)) != -1 && rebate.lastReceiptOfAgent == null)){
-			<a class="btn btn-success" data-toggle="确认收款" href="#" onclick="showConfirm('@String.valueOf(rebate.id)')"><i class="icon-ok icon-white"></i></a>
-		} else {
-			<span class="btn disabled" data-toggle="确认收款" href="#"><i class="icon-ok icon-white"></i></span>
-		}
+		<a class="btn btn-success" data-toggle="确认收款" href="#" onclick="showConfirm('@String.valueOf(rebate.id)')"><i class="icon-ok icon-white"></i></a>
 		
 	</div>
 </div>

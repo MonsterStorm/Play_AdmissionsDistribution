@@ -140,6 +140,15 @@ public class CourseDistribution extends Model {
 		}
 
 		Rebate rebate = Rebate.createRebate(cd);
+		rebate.typeToPlatform = course.eduRebateType;
+		rebate.typeToAgent = course.agentRebateType;
+		rebate.lastReceiptOfEdu = new ConfirmReceipt();
+		rebate.lastReceiptOfPlatform = new ConfirmReceipt();
+		rebate.lastReceiptOfAgent = new ConfirmReceipt();
+		rebate.lastReceiptOfEdu.save();
+		rebate.lastReceiptOfPlatform.save();
+		rebate.lastReceiptOfAgent.save();
+
 		rebate.save();
 		cd.rebate = rebate;
 
@@ -212,5 +221,57 @@ public class CourseDistribution extends Model {
 		return new QueryHelper<CourseDistribution>(finder, form).addEq("course.edu.creator.id", "userId", Long.class).findPage(page, pageSize);
 	}
 
+
+	/**
+	 * find page with filter
+	 * 
+	 * @param page
+	 * @param form
+	 * @return
+	 */
+	public static List<CourseDistribution> findByEdu(EducationInstitution edu, Long startTime, Long endTime) {
+		return finder.where().eq("course.edu.id", edu.id).ge("rebate.lastReceiptOfEdu.time", startTime).le("rebate.lastReceiptOfEdu.time", endTime ).gt("rebate.rebateToPlatform", 0).findList();
+
+		//return new QueryHelper<Enroll>(finder, form).addEq("edu.creator.id", "userId", Long.class).addGe("confirmOfEdu.time", "startTime", Long.class).addLe("confirmOfEdu.time", "endTime", Long.class).findPage(1, 100000);
+	}
+
+	/**
+	 * find page with filter
+	 * 
+	 * @param page
+	 * @param form
+	 * @return
+	 */
+	public static List<CourseDistribution> findByAgent(Agent agent, Long startTime, Long endTime) {
+		return finder.where().eq("agent.id", agent.id).ge("rebate.lastReceiptOfPlatform.time", startTime).le("rebate.lastReceiptOfPlatform.time", endTime ).gt("rebate.rebateToAgent", 0).findList();
+
+		//return new QueryHelper<Enroll>(finder, form).addEq("edu.creator.id", "userId", Long.class).addGe("confirmOfEdu.time", "startTime", Long.class).addLe("confirmOfEdu.time", "endTime", Long.class).findPage(1, 100000);
+	}
+
+	/**
+	 * find page with filter
+	 * 
+	 * @param page
+	 * @param form
+	 * @return
+	 */
+	public static List<CourseDistribution> findByPlatformIncome(Long startTime, Long endTime) {
+		return finder.where().ge("rebate.lastReceiptOfEdu.time", startTime).le("rebate.lastReceiptOfEdu.time", endTime ).gt("rebate.rebateToPlatform", 0).findList();
+
+		//return new QueryHelper<Enroll>(finder, form).addEq("edu.creator.id", "userId", Long.class).addGe("confirmOfEdu.time", "startTime", Long.class).addLe("confirmOfEdu.time", "endTime", Long.class).findPage(1, 100000);
+	}
+
+	/**
+	 * find page with filter
+	 * 
+	 * @param page
+	 * @param form
+	 * @return
+	 */
+	public static List<CourseDistribution> findByPlatformPay(Long startTime, Long endTime) {
+		return finder.where().ge("rebate.lastReceiptOfPlatform.time", startTime).le("rebate.lastReceiptOfPlatform.time", endTime ).gt("rebate.rebateToAgent", 0).findList();
+
+		//return new QueryHelper<Enroll>(finder, form).addEq("edu.creator.id", "userId", Long.class).addGe("confirmOfEdu.time", "startTime", Long.class).addLe("confirmOfEdu.time", "endTime", Long.class).findPage(1, 100000);
+	}
 
 }

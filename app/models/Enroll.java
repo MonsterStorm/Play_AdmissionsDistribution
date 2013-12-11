@@ -227,6 +227,19 @@ public class Enroll extends Model {
 		return new QueryHelper<Enroll>(finder, form).addEq("edu.id", "id", Long.class).addOrderBy("orderby").findPage(page, pageSize);
 	}
 
+	/**
+	 * find page with filter
+	 * 
+	 * @param page
+	 * @param form
+	 * @return
+	 */
+	public static List<Enroll> findByEdu(EducationInstitution edu, Long startTime, Long endTime) {
+		return finder.where().eq("edu.id", edu.id).ge("confirmOfEdu.time", startTime).le("confirmOfEdu.time", endTime ).findList();
+
+		//return new QueryHelper<Enroll>(finder, form).addEq("edu.creator.id", "userId", Long.class).addGe("confirmOfEdu.time", "startTime", Long.class).addLe("confirmOfEdu.time", "endTime", Long.class).findPage(1, 100000);
+	}
+
 
 	/**
 	 * enroll

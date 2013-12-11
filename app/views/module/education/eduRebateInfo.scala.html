@@ -1,0 +1,84 @@
+@(model:Rebate)
+
+@import basic.common._
+@import basic.common.basicform._
+
+@bootstrapDatetimepicker()
+
+@toolbar_header={
+<div class="row">
+	<div class="span2">
+		<h4>分账确认</h4>
+	</div>
+</div>
+} 
+
+<script type="text/javascript">
+    $(document).ready( function() {
+			$('#myform').submit(function() {
+		    $(this).ajaxSubmit(ajaxSubmitOptions);
+		    return false;
+			});
+		});
+</script>
+
+
+@toolbar_header
+<div class="table-responsive">
+	<div style="overflow: auto">
+		<form class="form-horizontal" id="myform" method="post" action="@routes.EducationController.addOrUpdateEntity()">
+	
+			@form_validate_info()
+			@inputText("课程名称", "coursename", model.distribution.course.name, true)		
+			@inputText("代理名称", "agentname", model.distribution.agent.name, true)
+			@datetimePicker("开课时间", "coursetime", model.distribution.course.startTime,true)
+	
+			@if(model != null && model.numOfStudents != null ){
+				@inputNumber("学生人数", "stunum", model.numOfStudents, true)
+			}else{
+				@inputNumber("学生人数", "stunum", null, true)
+			}
+
+			@if(model != null && model.totalMoney != null ){
+				@inputNumber("学费总额", "stutime", model.totalMoney,true)
+			}else{
+				@inputNumber("学费总额", "stutime", null,true)
+			}
+			@if(model != null && model.lastReceiptOfEdu != null && model.lastReceiptOfEdu.money != null){
+				@inputNumber("最终确认金额", "lastReceiptOfEdu.money", model.lastReceiptOfEdu.money, false)
+			}else{
+				@inputNumber("最终确认金额", "lastReceiptOfEdu.money", null, false)
+			}
+			@if(model != null && model.lastReceiptOfEdu != null && model.lastReceiptOfEdu.info != null){
+				@textarea("最终确认说明", "lastReceiptOfEdu.info", model.lastReceiptOfEdu.info, false)
+			}else{
+				@textarea("最终确认说明", "lastReceiptOfEdu.info", null, false)
+			}
+			
+			@if(model != null && model.lastReceiptOfEdu != null && model.lastReceiptOfEdu.time != null){
+				@datetimePicker("最终确认时间", "lastReceiptOfEdu.time", model.lastReceiptOfEdu.time, true)
+			}else{
+				@datetimePicker("最终确认时间", "lastReceiptOfEdu.time", null, true)
+			}
+
+			@if(model != null && model.rebateToPlatform != null){
+				@inputNumber("平台返利金额", "rebateToPlatform", model.rebateToPlatform, true)
+			}else{
+				@inputNumber("平台返利金额", "rebateToPlatform", null, true)
+			}
+
+			<input class="input-large" type="hidden" name="table" value="edu_rebate">
+			@if(model != null){
+				<input class="input-large" type="hidden" name="rebateId" value="@model.id">
+			} else {
+				<input class="input-large" type="hidden" name="rebateId">
+			}
+			<hr>
+			<div class="control-group row">
+    		<div class="controls">
+      			<button type="submit" class="btn btn-large btn-success btn-block span2">提交</button>
+    	</div>
+  </div>
+</form>
+	</div>
+</div>

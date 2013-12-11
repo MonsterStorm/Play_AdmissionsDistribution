@@ -1,0 +1,113 @@
+@(model:Rebate)
+
+@import basic.common._
+@import basic.common.basicform._
+
+@bootstrapDatetimepicker()
+
+@toolbar_header={
+<div class="row">
+	<div class="span2">
+		<h4>分账确认</h4>
+	</div>
+</div>
+} 
+
+<script type="text/javascript">
+    $(document).ready( function() {
+			$('#myform').submit(function() {
+		    $(this).ajaxSubmit(ajaxSubmitOptions);
+		    return false;
+			});
+		});
+</script>
+
+
+@toolbar_header
+<div class="table-responsive">
+	<div style="overflow: auto">
+		<form class="form-horizontal" id="myform" method="post" action="@routes.CommonController.addOrUpdateEntity()">
+	
+			@form_validate_info()
+			@inputText("课程名称", "coursename", model.distribution.course.name, true)		
+			@inputText("代理名称", "agentname", model.distribution.agent.name, true)
+			@datetimePicker("开课时间", "coursetime", model.distribution.course.startTime,true)
+	
+			@if(model != null && model.numOfStudents != null ){
+				@inputNumber("学生人数", "stunum", model.numOfStudents, true)
+			}else{
+				@inputNumber("学生人数", "stunum", null, true)
+			}
+
+			@if(model != null && model.totalMoney != null ){
+				@inputNumber("学费总额", "stutime", model.totalMoney,true)
+			}else{
+				@inputNumber("学费总额", "stutime", null,true)
+			}
+			@if(model != null && model.lastReceiptOfEdu != null && model.lastReceiptOfEdu.money != null){
+				@inputNumber("教育机构最终确认金额", "lastReceiptOfEdu.money", model.lastReceiptOfEdu.money, false)
+			}else{
+				@inputNumber("教育机构最终确认金额", "lastReceiptOfEdu.money", null, false)
+			}
+			@if(model != null && model.lastReceiptOfEdu != null && model.lastReceiptOfEdu.time != null){
+				@datetimePicker("最终确认时间", "lastReceiptOfEdu.time", model.lastReceiptOfEdu.time, true)
+			}else{
+				@datetimePicker("最终确认时间", "lastReceiptOfEdu.time", null, true)
+			}			
+
+			@if(model != null && model.rebateToPlatform != null){
+				@inputNumber("教育机构最终确认返利", "rebateToPlatform", model.rebateToPlatform, false)
+			}else{
+				@inputNumber("教育机构最终确认返利", "rebateToPlatform", null, false)
+			}
+
+			@if(model != null && model.lastReceiptOfPlatform != null && model.lastReceiptOfPlatform.money != null){
+				@inputNumber("平台最终确认金额", "lastReceiptOfPlatform.money", model.lastReceiptOfPlatform.money, false)
+			}else{
+				@inputNumber("平台最终确认金额", "lastReceiptOfPlatform.money", null, false)
+			}
+			@if(model != null && model.lastReceiptOfPlatform != null && model.lastReceiptOfPlatform.info != null){
+				@textarea("平台最终确认说明", "lastReceiptOfPlatform.info", model.lastReceiptOfPlatform.info, false)
+			}else{
+				@textarea("平台最终确认说明", "lastReceiptOfPlatform.info", null, false)
+			}
+			
+			@if(model != null && model.lastReceiptOfPlatform != null && model.lastReceiptOfPlatform.time != null){
+				@datetimePicker("平台最终确认时间", "lastReceiptOfPlatform.time", model.lastReceiptOfPlatform.time, true)
+			}else{
+				@datetimePicker("平台最终确认时间", "lastReceiptOfPlatform.time", null, true)
+			}
+
+			@if(model.typeToAgent !=null && model.typeToAgent.ratioOfTotal !=null){
+				@inputNumber("代理人按每个学生返利金额", "typeToAgent.ratioOfTotal", model.typeToAgent.ratioOfTotal, true)
+			}else{
+				@inputNumber("代理人按每个学生返利金额", "typeToAgent.ratioOfTotal", null, true)
+			}
+			@if(model.typeToAgent != null && model.typeToAgent.ratioOfPerStudent != null){
+				@inputNumber("代理人按总金额返利比例", "typeToAgent.ratioOfPerStudent ", model.typeToAgent.ratioOfPerStudent, true)
+			}else{
+				@inputNumber("代理人按总金额返利比例", "typeToAgent.ratioOfPerStudent ", null, true)
+			}
+
+
+			@if(model != null && model.rebateToAgent != null){
+				@inputNumber("代理人返利金额", "rebateToAgent", model.rebateToAgent, true)
+			}else{
+				@inputNumber("代理人返利金额", "rebateToAgent", null, true)
+			}
+
+			<input class="input-large" type="hidden" name="table" value="admin_rebate">
+			@if(model != null){
+				<input class="input-large" type="hidden" name="rebateId" value="@model.id">
+			} else {
+				<input class="input-large" type="hidden" name="rebateId">
+			}
+			<hr>
+			<div class="control-group row">
+    		<div class="controls">
+      			<button type="submit" class="btn btn-large btn-success btn-block span2">提交</button>
+    	</div>
+  </div>
+</form>
+	</div>
+</div>
