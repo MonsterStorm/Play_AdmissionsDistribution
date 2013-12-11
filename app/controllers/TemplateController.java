@@ -141,8 +141,8 @@ public class TemplateController extends Controller {
 
 		// reset flash
 		FormHelper.resetFlash(form().bindFromRequest(), flash());
-
-		return ok(views.html.module.agent.useTemplate.render(templateTypes));
+		
+		return ok(views.html.module.agent.useTemplate.render(templateTypes, user));
 	}
 
 
