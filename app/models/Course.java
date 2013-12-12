@@ -68,6 +68,9 @@ public class Course extends Model {
 	@ManyToMany(mappedBy = "courses")
 	public List<Agent> agents = new ArrayList<Agent>();// 代理该课程的代理人列表，一个代理人可以代理多个课程，一个课程可以被多个代理人代理
 
+	@OneToMany(mappedBy="course", cascade=CascadeType.ALL)
+	public List<QAndS> qands = new ArrayList<QAndS>();
+	
 	// @OneToMany(mappedBy="course")
 	// public List<Audit> agentRegAudit = new
 	// ArrayList<Audit>();//申请代理该课程的审核列表，一个课程对应多个审核 一个审核对应一个课程

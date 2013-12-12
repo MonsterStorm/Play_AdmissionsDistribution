@@ -1,0 +1,114 @@
+@(models: com.avaje.ebean.Page[QAndS])
+
+@import basic.common._
+
+@baseUrl=@{
+	var url = "qands";
+	url
+}
+
+@toolbar_header={
+<div class="row">
+	<div class="span2">
+		<h4>培训项目</h4>
+	</div>
+	<div class="btn-toolbar pull-right" role="toolbar">
+		<div class="btn-group">
+			<a class="btn btn-success" data-toggle="新增" href="#" onclick="getCommonPage(this, 'courseDetail', 'addNew=true');"><i
+				class="icon-plus icon-white"></i>新增</a>
+		</div>
+		<div class="btn-group">
+			<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+				排序 <span class="caret"></span>
+			</a>
+			<ul class="dropdown-menu">
+				<li class="@checkActive("orderby", "addTime-asc", true)"><a onclick="@buildAction({baseUrl}, "platform", Array("orderby"), Array("addTime-asc"))">按新增时间-升序</a></li>
+				<li class="@checkActive("orderby", "addTime-desc")"><a onclick="@buildAction({baseUrl}, "platform", Array("orderby"), Array("addTime-desc"))">按新增时间-降序</a></li>
+				<li class="@checkActive("orderby", "question-asc")"><a onclick="@buildAction({baseUrl}, "platform", Array("orderby"), Array("question-asc"))">按问题-升序</a></li>
+				<li class="@checkActive("orderby", "question-desc")"><a onclick="@buildAction({baseUrl}, "platform", Array("orderby"), Array("question-desc"))">按问题-降序</a></li>
+				<li class="@checkActive("orderby", "answer-asc")"><a onclick="@buildAction({baseUrl}, "platform", Array("orderby"), Array("answer-asc"))">按答案-升序</a></li>
+				<li class="@checkActive("orderby", "answer-desc")"><a onclick="@buildAction({baseUrl}, "platform", Array("orderby"), Array("answer-desc"))">按答案-降序</a></li>	
+			</ul>
+		</div>
+		<div class="btn-group">
+		<a class="btn btn btn-info" data-toggle="设置" href="#" onclick="getAdminPage(this, 'adminCourseType')"><i
+			class="icon-cog icon-white"></i></a>
+		</div>
+	</div>
+</div>
+
+@queryFilters(Array("question", "answer"), Array("课程名", "课程类别"), Array("", "", "", ""), Array("text", "text"), {baseUrl}, "platform")
+
+} 
+
+@toolbar(qands: QAndS)={
+<!-- <script type="text/javascript">
+$('#toolbar').tooltip(options);
+</script> -->
+
+@dialogDelete("删除问答", QAndS.TABLE_NAME, qands.id){
+	确定删除&nbsp;
+	<b style="font-size:x-large;color:red">
+	@{
+		if(qands.question != null){
+			qands.question
+		}
+	}
+	</b>&nbsp;？
+}
+
+<div class="pull-left" style="width:130px;">
+	<div class="btn-group">
+		<a class="btn btn-danger" data-toggle="删除，请谨慎操作！" href="#" onclick="doDelete(@qands.id)"><i
+			class="icon-remove icon-white"></i></a>
+	</div>
+</div>
+} 
+
+@toolbar_header
+
+<div class="table-responsive">
+	<div style="overflow: auto">
+		<table class="table table-hover table-bordered table-striped">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>课程</th>
+					<th>问题</th>
+					<th>答案</th>
+					<th>创建时间</th>
+				</tr>
+			</thead>
+			<tbody>
+				@for(model <- models.getList()){
+				<tr>
+					<td>@model.id</td>
+					@if(model.course != null){
+						<td><a href="#" onclick="getCommonPage(this, 'courseDetail', 'id=@model.course.id');">@model.course.name</a></td>
+					} else {
+						<td>-</td>
+					}
+					@if(model.question != null){
+						<td>@model.question</td>
+					} else {
+						<td>-</td>
+					}
+					@if(model.answer != null){
+						<td>@model.answer</td>
+					} else {
+						<td>-</td>
+					}
+					@if(model.addTime != null){
+						<td>@datetime_formatter(model.addTime, true)</td>
+					} else {
+						<td>-</td>
+					}
+					<td>@toolbar(model)</td>
+				</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+</div>
+
+@paging(models, {baseUrl}, "platform")

@@ -1,0 +1,76 @@
+@(models: List[QAndS], divid: String=null)
+
+@import basic.common._
+
+@baseUrl=@{
+	var url = "qands";
+	url
+}
+
+@toolbar(qands: QAndS)={
+<!-- <script type="text/javascript">
+$('#toolbar').tooltip(options);
+</script> -->
+
+@dialogDelete("删除问答", QAndS.TABLE_NAME, qands.id){
+	确定删除&nbsp;
+	<b style="font-size:x-large;color:red">
+	@{
+		if(qands.question != null){
+			qands.question
+		}
+	}
+	</b>&nbsp;？
+}
+
+<div class="pull-left" style="width:130px;">
+	<div class="btn-group">
+		<a class="btn btn-danger" data-toggle="删除，请谨慎操作！" href="#" onclick="doDelete(@qands.id)"><i
+			class="icon-remove icon-white"></i></a>
+	</div>
+</div>
+} 
+
+<div  @if(divid){id="@divid"} class="table-responsive">
+	<div style="overflow: auto">
+		<table class="table table-hover table-bordered table-striped">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>课程</th>
+					<th>问题</th>
+					<th>答案</th>
+					<th>创建时间</th>
+				</tr>
+			</thead>
+			<tbody>
+				@for(model <- models){
+				<tr>
+					<td>@model.id</td>
+					@if(model.course != null){
+						<td><a href="#" onclick="getCommonPage(this, 'courseDetail', 'id=@model.course.id');">@model.course.name</a></td>
+					} else {
+						<td>-</td>
+					}
+					@if(model.question != null){
+						<td>@model.question</td>
+					} else {
+						<td>-</td>
+					}
+					@if(model.answer != null){
+						<td>@model.answer</td>
+					} else {
+						<td>-</td>
+					}
+					@if(model.addTime != null){
+						<td>@datetime_formatter(model.addTime, true)</td>
+					} else {
+						<td>-</td>
+					}
+					<td>@toolbar(model)</td>
+				</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+</div>
