@@ -99,6 +99,12 @@ public class Validator {
 				return configuration.msg();
 			}
 			break;
+		case 	USERNAME:
+			if (StringHelper.isValidate(value) == false
+					|| value.matches(FormValidator.REGEX_USERNAME) == false) {
+				return configuration.msg();
+			}
+			break;
 		case REGEX:
 			if (StringHelper.isValidate(value) == false
 					|| value.matches(configuration.regex()) == false) {

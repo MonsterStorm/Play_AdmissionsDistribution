@@ -724,7 +724,15 @@ public class User extends Model {
 		if (user != null) {
 			return Constants.INT_USERNAME_EXIST;
 		}
+		user = finder.where().eq("email", username).findUnique();
+		if (user != null) {
+			return Constants.INT_USERNAME_EXIST;
+		}
 		user = finder.where().eq("email", email).findUnique();
+		if (user != null) {
+			return Constants.INT_EMAIL_EXIST;
+		}
+		user = finder.where().eq("username", email).findUnique();
 		if (user != null) {
 			return Constants.INT_EMAIL_EXIST;
 		}

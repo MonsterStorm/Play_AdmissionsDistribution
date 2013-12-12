@@ -4,7 +4,11 @@ import models.*;
 import play.data.*;
 import play.mvc.*;
 import static play.data.Form.*;
-
+import play.data.*;
+import play.mvc.Http.MultipartFormData;
+import play.mvc.Http.MultipartFormData.FilePart;
+import common.FileHelper.ErrorType;
+import common.FormValidator.Type;
 
 /**
  * 处理用户注册 后期要加入邮箱验证与手机号码验证
@@ -37,8 +41,15 @@ public class RegisterController extends BaseController {
 			return null;
 		}
 	}
-
+	@FormValidators(values = {
+			@FormValidator(name = "username", validateType = Type.USERNAME, msg = "用户名必须为长度1-20以字母开头且只能包括数字和_的字符串"),
+			@FormValidator(name = "email", validateType = Type.EMAIL, msg = "邮箱格式错误")
+	})
 	public static Result addUser(){
+		String msg = Validator.check(RegisterController.class, "addUser");
+		if (msg != null) {
+			return badRequest(msg);
+		}
 		Form<Register> registerForm = form(Register.class).bindFromRequest();
 		if (registerForm.hasErrors()) {
 			return badRequest(views.html.module.platform.register.render(registerForm));

@@ -531,6 +531,9 @@ public class PlatformController extends BaseController {
 			student = new Student();
 			user = User.getRandomUserForStudent(student, Role.ROLE_STUDENT,
 					Audit.STATUS_SUCCESS);
+			user.save();
+			student.user = user;
+			student.save();
 		}
 		student = user.student;
 		if (student != null) {

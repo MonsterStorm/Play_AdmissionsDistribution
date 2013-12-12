@@ -53,16 +53,21 @@ var ajaxSubmitOptionsEnroll = {
 		@if(enroll.auditOfEdu != null){
 			@datetimePicker("教育平台审核状况", "auditOfEdu", enroll.auditOfEdu.status)
 		}
-		
-		@inputText("学员名称", "realname", user.basicInfo.realname, true)
-		@inputText("性别", "sex", user.basicInfo.realname, true)
+		@if(user!=null  && user.basicInfo  !=null &&  user.basicInfo.realname !=null ){
+			@inputText("学员名称", "realname", user.basicInfo.realname, true)
+		}
+		@if(user!=null  && user.basicInfo  !=null &&user.basicInfo.sex !=null){
+			@inputText("性别", "sex", user.basicInfo.sex, true)
+		}
 		@inputText("公司名称", "companyName", enroll.student.companyName, true)
 		@inputText("职务", "position", enroll.student.position, true)
-		@inputText("手机号码", "mobile", user.mobile, true)
-		@inputText("座机号码", "mobile", user.basicInfo.phone, true)
-		@inputText("QQ号码", "qq", user.basicInfo.qq, true)
-		@inputText("Email", "email", user.email, true)
-		@textarea("联系地址", "address", user.basicInfo.address, true)
+		@if(user !=null){
+			@inputText("手机号码", "mobile", user.mobile, true)
+			@inputText("座机号码", "mobile", user.basicInfo.phone, true)
+			@inputText("QQ号码", "qq", user.basicInfo.qq, true)
+			@inputText("Email", "email", user.email, true)
+			@textarea("联系地址", "address", user.basicInfo.address, true)
+		}
 		@textarea("额外信息", "info", enroll.student.info, true)
 
 
