@@ -126,13 +126,17 @@ public class Course extends Model {
 		return finder.where().eq("id", id).findUnique();
 	}
 
+	public static Course addOrUpdate(Course course){
+		return addOrUpdate(course, null);
+	}
+	
 	/**
 	 * 新增或更新一个课程
 	 * 
 	 * @param form
 	 * @return
 	 */
-	public static Course addOrUpdate(Course course) {
+	public static Course addOrUpdate(Course course, String[] updateFiledNames) {
 		play.Logger.debug(TAG + ".addOrUpdate: id=" + course.id + ", name="
 				+ course.name);
 		if (course != null) {
@@ -161,7 +165,7 @@ public class Course extends Model {
 
 				course.save();
 			} else {// 更新
-				course.update();
+				ModelHelper.update(Course.find(course.id), course, updateFiledNames);
 			}
 			return course;
 		}

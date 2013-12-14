@@ -1,5 +1,7 @@
 package common;
 
+import java.lang.reflect.*;
+
 import play.data.*;
 import play.db.ebean.*;
 
@@ -512,6 +514,37 @@ public class QueryHelper<T> {
 	}
 
 	/**
+	 * create instance of given clazz
+	 * 
+	 * @param clazz
+	 * @return
+	 */
+	public static <T> T createObject(Class<T> clazz) {
+		try {
+			return clazz.newInstance();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	/**
+	 * get generic type paramerer
+	 * 
+	 * @return
+	 */
+	public Class<T> getTypeParameterClass() {
+		// Get "T" and assign it to this.entityClass
+		java.lang.reflect.Type type = (java.lang.reflect.Type) (getClass().getGenericSuperclass());
+		if (type instanceof Class) {
+			return (Class<T>) type;
+		} else if (type instanceof ParameterizedType) {
+			return (Class<T>) ((ParameterizedType) type).getRawType();
+		}
+		return null;
+	}
+
+	/**
 	 * find page
 	 * 
 	 * @param page
@@ -528,23 +561,31 @@ public class QueryHelper<T> {
 
 		final String orderby = form.get("orderby");
 		if (StringHelper.isValidate(orderby)) {
-			String[] orders = orderby.split("-");
-			boolean isDesc = false;
-			if (orders.length > 1) {
-				isDesc = StringHelper.isDesc(orders[1]);
-			}
-			if (isDesc) {
-				if (query == null) {
-					query = finder.order().desc(orders[0]);
-				} else {
-					query = query.orderBy().desc(orders[0]);
+			Class<T> clazz = getTypeParameterClass();
+			try {
+				if (clazz != null && clazz.getField("orderby") != null) {
+
+					String[] orders = orderby.split("-");
+					boolean isDesc = false;
+					if (orders.length > 1) {
+						isDesc = StringHelper.isDesc(orders[1]);
+					}
+					if (isDesc) {
+						if (query == null) {
+							query = finder.order().desc(orders[0]);
+						} else {
+							query = query.orderBy().desc(orders[0]);
+						}
+					} else {
+						if (query == null) {
+							query = finder.order().asc(orders[0]);
+						} else {
+							query = query.orderBy().asc(orders[0]);
+						}
+					}
 				}
-			} else {
-				if (query == null) {
-					query = finder.order().asc(orders[0]);
-				} else {
-					query = query.orderBy().asc(orders[0]);
-				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 

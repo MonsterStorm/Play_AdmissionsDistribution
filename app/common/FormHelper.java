@@ -4,8 +4,10 @@ import static play.data.Form.form;
 
 import java.util.*;
 
+import models.*;
 import play.data.*;
 import play.data.validation.*;
+import play.db.ebean.*;
 import play.mvc.Http.Flash;
 
 /**
@@ -17,56 +19,75 @@ import play.mvc.Http.Flash;
 public class FormHelper {
 	
 	/**
+	 * get param names
+	 * @param form
+	 * @return
+	 */
+	public static <E> String[] getParamNames(play.data.Form<E> form){
+		Map<String, String> params = form.data();
+		if(params != null){
+			String[] result = new String[params.size()];
+			return params.keySet().toArray(result);
+		} else{
+			return null;
+		}
+	}
+
+	/**
 	 * get String
+	 * 
 	 * @param form
 	 * @param field
 	 * @return
 	 */
-	public static String getString(DynamicForm form, String field){
+	public static String getString(DynamicForm form, String field) {
 		final String value = form.get(field);
-		if(StringHelper.isValidate(value)){
+		if (StringHelper.isValidate(value)) {
 			return value;
 		}
 		return null;
 	}
-	
+
 	/**
 	 * get long
+	 * 
 	 * @param form
 	 * @param field
 	 * @return
 	 */
-	public static Long getLong(DynamicForm form, String field){
+	public static Long getLong(DynamicForm form, String field) {
 		final String value = form.get(field);
-		if(StringHelper.isValidate(value)){
+		if (StringHelper.isValidate(value)) {
 			return Long.valueOf(value);
 		}
 		return null;
 	}
-	
+
 	/**
 	 * get long
+	 * 
 	 * @param form
 	 * @param field
 	 * @return
 	 */
-	public static Double getDouble(DynamicForm form, String field){
+	public static Double getDouble(DynamicForm form, String field) {
 		final String value = form.get(field);
-		if(StringHelper.isValidate(value)){
+		if (StringHelper.isValidate(value)) {
 			return Double.valueOf(value);
 		}
 		return null;
 	}
-	
+
 	/**
 	 * get integer
+	 * 
 	 * @param form
 	 * @param field
 	 * @return
 	 */
-	public static Integer getInt(DynamicForm form, String field){
+	public static Integer getInt(DynamicForm form, String field) {
 		final String value = form.get(field);
-		if(StringHelper.isValidate(value)){
+		if (StringHelper.isValidate(value)) {
 			return Integer.valueOf(value);
 		}
 		return null;
@@ -74,30 +95,34 @@ public class FormHelper {
 
 	/**
 	 * get boolean
+	 * 
 	 * @param form
 	 * @param field
 	 * @return
 	 */
-	public static Boolean getBool(DynamicForm form, String field){
+	public static Boolean getBool(DynamicForm form, String field) {
 		final String value = form.get(field);
-		if(StringHelper.isValidate(value)){
+		if (StringHelper.isValidate(value)) {
 			return Boolean.valueOf(value);
 		}
 		return null;
 	}
+
 	/**
 	 * is add new action
+	 * 
 	 * @param form
 	 * @return
 	 */
-	public static boolean isAddNew(DynamicForm form){
+	public static boolean isAddNew(DynamicForm form) {
 		final String strAddNew = form.get("addNew");
-		if(StringHelper.isValidate(strAddNew) && Boolean.parseBoolean(strAddNew) == true){
+		if (StringHelper.isValidate(strAddNew)
+				&& Boolean.parseBoolean(strAddNew) == true) {
 			return true;
 		}
 		return false;
 	}
-	
+
 	/**
 	 * get page
 	 * 
@@ -115,6 +140,7 @@ public class FormHelper {
 
 	/**
 	 * reset flash from form
+	 * 
 	 * @param form
 	 * @param flash
 	 */
@@ -125,19 +151,20 @@ public class FormHelper {
 			flash.putAll(form().bindFromRequest().data());
 		}
 	}
-	
+
 	/**
 	 * get an error msg
+	 * 
 	 * @param form
 	 * @return
 	 */
-	public static String getFirstError(Map<String, List<ValidationError>> errors){
+	public static String getFirstError(Map<String, List<ValidationError>> errors) {
 		for (Iterator<String> iter = errors.keySet().iterator(); iter.hasNext();) {
 			final String key = iter.next();
 			final List<ValidationError> values = errors.get(key);
-			if(values != null){
-				for(ValidationError ve : values){
-					if(StringHelper.isValidate(ve.message())){
+			if (values != null) {
+				for (ValidationError ve : values) {
+					if (StringHelper.isValidate(ve.message())) {
 						return ve.message();
 					}
 				}
@@ -145,8 +172,7 @@ public class FormHelper {
 		}
 		return null;
 	}
-	
-	
-	//-----------------------private methods----------------------------
+
+	// -----------------------private methods----------------------------
 
 }

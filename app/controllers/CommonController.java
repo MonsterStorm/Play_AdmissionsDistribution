@@ -312,7 +312,7 @@ public class CommonController extends Controller {
 		
 		Form<Course> form = form(Course.class).bindFromRequest();
 		if (form != null && form.hasErrors() == false) {
-			Course course = Course.addOrUpdate(form.get());
+			Course course = Course.addOrUpdate(form.get(), FormHelper.getParamNames(form));
 			if (course != null) {
 				return pageCourseDetail(course);
 			}

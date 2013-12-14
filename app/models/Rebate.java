@@ -121,38 +121,49 @@ public class Rebate extends Model {
 	 * @param form
 	 * @return
 	 */
-	public static Page<Rebate> findPage(DynamicForm form, int page, Integer pageSize) {
+	public static Page<Rebate> findPage(DynamicForm form, Integer page, Integer pageSize) {
+		QueryHelper<Rebate> queryFilter = new QueryFilterHelper<Rebate>(finder, form).filter(Rebate.class, "findPage", DynamicForm.class, Integer.class, Integer.class);
+		
 		Integer status;
 		if(form == null){
 			status = -1;
 		} else {
 			status = FormHelper.getInt(form, "status"); 
 		}
+		
+		//排序
+		String orderBy = FormHelper.getString(form, "time-asc");
+		if(StringHelper.isValidate(orderBy) == false){
+			orderBy = FormHelper.getString(form, "time-desc");
+		}
+		
 		User user = LoginController.getSessionUser();
 		
-		play.Logger.debug("status: " + status + ",role:" + user.hasRole(Role.ROLE_EDU) + "," + user.hasRole(Role.ROLE_ADMIN) + "," + user.hasRole(Role.ROLE_AGENT));
+		play.Logger.debug("status: " + status + ", role:" + user.hasRole(Role.ROLE_EDU) + "," + user.hasRole(Role.ROLE_ADMIN) + "," + user.hasRole(Role.ROLE_AGENT));
 		
 		if (status != null && status == 1){//未收款
 			if(user.hasRole(Role.ROLE_EDU)){//教育机构
-				return new QueryHelper<Rebate>(finder, form).addEq("lastReceiptOfEdu", null, null).findPage(page, pageSize);
+				return queryFilter.addEq("lastReceiptOfEdu.confirmer", null, null).addOrderBy("lastReceiptOfEdu." + orderBy).findPage(page, pageSize);
 			} else if (user.hasRole(Role.ROLE_ADMIN)){//平台
-				return new QueryHelper<Rebate>(finder, form).addEq("lastReceiptOfPlatform", null, null).findPage(page, pageSize);
+				return queryFilter.addEq("lastReceiptOfPlatform.confirmer", null, null).addOrderBy("lastReceiptOfPlatform." + orderBy).findPage(page, pageSize);
 			} else if (user.hasRole(Role.ROLE_AGENT)){//代理人
-				return new QueryHelper<Rebate>(finder, form).addEq("lastReceiptOfAgent", null, null).findPage(page, pageSize);
+				return queryFilter.addEq("lastReceiptOfAgent.confirmer", null, null).addOrderBy("lastReceiptOfAgent." + orderBy).findPage(page, pageSize);
 			}
 		} else if (status != null && status == 2){//已经收款
 			if(user.hasRole(Role.ROLE_EDU)){//教育机构
-				return new QueryHelper<Rebate>(finder, form).addNe("lastReceiptOfEdu", null, null).findPage(page, pageSize);
+				return queryFilter.addNe("lastReceiptOfEdu.confirmer", null, null).addOrderBy("lastReceiptOfEdu." + orderBy).findPage(page, pageSize);
 			} else if (user.hasRole(Role.ROLE_ADMIN)){//平台
-				return new QueryHelper<Rebate>(finder, form).addNe("lastReceiptOfPlatform", null, null).findPage(page, pageSize);
+				return queryFilter.addNe("lastReceiptOfPlatform.confirmer", null, null).addOrderBy("lastReceiptOfPlatform." + orderBy).findPage(page, pageSize);
 			} else if (user.hasRole(Role.ROLE_AGENT)){//代理人
-				return new QueryHelper<Rebate>(finder, form).addNe("lastReceiptOfAgent", null, null).findPage(page, pageSize);
+				return queryFilter.addNe("lastReceiptOfAgent.confirmer", null, null).addOrderBy("lastReceiptOfAgent." + orderBy).findPage(page, pageSize);
 			}
 		} else {//all
-			return new QueryHelper<Rebate>().findPage(finder, form, page, pageSize);
+			return queryFilter.findPage(page, pageSize);
 		}
 		return null;
 	}
+	
+	
 	
 	/**
 	 * confirm receipt
