@@ -19,23 +19,53 @@ var spinOptions = {
 };
 
 var ajaxSubmitOptions = {
+	extsFuns: {
+	},
 	beforeSubmit : function() {
 		$('.myprompt').hide();
 		var target = document.getElementById('content');
 		var spinner = new Spinner(spinOptions).spin(target);
 		//$('#content').html('<div class="progress progress-striped active"><div class="bar" style="width: 100%;">加载中...</div><div>');
+		
+		var exts = this.extsFuns;
+		if(exts != undefined){
+			var beforeFun = exts.beforeFun;
+			if(beforeFun != undefined && typeof beforeFun == 'function'){
+	            beforeFun();
+	        }
+		}
 	},
 	success : function(html) { // 请求成功的返回数据
 		if(!html) return false;
 		$('#content').html(html);
 		$('#content').before('<div class="alert alert-success myprompt"><center>成功!</center></div>');
 		$(".myprompt").fadeOut({speed:"slow"});
+		
+		var exts = this.extsFuns;
+		if(exts != undefined){
+			var successFun = exts.successFun;
+			if(successFun != undefined && typeof successFun == 'function'){
+				successFun(html);
+			}
+			this.extsFuns = {};
+		}
+		
 		return true;
 	},
 	error : function(obj) {
 		var message = obj.responseText || '服务器错误';
 		$('#content').before('<div class="alert alert-danger myprompt"><center>' + message + '</center></div>');
 		$('.spinner').hide();
+		
+		var exts = this.extsFuns;
+		if(exts != undefined){
+			var errorFun = exts.errorFun;
+			if(errorFun != undefined && typeof errorFun == 'function'){
+				errorFun(obj);
+			}
+			this.extsFuns = {};
+		}
+		
 		return false;
 	}
 };
@@ -47,10 +77,16 @@ var ajaxSubmitOptions = {
  * 
  * @param 请求的Ajax
  *            URL，请求方式，发送的数据，用于接收返回结果的div
+ * 
+ * @param extFuns {
+ * 			beforeFun: function,
+ * 			successFun: function,
+ * 			errorFun: function	
+ * 		}
  * @author cst
  * @time 20110810
  */
-function ajaxBasic(ajaxUrl, ajaxData, method, promptObj) {
+function ajaxBasic(ajaxUrl, ajaxData, method, promptObj, extFuns) {
 	// 接收提示信息的div有一个默认值'#content'
 	promptObj = promptObj || '#content';
 	// 请求方式method有默认值get
@@ -66,14 +102,39 @@ function ajaxBasic(ajaxUrl, ajaxData, method, promptObj) {
 		beforeSend : function() {
 			$('.myprompt').hide();
 			$(promptObj).html('<div class="progress progress-striped active"><div class="bar" style="width: 100%;">加载中...</div><div>');
+			
+			if(extFuns != undefined){
+				var beforeFun = extFuns.beforeFun;
+				if(beforeFun != undefined && typeof beforeFun == 'function'){
+		            beforeFun();
+		        }
+			}
+			
+			
 		},
 		success : function(html) {
 			$(promptObj).html(html);
+			
+			if(extFuns != undefined){
+				var successFun = extFuns.successFun;
+				if(successFun != undefined && typeof successFun == 'function'){
+					successFun(html);
+				}
+			}
+			
 			return true;
 		},
 		error : function(obj) {
 			var message = obj.responseText || '服务器错误';
 			$(promptObj).html('<div class="alert alert-danger"><center>' + message + '</center></div>');
+			
+			if(extFuns != undefined){
+				var errorFun = extFuns.errorFun;
+				if(errorFun != undefined && typeof errorFun == 'function'){
+					errorFun(obj);
+				}
+			}
+			
 			return false;
 		}
 	}

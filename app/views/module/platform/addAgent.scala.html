@@ -8,6 +8,11 @@
 <script type="text/javascript">
     $(document).ready( function() {
 			$('#myform').submit(function() {
+				ajaxSubmitOptions.extsFuns = {
+					successFun: function(){
+						alert('注册信息已提交，请耐心等待审核，审核成功后将为您开放后台功能！');
+					}
+				};
 		    $(this).ajaxSubmit(ajaxSubmitOptions);
 		    return false;
 			});

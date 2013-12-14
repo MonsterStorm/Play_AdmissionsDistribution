@@ -9,6 +9,11 @@
 <script type="text/javascript">
     $(document).ready( function() {
 			$('#myform').submit(function() {
+				ajaxSubmitOptions.extsFuns = {
+					successFun: function(){
+						alert('注册信息已提交，请耐心等待审核，审核成功后将为您开放后台功能！');
+					}
+				};
 		    $(this).ajaxSubmit(ajaxSubmitOptions);
 		    return false;
 			});
@@ -143,7 +148,7 @@
 			<div class="control-group row">
 		    		<div class="controls">
 							@if(model != null){
-		      			<button type="submit" class="btn btn-large btn-success btn-block span2 disabled">提交</button>
+		      			<span type="submit" class="btn btn-large btn-success btn-block span2 disabled">提交</span>
 		      		} else {
 		      			<button type="submit" class="btn btn-large btn-success btn-block span2">提交</button>
 		      		}
