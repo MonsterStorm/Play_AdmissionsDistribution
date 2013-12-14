@@ -2,10 +2,6 @@
 
 @basic.platform.main("平台"){@meta()}{@styles()}{@scripts()}{@nav()}{@header()}{
 <script type="text/javascript">
-function getPlatformPage(li, url, data){
-  	data = data||"";
-  	ajaxBasic("/platform/" +url,data,"GET","#content");
-  }
   function getEducationPage(li, url, data){
 		 data = data || "";
      ajaxBasic("/education/" + url, data, "GET", "#content");
