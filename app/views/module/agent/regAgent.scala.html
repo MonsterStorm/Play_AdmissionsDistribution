@@ -14,7 +14,6 @@
 
 <div class="table-responsive">
 	<div style="overflow: auto">
-	<div class="form-horizontal">
 
   		@if(model != null){
 			@inputText("协议名称", "name", model.name, true)
@@ -28,13 +27,6 @@
 			@textarea("协议详情", "detail", null, false, 20)
 		}
 		
-		<input class="input-large" type="hidden" name="table" value="@Contract.TABLE_NAME">
-		@if(model != null){
-			<input class="input-large" type="hidden" name="id" value="@model.id">
-		} else {
-			<input class="input-large" type="hidden" name="id">
-		}
-		<hr>
 		<div class="control-group row">
 	    		<div class="controls">
 				@if(model != null){
@@ -44,8 +36,6 @@
 				}
 	    		</div>
   		</div>
-		
-	</form>
 	</div>
 </div>
 

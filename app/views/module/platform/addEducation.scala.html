@@ -29,6 +29,27 @@
 <div class="table-responsive">
 	<div style="overflow: auto">
 		<form class="form-horizontal" id="myform" method="post" action="@routes.PlatformController.addOrUpdateEntity()">
+			@if(user != null){
+				@inputText("账号名称", "username", user.username, false)
+			}else{
+				@inputText("账号名称", "username", null, false)
+			}
+			@if(user == null){
+				@inputPassword("密码", "password", null, false)
+			}
+			@if(user == null){
+				@inputPassword("密码确认", "passwordConfirm", null, false)
+			}
+			@if( user != null ){
+				@inputEmail("注册邮箱", "email", user.email, false)
+				
+			}else{
+
+				@inputEmail("注册邮箱", "email", null, false)
+			}
+
+
+
 			@if(model != null){
 				@inputText("教育机构名称", "name", model.name, false)
 			} else {
@@ -111,15 +132,6 @@
 				@inputText("QQ号码", "qq", null, false)
 			}}
   		
-  		@if(model != null && model.creator != null){
-				@inputText("Email", "email", model.creator.email, false)
-			} else{
-				@if(user!=null){
-					@inputText("Email", "email", user.email, false)
-				}else {
-					@inputText("Email", "email", null, false)
-				}
-			}
 			
 			@if(model != null && model.creator != null && model.creator.basicInfo != null){
 				@textarea("联系地址", "address", model.creator.basicInfo.address, false)
@@ -143,7 +155,11 @@
 			} else {
 				<input class="input-large" type="hidden" name="id">
 			}
-
+			@if(user != null){
+				<input class="input-large" type="hidden" name="uid" value="@user.id">
+			} else {
+				<input class="input-large" type="hidden" name="uid">
+			}
 			<hr>
 			<div class="control-group row">
 		    		<div class="controls">

@@ -24,6 +24,8 @@ import common.FileHelper.ErrorType;
 import common.FormValidator.Type;
 
 public class PlatformController extends BaseController {
+	public static final String KEY_USER_ACCOUNT = "account";
+	public static final String KEY_USER_ID = "user_id";
 	// pages
 	private static final String PAGE_INDEX = "index";
 	private static final String PAGE_SUCCESSFUL_CASE = "successful_case";
@@ -190,8 +192,10 @@ public class PlatformController extends BaseController {
 	 */
 	public static Result pageAddEducation() {
 		User user = LoginController.getSessionUser();
+		FormHelper.resetFlash(form().bindFromRequest(), flash());
 		if (user == null) {
-			return badRequest(Constants.MSG_NOT_LOGIN);
+			return ok(views.html.module.platform.addEducation.render(null, null));
+			//return badRequest(Constants.MSG_NOT_LOGIN);
 		}
 		return ok(views.html.module.platform.addEducation.render(null, user));
 	}
@@ -204,7 +208,7 @@ public class PlatformController extends BaseController {
 	public static Result pageAddAgent() {
 		User user = LoginController.getSessionUser();
 		if (user == null) {
-			return badRequest(Constants.MSG_NOT_LOGIN);
+			return ok(views.html.module.platform.addAgent.render(null, null));
 		}
 
 		return ok(views.html.module.platform.addAgent.render(null, user));
@@ -218,7 +222,7 @@ public class PlatformController extends BaseController {
 	public static Result pageAddTeacher() {
 		User user = LoginController.getSessionUser();
 		if (user == null) {
-			return badRequest(Constants.MSG_NOT_LOGIN);
+			return ok(views.html.module.platform.addTeacher.render(null, null));
 		}
 		return ok(views.html.module.platform.addTeacher.render(null, user));
 	}
@@ -715,7 +719,9 @@ public class PlatformController extends BaseController {
 		play.Logger.error(form().bindFromRequest().get("page"));
 		User user = LoginController.getSessionUser();
 		if (user == null) {
-			return badRequest(Constants.MSG_NOT_LOGIN);
+			long idt = (long) 2;
+			Contract contractt = Contract.find(idt);
+			return ok(views.html.module.platform.regAgent.render(contractt ));
 		}
 		if (user.agent != null && user.agent.audit != null
 				&& user.agent.audit.status == Audit.STATUS_WAIT) {
@@ -737,9 +743,7 @@ public class PlatformController extends BaseController {
 	public static Result pageRegEducations() {
 		play.Logger.error(form().bindFromRequest().get("page"));
 		User user = LoginController.getSessionUser();
-		if (user == null) {
-			return badRequest(Constants.MSG_NOT_LOGIN);
-		}
+		
 		long id = (long) 1;
 		Contract contract = Contract.find(id);
 		return ok(views.html.module.platform.regEducation.render(contract));
@@ -754,7 +758,9 @@ public class PlatformController extends BaseController {
 		play.Logger.error(form().bindFromRequest().get("page"));
 		User user = LoginController.getSessionUser();
 		if (user == null) {
-			return badRequest(Constants.MSG_NOT_LOGIN);
+			long idt = (long) 3;
+			Contract contractt = Contract.find(idt);
+			return ok(views.html.module.platform.regTeacher.render(contractt));
 		}
 		if (user.instructor != null && user.instructor.audit != null
 				&& user.instructor.audit.status == Audit.STATUS_WAIT) {
@@ -779,7 +785,7 @@ public class PlatformController extends BaseController {
 			@FormValidator(name = "idcard", validateType = Type.REQUIRED, msg = "身份证号不能为空"),
 			@FormValidator(name = "idcard", validateType = Type.NUMBER, msg = "身份证号只能为数字"),
 			@FormValidator(name = "birthday", validateType = Type.REQUIRED, msg = "出生日期不能为空"),
-			@FormValidator(name = "phone", validateType = Type.PHONE, msg = "请填写正确的座机号码"),
+			@FormValidator(name = "phone", validateType = Type.REQUIRED, msg = "座机号码不能为空"),
 			@FormValidator(name = "mobile", validateType = Type.PHONE, msg = "请填写正确的手机号码"),
 			@FormValidator(name = "qq", validateType = Type.REQUIRED, msg = "qq号码不能为空"),
 			@FormValidator(name = "qq", validateType = Type.NUMBER, msg = "qq号码只能为数字"),
@@ -795,7 +801,19 @@ public class PlatformController extends BaseController {
 		}
 		User user = LoginController.getSessionUser();
 		if (user == null) {
-			return badRequest(Constants.MSG_NOT_LOGIN);
+			//return badRequest(Constants.MSG_NOT_LOGIN);
+
+			Form<Register> registerForm = form(Register.class).bindFromRequest();
+			if (registerForm.hasErrors()) {
+				return badRequest(registerForm.globalError().message());
+			}else{
+				user = User.addOrUpdate(form().bindFromRequest());
+				if(user != null){
+					session(KEY_USER_ACCOUNT, user.username);
+					session(KEY_USER_ID, user.id.toString());//存用户id
+				}
+			}
+
 		}
 		UserInfo basicInfo = user.basicInfo;
 		if (basicInfo == null) {
@@ -891,7 +909,7 @@ public class PlatformController extends BaseController {
 			@FormValidator(name = "idcard", validateType = Type.REQUIRED, msg = "身份证号称不能为空"),
 			@FormValidator(name = "idcard", validateType = Type.NUMBER, msg = "身份证号只能是数字"),
 			@FormValidator(name = "birthday", validateType = Type.REQUIRED, msg = "出生日期不能为空"),
-			@FormValidator(name = "phone", validateType = Type.PHONE, msg = "请填写正确的座机号码"),
+			@FormValidator(name = "phone", validateType = Type.REQUIRED, msg = "座机号码不能为空"),
 			@FormValidator(name = "mobile", validateType = Type.PHONE, msg = "请填写正确的手机号码"),
 			@FormValidator(name = "qq", validateType = Type.REQUIRED, msg = "QQ号码不能为空"),
 			@FormValidator(name = "qq", validateType = Type.NUMBER, msg = "QQ号码只能是数字"),
@@ -906,7 +924,17 @@ public class PlatformController extends BaseController {
 		}
 		User user = LoginController.getSessionUser();
 		if (user == null) {
-			return badRequest(Constants.MSG_NOT_LOGIN);
+			//return badRequest(Constants.MSG_NOT_LOGIN);
+			Form<Register> registerForm = form(Register.class).bindFromRequest();
+			if (registerForm.hasErrors()) {
+				return badRequest(registerForm.globalError().message());
+			}else{
+				user = User.addOrUpdate(form().bindFromRequest());
+				if(user != null){
+					session(KEY_USER_ACCOUNT, user.username);
+					session(KEY_USER_ID, user.id.toString());//存用户id
+				}
+			}
 		}
 		UserInfo basicInfo = user.basicInfo;
 		if (basicInfo == null) {
@@ -994,7 +1022,7 @@ public class PlatformController extends BaseController {
 			@FormValidator(name = "idcard", validateType = Type.REQUIRED, msg = "身份证号不能为空"),
 			@FormValidator(name = "idcard", validateType = Type.NUMBER, msg = "身份证号只能是数字"),
 			@FormValidator(name = "birthday", validateType = Type.REQUIRED, msg = "出生日期不能为空"),
-			@FormValidator(name = "phone", validateType = Type.PHONE, msg = "请填写正确的座机号码"),
+			@FormValidator(name = "phone", validateType = Type.REQUIRED, msg = "座机号码不能为空"),
 			@FormValidator(name = "qq", validateType = Type.REQUIRED, msg = "QQ号码不能为空"),
 			@FormValidator(name = "qq", validateType = Type.NUMBER, msg = "QQ号码只能是数字"),
 			@FormValidator(name = "address", validateType = Type.REQUIRED, msg = "联系地址不能为空"),
@@ -1012,7 +1040,17 @@ public class PlatformController extends BaseController {
 
 		User user = LoginController.getSessionUser();
 		if (user == null) {
-			return badRequest(Constants.MSG_NOT_LOGIN);
+			//return badRequest(Constants.MSG_NOT_LOGIN);
+			Form<Register> registerForm = form(Register.class).bindFromRequest();
+			if (registerForm.hasErrors()) {
+				return badRequest(registerForm.globalError().message());
+			}else{
+				user = User.addOrUpdate(form().bindFromRequest());
+				if(user != null){
+					session(KEY_USER_ACCOUNT, user.username);
+					session(KEY_USER_ID, user.id.toString());//存用户id
+				}
+			}
 		}
 		UserInfo basicInfo = user.basicInfo;
 		if (basicInfo == null) {

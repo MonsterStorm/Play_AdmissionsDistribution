@@ -183,7 +183,7 @@ public class TeacherController extends BaseController {
 			@FormValidator(name = "idcard", validateType = Type.REQUIRED, msg = "身份证号不能为空"),
 			@FormValidator(name = "idcard", validateType = Type.NUMBER, msg = "身份证号只能是数字"),
 			@FormValidator(name = "birthday", validateType = Type.REQUIRED, msg = "出生日期不能为空"),
-			@FormValidator(name = "phone", validateType = Type.PHONE, msg = "请填写正确的座机号码"),
+			@FormValidator(name = "phone", validateType = Type.REQUIRED, msg = "座机号码不能为空"),
 			@FormValidator(name = "qq", validateType = Type.REQUIRED, msg = "QQ号码不能为空"),
 			@FormValidator(name = "qq", validateType = Type.NUMBER, msg = "QQ号码只能是数字"),
 			@FormValidator(name = "address", validateType = Type.REQUIRED, msg = "联系地址不能为空"),

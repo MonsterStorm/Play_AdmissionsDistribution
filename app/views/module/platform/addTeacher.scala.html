@@ -30,6 +30,24 @@
 		<form class="form-horizontal" id="myform" method="post" action="@routes.PlatformController.addOrUpdateEntity()">
 	
 			@form_validate_info()
+			@if(user != null){
+				@inputText("账号名称", "username", user.username, false)
+			}else{
+				@inputText("账号名称", "username", null, false)
+			}
+			@if(user == null){
+				@inputPassword("密码", "password", null, false)
+			}
+			@if(user == null){
+				@inputPassword("密码确认", "passwordConfirm", null, false)
+			}
+			@if( user != null ){
+				@inputEmail("注册邮箱", "email", user.email, false)
+				
+			}else{
+
+				@inputEmail("注册邮箱", "email", null, false)
+			}
 			@if(model != null &&model.user!=null && model.user.basicInfo != null){
 				@inputText("真实姓名", "realname", model.user.basicInfo.realname, false)
 			}else{ 
@@ -107,16 +125,7 @@
 			}else {
 				@inputText("QQ号码", "qq", null, false)
 			}}
-  		
-  			@if(model != null && model.user != null){
-				@inputText("Email", "email", model.user.email, false)
-			} else{
-			@if(user!=null){
-				@inputText("Email", "email", user.email, false)
-			}else {
-				@inputText("Email", "email", null, false)
-			}}
-			
+				
 			@if(model != null && model.user != null && model.user.basicInfo != null){
 				@textarea("联系地址", "address", model.user.basicInfo.address, false)
 			} else{

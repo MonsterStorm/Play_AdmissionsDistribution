@@ -6,13 +6,12 @@
 
 <div class="table-responsive">
 	<div style="overflow: auto">
-		<form class="form-horizontal">
+
 		<div style="font-size:30px;font-weight:200;margin:20px;"><center><b>@model.name</b></center></div>
 		<div style="max-width:900px;border:1px solid grey;padding:10px;margin:auto;">
 			@Html(model.detail)
 		</div>		
 
-		<input class="input-large" type="hidden" name="table" value="@Contract.TABLE_NAME">
 		@if(model != null){
 			<input class="input-large" type="hidden" name="id" value="@model.id">
 		} else {
@@ -26,7 +25,7 @@
 					
     	</div>
   	</div>
-		</form>
+
 	</div>
 </div>
 
