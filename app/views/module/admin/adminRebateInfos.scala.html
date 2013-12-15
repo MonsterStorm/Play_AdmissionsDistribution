@@ -1,6 +1,6 @@
 @(models: com.avaje.ebean.Page[Rebate])
 @import basic.common._
-
+@initTooltip()
 @baseUrl=@{
 	var url = "adminRebateInfos";
 	url
@@ -39,9 +39,9 @@
 		
 
 		@if( rebate!=null && rebate.lastReceiptOfEdu !=null && rebate.lastReceiptOfEdu.time !=null ){
-			<a class="btn btn-info" data-toggle="确认分账" href="#" onclick="getCommonPage(this, 'rebateInfo', 'rebateId=@rebate.id')"><i class="icon-edit icon-white"></i></a> 
+			<a class="btn btn-info" rel="tooltip" title="确认分账" href="#" onclick="getCommonPage(this, 'rebateInfo', 'rebateId=@rebate.id')"><i class="icon-edit icon-white"></i></a> 
 		} else {
-			<span class="btn disabled" data-toggle="确认分账" href="#"><i class="icon-edit icon-white"></i></span>
+			<span class="btn disabled" rel="tooltip" title="确认分账" href="#"><i class="icon-edit icon-white"></i></span>
 		}
 	</div>
 </div>

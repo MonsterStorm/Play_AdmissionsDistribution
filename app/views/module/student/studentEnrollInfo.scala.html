@@ -1,6 +1,6 @@
 @(models: com.avaje.ebean.Page[Enroll])
 @import basic.common._
-
+@initTooltip()
 @baseUrl=@{
 	var url = "studentEnrollInfo";
 	url
@@ -31,9 +31,9 @@
 <div class="pull-left" style="width:130px;">
 	<div class="btn-group" id="toolbar">
 		@if(enroll.auditOfAgent != null && enroll.auditOfAgent.status == Audit.STATUS_SUCCESS && enroll.auditOfEdu != null && enroll.auditOfEdu.status == Audit.STATUS_SUCCESS && enroll.confirmOfStu.money == null ){
-			<a class="btn btn-success" data-toggle="确认付款" href="#" onclick="getStudentPage(this, 'studentReceiptInfo', 'enrollId=@enroll.id')"><i class="icon-ok icon-white"></i></a> 
+			<a class="btn btn-success" rel="tooltip" title="确认付款" href="#" onclick="getStudentPage(this, 'studentReceiptInfo', 'enrollId=@enroll.id')"><i class="icon-ok icon-white"></i></a> 
 		} else {
-			<span class="btn disabled" data-toggle="确认付款" href="#"><i class="icon-ok icon-white"></i></span>
+			<span class="btn disabled" rel="tooltip" title="确认付款" href="#"><i class="icon-ok icon-white"></i></span>
 		}
 	</div>
 </div>

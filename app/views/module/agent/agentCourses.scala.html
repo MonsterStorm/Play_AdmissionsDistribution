@@ -1,7 +1,7 @@
 @(models: com.avaje.ebean.Page[Course], courseTypeNames:Array[String])
 
 @import basic.common._
-
+@initTooltip()
 @baseUrl=@{
 	var url = "agentCourses";
 	url
@@ -57,11 +57,11 @@ $('#toolbar').tooltip(options);
 
 <div class="pull-left" style="width:130px;">
 	<div class="btn-group">
-		<a class="btn btn-danger" data-toggle="删除，请谨慎操作！" href="#" onclick="doDelete(@course.id)"><i
+		<a class="btn btn-danger" rel="tooltip" title="删除，请谨慎操作！" href="#" onclick="doDelete(@course.id)"><i
 			class="icon-remove icon-white"></i></a>
 	</div>
 	<div class="btn-group">
-		<a class="btn btn btn-success" data-toggle="报名" href="#" onclick="getAgentPage(this, 'userEnrollByAgent','courseId=@course.id')"><i class="icon-plus icon-white"></i>报名</a>
+		<a class="btn btn btn-success" rel="tooltip" title="报名" href="#" onclick="getAgentPage(this, 'userEnrollByAgent','courseId=@course.id')"><i class="icon-plus icon-white"></i>报名</a>
 	</div>
 </div>
 } 

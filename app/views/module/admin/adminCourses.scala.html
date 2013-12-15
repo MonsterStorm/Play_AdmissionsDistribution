@@ -1,6 +1,7 @@
 @(models: com.avaje.ebean.Page[Course], courseTypeNames:Array[String], courseClassNames:Array[String])
 
 @import basic.common._
+@initTooltip()
 
 @baseUrl=@{
 	var url = "adminCourses";
@@ -14,7 +15,7 @@
 	</div>
 	<div class="btn-toolbar pull-right" role="toolbar">
 		<div class="btn-group">
-			<a class="btn btn-success" data-toggle="新增" href="#" onclick="getCommonPage(this, 'courseDetail', 'addNew=true');"><i
+			<a class="btn btn-success" href="#" onclick="getCommonPage(this, 'courseDetail', 'addNew=true');"><i
 				class="icon-plus icon-white"></i>新增</a>
 		</div>
 		<div class="btn-group" id="btnGroup">
@@ -36,7 +37,7 @@
 			</ul>
 		</div>
 		<div class="btn-group">
-		<a class="btn btn btn-info" data-toggle="设置" href="#" onclick="getAdminPage(this, 'adminCourseType')"><i
+		<a class="btn btn btn-info" rel="tooltip" title="设置" href="#" onclick="getAdminPage(this, 'adminCourseType')"><i
 			class="icon-cog icon-white"></i></a>
 		</div>
 	</div>
@@ -73,7 +74,6 @@ $('#toolbar').tooltip(options);
 	</b>&nbsp;？
 }
 
-
 @dialogConfirm("确定拒绝通过", String.valueOf("n" + course.id), "doAdminAudit('n" + course.id + "', {id:" + course.id + ",status:" + Audit.STATUS_FAILED + ",table:'" + Course.TABLE_NAME + "'})"){
 	确定拒绝通过&nbsp;
 	<b style="font-size:x-large;color:red">
@@ -88,19 +88,19 @@ $('#toolbar').tooltip(options);
 <div class="pull-left" style="width:130px;">
 	<div class="btn-group" id="toolbar">
 		@if(course.audit != null && course.audit.status != Audit.STATUS_SUCCESS){
-			<a class="btn btn-success" data-toggle="审核通过" href="#" onclick="showConfirm('@String.valueOf("y" + course.id)')"><i class="icon-ok icon-white"></i></a> 
+			<a class="btn btn-success" rel="tooltip" title="审核通过" data-toggle="审核通过" href="#" onclick="showConfirm('@String.valueOf("y" + course.id)')"><i class="icon-ok icon-white"></i></a> 
 		} else {
-			<span class="btn disabled" data-toggle="审核通过" href="#"><i class="icon-ok icon-white"></i></span>
+			<span class="btn disabled" rel="tooltip" title="审核通过" data-toggle="审核通过" href="#"><i class="icon-ok icon-white"></i></span>
 		}
 		
 		@if(course.audit != null && course.audit.status != Audit.STATUS_FAILED){
-			<a class="btn btn-info"	data-toggle="拒绝通过" href="#" onclick="showConfirm('@String.valueOf("n" + course.id)')"><i class="icon-ban-circle icon-white"></i></a>
+			<a class="btn btn-info"	rel="tooltip" title="拒绝通过" data-toggle="拒绝通过" href="#" onclick="showConfirm('@String.valueOf("n" + course.id)')"><i class="icon-ban-circle icon-white"></i></a>
 		} else {
-			<span class="btn disabled"	data-toggle="拒绝通过" href="#"><i class="icon-ban-circle icon-white"></i></span>
+			<span class="btn disabled" rel="tooltip" title="拒绝通过" data-toggle="拒绝通过" href="#"><i class="icon-ban-circle icon-white"></i></span>
 		}
 	</div>
 	<div class="btn-group">
-		<a class="btn btn-danger" data-toggle="删除，请谨慎操作！" href="#" onclick="doDelete(@course.id)"><i
+		<a class="btn btn-danger" rel="tooltip" title="删除，请谨慎操作！" data-toggle="删除，请谨慎操作！" href="#" onclick="doDelete(@course.id)"><i
 			class="icon-remove icon-white"></i></a>
 	</div>
 </div>

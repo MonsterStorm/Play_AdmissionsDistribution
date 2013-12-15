@@ -1,6 +1,6 @@
 @(models: com.avaje.ebean.Page[TemplateType])
 @import basic.common._
-
+@initTooltip()
 @baseUrl=@{
 	var url = "adminTemplateTypes";
 	url
@@ -12,7 +12,7 @@
 	</div>
 	<div class="btn-toolbar pull-right" role="toolbar">
 		<div class="btn-group">
-			<a class="btn btn-success" data-toggle="新增" href="#" onclick="getCommonPage(this, 'templateTypeDetail', 'addNew=true');"><i
+			<a class="btn btn-success" href="#" onclick="getCommonPage(this, 'templateTypeDetail', 'addNew=true');"><i
 				class="icon-plus icon-white"></i>新增</a>
 		</div>
 		<div class="btn-group">
@@ -40,11 +40,11 @@ $('#toolbar').tooltip(options);
 
 <div class="pull-left" style="width:130px;">
 	<div class="btn-group" id="toolbar">
-		<a class="btn btn-info" data-toggle="修改" href="#" onclick="getCommonPage(this, 'templateTypeDetail', 'id=@templateType.id');"><i
+		<a class="btn btn-info" rel="tooltip" title="修改" href="#" onclick="getCommonPage(this, 'templateTypeDetail', 'id=@templateType.id');"><i
 			class="icon-edit icon-white"></i></a>
 	</div>
 	<div class="btn-group">
-		<a class="btn btn-danger" data-toggle="删除，请谨慎操作！" href="#" onclick="doDelete(@templateType.id)"><i
+		<a class="btn btn-danger" rel="tooltip" title="删除，请谨慎操作！" href="#" onclick="doDelete(@templateType.id)"><i
 			class="icon-remove icon-white"></i></a>
 	</div>
 </div>

@@ -1,7 +1,7 @@
 @(models: List[QAndS], divid: String=null)
 
 @import basic.common._
-
+@initTooltip()
 @baseUrl=@{
 	var url = "qands";
 	url
@@ -25,7 +25,7 @@ $('#toolbar').tooltip(options);
 
 <div class="pull-left" style="width:130px;">
 	<div class="btn-group">
-		<a class="btn btn-danger" data-toggle="删除，请谨慎操作！" href="#" onclick="doDelete(@qands.id)"><i
+		<a class="btn btn-danger" rel="tooltip" title="删除，请谨慎操作！" href="#" onclick="doDelete(@qands.id)"><i
 			class="icon-remove icon-white"></i></a>
 	</div>
 </div>

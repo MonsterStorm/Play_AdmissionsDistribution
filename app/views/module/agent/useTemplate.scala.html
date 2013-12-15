@@ -1,6 +1,6 @@
 @(models: com.avaje.ebean.Page[TemplateType], sessionUser: User)
 @import basic.common._
-
+@initTooltip()
 @baseUrl=@{
 	var url = "useTemplate";
 	url
@@ -50,7 +50,7 @@ $('#toolbar').tooltip(options);
 
 <div class="pull-left" style="width:130px;">
 	<div class="btn-group" id="toolbar">
-		<a class="btn btn-info" data-toggle="使用" href="#" onclick="showConfirm(@templateType.id);"><i
+		<a class="btn btn-info" rel="tooltip" title="使用" href="#" onclick="showConfirm(@templateType.id);"><i
 			class="icon-edit icon-white"></i></a>
 	</div>
 </div>

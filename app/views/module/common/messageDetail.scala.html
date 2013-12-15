@@ -1,7 +1,7 @@
 @(model: Message)
 @import basic.common._
 @import basic.common.basicform._
-
+@initTooltip()
 @bootstrapDatetimepicker()
 @toolbar_header={
 <div class="row">
@@ -10,13 +10,13 @@
 	</div>
 	<div class="btn-toolbar pull-right" role="toolbar">
 		<div class="btn-group">
-			<a class="btn btn-default" data-toggle="上一条" href="#"><i
+			<a class="btn btn-default" rel="tooltip" title="上一条" href="#"><i
 				class="icon-arrow-left"></i>上一条</a>
-			<a class="btn btn-default" data-toggle="下一条" href="#"><i
+			<a class="btn btn-default" rel="tooltip" title="下一条" href="#"><i
 				class="icon-arrow-right"></i>下一条</a>
 		</div>	
 		<!--<div class="btn-group">
-			<a class="btn btn-danger" data-toggle="删除" href="#"><i
+			<a class="btn btn-danger" rel="tooltip" title="删除" href="#"><i
 				class="icon-remove icon-white"></i>删除</a>
 		</div>-->
 	</div>

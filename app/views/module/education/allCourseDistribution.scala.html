@@ -1,7 +1,7 @@
 @(models: com.avaje.ebean.Page[CourseDistribution])
 
 @import basic.common._
-
+@initTooltip()
 @baseUrl=@{
 	var url = "allCourseDistribution";
 	url
@@ -36,9 +36,9 @@
 
 <div class="pull-left" style="width:130px;">
 	<div class="btn-group" id="toolbar">
-		<a class="btn btn-success" data-toggle="审核通过" href="#" onclick="showConfirm('@String.valueOf("y" + cd.id)')"><i
+		<a class="btn btn-success" rel="tooltip" title="审核通过" href="#" onclick="showConfirm('@String.valueOf("y" + cd.id)')"><i
 			class="icon-ok icon-white"></i></a> <a class="btn btn-info"
-			data-toggle="拒绝通过" href="#"><i class="icon-ban-circle icon-white"></i></a>
+			rel="tooltip" title="拒绝通过" href="#"><i class="icon-ban-circle icon-white"></i></a>
 	</div>
 </div>
 } 

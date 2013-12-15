@@ -1,7 +1,7 @@
 @(models: com.avaje.ebean.Page[Message])
 
 @import basic.common._
-
+@initTooltip()
 @baseUrl=@{
 	var url = "adminMessages";
 	url
@@ -47,11 +47,11 @@ $('#toolbar').tooltip(options);
 
 <div class="pull-left" style="width:130px;">
 	<div class="btn-group" id="toolbar">
-		<a class="btn btn-info" data-toggle="查看详细" href="#" onclick="getCommonPage(this, 'messageDetail', 'id=@message.id');"><i
+		<a class="btn btn-info" rel="tooltip" title="查看详细" href="#" onclick="getCommonPage(this, 'messageDetail', 'id=@message.id');"><i
 			class="icon-eye-open icon-white"></i></a> 
 	</div>
 	<div class="btn-group">
-		<a class="btn btn-danger" data-toggle="删除，请谨慎操作！" href="#" onclick="doDelete(@message.id)"><i
+		<a class="btn btn-danger" rel="tooltip" title="删除，请谨慎操作！" href="#" onclick="doDelete(@message.id)"><i
 			class="icon-remove icon-white"></i></a>
 	</div>
 </div>

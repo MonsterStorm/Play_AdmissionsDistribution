@@ -1,7 +1,7 @@
 @(models: com.avaje.ebean.Page[Contract])
 
 @import basic.common._
-
+@initTooltip()
 @baseUrl=@{
 	var url = "adminContracts";
 	url
@@ -14,7 +14,7 @@
 	</div>
 	<div class="btn-toolbar pull-right" role="toolbar">
 		<div class="btn-group">
-			<a class="btn btn-success" data-toggle="新增" href="#" onclick="getCommonPage(this, 'contractDetail', 'addNew=true');"><i
+			<a class="btn btn-success" href="#" onclick="getCommonPage(this, 'contractDetail', 'addNew=true');"><i
 				class="icon-plus icon-white"></i>新增</a>
 		</div>
 		<div class="btn-group" id="btnGroup">
@@ -32,12 +32,13 @@ $('#toolbar').tooltip(options);
 @dialogDelete("删除协议", Contract.TABLE_NAME, contract.id){确定删除&nbsp;<b style="font-size:x-large;color:red">@contract.name</b>&nbsp;？}
 
 <div class="pull-left" style="width:130px;">
+<!--
 	<div class="btn-group" id="toolbar">
-			<a class="btn btn-success" data-toggle="操作1" href="#"><i	class="icon-ok icon-white"></i></a>
-			<a class="btn btn-info"	data-toggle="操作2" href="#"><i class="icon-ban-circle icon-white"></i></a>
-	</div>
+			<a class="btn btn-success" rel="tooltip" title="操作1" href="#"><i	class="icon-ok icon-white"></i></a>
+			<a class="btn btn-info"	rel="tooltip" title="操作2" href="#"><i class="icon-ban-circle icon-white"></i></a>
+	</div>-->
 	<div class="btn-group">
-		<a class="btn btn-danger" data-toggle="删除，请谨慎操作！" href="#" onclick="doDelete(@contract.id)"><i	class="icon-remove icon-white"></i></a>
+		<a class="btn btn-danger" rel="tooltip" title="删除，请谨慎操作！" href="#" onclick="doDelete(@contract.id)"><i	class="icon-remove icon-white"></i></a>
 	</div>
 </div>
 } 

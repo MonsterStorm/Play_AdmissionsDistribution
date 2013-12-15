@@ -1,7 +1,7 @@
 @(models: com.avaje.ebean.Page[Instructor])
 
 @import basic.common._
-
+@initTooltip()
 @baseUrl=@{
 	var url = "adminInstructors";
 	url
@@ -14,7 +14,7 @@
 	</div>
 	<div class="btn-toolbar pull-right" role="toolbar">
 		<div class="btn-group">
-			<a class="btn btn-success" data-toggle="新增" href="#" onclick="getCommonPage(this, 'instructorDetail', 'addNew=true');"><i
+			<a class="btn btn-success" href="#" onclick="getCommonPage(this, 'instructorDetail', 'addNew=true');"><i
 				class="icon-plus icon-white"></i>新增</a>
 		</div>
 		<div class="btn-group" id="btnGroup">
@@ -84,19 +84,19 @@ $('#toolbar').tooltip(options);
 <div class="pull-left" style="width:130px;">
 	<div class="btn-group" id="toolbar">
 		@if(instructor.audit != null && instructor.audit.status != Audit.STATUS_SUCCESS){
-			<a class="btn btn-success" data-toggle="审核通过" href="#" onclick="showConfirm('@String.valueOf("y" + instructor.id)')"><i class="icon-ok icon-white"></i></a> 
+			<a class="btn btn-success" rel="tooltip" title="审核通过" href="#" onclick="showConfirm('@String.valueOf("y" + instructor.id)')"><i class="icon-ok icon-white"></i></a> 
 		} else {
-			<span class="btn disabled" data-toggle="审核通过" href="#"><i class="icon-ok icon-white"></i></span>
+			<span class="btn disabled" rel="tooltip" title="审核通过" href="#"><i class="icon-ok icon-white"></i></span>
 		}
 		
 		@if(instructor.audit != null && instructor.audit.status != Audit.STATUS_FAILED){
-			<a class="btn btn-info"	data-toggle="拒绝通过" href="#" onclick="showConfirm('@String.valueOf("n" + instructor.id)')"><i class="icon-ban-circle icon-white"></i></a>
+			<a class="btn btn-info"	rel="tooltip" title="拒绝通过" href="#" onclick="showConfirm('@String.valueOf("n" + instructor.id)')"><i class="icon-ban-circle icon-white"></i></a>
 		} else {
-			<span class="btn disabled"	data-toggle="拒绝通过" href="#"><i class="icon-ban-circle icon-white"></i></span>
+			<span class="btn disabled"	rel="tooltip" title="拒绝通过" href="#"><i class="icon-ban-circle icon-white"></i></span>
 		}
 	</div>
 	<div class="btn-group">
-		<a class="btn btn-danger" data-toggle="删除，请谨慎操作！" href="#" onclick="doDelete(@instructor.id)"><i
+		<a class="btn btn-danger" rel="tooltip" title="删除，请谨慎操作！" href="#" onclick="doDelete(@instructor.id)"><i
 			class="icon-remove icon-white"></i></a>
 	</div>
 </div>

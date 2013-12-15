@@ -2,7 +2,7 @@
 
 @import basic.common._
 @import basic.common.basicform._
-
+@initTooltip()
 @bootstrapDatetimepicker()
 @toolbar_header={
 <div class="row">
@@ -11,7 +11,7 @@
 	</div>
 	<div class="btn-toolbar pull-right" role="toolbar">
 		<div class="btn-group">
-			<a class="btn btn-info" data-toggle="修改" href="#" onclick="toggleAllEdit(this, '#myform')"><i
+			<a class="btn btn-info" href="#" onclick="toggleAllEdit(this, '#myform')"><i
 				class="icon-edit icon-white"></i>修改</a>
 		</div>
 	</div>

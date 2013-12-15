@@ -2,7 +2,7 @@
 
 @import basic.common._
 @import basic.common.basicform._
-
+@initTooltip()
 @baseUrl=@{
 	var url = "adminRebates";
 	url
@@ -63,12 +63,12 @@ $('#toolbar').tooltip(options);
 
 <div class="pull-left" style="width:130px;">
 	<div class="btn-group" id="toolbar">
-		<a class="btn btn-info" data-toggle="查看详细" href="#" onclick="getCommonPage(this, 'rebateDetail', 'id=@rebate.id');"><i
+		<a class="btn btn-info" rel="tooltip" title="查看详细" href="#" onclick="getCommonPage(this, 'rebateDetail', 'id=@rebate.id');"><i
 			class="icon-eye-open icon-white"></i></a> 
 	</div>
 	<div class="btn-group" id="toolbar">
 		<!--EDU, Admin, Agent-->
-		<a class="btn btn-success" data-toggle="确认收款" href="#" onclick="showConfirm('@String.valueOf(rebate.id)')"><i class="icon-ok icon-white"></i></a>
+		<a class="btn btn-success" rel="tooltip" title="确认收款" href="#" onclick="showConfirm('@String.valueOf(rebate.id)')"><i class="icon-ok icon-white"></i></a>
 		
 	</div>
 </div>

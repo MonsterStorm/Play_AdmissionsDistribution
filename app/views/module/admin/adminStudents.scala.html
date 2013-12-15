@@ -1,7 +1,7 @@
 @(models: com.avaje.ebean.Page[Student])
 
 @import basic.common._
-
+@initTooltip()
 @baseUrl=@{
 	var url = "adminStudents";
 	url
@@ -14,7 +14,7 @@
 	</div>
 	<div class="btn-toolbar pull-right" role="toolbar">
 		<div class="btn-group">
-			<a class="btn btn-success" data-toggle="新增" href="#" onclick="getCommonPage(this, 'studentDetail', 'addNew=true');"><i
+			<a class="btn btn-success" href="#" onclick="getCommonPage(this, 'studentDetail', 'addNew=true');"><i
 				class="icon-plus icon-white"></i>新增</a>
 		</div>
 		<!--<div class="btn-group" id="btnGroup">
@@ -53,7 +53,7 @@ $('#toolbar').tooltip(options);
 		<a class="btn btn-info"	data-toggle="拒绝通过" href="#"><i class="icon-ban-circle icon-white"></i></a>
 	</div>-->
 	<div class="btn-group">
-		<a class="btn btn-danger" data-toggle="删除，请谨慎操作！" href="#" onclick="doDelete(@student.id)"><i
+		<a class="btn btn-danger" rel="tooltip" title="删除，请谨慎操作！" href="#" onclick="doDelete(@student.id)"><i
 			class="icon-remove icon-white"></i></a>
 	</div>
 </div>

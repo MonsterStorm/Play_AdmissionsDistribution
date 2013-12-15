@@ -1,7 +1,7 @@
 @(models: com.avaje.ebean.Page[Advertisment])
 @import basic.platform._
 @import basic.common._
-
+@initTooltip()
 <h5><strong>友情链接</strong></h5>
 <ul>
 	@for(model <- models.getList()){

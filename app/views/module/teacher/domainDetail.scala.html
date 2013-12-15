@@ -3,7 +3,7 @@
 @import basic.common._
 @import basic.common.basicform._
 
-
+@initTooltip()
 @toolbar_header={
 <div class="row">
 	<div class="span2">
@@ -11,11 +11,11 @@
 	</div>
 	<div class="btn-toolbar pull-right" role="toolbar">
 		<div class="btn-group">
-			<a class="btn btn-success" data-toggle="新增" href="#" onclick="doAddNew('#myform')"><i
+			<a class="btn btn-success" href="#" onclick="doAddNew('#myform')"><i
 				class="icon-plus icon-white"></i>新增</a>
 		</div>
 		<div class="btn-group">
-			<a class="btn btn-info" data-toggle="编辑" href="#" onclick="toggleAllEdit(this, '#myform')"><i
+			<a class="btn btn-info" href="#" onclick="toggleAllEdit(this, '#myform')"><i
 				class="icon-edit icon-white"></i>编辑</a>
 		</div>
 	</div>

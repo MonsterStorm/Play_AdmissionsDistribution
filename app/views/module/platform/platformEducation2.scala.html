@@ -1,7 +1,7 @@
 @(models: com.avaje.ebean.Page[EducationInstitution])
 @import basic.platform._
 @import basic.common._
-
+@initTooltip()
 <h5><strong>加盟商家</strong></h5>
 <ul>
 	@for(model <- models.getList()){
