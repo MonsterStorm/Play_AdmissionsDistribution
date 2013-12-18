@@ -1,10 +1,44 @@
-@(models: List[QAndS], divid: String=null)
+@(models: Course, divid: String=null)
 
 @import basic.common._
+@import basic.common.basicform._
 @initTooltip()
 @baseUrl=@{
 	var url = "qands";
 	url
+}
+
+<script type="text/javascript">
+    
+</script>
+
+@toolbarAddNew()={
+	@if(models != null){
+		<form class="form-horizontal" id="myform" method="post" action="@routes.CommonController.addOrUpdateEntity()">
+		<div id="qands_content">
+		<tr>
+			<td>
+				@if(models.qands != null){
+					@{models.qands.size() + 1}
+				} else {
+					1			
+				}
+			</td>
+			<td>@models.name</td>
+			<td>@inputTextShort(null, "question", null, false)</td>
+			<td>@inputTextShort(null, "answer", null, false)</td>
+			<td>now</td>
+			<td><button type="submit" class="btn btn-success">新增</button></td>
+		</tr>
+		<input class="input-large" type="hidden" name="table" value="@QAndS.TABLE_NAME">
+		@if(models != null){
+			<input class="input-large" type="hidden" name="courseId" value="@models.id">
+		} else {
+			<input class="input-large" type="hidden" name="courseId">
+		}
+		</div>
+		</form>
+	}
 }
 
 @toolbar(qands: QAndS)={
@@ -44,32 +78,35 @@ $('#toolbar').tooltip(options);
 				</tr>
 			</thead>
 			<tbody>
-				@for(model <- models){
-				<tr>
+				@if(models != null){
+					@for(model <- models.qands){
+					<tr>
 					<td>@model.id</td>
 					@if(model.course != null){
-						<td><a href="#" onclick="getCommonPage(this, 'courseDetail', 'id=@model.course.id');">@model.course.name</a></td>
-					} else {
-						<td>-</td>
-					}
+							<td><a href="#" onclick="getCommonPage(this, 'courseDetail', 'id=@model.course.id');">@model.course.name</a></td>
+						} else {
+							<td>-</td>
+						}
 					@if(model.question != null){
-						<td>@model.question</td>
-					} else {
-						<td>-</td>
-					}
+							<td>@model.question</td>
+						} else {
+							<td>-</td>
+						}
 					@if(model.answer != null){
-						<td>@model.answer</td>
-					} else {
-						<td>-</td>
-					}
+							<td>@model.answer</td>
+						} else {
+							<td>-</td>
+						}
 					@if(model.addTime != null){
-						<td>@datetime_formatter(model.addTime, true)</td>
-					} else {
-						<td>-</td>
-					}
+							<td>@datetime_formatter(model.addTime, true)</td>
+						} else {
+							<td>-</td>
+						}
 					<td>@toolbar(model)</td>
 				</tr>
+					}
 				}
+				@toolbarAddNew()
 			</tbody>
 		</table>
 	</div>
