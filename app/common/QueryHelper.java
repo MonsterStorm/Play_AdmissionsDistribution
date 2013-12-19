@@ -444,6 +444,78 @@ public class QueryHelper<T> {
 		}
 		return this;
 	}
+	
+	/**
+	 * add in
+	 * @param field
+	 * @param paramStr, param split by , or ;
+	 * @param clazz
+	 * @return
+	 */
+	public QueryHelper<T> addIn(String field, String paramStr) {
+		if (query == null) {
+			if (paramStr == null) {
+				query = finder.where().lt(field, null).query();
+			} else {
+				final String valueStr = FormHelper.getString(form, paramStr);
+				if (StringHelper.isValidate(valueStr)) {
+					Object[] values = valueStr.split("[,|;]");
+					if (values != null && values.length > 0) {
+						query = finder.where().in(field, values).query();
+					}
+				}
+			}
+		} else {
+			if (paramStr == null) {
+				query = query.where().ge(field, null).query();
+			} else {
+				final String valueStr = FormHelper.getString(form, paramStr);
+				if (StringHelper.isValidate(valueStr)) {
+					Object[] values = valueStr.split("[,|;]");
+					if (values != null && values.length > 0) {
+						query = query.where().in(field, values).query();
+					}
+				}
+			}
+		}
+		return this;
+	}
+	
+	/**
+	 * add in
+	 * @param field
+	 * @param paramStr
+	 * @param clazz
+	 * @return
+	 */
+	public QueryHelper<T> addNotIn(String field, String paramStr) {
+		if (query == null) {
+			if (paramStr == null) {
+				query = finder.where().lt(field, null).query();
+			} else {
+				final String valueStr = FormHelper.getString(form, paramStr);
+				if (StringHelper.isValidate(valueStr)) {
+					Object[] values = valueStr.split("[,|;]");
+					if (values != null && values.length > 0) {
+						query = finder.where().not(Expr.in(field, values)).query();
+					}
+				}
+			}
+		} else {
+			if (paramStr == null) {
+				query = query.where().ge(field, null).query();
+			} else {
+				final String valueStr = FormHelper.getString(form, paramStr);
+				if (StringHelper.isValidate(valueStr)) {
+					Object[] values = valueStr.split("[,|;]");
+					if (values != null && values.length > 0) {
+						query = query.where().not(Expr.in(field, values)).query();
+					}
+				}
+			}
+		}
+		return this;
+	}
 
 	/**
 	 * 添加like

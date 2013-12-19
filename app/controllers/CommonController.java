@@ -354,15 +354,11 @@ public class CommonController extends Controller {
 
 		Long courseId = FormHelper.getLong(form().bindFromRequest(), "courseId");
 		Course course = Course.find(courseId);
-		play.Logger.debug(courseId + "!!!" + course);
 		if (course != null) {
 			Form<QAndS> form = form(QAndS.class).bindFromRequest();
-			play.Logger.debug(form + "222");
 			if (form != null && form.hasErrors() == false) {
-				play.Logger.debug(form + "222" + form.get());
 				QAndS qands = QAndS.addOrUpdate(form.get(), course,
 						FormHelper.getParamNames(form));
-				play.Logger.debug(qands + "333");
 				if (qands != null) {
 					return pageCourseDetail(course);
 				}
