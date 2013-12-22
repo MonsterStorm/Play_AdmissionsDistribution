@@ -344,7 +344,7 @@ public class CommonController extends Controller {
 	@FormValidators(values = {
 			@FormValidator(name = "courseId", validateType = Type.REQUIRED, msg = "未指定问答所属课程"),
 			@FormValidator(name = "question", validateType = Type.REQUIRED, msg = "问答标题不能为空"),
-			@FormValidator(name = "answer", validateType = Type.REQUIRED, msg = "问答答案不能为空"), })
+			@FormValidator(name = "answer", validateType = Type.REQUIRED, msg = "问答答案不能为空") })
 	public static Result addOrUpdateCourseQAndS() {
 		String msg = Validator.check(CommonController.class,
 				"addOrUpdateCourseQAndS");

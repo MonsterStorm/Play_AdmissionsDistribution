@@ -102,7 +102,7 @@ public class PlatformController extends BaseController {
 		} else if (PAGE_REGISTER.equalsIgnoreCase(page)) {
 			// 普通注册
 			return ok(views.html.module.platform.register
-					.render(form(Register.class)));
+					.render());
 		} else if (PAGE_REGISTER_STUDENT.equalsIgnoreCase(page)) {
 			// 学生注册
 			return ok(views.html.module.platform.contact_us.render(null));

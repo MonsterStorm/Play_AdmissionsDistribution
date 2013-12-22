@@ -1,0 +1,66 @@
+@(form: Form[RegisterController.Register]) 
+@import basic.platform._
+@import basic.common._
+@initTooltip()
+@basic.platform.main("注册"){@meta()}{@styles2()}{@scripts()}{@nav()}{@header()}{
+<style type="text/css">
+.form-signin {
+	max-width: 350px;
+	padding: 19px 29px 29px;
+	margin: 0 auto 20px;
+	background-color: #fff;
+	border: 1px solid #e5e5e5;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	-webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, .05);
+	-moz-box-shadow: 0 1px 2px rgba(0, 0, 0, .05);
+	box-shadow: 0 1px 2px rgba(0, 0, 0, .05);
+}
+</style>
+
+<!-- content -->
+<div class="container" id="content" style="border:none;">
+	<div class="row">
+		<div class="span12">
+				<form class="form-signin" id="myform" method="post" action="@routes.RegisterController.addUser()">
+					@if(form.hasGlobalErrors){
+						<div class="alert alert-danger">@form.globalError.message</div>
+					} 
+					@form_validate_info()
+
+					<div class="control-group">
+   					<label class="control-label" for="username"><b>用户名</b></label>
+   					<div class="controls">
+							<input class="input-block-level" type="text" name="username" value="@form("username").value">
+  					</div>
+					</div>
+
+					<div class="control-group">
+   					<label class="control-label" for="password"><b>密码</b></label>
+   					<div class="controls">
+							<input class="input-block-level" type="password" name="password" value="@form("password").value">
+  					</div>
+					</div>
+					
+					<div class="control-group">
+   					<label class="control-label" for="passwordConfirm"><b>确认密码</b></label>
+   					<div class="controls">
+							<input class="input-block-level" type="password" name="passwordConfirm" value="@form("passwordConfirm").value">
+  					</div>
+					</div>
+
+					<div class="control-group">
+   					<label class="control-label" for="email"><b>邮箱</b></label>
+   					<div class="controls">
+							<input class="input-block-level" type="email" name="email" value="@form("email").value">
+  					</div>
+					</div>
+
+					<button class="btn btn-large btn-primary btn-block" type="submit">注册</button>
+					
+				</form>
+		</div>
+	</div>
+</div>
+}{@footer()}

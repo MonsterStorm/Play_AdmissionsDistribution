@@ -52,7 +52,7 @@ public class RegisterController extends BaseController {
 		}
 		Form<Register> registerForm = form(Register.class).bindFromRequest();
 		if (registerForm.hasErrors()) {
-			return badRequest(views.html.module.platform.register.render(registerForm));
+			return badRequest(views.html.module.platform.register.render());
 		}
 		// if(!form().bindFromRequest().get("password").equals(form().bindFromRequest().get("passwordConfirm"))){
 		// 	return badRequest(Constants.MSG_PASSWORD_NOT_SAME);
