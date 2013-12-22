@@ -84,6 +84,12 @@ public class QueryFilterHelper<T> {
 		case BETWEEN:
 			helper.addBetween(dataName, paramName, clazz);
 			break;
+		case IN:
+			helper.addIn(dataName, paramName);
+			break;
+		case NOTIN:
+			helper.addNotIn(dataName, paramName);
+			break;
 		case ORDERBY:
 			helper.addOrderBy(paramName);
 			break;

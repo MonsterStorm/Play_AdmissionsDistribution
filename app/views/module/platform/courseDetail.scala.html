@@ -51,6 +51,14 @@ function pageUserEnroll(li, url, data){
 		 $(li).addClass("active");
 	}
 </script>
+<style>
+.fixed-div {
+    position: fixed;
+    top: 30%;
+    left: 0;
+}
+</style>
+
 <div>
 	<div style="font-size:30px;"><center><b>@model.name</b></center></div>
 	
@@ -65,7 +73,23 @@ function pageUserEnroll(li, url, data){
 		学费：@model.money</center></b>
 	</div>
 	<br/>
-	<div>@Html(model.detail)</div>
+	<div>
+
+		@Html(model.detail)
+		
+		@if(model != null && model.qands != null && model.qands.size() > 0){
+		<div class="fixed-div" style="border:1px solid gray;padding:10px;max-width:200px;">
+			<div style="font-size:16px">关于&nbsp;<b>@model.name</b>&nbsp;的最新提问：</div>
+				@for(qs <- model.qands){
+					<b>问：@qs.question</b>
+						<br/> 
+							答：@qs.answer
+						<br/>
+					<div style="border:1px dashed gray;"></div>
+				}
+		</div>
+		}
+	</div>
 
 	<button type="submit" class="ym-button ym-success ym-large" onClick = "getPlatformPage(this, 'pageUserEnroll', 'courseId=@model.id')">我要报名</button>
 

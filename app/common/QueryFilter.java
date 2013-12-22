@@ -30,6 +30,8 @@ public @interface QueryFilter {
 		LET("<="), // 小于等于
 		LIKE("%%"),//Like
 		BETWEEN(">=<="),//>=<=
+		IN("()"),//有
+		NOTIN(")("),//没有
 		ORDERBY("orderby");//排序
 
 		public String value;
