@@ -58,8 +58,9 @@ public class QueryFilterHelper<T> {
 		String paramName = filter.paramName();
 		Type type = filter.queryType();
 		Class<?> clazz = filter.dataType();
-
+		play.Logger.debug( "type!!!!" + type );
 		switch (type) {
+
 		case EQ:
 			helper.addEq(dataName, paramName, clazz);
 			break;
@@ -92,6 +93,9 @@ public class QueryFilterHelper<T> {
 			break;
 		case ORDERBY:
 			helper.addOrderBy(paramName);
+			break;
+		case NEWORDERBY:
+			helper.addNewOrderBy(dataName, paramName, clazz);
 			break;
 		}
 

@@ -54,7 +54,11 @@
   	getPlatformPage(this, '@url', {@params})
   }
   case "agent" => {
-  	getAgentPage(this, '@url', {@params})
+  	@if(value == null){<!--没有参数值才使用额外参数-->
+  		getAgentPage(this, '@url', {@params}, @key.mkString("'", ";", "'"))
+  	} else {
+  		getAgentPage(this, '@url', {@params})
+  	}
   }
   case "education" => {
   	getEducationPage(this, '@url', {@params})

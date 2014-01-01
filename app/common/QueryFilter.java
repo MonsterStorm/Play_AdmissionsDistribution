@@ -32,7 +32,8 @@ public @interface QueryFilter {
 		BETWEEN(">=<="),//>=<=
 		IN("()"),//有
 		NOTIN(")("),//没有
-		ORDERBY("orderby");//排序
+		ORDERBY("orderby"),//排序
+		NEWORDERBY("neworderby");//实现复杂功能的新排序
 
 		public String value;
 

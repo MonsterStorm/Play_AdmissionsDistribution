@@ -226,7 +226,6 @@ public class AgentController extends BaseController {
 	 * @return
 	 */
 	public static Result pageAllCourses() {
-		play.Logger.error(form().bindFromRequest().get("page"));
 		// get page
 		int page = FormHelper.getPage(form().bindFromRequest());
 

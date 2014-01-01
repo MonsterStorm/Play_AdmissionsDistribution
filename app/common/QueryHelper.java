@@ -96,6 +96,17 @@ public class QueryHelper<T> {
 		return this;
 	}
 
+	public QueryHelper<T> addIdIn(Model.Finder<Long, T> tfinder){
+		if(query == null){
+			query = finder.where().eq("id", null).query();
+		}
+
+		query = query.where().idIn( tfinder.where().eq("id", 1).findList() ).query();
+		return this;
+
+	}
+
+
 	/**
 	 * 添加等于字段
 	 * 
@@ -579,6 +590,60 @@ public class QueryHelper<T> {
 					query = finder.order().asc(orders[0]);
 				} else {
 					query = query.orderBy().asc(orders[0]);
+				}
+			}
+		}
+		return this;
+	}
+
+	/**
+	 * 添加<=
+	 * 
+	 * @param field
+	 * @param paramStr
+	 * @param clazz
+	 * @return
+	 */
+	public QueryHelper<T> addNewOrderBy(String field, String paramStr, Class<?> clazz) {
+		play.Logger.debug( "field!!!!" + field );
+		if (query == null) {
+			if (paramStr == null || clazz == null) {
+				
+			} else {
+
+				final String valueStr = FormHelper.getString(form, paramStr);
+				if (StringHelper.isValidate(valueStr)) {
+					if (clazz == Integer.class) {
+						query = finder.order().desc(field + Integer.valueOf(valueStr));
+					} else if (clazz == Boolean.class) {
+						query = finder.order().desc(field + Boolean.valueOf(valueStr));
+					} else if (clazz == Float.class) {
+						query = finder.order().desc(field + Float.valueOf(valueStr));
+					} else if (clazz == Long.class) {
+						query = finder.order().desc(field + Long.valueOf(valueStr));
+					} else if (clazz == String.class) {
+						query = finder.order().desc(field + valueStr);
+					}
+				}
+			}
+		} else {
+			if (paramStr == null || clazz == null) {
+
+			} else {
+				final String valueStr = FormHelper.getString(form, paramStr);
+
+				if (StringHelper.isValidate(valueStr)) {
+					if (clazz == Integer.class) {
+						query = query.orderBy().desc(field + Integer.valueOf(valueStr));
+					} else if (clazz == Boolean.class) {
+						query = query.orderBy().desc(field + Boolean.valueOf(valueStr));
+					} else if (clazz == Float.class) {
+						query = query.orderBy().desc(field + Float.valueOf(valueStr));
+					} else if (clazz == Long.class) {
+						query = query.orderBy().desc(field + Long.valueOf(valueStr));
+					} else if (clazz == String.class) {
+						query = query.orderBy().desc(field + valueStr);
+					}
 				}
 			}
 		}

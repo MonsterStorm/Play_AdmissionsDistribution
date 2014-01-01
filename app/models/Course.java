@@ -220,12 +220,17 @@ public class Course extends Model {
 			@QueryFilter(dataName="name", paramName="courseName", queryType=QueryFilter.Type.LIKE, dataType=String.class),
 			@QueryFilter(dataName="courseType.name", paramName="courseTypeName", queryType=QueryFilter.Type.EQ, dataType=String.class),
 			@QueryFilter(dataName="edu.name", paramName="eduName", queryType=QueryFilter.Type.LIKE, dataType=String.class),
-			@QueryFilter(dataName="audit.status", paramName="auditStatus", queryType=QueryFilter.Type.EQ, dataType=Integer.class),
-			@QueryFilter(dataName="startTime", paramName="startEndTime", queryType=QueryFilter.Type.BETWEEN, dataType=Long.class)
+			@QueryFilter(dataName="startTime", paramName="startEndTime", queryType=QueryFilter.Type.BETWEEN, dataType=Long.class),
+			@QueryFilter(dataName="agentRebateType.ratioOfTotal * money + agentRebateType.ratioOfPerStudent * ", paramName="myorder", queryType=QueryFilter.Type.NEWORDERBY, dataType=Long.class)
 	})
-	public static Page<Course> findPage(DynamicForm form, Integer page,	Integer pageSize) {
+	public static Page<Course> findPage(DynamicForm form, Integer page, Integer pageSize) {
 		QueryHelper<Course> queryFilter = new QueryFilterHelper<Course>(finder, form).filter(Course.class, "findPage", DynamicForm.class, Integer.class, Integer.class);
 		return queryFilter.findPage(page, pageSize);
+
+		//Model.Finder<Long, Course> finder2 = new Model.Finder(Long.class, Course.class);
+		//return finder.where().in( "id" , finder2.select("id").where().eq("id", 1).query() ).query().findPagingList(10).getPage(0);
+		//return finder.query().order().asc("agentRebateType.ratioOfTotal * money + agentRebateType.ratioOfPerStudent * 10").findPagingList(50).getPage(0);
+
 //		return new QueryHelper<Course>().findPage(finder, form, page, pageSize);
 	}
 
